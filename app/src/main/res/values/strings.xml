@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">SportzFever</string>
+
+    <string name="message_network_problem">Please check your internet connectivity.</string>
+    <string name="message_problem">Opps! Something went wrong, please try again.</string>
+    <string name="problem_server">Problem connecting to server, Please try later.</string>
+    <string name="some_error_occurred">Unable to connect to the service, please try again later.</string>
+    <string name="timeout">Time out</string>
+    <string name="no_internet_connection">No Internet connection.  Please check your network settings.</string>
+    <string name="alert_internet_connection">Please check your internet connection.</string>
+    <string name="hint_enter_email">Enter Email</string>
+    <string name="hint_enter_password">Enter Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="log_in">Log In</string>
+    <string name="enter_email">Please enter email</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="enter_valid_emailid">Please enter valid emailid</string>
+    <string name="or">OR</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
