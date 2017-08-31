@@ -19,6 +19,8 @@ import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
     private Activity mActivity;
@@ -75,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
             @Override
             public void onClick(View view) {
 
-             //   startActivity(new Intent(mActivity, ForgotPassword.class));
+                //   startActivity(new Intent(mActivity, ForgotPassword.class));
             }
         });
     }
@@ -85,10 +87,17 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
-            //http://onlineworkpro.com/trendi/api/login.php?mobile=1234567890&password=123456&gcm=fsfsdfsdfdsfsfsdf&device_type=1&device_id=
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN + "mobile=" + edtEmail.getText().toString() + "&password=" + edtPassword.getText().toString()
-                    + "&latitude=" + latitude + "&longitude=" + longitude + "&gcm=" + AppUtils.getGcmRegistrationKey(mActivity) + "&device_type=" + AppConstant.DEVICE_TYPE + "&device_id=" + "";
-            new CommonAsyncTaskHashmap(1, mActivity, this).getquery(url);
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put("email", edtEmail.getText().toString());
+            hm.put("password", edtPassword.getText().toString());
+            hm.put("isAppLogin", "true");
+            hm.put("SF_USER_LOGIN", "true");
+            hm.put("deviceid", "dg");
+            hm.put("devicetoken", AppUtils.getGcmRegistrationKey(mActivity));
+            hm.put("devicetype", AppConstant.DEVICE_TYPE);
+
+            String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN;
+            new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJson(url,hm);
 
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -115,11 +124,9 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
         try {
             if (method == 1) {
 
-                JSONObject commandResult = response.getJSONObject("commandResult");
+                if (response.getString("result").equalsIgnoreCase("1")) {
 
-                if (commandResult.getString("success").equalsIgnoreCase("1")) {
-
-                    JSONObject data = commandResult.getJSONObject("data");
+                    JSONObject data = response.getJSONObject("data");
 
                     AppUtils.setUserId(mActivity, data.getString("UserId"));
                     AppUtils.setUserRole(mActivity, data.getString("UserType"));
@@ -133,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                     finish();*/
                 } else {
 
-                    Toast.makeText(mActivity, commandResult.getString("message"), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
