@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
         arrayList = new ArrayList<>();
         setlistener();
 
-        modelNotification = new ModelFeed();
+    /*    modelNotification = new ModelFeed();
         modelNotification.setRowType(1);
         arrayList.add(modelNotification);
         arrayList.add(modelNotification);
@@ -85,7 +84,8 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
         arrayList.add(modelNotification);
 
         adapterFeed = new AdapterFeed(getActivity(), this, arrayList);
-        list_request.setAdapter(adapterFeed);
+        list_request.setAdapter(adapterFeed);*/
+        getServicelistRefresh();
 
     }
 
@@ -98,6 +98,7 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
             }
         });
 
+/*
         list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -148,6 +149,7 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
                 }
             }
         });
+*/
 
     }
 
@@ -169,15 +171,12 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
     }
 
     private void getServicelist() {
-
         try {
-
             skipCount = 0;
 
             if (AppUtils.isNetworkAvailable(context)) {
-
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -196,9 +195,9 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-
+                // http://sfscoring.betasportzfever.com/getFeeds/155
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -218,12 +217,11 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
         try {
 
             if (position == 1) {
-                JSONObject commandResult = jObject
-                        .getJSONObject("commandResult");
-                if (commandResult.getString("success").equalsIgnoreCase("1")) {
 
-                    JSONArray data = commandResult.getJSONArray("data");
-                    maxlistLength = commandResult.getString("total");
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+
+                    JSONArray data = jObject.getJSONArray("data");
+                  //  maxlistLength = jObject.getString("total");
                     arrayList.removeAll(arrayList);
                     for (int i = 0; i < data.length(); i++) {
 
@@ -253,11 +251,9 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
                 }
             } else if (position == 4) {
 
-                JSONObject commandResult = jObject
-                        .getJSONObject("commandResult");
-                if (commandResult.getString("success").equalsIgnoreCase("1")) {
-                    maxlistLength = commandResult.getString("total");
-                    JSONArray data = commandResult.getJSONArray("data");
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                   // maxlistLength = jObject.getString("total");
+                    JSONArray data = jObject.getJSONArray("data");
 
                     arrayList.remove(arrayList.size() - 1);
                     for (int i = 0; i < data.length(); i++) {

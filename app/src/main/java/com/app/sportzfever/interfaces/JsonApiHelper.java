@@ -8,5 +8,7 @@ public interface JsonApiHelper {
 
     String BASEURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
+    String GET_FEEDS = "getFeeds/";
+    String GET_NOTIFICATION = "getNotifications/";
 
 }

@@ -76,10 +76,9 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ModelNotification m1 = (ModelNotification) detail.get(i);
 
-            /*((CustomViewHolder) holder).text_name.setText(m1.getSenderName() + "(" + m1.getRequestId() + ")");
-            ((CustomViewHolder) holder).text_message.setText(m1.getMessage());
-            ((CustomViewHolder) holder).text_date.setText(AppUtils.getTimeFromDateString(m1.getDate()));
-*/
+            ((CustomViewHolder) holder).text_name.setText(m1.getActivity());
+            ((CustomViewHolder) holder).text_message.setText(m1.getNotificationText());
+            ((CustomViewHolder) holder).text_date.setText(m1.getDatetime());
           /*  if (!m1.getUserImage().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getReceiverImage())
@@ -87,17 +86,7 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                         .placeholder(R.drawable.user)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
-
-
-            if (Integer.parseInt(m1.getUnreadCount()) > 0) {
-
-                ((CustomViewHolder) holder).text_new_msgcount.setText(m1.getUnreadCount().trim());
-                ((CustomViewHolder) holder).text_new_msgcount.setVisibility(View.VISIBLE);
-            } else {
-                ((CustomViewHolder) holder).text_new_msgcount.setVisibility(View.GONE);
-
-            }*/
-
+*/
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }

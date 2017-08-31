@@ -6,9 +6,106 @@ package com.app.sportzfever.models;
 
 public class ModelNotification {
 
-    private int rowType;
-    private String message, date, notification_id;
 
+    private int rowType;
+    private String message, date, notification_id,notificationText,event,status,team,activity,datetime,readStatus,isTeamNotification
+            ,fromUser,fromAvatar,toUser,toAvatar;
+
+    public String getNotificationText() {
+        return notificationText;
+    }
+
+    public void setNotificationText(String notificationText) {
+        this.notificationText = notificationText;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(String readStatus) {
+        this.readStatus = readStatus;
+    }
+
+    public String getIsTeamNotification() {
+        return isTeamNotification;
+    }
+
+    public void setIsTeamNotification(String isTeamNotification) {
+        this.isTeamNotification = isTeamNotification;
+    }
+
+    public String getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
+    }
+
+    public String getFromAvatar() {
+        return fromAvatar;
+    }
+
+    public void setFromAvatar(String fromAvatar) {
+        this.fromAvatar = fromAvatar;
+    }
+
+    public String getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
+    }
+
+    public String getToAvatar() {
+        return toAvatar;
+    }
+
+    public void setToAvatar(String toAvatar) {
+        this.toAvatar = toAvatar;
+    }
 
     public String getMessage() {
         return message;
