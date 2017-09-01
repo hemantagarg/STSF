@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,18 +74,7 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
         arrayList = new ArrayList<>();
         setlistener();
 
-        modelNotification = new ModelNotification();
-        modelNotification.setRowType(1);
-        arrayList.add(modelNotification);
-        arrayList.add(modelNotification);
-        arrayList.add(modelNotification);
-        arrayList.add(modelNotification);
-        arrayList.add(modelNotification);
-        arrayList.add(modelNotification);
-
-        adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
-        list_request.setAdapter(adapterNotification);
-
+        getServicelistRefresh();
     }
 
     private void setlistener() {
@@ -98,10 +86,10 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
             }
         });
 
+/*
         list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
                 if ((AppUtils.isNetworkAvailable(context))) {
 
                     if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
@@ -147,6 +135,7 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
                 }
             }
         });
+*/
 
     }
 
@@ -163,31 +152,21 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
         in.putExtra("image", arrayList.get(position).getReceiverImage());
         in.putExtra("searchID", arrayList.get(position).getSearchId());
         startActivity(in);*/
-
-
     }
 
     private void getServicelist() {
-
         try {
-
             skipCount = 0;
-
             if (AppUtils.isNetworkAvailable(context)) {
-
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
+                // http://sfscoring.betasportzfever.com/getNotifications/155
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
-
     }
 
     private void getServicelistRefresh() {
@@ -195,9 +174,9 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-
+            //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -205,91 +184,97 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
-
     }
 
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
+                if (position == 1) {
+                    if (jObject.getString("result").equalsIgnoreCase("1")) {
+                        JSONArray data = jObject.getJSONArray("data");
+                      //  maxlistLength = jObject.getString("total");
+                        arrayList.removeAll(arrayList);
+                        for (int i = 0; i < data.length(); i++) {
 
-            if (position == 1) {
-                JSONObject commandResult = jObject
-                        .getJSONObject("commandResult");
-                if (commandResult.getString("success").equalsIgnoreCase("1")) {
+                            JSONObject jo = data.getJSONObject(i);
 
-                    JSONArray data = commandResult.getJSONArray("data");
-                    maxlistLength = commandResult.getString("total");
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                            modelNotification = new ModelNotification();
+                            modelNotification.setNotification_id(jo.getString("id"));
+                            modelNotification.setNotificationText(jo.getString("notificationText"));
+                            modelNotification.setEvent(jo.getString("event"));
+                            modelNotification.setStatus(jo.getString("status"));
+                            modelNotification.setActivity(jo.getString("activity"));
+                            modelNotification.setTeam(jo.getString("team"));
+                            modelNotification.setDatetime(jo.getString("datetime"));
+                            modelNotification.setReadStatus(jo.getString("readStatus"));
+                            modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
+                            modelNotification.setFromUser(jo.getString("fromUser"));
+                            modelNotification.setFromAvatar(jo.getString("fromAvatar"));
+                            modelNotification.setToUser(jo.getString("toUser"));
+                            modelNotification.setToAvatar(jo.getString("toAvatar"));
+                            modelNotification.setRowType(1);
 
-                        JSONObject jo = data.getJSONObject(i);
+                            arrayList.add(modelNotification);
+                        }
+                        adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
+                        list_request.setAdapter(adapterNotification);
 
-                        modelNotification = new ModelNotification();
+                        if (mSwipeRefreshLayout != null) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
 
-                        modelNotification.setMessage(jo.getString("message"));
-                        modelNotification.setRowType(1);
-
-                        modelNotification.setDate(jo.getString("message_date"));
-                        arrayList.add(modelNotification);
+                    } else {
+                        if (mSwipeRefreshLayout != null) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     }
-                    adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterNotification);
 
-                    if (mSwipeRefreshLayout != null) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                } else if (position == 4) {
 
-                } else {
+                    if (jObject.getString("result").equalsIgnoreCase("1")) {
+                     //   maxlistLength = jObject.getString("total");
+                        JSONArray data = jObject.getJSONArray("data");
 
-                    if (mSwipeRefreshLayout != null) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                        arrayList.remove(arrayList.size() - 1);
+                        for (int i = 0; i < data.length(); i++) {
 
-                }
-            } else if (position == 4) {
+                            JSONObject jo = data.getJSONObject(i);
 
-                JSONObject commandResult = jObject
-                        .getJSONObject("commandResult");
-                if (commandResult.getString("success").equalsIgnoreCase("1")) {
-                    maxlistLength = commandResult.getString("total");
-                    JSONArray data = commandResult.getJSONArray("data");
+                            modelNotification = new ModelNotification();
+                            modelNotification.setNotification_id(jo.getString("id"));
+                            modelNotification.setNotificationText(jo.getString("notificationText"));
+                            modelNotification.setEvent(jo.getString("event"));
+                            modelNotification.setStatus(jo.getString("status"));
+                            modelNotification.setActivity(jo.getString("activity"));
+                            modelNotification.setTeam(jo.getString("team"));
+                            modelNotification.setDatetime(jo.getString("datetime"));
+                            modelNotification.setReadStatus(jo.getString("readStatus"));
+                            modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
+                            modelNotification.setFromUser(jo.getString("fromUser"));
+                            modelNotification.setFromAvatar(jo.getString("fromAvatar"));
+                            modelNotification.setToUser(jo.getString("toUser"));
+                            modelNotification.setToAvatar(jo.getString("toAvatar"));
+                            modelNotification.setRowType(1);
 
-                    arrayList.remove(arrayList.size() - 1);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        modelNotification = new ModelNotification();
-                        modelNotification.setMessage(jo.getString("message"));
-                        modelNotification.setRowType(1);
-                        modelNotification.setDate(jo.getString("message_date"));
-                        //   modelNotification.setUserImage(getResources().getString(R.string.img_url) + jo.getString("userImage"));
-                        arrayList.add(modelNotification);
-                    }
-                    adapterNotification.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
+                            arrayList.add(modelNotification);
+                        }
+                        adapterNotification.notifyDataSetChanged();
+                        loading = true;
+                        if (data.length() == 0) {
+                            skipCount = skipCount - 10;
+                            //  return;
+                        }
+                    } else {
+                        adapterNotification.notifyDataSetChanged();
                         skipCount = skipCount - 10;
-                        //  return;
+                        loading = true;
                     }
-                } else {
-
-                    adapterNotification.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
-
                 }
-
-
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

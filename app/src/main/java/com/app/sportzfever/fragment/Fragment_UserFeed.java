@@ -166,8 +166,6 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
         in.putExtra("image", arrayList.get(position).getReceiverImage());
         in.putExtra("searchID", arrayList.get(position).getSearchId());
         startActivity(in);*/
-
-
     }
 
     private void getServicelist() {
@@ -178,16 +176,12 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
-
     }
 
     private void getServicelistRefresh() {
@@ -205,10 +199,7 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
-
     }
 
 
