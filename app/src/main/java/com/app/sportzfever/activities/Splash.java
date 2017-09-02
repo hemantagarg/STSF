@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.utils.AppUtils;
 
 public class Splash extends AppCompatActivity {
 
@@ -19,7 +21,7 @@ public class Splash extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-
+        Log.e("gcm", AppUtils.getGcmRegistrationKey(getApplicationContext()));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

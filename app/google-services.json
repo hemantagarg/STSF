@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "625104337187",
+    "firebase_url": "https://sportzfever-56cea.firebaseio.com",
+    "project_id": "sportzfever-56cea",
+    "storage_bucket": "sportzfever-56cea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625104337187:android:0c402e7adb9ec352",
+        "android_client_info": {
+          "package_name": "com.app.sportzfever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625104337187-vumf89093j112da4jrabpt2879l8satr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7p_zDB1nVdL8CU8wMAzjVtk5AUgsVdC8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
