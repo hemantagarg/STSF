@@ -219,7 +219,6 @@ public class Fragment_UserFeed extends Fragment implements ApiResponse, OnCustom
                         JSONObject jo = data.getJSONObject(i);
 
                         modelNotification = new ModelFeed();
-
                         modelNotification.setMessage(jo.getString("message"));
                         modelNotification.setRowType(1);
 
