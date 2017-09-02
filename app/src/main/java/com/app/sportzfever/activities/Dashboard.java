@@ -44,18 +44,66 @@ public class Dashboard extends AppCompatActivity
     }
 
     private void setupTabIcons() {
-
-        tabLayout.getTabAt(0).setIcon(R.drawable.feed_icon_red);
-        tabLayout.getTabAt(1).setIcon(R.drawable.feed_icon_red);
-        tabLayout.getTabAt(2).setIcon(R.drawable.team_grey);
-        tabLayout.getTabAt(3).setIcon(R.drawable.calender_grey);
-        tabLayout.getTabAt(4).setIcon(R.drawable.message_grey);
-
+        tabLayout.getTabAt(0).setIcon(R.drawable.newsfeed_sel);
+        tabLayout.getTabAt(1).setIcon(R.drawable.friends);
+        tabLayout.getTabAt(2).setIcon(R.drawable.calendar);
+        tabLayout.getTabAt(3).setIcon(R.drawable.bell);
+        tabLayout.getTabAt(4).setIcon(R.drawable.chat);
     }
 
     private void setListener() {
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        tab.setIcon(R.drawable.newsfeed_sel);
+                        break;
+                    case 1:
+                        tab.setIcon(R.drawable.friends_sel);
+                        break;
+                    case 2:
+                        tab.setIcon(R.drawable.calendar_sel);
+                        break;
+                    case 3:
+                        tab.setIcon(R.drawable.bell_sel);
+                        break;
+                    case 4:
+                        tab.setIcon(R.drawable.chat_sel);
+                        break;
 
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        tab.setIcon(R.drawable.newsfeed);
+                        break;
+                    case 1:
+                        tab.setIcon(R.drawable.friends);
+                        break;
+                    case 2:
+                        tab.setIcon(R.drawable.calendar);
+                        break;
+                    case 3:
+                        tab.setIcon(R.drawable.bell);
+                        break;
+                    case 4:
+                        tab.setIcon(R.drawable.chat);
+                        break;
+
+                }
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void init() {

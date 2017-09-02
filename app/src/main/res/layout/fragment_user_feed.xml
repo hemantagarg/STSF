@@ -1,102 +1,98 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout1"
     android:layout_width="match_parent"
-    android:background="@color/layout_bg"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
 
-    <LinearLayout
-        android:id="@+id/rl_main_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/rl_main_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp5"
-            android:layout_marginTop="@dimen/dp5"
-            android:background="@color/white">
-
-            <EditText
-                android:id="@+id/edt_text_post"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="Share something with world!"
-                android:padding="@dimen/dp15"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/edt_text_post"
-                android:background="@color/view_color" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view"
-                android:padding="@dimen/dp10">
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp5"
+                android:background="@color/white">
 
-                <ImageView
-                    android:id="@+id/image_photo"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edt_text_post"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp5"
-                    android:padding="@dimen/dp5"
-                    android:src="@drawable/gallery_red" />
+                    android:background="@android:color/transparent"
+                    android:hint="Share something with world!"
+                    android:padding="@dimen/dp15"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
 
-                <TextView
-                    android:id="@+id/txt_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/image_photo"
-                    android:text="Photo/Video"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_14" />
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/edt_text_post"
+                    android:background="@color/view_color" />
 
-                <TextView
-                    android:id="@+id/text_post"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp10"
-                    android:background="@drawable/blue_button_selecor"
-                    android:paddingBottom="@dimen/dp5"
-                    android:paddingLeft="@dimen/dp15"
-                    android:paddingRight="@dimen/dp15"
-                    android:paddingTop="@dimen/dp5"
-                    android:text="Post"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14" />
+                    android:layout_below="@+id/view"
+                    android:padding="@dimen/dp10">
+
+                    <ImageView
+                        android:id="@+id/image_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp5"
+                        android:padding="@dimen/dp5"
+                        android:src="@drawable/gallery_red" />
+
+                    <TextView
+                        android:id="@+id/txt_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/image_photo"
+                        android:text="Photo/Video"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14" />
+
+                    <TextView
+                        android:id="@+id/text_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:background="@drawable/blue_button_selecor"
+                        android:paddingBottom="@dimen/dp5"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="Post"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
-
-        </RelativeLayout>
-
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp5">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_request"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp3"
+                android:layout_height="wrap_content"
                 android:visibility="visible">
 
             </android.support.v7.widget.RecyclerView>
-        </android.support.v4.widget.SwipeRefreshLayout>
 
+        </LinearLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>
