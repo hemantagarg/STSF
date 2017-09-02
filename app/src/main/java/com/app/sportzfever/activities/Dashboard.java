@@ -131,9 +131,9 @@ public class Dashboard extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Fragment_UserFeed());
-        adapter.addFrag(new Fragment_Notification());
-        adapter.addFrag(new Fragment_Friend_Request());
         adapter.addFrag(new Fragment_TeamJoin_Request());
+        adapter.addFrag(new Fragment_Friend_Request());
+        adapter.addFrag(new Fragment_Notification());
         adapter.addFrag(new Fragment_MatchInvitationAvailability());
         viewPager.setAdapter(adapter);
     }
