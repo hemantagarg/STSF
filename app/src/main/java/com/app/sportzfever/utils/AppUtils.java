@@ -317,7 +317,7 @@ public class AppUtils {
         String formattedString = "";
         try {
             // String source = "2013-02-19T11:20:16.393Z";
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date date = null;
             date = formatter.parse(dateString);
             SimpleDateFormat formatterNew = new SimpleDateFormat("hh:mm a");

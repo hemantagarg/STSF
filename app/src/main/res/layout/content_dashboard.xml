@@ -17,7 +17,7 @@
         android:layout_height="50dp"
         app:tabGravity="fill"
         android:background="@color/white"
-        app:tabIndicatorColor="@color/view_color"
+        app:tabIndicatorColor="@color/tab_indicator_color"
         app:tabIndicatorHeight="@dimen/dp2"
         app:tabMode="fixed" />
 
