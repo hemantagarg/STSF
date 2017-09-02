@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignLeft="@+id/rl_top"
-                android:layout_below="@+id/image_viewers"
+                android:layout_below="@+id/rl_top"
                 android:alpha=".3"
                 android:background="@color/view_color" />
 
