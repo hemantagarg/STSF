@@ -10,5 +10,8 @@ public interface JsonApiHelper {
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
     String GET_NOTIFICATION = "getNotifications/";
+    String GET_FRIENDREQUEST = "getFriendRequests/";
+    String GET_TEAMJOINREQUEST = "getInvitationFromTeamToJoin/";
+    String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
 
 }

@@ -17,7 +17,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.fragment.Fragment_Friend_Request;
+import com.app.sportzfever.fragment.Fragment_MatchInvitationAvailability;
 import com.app.sportzfever.fragment.Fragment_Notification;
+import com.app.sportzfever.fragment.Fragment_TeamJoin_Request;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 
 import java.util.ArrayList;
@@ -81,9 +84,9 @@ public class Dashboard extends AppCompatActivity
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Fragment_UserFeed());
         adapter.addFrag(new Fragment_Notification());
-        adapter.addFrag(new Fragment_Notification());
-        adapter.addFrag(new Fragment_Notification());
-        adapter.addFrag(new Fragment_Notification());
+        adapter.addFrag(new Fragment_Friend_Request());
+        adapter.addFrag(new Fragment_TeamJoin_Request());
+        adapter.addFrag(new Fragment_MatchInvitationAvailability());
         viewPager.setAdapter(adapter);
     }
 

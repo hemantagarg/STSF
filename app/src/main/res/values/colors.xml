@@ -11,8 +11,12 @@
     <color name="text_color_black">#000000</color>
     <color name="text_hint_color">#777777</color>
     <color name="red">#fe4319</color>
+    <color name="red_select">#fe5a19</color>
     <color name="black">#000000</color>
     <color name="button_bg">#3d85f3</color>
     <color name="button_selected_bg">#2b78ef</color>
+    <color name="button_gren">#f92baf60</color>
+    <color name="button_selected_gren">#3da353</color>
+    <color name="logocolor">#F34A12</color>
 
 </resources>
