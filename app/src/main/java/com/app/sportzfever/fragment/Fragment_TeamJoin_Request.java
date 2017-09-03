@@ -2,7 +2,6 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,15 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
-import com.app.sportzfever.adapter.AdapterFriendRequest;
 import com.app.sportzfever.adapter.AdapterTeamJoinRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.FriendRequest;
-import com.app.sportzfever.models.ModelNotification;
 import com.app.sportzfever.models.TeamJoinRequest;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -33,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_TeamJoin_Request extends Fragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_TeamJoin_Request extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
@@ -50,6 +46,15 @@ public class Fragment_TeamJoin_Request extends Fragment implements ApiResponse, 
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+
+    public static Fragment_TeamJoin_Request fragment_teamJoin_request;
+    private final String TAG = Fragment_TeamJoin_Request.class.getSimpleName();
+
+    public static Fragment_TeamJoin_Request getInstance() {
+        if (fragment_teamJoin_request == null)
+            fragment_teamJoin_request = new Fragment_TeamJoin_Request();
+        return fragment_teamJoin_request;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -178,7 +183,7 @@ public class Fragment_TeamJoin_Request extends Fragment implements ApiResponse, 
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-            //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + "155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
@@ -195,79 +200,78 @@ public class Fragment_TeamJoin_Request extends Fragment implements ApiResponse, 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-                if (position == 1) {
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                        JSONArray data = jObject.getJSONArray("data");
-                      //  maxlistLength = jObject.getString("total");
-                        arrayList.removeAll(arrayList);
-                        for (int i = 0; i < data.length(); i++) {
+            if (position == 1) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = jObject.getJSONArray("data");
+                    //  maxlistLength = jObject.getString("total");
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < data.length(); i++) {
 
-                            JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
-                            teamJoinRequest = new TeamJoinRequest();
-                            teamJoinRequest = new TeamJoinRequest();
-                            teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
-                            teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
-                            teamJoinRequest.setTeamName(jo.getString("teamName"));
-                            teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
-                            teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
-                            teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest = new TeamJoinRequest();
+                        teamJoinRequest = new TeamJoinRequest();
+                        teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
+                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setId(jo.getString("id"));
 
 
+                        teamJoinRequest.setRowType(1);
 
-                            teamJoinRequest.setRowType(1);
+                        arrayList.add(teamJoinRequest);
+                    }
+                    adapterTeamJoinRequest = new AdapterTeamJoinRequest(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterTeamJoinRequest);
 
-                            arrayList.add(teamJoinRequest);
-                        }
-                        adapterTeamJoinRequest = new AdapterTeamJoinRequest(getActivity(), this, arrayList);
-                        list_request.setAdapter(adapterTeamJoinRequest);
-
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-
-                    } else {
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
-                } else if (position == 4) {
-
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                     //   maxlistLength = jObject.getString("total");
-                        JSONArray data = jObject.getJSONArray("data");
-
-                        arrayList.remove(arrayList.size() - 1);
-                        for (int i = 0; i < data.length(); i++) {
-
-                            JSONObject jo = data.getJSONObject(i);
-
-                            teamJoinRequest = new TeamJoinRequest();
-                            teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
-                            teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
-                            teamJoinRequest.setTeamName(jo.getString("teamName"));
-                            teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
-                            teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
-                            teamJoinRequest.setId(jo.getString("id"));
-
-
-                            teamJoinRequest.setRowType(1);
-
-                            arrayList.add(teamJoinRequest);
-                        }
-                        adapterTeamJoinRequest.notifyDataSetChanged();
-                        loading = true;
-                        if (data.length() == 0) {
-                            skipCount = skipCount - 10;
-                            //  return;
-                        }
-                    } else {
-                        adapterTeamJoinRequest.notifyDataSetChanged();
-                        skipCount = skipCount - 10;
-                        loading = true;
+                } else {
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
+
+            } else if (position == 4) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    //   maxlistLength = jObject.getString("total");
+                    JSONArray data = jObject.getJSONArray("data");
+
+                    arrayList.remove(arrayList.size() - 1);
+                    for (int i = 0; i < data.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+                        teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
+                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setId(jo.getString("id"));
+
+
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    }
+                    adapterTeamJoinRequest.notifyDataSetChanged();
+                    loading = true;
+                    if (data.length() == 0) {
+                        skipCount = skipCount - 10;
+                        //  return;
+                    }
+                } else {
+                    adapterTeamJoinRequest.notifyDataSetChanged();
+                    skipCount = skipCount - 10;
+                    loading = true;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

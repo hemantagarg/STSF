@@ -2,7 +2,6 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_Notification extends Fragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_Notification extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
@@ -46,6 +45,14 @@ public class Fragment_Notification extends Fragment implements ApiResponse, OnCu
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+
+    public static Fragment_Notification fragment_notification;
+    private final String TAG = Fragment_Notification.class.getSimpleName();
+    public static Fragment_Notification getInstance() {
+        if (fragment_notification == null)
+            fragment_notification = new Fragment_Notification();
+        return fragment_notification;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

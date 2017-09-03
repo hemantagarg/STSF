@@ -2,7 +2,6 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_MatchInvitationAvailability extends Fragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_MatchInvitationAvailability extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
@@ -46,6 +45,14 @@ public class Fragment_MatchInvitationAvailability extends Fragment implements Ap
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+
+    public static Fragment_MatchInvitationAvailability fragment_matchInvitationAvailability;
+    private final String TAG = Fragment_MatchInvitationAvailability.class.getSimpleName();
+    public static Fragment_MatchInvitationAvailability getInstance() {
+        if (fragment_matchInvitationAvailability == null)
+            fragment_matchInvitationAvailability = new Fragment_MatchInvitationAvailability();
+        return fragment_matchInvitationAvailability;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
