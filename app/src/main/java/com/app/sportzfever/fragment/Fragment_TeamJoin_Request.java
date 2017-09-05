@@ -202,23 +202,78 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
                     //  maxlistLength = jObject.getString("total");
+JSONArray match=data.getJSONArray("matchAndPrctiseInvitation");
+                    JSONArray matchchallenged =data.getJSONArray("matchchallengeInvitation");
+                    JSONArray scorerInvitation =data.getJSONArray("scorerInvitation");
+                    JSONArray invitationFromTeamToJoin =data.getJSONArray("invitationFromTeamToJoin");
+
                     arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    for (int i = 0; i < match.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = match.getJSONObject(i);
 
                         teamJoinRequest = new TeamJoinRequest();
-                        teamJoinRequest = new TeamJoinRequest();
-                        teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
-                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
-                        teamJoinRequest.setTeamName(jo.getString("teamName"));
-                        teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
-                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+
                         teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setInviteStatus(jo.getString("inviteStatus"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setEventType(jo.getString("eventType"));
+                        teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
 
 
+
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    }
+                    for (int i = 0; i < matchchallenged.length(); i++) {
+
+                        JSONObject jo = matchchallenged.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setMatchDate(jo.getString("matchDate"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setLocation(jo.getString("location"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setOppositionTeamName(jo.getString("oppositionTeamName"));
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    } for (int i = 0; i < scorerInvitation.length(); i++) {
+
+                        JSONObject jo = scorerInvitation.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setMatchDate(jo.getString("matchDate"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        //teamJoinRequest.setLocation(jo.getString("location"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
+                        teamJoinRequest.setOppositionTeamName(jo.getString("oppositionTeamName"));
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    }
+                    for (int i = 0; i < invitationFromTeamToJoin.length(); i++) {
+
+                        JSONObject jo = invitationFromTeamToJoin.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setRequestSentAt(jo.getString("requestSentAt"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+
+                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
                         teamJoinRequest.setRowType(1);
 
                         arrayList.add(teamJoinRequest);
@@ -239,23 +294,73 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    //   maxlistLength = jObject.getString("total");
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
+                    //  maxlistLength = jObject.getString("total");
+                    JSONArray match=data.getJSONArray("matchAndPrctiseInvitation");
+                    JSONArray matchchallenged =data.getJSONArray("matchchallengeInvitation");
+                    JSONArray scorerInvitation =data.getJSONArray("scorerInvitation");
+                    JSONArray invitationFromTeamToJoin =data.getJSONArray("invitationFromTeamToJoin");
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < match.length(); i++) {
 
-                    arrayList.remove(arrayList.size() - 1);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = match.getJSONObject(i);
 
                         teamJoinRequest = new TeamJoinRequest();
-                        teamJoinRequest.setPlayerAvatarId(jo.getString("playerAvatarId"));
-                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
-                        teamJoinRequest.setTeamName(jo.getString("teamName"));
-                        teamJoinRequest.setPlayerAvatarProfilePicture(jo.getString("playerAvatarProfilePicture"));
-                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+
                         teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setInviteStatus(jo.getString("inviteStatus"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setEventType(jo.getString("eventType"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
+                        teamJoinRequest.setRowType(1);
 
+                        arrayList.add(teamJoinRequest);
+                    } for (int i = 0; i < matchchallenged.length(); i++) {
 
+                        JSONObject jo = matchchallenged.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setMatchDate(jo.getString("matchDate"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setOppositionTeamName(jo.getString("oppositionTeamName"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setLocation(jo.getString("location"));
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    }
+                    for (int i = 0; i < scorerInvitation.length(); i++) {
+
+                        JSONObject jo = scorerInvitation.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setMatchDate(jo.getString("matchDate"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+                       // teamJoinRequest.setLocation(jo.getString("location"));
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
+                        teamJoinRequest.setOppositionTeamName(jo.getString("oppositionTeamName"));
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
+                    }for (int i = 0; i < invitationFromTeamToJoin.length(); i++) {
+
+                        JSONObject jo = invitationFromTeamToJoin.getJSONObject(i);
+
+                        teamJoinRequest = new TeamJoinRequest();
+
+                        teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setRequestSentAt(jo.getString("requestSentAt"));
+                        teamJoinRequest.setTeamName(jo.getString("teamName"));
+
+                        teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+
+                        teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
                         teamJoinRequest.setRowType(1);
 
                         arrayList.add(teamJoinRequest);

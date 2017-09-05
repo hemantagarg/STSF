@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.TeamJoinRequest;
-import com.app.sportzfever.utils.CircleTransform;
+import com.app.sportzfever.models.UpcomingEvent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,16 +24,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterUpcomingEvent extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<TeamJoinRequest> detail;
+    ArrayList<UpcomingEvent> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterTeamJoinRequest(Context context, OnCustomItemClicListener lis, ArrayList<TeamJoinRequest> list) {
+    public AdapterUpcomingEvent(Context context, OnCustomItemClicListener lis, ArrayList<UpcomingEvent> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -47,7 +48,7 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_allmatchinvitation, parent, false);
+                    R.layout.row_upcomingevent, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -77,23 +78,40 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (holder instanceof CustomViewHolder) {
 
-            TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
+            UpcomingEvent m1 = (UpcomingEvent) detail.get(i);
 
-           ((CustomViewHolder) holder).text_name.setText(m1.getTeamName());
+          ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
+          ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
+            ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
            ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
-           ((CustomViewHolder) holder).text_teamname.setText(m1.getEventType());
-           ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
+           ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
+           ((CustomViewHolder) holder).text_date.setText(m1.getDate());
+           ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
+           ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
-            /*((CustomViewHolder) holder).text_mess age.setText(m1.getNotificationText());*/
-            //((CustomViewHolder) holder).text_date.setText(m1.getMatchDate());
-          if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
+          if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getTeamProfilePicture())
+                        .load(m1.getTeam1ProfilePicture())
 
                         .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_team);
+                        .into(((CustomViewHolder) holder).teama);
+            }if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
+                Picasso.with(mContext)
+                        .load(m1.getTeam2ProfilePicture())
+
+                        .placeholder(R.drawable.newsfeed)
+                        .into(((CustomViewHolder) holder).teamb);
             }
 
+            if (m1.getEventType().equalsIgnoreCase("EVENT")){
+                ((CustomViewHolder) holder).relmatchvs.setVisibility(View.GONE);
+                ((CustomViewHolder) holder).text_title.setText(m1.getTitle());
+                ((CustomViewHolder) holder).text_title.setVisibility(View.VISIBLE);
+
+            }else {
+                ((CustomViewHolder) holder).relmatchvs.setVisibility(View.VISIBLE);
+                ((CustomViewHolder) holder).text_title.setVisibility(View.GONE);
+            }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -107,21 +125,27 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_event_type, text_date,text_teamname,text_location;
-        ImageView image_team;
-Button btn_confirm,btn_reject;
+        TextView text_name, text_event_type, text_date,text_teamname,text_location,text_day,text_month,text_time,text_title;
+        ImageView teama,teamb;
 
+RelativeLayout relmatchvs;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            this.image_team = (ImageView) view.findViewById(R.id.image_team);
+
             this.text_name = (TextView) view.findViewById(R.id.text_name);
+            this.relmatchvs = (RelativeLayout) view.findViewById(R.id.relmatchvs);
             this.text_event_type = (TextView) view.findViewById(R.id.text_event_type);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.text_teamname = (TextView) view.findViewById(R.id.text_teamname);
             this.text_location = (TextView) view.findViewById(R.id.text_location);
-            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
-            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
+            this.text_title = (TextView) view.findViewById(R.id.text_title);
+            this.text_day = (TextView) view.findViewById(R.id.text_day);
+            this.text_month = (TextView) view.findViewById(R.id.text_month);
+            this.text_time = (TextView) view.findViewById(R.id.text_time);
+            this.teama = (ImageView) view.findViewById(R.id.teama);
+            this.teamb = (ImageView) view.findViewById(R.id.teamb);
+
 
         }
 
@@ -134,7 +158,7 @@ Button btn_confirm,btn_reject;
 
     @Override
     public int getItemViewType(int position) {
-        TeamJoinRequest m1 = (TeamJoinRequest) detail.get(position);
+        UpcomingEvent m1 = (UpcomingEvent) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

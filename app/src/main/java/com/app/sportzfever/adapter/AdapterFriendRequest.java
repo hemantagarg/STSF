@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.FriendRequest;
+import com.app.sportzfever.utils.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -77,16 +79,16 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<RecyclerView.View
             FriendRequest m1 = (FriendRequest) detail.get(i);
 
             ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
-            /*((CustomViewHolder) holder).text_message.setText(m1.getNotificationText());
-            ((CustomViewHolder) holder).text_date.setText(m1.getDatetime());*/
-          /*  if (!m1.getUserImage().equalsIgnoreCase("")) {
+            /*((CustomViewHolder) holder).text_message.setText(m1.getNotificationText());*/
+            ((CustomViewHolder) holder).text_date.setText(m1.getRequestSentAt());
+           if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getReceiverImage())
+                        .load(m1.getUserProfilePicture())
                         .transform(new CircleTransform())
-                        .placeholder(R.drawable.user)
+                        .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
-*/
+
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }

@@ -1,0 +1,210 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardElevation="0sp"
+    card_view:cardUseCompatPadding="false">
+<RelativeLayout
+    android:id="@+id/event_type"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp10"
+    android:layout_alignParentTop="true"
+    >
+    <ImageView
+        android:id="@+id/image_team"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:background="@drawable/logo_sportz"
+        android:padding="@dimen/dp10"
+
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/text_event_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="EVENT TYPE"
+        android:textStyle="bold"
+        android:padding="@dimen/dp10"
+        android:textColor="@color/logocolor"
+        android:textSize="@dimen/text_size_12" />
+</RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+
+        android:layout_below="@+id/event_type"
+        android:alpha=".3"
+        android:background="@color/view_color" />
+    <RelativeLayout
+        android:id="@+id/rl_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/event_type"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/rl_header1"
+                android:layout_width="wrap_content"
+android:layout_marginLeft="@dimen/dp10"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/text_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp5"
+                android:scaleType="fitXY"
+                android:text="TUESDAY"
+
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+android:textSize="@dimen/dp40"
+
+
+                android:text="28"
+android:layout_below="@+id/text_day"
+                android:layout_centerInParent="true"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/text_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+android:padding="@dimen/dp2"
+
+                android:text="nov"
+                android:layout_below="@+id/text_date"
+android:layout_centerInParent="true"
+
+
+                />
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:scaleType="fitXY"
+                android:text="12:30 pm"
+                android:layout_below="@+id/text_month"
+
+                android:layout_centerInParent="true"
+                android:gravity="center" />
+                </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/rl_header1"
+
+
+                android:padding="@dimen/dp5">
+
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+android:layout_marginLeft="@dimen/dp10"
+                    android:text="Madhav"
+
+                    android:textSize="@dimen/text_size_16" />
+
+                <TextView
+                    android:id="@+id/text_teamname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp10"
+android:layout_below="@+id/text_name"
+                    android:text="vs"
+
+
+
+                    android:textSize="@dimen/text_size_16" />
+
+
+                <TextView
+                    android:id="@+id/text_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/text_teamname"
+                    android:text="location"
+android:drawableLeft="@drawable/location"
+                    android:drawablePadding="@dimen/dp10"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:textSize="@dimen/text_size_16" />
+
+
+
+            </RelativeLayout>
+            <LinearLayout
+
+android:id="@+id/lin_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:layout_below="@+id/rl_header1"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_margin="@dimen/dp10"
+                    android:layout_weight="1"
+android:paddingLeft="@dimen/dp10"
+                    android:background="@drawable/green_button_selecor"
+                    android:drawableLeft="@drawable/tick"
+                    android:gravity="center"
+
+                    android:text="I'M IN"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_reject"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp40"
+                    android:text="I'M OUT"
+                    android:layout_margin="@dimen/dp10"
+                    android:background="@drawable/blue_button_selecor"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+
+                android:layout_below="@+id/lin_btn"
+                android:alpha=".3"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

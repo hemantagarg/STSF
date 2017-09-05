@@ -215,6 +215,9 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
                             friendrequest.setRequestStatus(jo.getString("requestStatus"));
                             friendrequest.setReadStatus(jo.getString("readStatus"));
                             friendrequest.setFriendUserName(jo.getString("friendUserName"));
+                            friendrequest.setUserProfilePicture(jo.getString("userProfilePicture"));
+                            friendrequest.setRequestSentAt(jo.getString("requestSentAt"));
+                            friendrequest.setFriendUserProfilePicture(jo.getString("friendUserProfilePicture"));
 
                             friendrequest.setRowType(1);
 

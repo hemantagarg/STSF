@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
+import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_Friend_Request;
 import com.app.sportzfever.fragment.Fragment_MatchInvitationAvailability;
 import com.app.sportzfever.fragment.Fragment_Notification;
@@ -101,7 +102,7 @@ public class Dashboard extends AppCompatActivity
 
         pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
         pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
-        pushFragments(GlobalConstants.TAB_EVENT_BAR, new Fragment_Friend_Request(), true);
+        pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
         pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
 

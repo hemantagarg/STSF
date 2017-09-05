@@ -18,6 +18,16 @@ public class FriendRequest
 
     private String readStatus;
 
+    public String getRequestSentAt() {
+        return requestSentAt;
+    }
+
+    public void setRequestSentAt(String requestSentAt) {
+        this.requestSentAt = requestSentAt;
+    }
+
+    private String requestSentAt;
+
     private String requestStatus;
 
     private String userId;
@@ -25,6 +35,25 @@ public class FriendRequest
     private String friendUserName;
 
     private String userName;
+    private String userProfilePicture;
+
+    public String getUserProfilePicture() {
+        return userProfilePicture;
+    }
+
+    public void setUserProfilePicture(String userProfilePicture) {
+        this.userProfilePicture = userProfilePicture;
+    }
+
+    public String getFriendUserProfilePicture() {
+        return friendUserProfilePicture;
+    }
+
+    public void setFriendUserProfilePicture(String friendUserProfilePicture) {
+        this.friendUserProfilePicture = friendUserProfilePicture;
+    }
+
+    private String friendUserProfilePicture;
 
     public String getFriendUserId ()
     {
