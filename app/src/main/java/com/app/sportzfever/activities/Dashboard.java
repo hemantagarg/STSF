@@ -21,9 +21,12 @@ import android.widget.FrameLayout;
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
+import com.app.sportzfever.fragment.Fragment_Comments;
 import com.app.sportzfever.fragment.Fragment_Friend_Request;
+import com.app.sportzfever.fragment.Fragment_Likes;
 import com.app.sportzfever.fragment.Fragment_MatchInvitationAvailability;
 import com.app.sportzfever.fragment.Fragment_Notification;
+import com.app.sportzfever.fragment.Fragment_Share;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 import com.app.sportzfever.interfaces.GlobalConstants;
@@ -101,8 +104,8 @@ public class Dashboard extends AppCompatActivity
         mStacks.put(GlobalConstants.TAB_EVENT_BAR, new Stack<Fragment>());
 
         pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
-        pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
-        pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
+        pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Likes(), true);
+        pushFragments(GlobalConstants.TAB_EVENT_BAR, new Fragment_Comments(), true);
         pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
 

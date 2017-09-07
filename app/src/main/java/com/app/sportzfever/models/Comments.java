@@ -8,6 +8,15 @@ public class Comments {
 
     private String id;
 
+    public int getRowType() {
+        return rowType;
+    }
+
+    public void setRowType(int rowType) {
+        this.rowType = rowType;
+    }
+
+    private int rowType;
     private String userProfilePicture;
 
     private String status;

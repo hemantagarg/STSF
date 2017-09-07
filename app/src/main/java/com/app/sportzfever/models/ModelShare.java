@@ -1,10 +1,12 @@
 package com.app.sportzfever.models;
 
+import java.util.ArrayList;
+
 /**
- * Created by hemanta on 01-09-2017.
+ * Created by hemanta on 30-08-2017.
  */
 
-public class Likes {
+public class ModelShare {
 
     private String id;
 
@@ -17,17 +19,18 @@ public class Likes {
     }
 
     private int rowType;
+
     private String avatarName;
 
     private String userProfilePicture;
+
+    private String shareDateTime;
 
     private String avatarProfilePicture;
 
     private String avatarId;
 
     private String status;
-
-    private String likeDateTime;
 
     private String userName;
 
@@ -63,6 +66,16 @@ public class Likes {
         this.userProfilePicture = userProfilePicture;
     }
 
+    public String getShareDateTime ()
+    {
+        return shareDateTime;
+    }
+
+    public void setShareDateTime (String shareDateTime)
+    {
+        this.shareDateTime = shareDateTime;
+    }
+
     public String getAvatarProfilePicture ()
     {
         return avatarProfilePicture;
@@ -93,16 +106,6 @@ public class Likes {
         this.status = status;
     }
 
-    public String getLikeDateTime ()
-    {
-        return likeDateTime;
-    }
-
-    public void setLikeDateTime (String likeDateTime)
-    {
-        this.likeDateTime = likeDateTime;
-    }
-
     public String getUserName ()
     {
         return userName;
@@ -122,5 +125,4 @@ public class Likes {
     {
         this.user = user;
     }
-
 }

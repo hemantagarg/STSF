@@ -3,6 +3,8 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.fragment.Fragment_Comments;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
@@ -85,7 +88,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
             ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
             ((CustomViewHolder) holder).text_time.setText(AppUtils.getTimeFromDateString(m1.getDateTime()));
+            ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                }
+            });
             ArrayList<Images> imagesArrayList = m1.getImages();
             if (imagesArrayList != null && imagesArrayList.size() > 0) {
 

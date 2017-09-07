@@ -5,6 +5,7 @@ public class FriendRequest
 
     private String friendUserId;
 
+
     public int getRowType() {
         return rowType;
     }

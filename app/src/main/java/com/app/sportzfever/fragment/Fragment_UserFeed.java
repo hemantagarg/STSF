@@ -18,6 +18,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFeed;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -372,5 +373,20 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         if (context != null && isAdded())
             Toast.makeText(getActivity(), getResources().getString(R.string.problem_server), Toast.LENGTH_SHORT).show();
     }
+    /*@Override
+    public void onItemClickListener(int position, int flag) {
+
+        if (flag == 1) {
+
+            Fragment_Comments vendorListFragment = new Fragment_Comments();
+            *//*Bundle b = new Bundle();
+            b.putString(AppConstant.SERVICEID, arrayList.get(position).getServiceId());
+            b.putString(AppConstant.CATEGORYNAME, arrayList.get(position).getServiceName());*//*
+
+           *//* vendorListFragment.setArguments(b);
+            setFragment(vendorListFragment);*//*
+        }
+
+    }*/
 }
 
