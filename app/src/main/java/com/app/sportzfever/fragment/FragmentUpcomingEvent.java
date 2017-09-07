@@ -11,15 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
-import com.app.sportzfever.adapter.AdapterTeamJoinRequest;
 import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.TeamJoinRequest;
 import com.app.sportzfever.models.UpcomingEvent;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -187,7 +186,7 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + "155/-1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + "155/-1/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -209,7 +208,6 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
                     //  data = jObject.getString("total");
 
 
-
                     arrayList.removeAll(arrayList);
                     for (int i = 0; i < data.length(); i++) {
 
@@ -226,7 +224,7 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
                         upcomingEvent.setTitle(jo.getString("title"));
-                        JSONObject j1=jo.getJSONObject("startDate");
+                        JSONObject j1 = jo.getJSONObject("startDate");
 
                         upcomingEvent.setDayName(j1.getString("dayName"));
                         upcomingEvent.setMonthName(j1.getString("monthName"));
@@ -257,9 +255,8 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    JSONObject eventtime=jObject.optJSONObject("startDate");
+                    JSONObject eventtime = jObject.optJSONObject("startDate");
                     //  maxlistLength = jObject.getString("total");
-
 
 
                     arrayList.removeAll(arrayList);
@@ -278,7 +275,7 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
                         upcomingEvent.setTitle(jo.getString("title"));
-                        JSONObject j1=jo.getJSONObject("startDate");
+                        JSONObject j1 = jo.getJSONObject("startDate");
 
                         upcomingEvent.setDayName(j1.getString("dayName"));
                         upcomingEvent.setMonthName(j1.getString("monthName"));

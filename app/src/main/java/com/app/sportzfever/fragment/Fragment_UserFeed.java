@@ -5,16 +5,19 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterFeed;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFeed;
@@ -48,6 +51,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     public static Fragment_UserFeed fragment_userFeed;
     private final String TAG = Fragment_UserFeed.class.getSimpleName();
+
     public static Fragment_UserFeed getInstance() {
         if (fragment_userFeed == null)
             fragment_userFeed = new Fragment_UserFeed();
@@ -163,17 +167,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
+        if (flag == 1) {
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Comments(), true);
+        } else if (flag == 2) {
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Likes(), true);
+        } else if (flag == 3) {
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Share(), true);
         }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
     }
 
     private void getServicelist() {
@@ -199,7 +199,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
                 //         /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155/"+ AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -214,18 +214,16 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-
             if (position == 1) {
-
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-
                     JSONArray data = jObject.getJSONArray("data");
                     //  maxlistLength = jObject.getString("total");
-                    arrayList.removeAll(arrayList);
+                    arrayList.clear();
+
+                    Log.e("jsonsize","**"+data.length());
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
-
                         modelFeed = new ModelFeed();
 
                         modelFeed.setId(jo.getString("id"));
@@ -318,6 +316,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setRowType(1);
                         arrayList.add(modelFeed);
                     }
+
+                    Log.e("size","**"+arrayList.size());
                     adapterFeed = new AdapterFeed(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterFeed);
 

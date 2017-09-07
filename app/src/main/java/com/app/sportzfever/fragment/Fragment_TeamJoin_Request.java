@@ -18,6 +18,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.TeamJoinRequest;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -185,7 +186,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + "155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + "155/"+ AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

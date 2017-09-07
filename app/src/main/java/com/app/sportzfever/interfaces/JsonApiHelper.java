@@ -17,6 +17,7 @@ public interface JsonApiHelper {
     String GET_COMMENTS = "getComments/";
     String GET_LIKES = "getLikes/";
     String GET_SHARE = "getShares/";
-    String POSTCOMMENT = "comment/";
+    String POSTCOMMENT = "comment";
+
 
 }

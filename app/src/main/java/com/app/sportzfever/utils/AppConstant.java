@@ -9,7 +9,7 @@ public class AppConstant {
     public static final String REGID = "regidKey";
     public static final String DEVICEID = "deviceidKey";
     public static final String DEVICETYPE = "android";
-    public static final String MIXPELTOKEN = "54c668981ba902203269c9c3a1a70fe2";
+    public static final String TOKEN = "efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
     public static final String CATEGORYID = "category_id";
     public static final String VENDORID = "vendor_id";
     public static final String SUBCATEGORYID = "subcategory_id";

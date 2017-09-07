@@ -3,9 +3,12 @@ package com.app.sportzfever.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,12 +24,8 @@ import android.widget.FrameLayout;
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
-import com.app.sportzfever.fragment.Fragment_Comments;
-import com.app.sportzfever.fragment.Fragment_Friend_Request;
-import com.app.sportzfever.fragment.Fragment_Likes;
 import com.app.sportzfever.fragment.Fragment_MatchInvitationAvailability;
 import com.app.sportzfever.fragment.Fragment_Notification;
-import com.app.sportzfever.fragment.Fragment_Share;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 import com.app.sportzfever.interfaces.GlobalConstants;
@@ -53,7 +52,7 @@ public class Dashboard extends AppCompatActivity
       * */
     private static Dashboard mInstance;
     public static volatile Fragment currentFragment;
-    private HashMap<String, Stack<Fragment>> mStacks;
+    private  HashMap<String, Stack<Fragment>> mStacks;
 
     /***********************************************
      * Function Name : getInstance
@@ -67,8 +66,21 @@ public class Dashboard extends AppCompatActivity
         return mInstance;
     }
 
-    private void init() {
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
+    private void init() {
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,6 +107,7 @@ public class Dashboard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         context = this;
+        mInstance = Dashboard.this;
         init();
         mStacks = new HashMap<>();
         mStacks.put(GlobalConstants.TAB_FEED_BAR, new Stack<Fragment>());
@@ -104,8 +117,8 @@ public class Dashboard extends AppCompatActivity
         mStacks.put(GlobalConstants.TAB_EVENT_BAR, new Stack<Fragment>());
 
         pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
-        pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Likes(), true);
-        pushFragments(GlobalConstants.TAB_EVENT_BAR, new Fragment_Comments(), true);
+        pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
+        pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
         pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
 
@@ -138,23 +151,59 @@ public class Dashboard extends AppCompatActivity
                 switch (tab.getPosition()) {
                     case 0:
                         tab.setIcon(R.drawable.newsfeed_sel);
-                        activeFeedFragment();
+
+                        if (mStacks.get(GlobalConstants.TAB_FEED_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed))
+                                AppUtils.showErrorLog(TAG, "Feed clicked");
+                            activeFeedFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
+
                         break;
                     case 1:
                         tab.setIcon(R.drawable.friends_sel);
-                        activeFreindsFragment();
+                        if (mStacks.get(GlobalConstants.TAB_FRIENDS_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team))
+                                AppUtils.showErrorLog(TAG, "Friens clicked");
+                            activeFreindsFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+
+
                         break;
                     case 2:
                         tab.setIcon(R.drawable.calendar_sel);
-                        activeEventFragment();
+                        if (mStacks.get(GlobalConstants.TAB_EVENT_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent))
+                                AppUtils.showErrorLog(TAG, "Friens clicked");
+                            activeEventFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
+
+
                         break;
                     case 3:
                         tab.setIcon(R.drawable.bell_sel);
-                        activeNotificationFragment();
+                        if (mStacks.get(GlobalConstants.TAB_NOTIFCATION_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification))
+                                AppUtils.showErrorLog(TAG, "Friens clicked");
+                            activeNotificationFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
+
+
+
                         break;
                     case 4:
                         tab.setIcon(R.drawable.chat_sel);
-                        activeChatFragment();
+                        if (mStacks.get(GlobalConstants.TAB_CHAT_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_MatchInvitationAvailability))
+                                AppUtils.showErrorLog(TAG, "Friens clicked");
+                            activeChatFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
+
+
                         break;
 
                 }
@@ -296,6 +345,7 @@ public class Dashboard extends AppCompatActivity
             mCurrentTab = tag;
             if (ShouldAdd)
                 mStacks.get(tag).add(fragment);
+
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
             if (tag.equals(GlobalConstants.TAB_FEED_BAR)) {

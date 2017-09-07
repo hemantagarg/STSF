@@ -14,14 +14,12 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterComments;
-import com.app.sportzfever.adapter.AdapterFriendRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Comments;
-import com.app.sportzfever.models.FriendRequest;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -54,12 +52,13 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
     private boolean loading = true;
     private String maxlistLength = "";
 
-    public static Fragment_Comments fragment_friend_request;
+    public static Fragment_Comments fragment_comments;
     private final String TAG = Fragment_Comments.class.getSimpleName();
+
     public static Fragment_Comments getInstance() {
-        if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_Comments();
-        return fragment_friend_request;
+        if (fragment_comments == null)
+            fragment_comments = new Fragment_Comments();
+        return fragment_comments;
     }
 
     @Override
@@ -83,8 +82,8 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        send_message=(ImageView)view.findViewById(R.id.send_message);
-        edit_message=(EditText)view.findViewById(R.id.edit_message);
+        send_message = (ImageView) view.findViewById(R.id.send_message);
+        edit_message = (EditText) view.findViewById(R.id.edit_message);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
@@ -92,7 +91,6 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         setlistener();
 
         getServicelistRefresh();
-
 
 
     }
@@ -195,21 +193,19 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         } catch (Exception e) {
             e.printStackTrace();
         }
-}
+    }
+
     private void postcomment() {
         try {
-
             if (AppUtils.isNetworkAvailable(context)) {
-
-
                 HashMap<String, String> hm = new HashMap<>();
-                hm.put("userId","155");
-                hm.put("statusId","344");
-                hm.put("Authorization","efc0c68e-8bb5-11e7-8cf8-008cfa5afa52");
+                hm.put("userId", "155");
+                hm.put("statusId", "344");
+                hm.put("Authorization", AppConstant.TOKEN);
                 hm.put("comment", edit_message.getText().toString());
                 // http://sfscoring.betasportzfever.com/getNotifications/155
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.POSTCOMMENT;
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJson(url,hm);
+                new CommonAsyncTaskHashmap(4, context, this).getqueryJson(url, hm);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -223,9 +219,9 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-            //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_COMMENTS + "334/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_COMMENTS + "334/"+ AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -240,76 +236,72 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-                if (position == 1) {
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                        JSONArray data = jObject.getJSONArray("data");
-                      //  maxlistLength = jObject.getString("total");
-                        arrayList.removeAll(arrayList);
-                        for (int i = 0; i < data.length(); i++) {
+            if (position == 1) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = jObject.getJSONArray("data");
+                    //  maxlistLength = jObject.getString("total");
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < data.length(); i++) {
 
-                            JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
-                            comments = new Comments();
-                            comments.setComment(jo.getString("comment"));
-                            comments.setCommentDateTime(jo.getString("commentDateTime"));
-                            comments.setId(jo.getString("id"));
-                            comments.setUserName(jo.getString("userName"));
-                            comments.setUserProfilePicture(jo.getString("userProfilePicture "));
+                        comments = new Comments();
+                        comments.setComment(jo.getString("comment"));
+                        comments.setCommentDateTime(jo.getString("commentDateTime"));
+                        comments.setId(jo.getString("id"));
+                        comments.setUserName(jo.getString("userName"));
+                        comments.setUserProfilePicture(jo.getString("userProfilePicture "));
 
 
-                            comments.setRowType(1);
+                        comments.setRowType(1);
 
-                            arrayList.add(comments);
-                        }
-                        adapterComments = new AdapterComments(getActivity(), this, arrayList);
-                        list_request.setAdapter(adapterComments);
+                        arrayList.add(comments);
+                    }
+                    adapterComments = new AdapterComments(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterComments);
 
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-
-                    } else {
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
-                } else if (position == 4) {
-
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                     //   maxlistLength = jObject.getString("total");
-                        JSONArray data = jObject.getJSONArray("data");
-
-                        arrayList.remove(arrayList.size() - 1);
-                        for (int i = 0; i < data.length(); i++) {
-
-                            JSONObject jo = data.getJSONObject(i);
-
-                            comments = new Comments();
-                            comments.setComment(jo.getString("comment"));
-                            comments.setCommentDateTime(jo.getString("commentDateTime"));
-                            comments.setId(jo.getString("id"));
-                            comments.setUserName(jo.getString("userName"));
-                            comments.setUserProfilePicture(jo.getString("userProfilePicture "));
-
-
-
-                            comments.setRowType(1);
-
-                            arrayList.add(comments);
-                        }
-                        adapterComments.notifyDataSetChanged();
-                        loading = true;
-                        if (data.length() == 0) {
-                            skipCount = skipCount - 10;
-                            //  return;
-                        }
-                    } else {
-                        adapterComments.notifyDataSetChanged();
-                        skipCount = skipCount - 10;
-                        loading = true;
+                } else {
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
+
+            } else if (position == 4) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    //   maxlistLength = jObject.getString("total");
+                    JSONArray data = jObject.getJSONArray("data");
+
+                    arrayList.remove(arrayList.size() - 1);
+                    for (int i = 0; i < data.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        comments = new Comments();
+                        comments.setComment(jo.getString("comment"));
+                        comments.setCommentDateTime(jo.getString("commentDateTime"));
+                        comments.setId(jo.getString("id"));
+                        comments.setUserName(jo.getString("userName"));
+                        comments.setUserProfilePicture(jo.getString("userProfilePicture "));
+                        comments.setRowType(1);
+                        arrayList.add(comments);
+                    }
+                    adapterComments.notifyDataSetChanged();
+                    edit_message.setText("");
+                    loading = true;
+                    if (data.length() == 0) {
+                        skipCount = skipCount - 10;
+                        //  return;
+                    }
+                } else {
+                    adapterComments.notifyDataSetChanged();
+                    skipCount = skipCount - 10;
+                    loading = true;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

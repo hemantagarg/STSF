@@ -57,6 +57,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/rl_message"
             android:background="#f4f8f9">
+
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout1"
                 android:layout_width="match_parent"

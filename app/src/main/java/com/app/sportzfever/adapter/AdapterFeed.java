@@ -3,8 +3,6 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -17,11 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
-import com.app.sportzfever.fragment.Fragment_Comments;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -82,59 +79,104 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
 
         if (holder instanceof CustomViewHolder) {
+            try {
+                ModelFeed m1 = (ModelFeed) detail.get(i);
 
-            ModelFeed m1 = (ModelFeed) detail.get(i);
+                if (m1.getIsShared().equalsIgnoreCase("0")) {
+                    ((CustomViewHolder) holder).text_sharePost.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
+                    if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
+                        Picasso.with(mContext)
+                                .load(m1.getUserProfilePicture())
+                                .transform(new CircleTransform())
+                                .placeholder(R.drawable.logo_sportz)
+                                .into(((CustomViewHolder) holder).image_viewers);
+                    }
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
-            ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
-            ((CustomViewHolder) holder).text_time.setText(AppUtils.getTimeFromDateString(m1.getDateTime()));
-            ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                } else {
+                    ((CustomViewHolder) holder).text_sharePost.setVisibility(View.VISIBLE);
+                    ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
 
+                    if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
+                        ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
+                        if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getOriginalAvatarProfilePicture())
+                                    .transform(new CircleTransform())
+                                    .placeholder(R.drawable.logo_sportz)
+                                    .into(((CustomViewHolder) holder).image_viewers);
+                        }
+
+                    } else {
+                        ((CustomViewHolder) holder).text_name.setText(m1.getOriginalUserName());
+                        if (!m1.getOriginalUserProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getOriginalUserProfilePicture())
+                                    .transform(new CircleTransform())
+                                    .placeholder(R.drawable.logo_sportz)
+                                    .into(((CustomViewHolder) holder).image_viewers);
+                        }
+                    }
                 }
-            });
-            ArrayList<Images> imagesArrayList = m1.getImages();
-            if (imagesArrayList != null && imagesArrayList.size() > 0) {
 
-                if (imagesArrayList.size() == 1) {
-                    ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.VISIBLE);
-                    ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
+                ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
+                ((CustomViewHolder) holder).text_time.setText(AppUtils.getTimeFromDateString(m1.getDateTime()));
+                ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 1);
+                    }
+                });
+                ((CustomViewHolder) holder).text_like.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 2);
+                    }
+                });
+                ((CustomViewHolder) holder).text_share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 3);
+                    }
+                });
 
-                    if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
-                        Picasso.with(mContext)
-                                .load(imagesArrayList.get(0).getImage())
-                                .into(((CustomViewHolder) holder).image_feed1);
+
+              /*  ArrayList<Images> imagesArrayList = m1.getImages();
+                if (imagesArrayList != null && imagesArrayList.size() > 0) {
+
+                    if (imagesArrayList.size() == 1) {
+                        ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
+
+                        if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(imagesArrayList.get(0).getImage())
+                                    .into(((CustomViewHolder) holder).image_feed1);
+
+                        }
+                    } else if (imagesArrayList.size() > 1) {
+                        ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.GONE);
+                        ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.VISIBLE);
+
+                        if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(imagesArrayList.get(0).getImage())
+                                    .into(((CustomViewHolder) holder).image_feed2);
+                        }
+
+                        if (!imagesArrayList.get(1).getImage().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(imagesArrayList.get(1).getImage())
+                                    .into(((CustomViewHolder) holder).image_feed3);
+
+                        }
 
                     }
-                } else if (imagesArrayList.size() > 1) {
-                    ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.GONE);
-                    ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.VISIBLE);
-
-                    if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
-                        Picasso.with(mContext)
-                                .load(imagesArrayList.get(0).getImage())
-                                .into(((CustomViewHolder) holder).image_feed2);
-                    }
-
-                    if (!imagesArrayList.get(1).getImage().equalsIgnoreCase("")) {
-                        Picasso.with(mContext)
-                                .load(imagesArrayList.get(1).getImage())
-                                .into(((CustomViewHolder) holder).image_feed3);
-
-                    }
-
-                }
+                }*/
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-          /*  if (!m1.getUserImage().equalsIgnoreCase("")) {
-                Picasso.with(mContext)
-                        .load(m1.getReceiverImage())
-                        .transform(new CircleTransform())
-                        .placeholder(R.drawable.user)
-                        .into(((CustomViewHolder) holder).image_viewers);
-            }
-*/
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -148,7 +190,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_message, text_time, text_like, text_comment, text_share, text_imag_count;
+        TextView text_name, text_message, text_time, text_like, text_comment, text_share, text_imag_count, text_sharePost;
         ImageView image_viewers, image_feed1, image_feed2, image_feed3;
         LinearLayout ll_feed_images, ll_multiple_images;
         RelativeLayout rl_moreimages;
@@ -164,6 +206,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.rl_moreimages = (RelativeLayout) view.findViewById(R.id.rl_moreimages);
             this.ll_multiple_images = (LinearLayout) view.findViewById(R.id.ll_multiple_images);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
+            this.text_sharePost = (TextView) view.findViewById(R.id.text_sharePost);
             this.text_imag_count = (TextView) view.findViewById(R.id.text_imag_count);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_like = (TextView) view.findViewById(R.id.text_like);
