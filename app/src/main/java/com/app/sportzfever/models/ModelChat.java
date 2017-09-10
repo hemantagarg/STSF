@@ -1,22 +1,23 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
+
 /**
  * Created by hemanta on 24-03-2017.
  */
 
-public class ModelChat {
+public class ModelChat implements Serializable {
 
     private String username;
     private String userId;
     private String date;
-    private String message;
-    private String senderID;
+
     private String unreadCount;
     private String is_read;
     private String senderName;
     private String userImage = "", searchId;
     private String requestId;
-    private int rowType;
+    private int rowType = 1;
     private String receiverImage;
     private String date_time;
     private String sender_name = "";
@@ -24,6 +25,103 @@ public class ModelChat {
     private String reciever_id;
     private String receiverName;
 
+    private String senderid;
+
+    private String message;
+
+    private String sentTime;
+
+    private String receiverId;
+
+    private String recieverName;
+
+    private String recieverProfilePic;
+
+    private String sentDay;
+
+    private String senderPic;
+
+    private String senderUsername;
+
+    private String sentOn;
+
+    public String getSenderid() {
+        return senderid;
+    }
+
+    public void setSenderid(String senderid) {
+        this.senderid = senderid;
+    }
+
+
+    public String getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(String sentTime) {
+        this.sentTime = sentTime;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public String getRecieverName() {
+        return recieverName;
+    }
+
+    public void setRecieverName(String recieverName) {
+        this.recieverName = recieverName;
+    }
+
+    public String getRecieverProfilePic() {
+        return recieverProfilePic;
+    }
+
+    public void setRecieverProfilePic(String recieverProfilePic) {
+        this.recieverProfilePic = recieverProfilePic;
+    }
+
+    public String getSentDay() {
+        return sentDay;
+    }
+
+    public void setSentDay(String sentDay) {
+        this.sentDay = sentDay;
+    }
+
+    public String getSenderPic() {
+        return senderPic;
+    }
+
+    public void setSenderPic(String senderPic) {
+        this.senderPic = senderPic;
+    }
+
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public String getSentOn() {
+        return sentOn;
+    }
+
+    public void setSentOn(String sentOn) {
+        this.sentOn = sentOn;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassPojo [senderid = " + senderid + ", message = " + message + ", sentTime = " + sentTime + ", receiverId = " + receiverId + ", recieverName = " + recieverName + ", recieverProfilePic = " + recieverProfilePic + ", sentDay = " + sentDay + ", senderPic = " + senderPic + ", senderUsername = " + senderUsername + ", sentOn = " + sentOn + "]";
+    }
 
     public String getReceiverName() {
         return receiverName;
@@ -66,16 +164,6 @@ public class ModelChat {
     public void setDate_time(String date_time) {
         this.date_time = date_time;
     }
-
-
-    public String getSenderID() {
-        return senderID;
-    }
-
-    public void setSenderID(String senderID) {
-        this.senderID = senderID;
-    }
-
 
     public String getUnreadCount() {
         return unreadCount;

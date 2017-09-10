@@ -18,6 +18,7 @@ public interface JsonApiHelper {
     String GET_LIKES = "getLikes/";
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";
+    String GET_RECENTCHAT = "getRecentChat/";
     String SHAREFEED = "shareFeed";
     String POSTCOMMENT = "comment";
     String UPDATECOMMENT = "updateComment";

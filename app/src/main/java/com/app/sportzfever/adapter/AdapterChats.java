@@ -79,12 +79,12 @@ public class AdapterChats extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             ModelChat m1 = (ModelChat) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getSenderName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getSenderUsername());
             ((CustomViewHolder) holder).text_message.setText(m1.getMessage());
-            ((CustomViewHolder) holder).text_date.setText(AppUtils.getTimeFromDateString(m1.getDate()));
-            if (!m1.getUserImage().equalsIgnoreCase("")) {
+            ((CustomViewHolder) holder).text_date.setText(AppUtils.getTimeFromDateString(m1.getSentTime()));
+            if (!m1.getSenderPic().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getReceiverImage())
+                        .load(m1.getSenderPic())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.user)
                         .into(((CustomViewHolder) holder).image_viewers);

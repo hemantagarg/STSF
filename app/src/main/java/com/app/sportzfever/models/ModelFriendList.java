@@ -1,10 +1,12 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
+
 /**
  * Created by hemanta on 10-09-2017.
  */
 
-public class ModelFriendList {
+public class ModelFriendList implements Serializable{
 
     private String message;
     private int RowType=1;

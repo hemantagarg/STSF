@@ -22,6 +22,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelChat;
 import com.app.sportzfever.utils.AppUtils;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,7 +77,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         super.onResume();
 
         if (!AppUtils.getUserId(context).equalsIgnoreCase("")) {
-        //    getServicelistRefresh();
+            //    getServicelistRefresh();
         }
     }
 
@@ -92,6 +93,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+        getServicelistRefresh();
 
     }
 
@@ -109,8 +111,8 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     public void onItemClickListener(int position, int flag) {
 
         Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserId(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
+        if (arrayList.get(position).getSenderid().equalsIgnoreCase(AppUtils.getUserId(context))) {
+            in.putExtra("reciever_id", arrayList.get(position).getSenderid());
         } else {
             in.putExtra("reciever_id", arrayList.get(position).getUserId());
         }
@@ -125,9 +127,9 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getFriendsList/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDLIST + "1";
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url,null, Request.Method.GET);
+                //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + "1";
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -141,27 +143,20 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     arrayList.clear();
+                    Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
 
-                     /*   JSONObject jo = data.getJSONObject(i);
-                        modelChat = new ModelChat();
-
-                        modelChat.setUserId(jo.getString("ReceiverId"));
-                        modelChat.setSenderID(jo.getString("SenderId"));
-                        modelChat.setUsername(jo.getString("ReceiverName"));
-                        modelChat.setMessage(jo.getString("LastMessage"));
-                        modelChat.setSearchId(jo.getString("conver_id"));
-                        modelChat.setSenderName(jo.getString("SenderName"));
-                        modelChat.setReceiverImage(jo.getString("SenderImage"));
-                        modelChat.setRowType(1);
-                        modelChat.setDate(jo.getString("LastMessageDateTime"));
-                        modelChat.setUserImage(jo.getString("ReceiverImage"));
-                        arrayList.add(modelChat);*/
+                        ModelChat modelChat = null;
+                        try {
+                            modelChat = gson.fromJson(data.getJSONObject(i).toString(), ModelChat.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        arrayList.add(modelChat);
                     }
                     adapterChats = new AdapterChats(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterChats);
@@ -184,26 +179,16 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
                 if (commandResult.getString("success").equalsIgnoreCase("1")) {
                     maxlistLength = commandResult.getString("total");
                     JSONArray data = commandResult.getJSONArray("data");
-
                     arrayList.remove(arrayList.size() - 1);
+                    Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
-
-                        modelChat = new ModelChat();
-                        modelChat.setUserId(jo.getString("receiverID"));
-                        modelChat.setSenderID(jo.getString("senderID"));
-                        modelChat.setUsername(jo.getString("receiverName"));
-                        modelChat.setMessage(jo.getString("message"));
-                        modelChat.setSearchId(jo.getString("searchID"));
-                        modelChat.setSenderName(jo.getString("senderName"));
-                        modelChat.setUnreadCount(jo.getString("unreadCount"));
-                        modelChat.setIs_read(jo.getString("is_read"));
-                        modelChat.setReceiverImage(jo.getString("receiverImage"));
-                        modelChat.setRequestId(jo.getString("requestID"));
-                        modelChat.setRowType(1);
-                        modelChat.setDate(jo.getString("message_date"));
-                        //   modelChat.setUserImage(getResources().getString(R.string.img_url) + jo.getString("userImage"));
+                        ModelChat modelChat = null;
+                        try {
+                            modelChat = gson.fromJson(data.getJSONObject(i).toString(), ModelChat.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         arrayList.add(modelChat);
                     }
                     adapterChats.notifyDataSetChanged();
