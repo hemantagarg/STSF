@@ -173,7 +173,6 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });

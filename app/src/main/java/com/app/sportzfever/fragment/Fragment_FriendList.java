@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,15 +12,16 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.activities.ActivityChat;
-import com.app.sportzfever.adapter.AdapterChats;
+import com.app.sportzfever.adapter.AdapterFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelChat;
+import com.app.sportzfever.models.ModelFriendList;
 import com.app.sportzfever.utils.AppUtils;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,16 +32,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_FriendList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     RecyclerView list_request;
     Bundle b;
     Activity context;
-    AdapterChats adapterChats;
-    public static Fragment_Chat fragment_chat;
+    AdapterFriendList adapterFriendList;
+    public static Fragment_FriendList fragment_chat;
     ModelChat modelChat;
-    ArrayList<ModelChat> arrayList;
+    ArrayList<ModelFriendList> arrayList;
     SwipeRefreshLayout mSwipeRefreshLayout;
     ConnectionDetector cd;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -51,9 +51,9 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     String maxlistLength = "";
     View view;
 
-    public static Fragment_Chat getInstance() {
+    public static Fragment_FriendList getInstance() {
         if (fragment_chat == null)
-            fragment_chat = new Fragment_Chat();
+            fragment_chat = new Fragment_FriendList();
         return fragment_chat;
     }
 
@@ -76,7 +76,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         super.onResume();
 
         if (!AppUtils.getUserId(context).equalsIgnoreCase("")) {
-        //    getServicelistRefresh();
+         getServicelistRefresh();
         }
     }
 
@@ -108,7 +108,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     @Override
     public void onItemClickListener(int position, int flag) {
 
-        Intent in = new Intent(context, ActivityChat.class);
+     /*   Intent in = new Intent(context, ActivityChat.class);
         if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserId(context))) {
             in.putExtra("reciever_id", arrayList.get(position).getSenderID());
         } else {
@@ -117,7 +117,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         in.putExtra("name", arrayList.get(position).getSenderName());
         in.putExtra("image", arrayList.get(position).getReceiverImage());
         in.putExtra("conver_id", arrayList.get(position).getSearchId());
-        startActivity(in);
+        startActivity(in);*/
     }
 
     private void getServicelistRefresh() {
@@ -127,7 +127,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getFriendsList/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDLIST + "1";
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url,null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -146,25 +146,19 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     arrayList.clear();
+                    Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
 
-                     /*   JSONObject jo = data.getJSONObject(i);
-                        modelChat = new ModelChat();
-
-                        modelChat.setUserId(jo.getString("ReceiverId"));
-                        modelChat.setSenderID(jo.getString("SenderId"));
-                        modelChat.setUsername(jo.getString("ReceiverName"));
-                        modelChat.setMessage(jo.getString("LastMessage"));
-                        modelChat.setSearchId(jo.getString("conver_id"));
-                        modelChat.setSenderName(jo.getString("SenderName"));
-                        modelChat.setReceiverImage(jo.getString("SenderImage"));
-                        modelChat.setRowType(1);
-                        modelChat.setDate(jo.getString("LastMessageDateTime"));
-                        modelChat.setUserImage(jo.getString("ReceiverImage"));
-                        arrayList.add(modelChat);*/
+                        ModelFriendList modelFriendList = null;
+                        try {
+                            modelFriendList = gson.fromJson(data.getJSONObject(i).toString(), ModelFriendList.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        arrayList.add(modelFriendList);
                     }
-                    adapterChats = new AdapterChats(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterChats);
+                    adapterFriendList = new AdapterFriendList(context, this, arrayList);
+                    list_request.setAdapter(adapterFriendList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -185,7 +179,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
                     maxlistLength = commandResult.getString("total");
                     JSONArray data = commandResult.getJSONArray("data");
 
-                    arrayList.remove(arrayList.size() - 1);
+                /*    arrayList.remove(arrayList.size() - 1);
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
@@ -206,15 +200,15 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
                         //   modelChat.setUserImage(getResources().getString(R.string.img_url) + jo.getString("userImage"));
                         arrayList.add(modelChat);
                     }
-                    adapterChats.notifyDataSetChanged();
-                    loading = true;
+                    adapterFriendList.notifyDataSetChanged();
+                    loading = true;*/
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
 
-                    adapterChats.notifyDataSetChanged();
+                    adapterFriendList.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
 

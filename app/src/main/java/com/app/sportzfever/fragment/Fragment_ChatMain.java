@@ -6,10 +6,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -26,6 +28,7 @@ public class Fragment_ChatMain extends BaseFragment {
     private Bundle b;
     private Context context;
     private TabLayout tabLayout;
+    private FrameLayout frameLayout;
     private ViewPager viewPager;
     private ConnectionDetector cd;
 
@@ -56,18 +59,64 @@ public class Fragment_ChatMain extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
-
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
+        frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
+       /* setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);*/
         setupTabIcons();
+        setListener();
+        setFragment(new Fragment_Chat());
 
+    }
+
+    private void setListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        setFragment(new Fragment_Chat());
+                        break;
+                    case 1:
+                        setFragment(new Fragment_FriendList());
+                        break;
+                    case 2:
+                        setFragment(new Fragment_FriendList());
+                        break;
+
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+    }
+
+
+    private void setFragment(Fragment fragment) {
+        FragmentManager manager = getChildFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.frameLayout, fragment);
+        ft.commit();
     }
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("Chat");
+        tabLayout.addTab(tabLayout.newTab().setText("Chat"));
+        tabLayout.addTab(tabLayout.newTab().setText("Contacts"));
+        tabLayout.addTab(tabLayout.newTab().setText("Groups"));
+
+      /*  tabLayout.getTabAt(0).setText("Chat");
         tabLayout.getTabAt(1).setText("Contacts");
-        tabLayout.getTabAt(2).setText("Groups");
+        tabLayout.getTabAt(2).setText("Groups");*/
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
     }
@@ -76,7 +125,7 @@ public class Fragment_ChatMain extends BaseFragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
 
         adapter.addFrag(new Fragment_Chat());
-        adapter.addFrag(new Fragment_Chat());
+        adapter.addFrag(new Fragment_FriendList());
         adapter.addFrag(new Fragment_Chat());
         viewPager.setAdapter(adapter);
     }
