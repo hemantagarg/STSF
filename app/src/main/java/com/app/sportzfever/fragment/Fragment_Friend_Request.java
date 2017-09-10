@@ -81,7 +81,6 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-
         getServicelistRefresh();
     }
 
@@ -167,7 +166,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -184,7 +183,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             if (AppUtils.isNetworkAvailable(context)) {
             //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDREQUEST + "155/"+ AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDREQUEST + AppUtils.getUserId(context)+"/"+ AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

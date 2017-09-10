@@ -1,10 +1,12 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
+
 /**
  * Created by hemanta on 01-09-2017.
  */
 
-public class Comments {
+public class Comments implements Serializable{
 
     private String id;
 

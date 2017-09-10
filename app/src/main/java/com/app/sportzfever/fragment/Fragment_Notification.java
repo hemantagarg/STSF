@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterNotification;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -49,6 +50,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
 
     public static Fragment_Notification fragment_notification;
     private final String TAG = Fragment_Notification.class.getSimpleName();
+
     public static Fragment_Notification getInstance() {
         if (fragment_notification == null)
             fragment_notification = new Fragment_Notification();
@@ -167,7 +169,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -178,13 +180,13 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     }
 
     private void getServicelistRefresh() {
-
+        Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-            //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155/"+ AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -199,87 +201,89 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-                if (position == 1) {
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                        JSONArray data = jObject.getJSONArray("data");
-                      //  maxlistLength = jObject.getString("total");
-                        arrayList.removeAll(arrayList);
-                        for (int i = 0; i < data.length(); i++) {
+            if (position == 1) {
+                Dashboard.getInstance().setProgressLoader(false);
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = jObject.getJSONArray("data");
+                    //  maxlistLength = jObject.getString("total");
+                    arrayList.clear();
 
-                            JSONObject jo = data.getJSONObject(i);
+                    for (int i = 0; i < data.length(); i++) {
 
-                            modelNotification = new ModelNotification();
-                            modelNotification.setNotification_id(jo.getString("id"));
-                            modelNotification.setNotificationText(jo.getString("notificationText"));
-                            modelNotification.setEvent(jo.getString("event"));
-                            modelNotification.setStatus(jo.getString("status"));
-                            modelNotification.setActivity(jo.getString("activity"));
-                            modelNotification.setTeam(jo.getString("team"));
-                            modelNotification.setDatetime(jo.getString("datetime"));
-                            modelNotification.setReadStatus(jo.getString("readStatus"));
-                            modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
-                            modelNotification.setFromUser(jo.getString("fromUser"));
-                            modelNotification.setFromAvatar(jo.getString("fromAvatar"));
-                            modelNotification.setToUser(jo.getString("toUser"));
-                            modelNotification.setToAvatar(jo.getString("toAvatar"));
-                            modelNotification.setRowType(1);
+                        JSONObject jo = data.getJSONObject(i);
 
-                            arrayList.add(modelNotification);
-                        }
-                        adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
-                        list_request.setAdapter(adapterNotification);
+                        modelNotification = new ModelNotification();
+                        modelNotification.setNotification_id(jo.getString("id"));
+                        modelNotification.setNotificationText(jo.getString("notificationText"));
+                        modelNotification.setEvent(jo.getString("event"));
+                        modelNotification.setStatus(jo.getString("status"));
+                        modelNotification.setActivity(jo.getString("activity"));
+                        modelNotification.setTeam(jo.getString("team"));
+                        modelNotification.setDatetime(jo.getString("datetime"));
+                        modelNotification.setReadStatus(jo.getString("readStatus"));
+                        modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
+                        modelNotification.setFromUser(jo.getString("fromUser"));
+                        modelNotification.setFromAvatar(jo.getString("fromAvatar"));
+                        modelNotification.setToUser(jo.getString("toUser"));
+                        modelNotification.setToAvatar(jo.getString("toAvatar"));
+                        modelNotification.setRowType(1);
 
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                        arrayList.add(modelNotification);
+                    }
+                    adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterNotification);
 
-                    } else {
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
-                } else if (position == 4) {
-
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                     //   maxlistLength = jObject.getString("total");
-                        JSONArray data = jObject.getJSONArray("data");
-
-                        arrayList.remove(arrayList.size() - 1);
-                        for (int i = 0; i < data.length(); i++) {
-
-                            JSONObject jo = data.getJSONObject(i);
-
-                            modelNotification = new ModelNotification();
-                            modelNotification.setNotification_id(jo.getString("id"));
-                            modelNotification.setNotificationText(jo.getString("notificationText"));
-                            modelNotification.setEvent(jo.getString("event"));
-                            modelNotification.setStatus(jo.getString("status"));
-                            modelNotification.setActivity(jo.getString("activity"));
-                            modelNotification.setTeam(jo.getString("team"));
-                            modelNotification.setDatetime(jo.getString("datetime"));
-                            modelNotification.setReadStatus(jo.getString("readStatus"));
-                            modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
-                            modelNotification.setFromUser(jo.getString("fromUser"));
-                            modelNotification.setFromAvatar(jo.getString("fromAvatar"));
-                            modelNotification.setToUser(jo.getString("toUser"));
-                            modelNotification.setToAvatar(jo.getString("toAvatar"));
-                            modelNotification.setRowType(1);
-
-                            arrayList.add(modelNotification);
-                        }
-                        adapterNotification.notifyDataSetChanged();
-                        loading = true;
-                        if (data.length() == 0) {
-                            skipCount = skipCount - 10;
-                            //  return;
-                        }
-                    } else {
-                        adapterNotification.notifyDataSetChanged();
-                        skipCount = skipCount - 10;
-                        loading = true;
+                } else {
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
+
+            } else if (position == 4) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    //   maxlistLength = jObject.getString("total");
+                    JSONArray data = jObject.getJSONArray("data");
+
+                    arrayList.remove(arrayList.size() - 1);
+                    for (int i = 0; i < data.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        modelNotification = new ModelNotification();
+                        modelNotification.setNotification_id(jo.getString("id"));
+                        modelNotification.setNotificationText(jo.getString("notificationText"));
+                        modelNotification.setEvent(jo.getString("event"));
+                        modelNotification.setStatus(jo.getString("status"));
+                        modelNotification.setActivity(jo.getString("activity"));
+                        modelNotification.setTeam(jo.getString("team"));
+                        modelNotification.setDatetime(jo.getString("datetime"));
+                        modelNotification.setReadStatus(jo.getString("readStatus"));
+                        modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
+                        modelNotification.setFromUser(jo.getString("fromUser"));
+                        modelNotification.setFromAvatar(jo.getString("fromAvatar"));
+                        modelNotification.setToUser(jo.getString("toUser"));
+                        modelNotification.setToAvatar(jo.getString("toAvatar"));
+                        modelNotification.setRowType(1);
+
+                        arrayList.add(modelNotification);
+                    }
+                    adapterNotification.notifyDataSetChanged();
+                    loading = true;
+                    if (data.length() == 0) {
+                        skipCount = skipCount - 10;
+                        //  return;
+                    }
+                } else {
+                    adapterNotification.notifyDataSetChanged();
+                    skipCount = skipCount - 10;
+                    loading = true;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

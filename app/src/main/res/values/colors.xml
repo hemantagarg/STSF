@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#171518</color>
     <color name="colorPrimaryDark">#000000</color>
+<!--
     <color name="colorAccent">#cfc9cb</color>
+-->
+    <color name="colorAccent">#fe4319</color>
     <color name="underline">#5458DF</color>
     <color name="view_color">#80979797</color>
     <color name="layout_bg">#f6f7fb</color>

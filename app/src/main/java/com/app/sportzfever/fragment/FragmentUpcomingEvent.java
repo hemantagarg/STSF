@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -169,7 +170,7 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -180,13 +181,13 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
     }
 
     private void getServicelistRefresh() {
-
+        Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + "155/-1/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/-1/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -202,13 +203,12 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
 
                     //  data = jObject.getString("total");
-
-
-                    arrayList.removeAll(arrayList);
+                    arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);

@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Comments;
-import com.app.sportzfever.models.ModelNotification;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -82,13 +82,30 @@ public class AdapterComments extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
             ((CustomViewHolder) holder).text_message.setText(m1.getComment());
             ((CustomViewHolder) holder).text_date.setText(m1.getCommentDateTime());
-           if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
+            if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getUserProfilePicture())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.logo_sportz)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
+
+            ((CustomViewHolder) holder).img_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
+                }
+            });
+
+            ((CustomViewHolder) holder).card_view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onItemClickListener(i, 2);
+
+                    return false;
+                }
+            });
+
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
@@ -102,24 +119,20 @@ public class AdapterComments extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView text_name, text_message, text_date;
-        ImageView image_viewers;
-
+        ImageView image_viewers, img_edit;
+        RelativeLayout card_view;
 
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
             this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
+            this.img_edit = (ImageView) view.findViewById(R.id.img_edit);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
+            this.card_view = (RelativeLayout) view.findViewById(R.id.card_view);
 
-        }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
         }
 
     }

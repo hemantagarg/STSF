@@ -1,12 +1,13 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by hemanta on 30-08-2017.
  */
 
-public class ModelFeed {
+public class ModelFeed implements Serializable {
 
     private int rowType;
     private String message, date, feedId;
@@ -40,6 +41,7 @@ public class ModelFeed {
     private String description;
 
     private String userName;
+    private int commentsCount = 0, likeCount = 0, shareCount = 0;
 
     private String originalAvatarType;
 
@@ -336,5 +338,29 @@ public class ModelFeed {
 
     public void setImages(ArrayList<Images> images) {
         this.images = images;
+    }
+
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
     }
 }

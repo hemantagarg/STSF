@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -17,6 +18,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -87,17 +89,23 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
-            HashMap<String, String> hm = new HashMap<>();
-            hm.put("email", edtEmail.getText().toString());
-            hm.put("password", edtPassword.getText().toString());
-            hm.put("isAppLogin", "true");
-            hm.put("SF_USER_LOGIN", "true");
-            hm.put("deviceid", "dg");
-            hm.put("devicetoken", AppUtils.getGcmRegistrationKey(mActivity));
-            hm.put("devicetype", AppConstant.DEVICE_TYPE);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("email", edtEmail.getText().toString());
+                jsonObject.put("password", edtPassword.getText().toString());
+                jsonObject.put("isAppLogin", "true");
+                jsonObject.put("SF_USER_LOGIN", "true");
+                jsonObject.put("deviceid", "dg");
+                jsonObject.put("devicetoken", AppUtils.getGcmRegistrationKey(mActivity));
+                jsonObject.put("devicetype", AppConstant.DEVICE_TYPE);
 
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN;
-            new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJson(url,hm);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN;
+                new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
 
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -128,19 +136,20 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
                     JSONObject data = response.getJSONObject("data");
 
-                    AppUtils.setUserId(mActivity, data.getString("UserId"));
-                    AppUtils.setUserRole(mActivity, data.getString("UserType"));
+                    AppUtils.setUserId(mActivity, data.getString("SF_USER_ID"));
+                   /* AppUtils.setUserRole(mActivity, data.getString("UserType"));
                     AppUtils.setUserName(mActivity, data.getString("Name"));
                     AppUtils.setUseremail(mActivity, data.getString("Email"));
                     AppUtils.setUserMobile(mActivity, data.getString("Mobile"));
                     AppUtils.setUserImage(mActivity, data.getString("ProfilePic"));
                     AppUtils.setCategories(mActivity, data.getJSONArray("services").toString());
-
+*/
+                    finish();
                    /* startActivity(new Intent(mActivity, VendorDashboard.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();*/
                 } else {
 
-                   // Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

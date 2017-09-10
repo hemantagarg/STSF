@@ -1,6 +1,6 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,15 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterLikes;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Likes;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -35,7 +38,7 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
 
     private RecyclerView list_request;
     private Bundle b;
-    private Context context;
+    private Activity context;
     private AdapterLikes adapterLikes;
     private Likes likes;
     private ArrayList<Likes> arrayList;
@@ -46,9 +49,13 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+    View mView;
+
 
     public static Fragment_Likes fragment_friend_request;
     private final String TAG = Fragment_Likes.class.getSimpleName();
+    private String feedId = "";
+
     public static Fragment_Likes getInstance() {
         if (fragment_friend_request == null)
             fragment_friend_request = new Fragment_Likes();
@@ -60,12 +67,12 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_notification, container, false);
+        mView = inflater.inflate(R.layout.fragement_likes, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
 
-        return view_about;
+        return mView;
     }
 
 
@@ -80,16 +87,60 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        getBundle();
         setlistener();
-
+        manageHeaderView();
         getServicelistRefresh();
+    }
+
+    private void getBundle() {
+
+        if (b != null) {
+            feedId = b.getString("FeedId");
+
+        }
+    }
+
+
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Likes");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
@@ -167,7 +218,7 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + "155";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -178,14 +229,12 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
     }
 
     private void getServicelistRefresh() {
-
+        HeaderViewManager.getInstance().setProgressLoader(true, false);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-            //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIKES + "334/"+ AppConstant.TOKEN;
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIKES + feedId;
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -199,76 +248,77 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
-                if (position == 1) {
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                        JSONArray data = jObject.getJSONArray("data");
-                      //  maxlistLength = jObject.getString("total");
-                        arrayList.removeAll(arrayList);
-                        for (int i = 0; i < data.length(); i++) {
+            if (position == 1) {
+                HeaderViewManager.getInstance().setProgressLoader(false, false);
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = jObject.getJSONArray("data");
+                    //  maxlistLength = jObject.getString("total");
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < data.length(); i++) {
 
-                            JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
-                            likes = new Likes();
+                        likes = new Likes();
 
-                            likes.setLikeDateTime(jo.getString("likeDateTime"));
-                           likes.setId(jo.getString("id"));
-                            likes.setUserName(jo.getString("userName"));
-                           likes.setUserProfilePicture(jo.getString("userProfilePicture"));
+                        likes.setLikeDateTime(jo.getString("likeDateTime"));
+                        likes.setId(jo.getString("id"));
+                        likes.setUserName(jo.getString("userName"));
+                        likes.setUserProfilePicture(jo.getString("userProfilePicture"));
 
-                            likes.setRowType(1);
+                        likes.setRowType(1);
 
-                            arrayList.add(likes);
-                        }
-                        adapterLikes = new AdapterLikes(getActivity(), this, arrayList);
-                        list_request.setAdapter(adapterLikes);
+                        arrayList.add(likes);
+                    }
+                    adapterLikes = new AdapterLikes(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterLikes);
 
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-
-                    } else {
-                        if (mSwipeRefreshLayout != null) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
-                } else if (position == 4) {
-
-                    if (jObject.getString("result").equalsIgnoreCase("1")) {
-                     //   maxlistLength = jObject.getString("total");
-                        JSONArray data = jObject.getJSONArray("data");
-
-                        arrayList.remove(arrayList.size() - 1);
-                        for (int i = 0; i < data.length(); i++) {
-
-                            JSONObject jo = data.getJSONObject(i);
-
-                            likes = new Likes();
-
-                            likes.setLikeDateTime(jo.getString("likeDateTime"));
-                            likes.setId(jo.getString("id"));
-                            likes.setUserName(jo.getString("userName"));
-
-
-                            //likes.setUserProfilePicture(jo.getString("userProfilePicture "));
-
-
-                            likes.setRowType(1);
-
-                            arrayList.add(likes);
-                        }
-                        adapterLikes.notifyDataSetChanged();
-                        loading = true;
-                        if (data.length() == 0) {
-                            skipCount = skipCount - 10;
-                            //  return;
-                        }
-                    } else {
-                        adapterLikes.notifyDataSetChanged();
-                        skipCount = skipCount - 10;
-                        loading = true;
+                } else {
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
+
+            } else if (position == 4) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    //   maxlistLength = jObject.getString("total");
+                    JSONArray data = jObject.getJSONArray("data");
+
+                    arrayList.remove(arrayList.size() - 1);
+                    for (int i = 0; i < data.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        likes = new Likes();
+
+                        likes.setLikeDateTime(jo.getString("likeDateTime"));
+                        likes.setId(jo.getString("id"));
+                        likes.setUserName(jo.getString("userName"));
+
+
+                        //likes.setUserProfilePicture(jo.getString("userProfilePicture "));
+
+
+                        likes.setRowType(1);
+
+                        arrayList.add(likes);
+                    }
+                    adapterLikes.notifyDataSetChanged();
+                    loading = true;
+                    if (data.length() == 0) {
+                        skipCount = skipCount - 10;
+                        //  return;
+                    }
+                } else {
+                    adapterLikes.notifyDataSetChanged();
+                    skipCount = skipCount - 10;
+                    loading = true;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

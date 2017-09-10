@@ -1,10 +1,12 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
+
 /**
  * Created by hemanta on 01-09-2017.
  */
 
-public class Likes {
+public class Likes implements Serializable{
 
     private String id;
 

@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.ImagesListActivity;
 import com.app.sportzfever.adapter.AdapterFeed;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -20,6 +23,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
@@ -86,26 +90,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         arrayList = new ArrayList<>();
         setlistener();
 
-    /*    modelFeed = new ModelFeed();
-        modelFeed.setRowType(1);
-        arrayList.add(modelFeed);
-        arrayList.add(modelFeed);
-        arrayList.add(modelFeed);
-        arrayList.add(modelFeed);
-        arrayList.add(modelFeed);
-        arrayList.add(modelFeed);
-
-        adapterFeed = new AdapterFeed(getActivity(), this, arrayList);
-        list_request.setAdapter(adapterFeed);*/
         getServicelistRefresh();
-
     }
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
@@ -168,22 +159,59 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Comments(), true);
+
+            Fragment_Comments fragment_comments = new Fragment_Comments();
+            Bundle b = new Bundle();
+            b.putString("FeedId", arrayList.get(position).getFeedId());
+            b.putInt("likeCount", arrayList.get(position).getLikeCount());
+            fragment_comments.setArguments(b);
+
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_comments, true);
         } else if (flag == 2) {
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Likes(), true);
+
+            Fragment_Likes fragmentLikes = new Fragment_Likes();
+            Bundle b = new Bundle();
+            b.putString("FeedId", arrayList.get(position).getFeedId());
+            fragmentLikes.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentLikes, true);
         } else if (flag == 3) {
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Share(), true);
+
+            shareFeed(arrayList.get(position).getFeedId());
+
+          /*  Fragment_Share fragment_share = new Fragment_Share();
+            Bundle b = new Bundle();
+            b.putString("FeedId", arrayList.get(position).getFeedId());
+            fragment_share.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);*/
+
+        } else if (flag == 4) {
+
+            if (arrayList.get(position).getImages() != null && arrayList.get(position).getImages().size() > 0) {
+                ArrayList<Images> imagesArrayList = arrayList.get(position).getImages();
+                Bundle b = new Bundle();
+                b.putSerializable("images", imagesArrayList);
+
+                Intent intent = new Intent(context, ImagesListActivity.class);
+                intent.putExtra("bundle", b);
+                startActivity(intent);
+            }
+
         }
     }
 
-    private void getServicelist() {
+    private void shareFeed(String id) {
         try {
             skipCount = 0;
-
             if (AppUtils.isNetworkAvailable(context)) {
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155";
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("userId", AppUtils.getUserId(context));
+                jsonObject.put("statusId", id);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SHAREFEED;
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -193,13 +221,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     }
 
     private void getServicelistRefresh() {
-
+        Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
                 //         /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + "155/"+ AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -215,18 +243,20 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     //  maxlistLength = jObject.getString("total");
                     arrayList.clear();
 
-                    Log.e("jsonsize","**"+data.length());
+                    Log.e("jsonsize", "**" + data.length());
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
                         modelFeed = new ModelFeed();
 
                         modelFeed.setId(jo.getString("id"));
+                        modelFeed.setFeedId(jo.getString("id"));
                         modelFeed.setUser(jo.getString("user"));
                         modelFeed.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
                         modelFeed.setAvatarName(jo.getString("avatarName"));
@@ -250,13 +280,16 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
                         modelFeed.setEvent(jo.getString("event"));
                         modelFeed.setShares(jo.getString("shares"));
+                        modelFeed.setCommentsCount(jo.getInt("comments"));
+                        modelFeed.setLikeCount(jo.getInt("likes"));
+                        modelFeed.setShareCount(jo.getInt("shares"));
+
                         modelFeed.setOriginalAvatar(jo.getString("originalAvatar"));
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
 
-/*
-                        if (jo.getJSONArray("images")!=null) {
+                        if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
                             JSONArray imagesArray = jo.getJSONArray("images");
                             for (int j = 0; j < imagesArray.length(); j++) {
@@ -266,58 +299,19 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                                 images.setId(jsonObject.getString("id"));
                                 images.setStatusId(jsonObject.getString("statusId"));
                                 images.setImage(jsonObject.getString("image"));
-                                images.setAlbum(jsonObject.getString("album"));
+                                if (jsonObject.has("album")) {
+                                    images.setAlbum(jsonObject.getString("album"));
+                                }
                                 imagesArrayList.add(images);
                             }
                             modelFeed.setImages(imagesArrayList);
                         }
-*/
-
-                       /* if (jo.getJSONArray("likes")!=null) {
-                            ArrayList<Likes> likesList = new ArrayList<>();
-                            JSONArray likesArray = jo.getJSONArray("likes");
-                            for (int j = 0; j < likesArray.length(); j++) {
-                                JSONObject jsonObject = likesArray.getJSONObject(j);
-                                Likes likes = new Likes();
-                                likes.setId(jsonObject.getString("id"));
-                                likes.setStatus(jsonObject.getString("status"));
-                                likes.setUser(jsonObject.getString("user"));
-                                likes.setAvatar(jsonObject.getString("avatar"));
-                                likes.setLikeDateTime(jsonObject.getString("likeDateTime"));
-                                likes.setUserName(jsonObject.getString("userName"));
-                                likes.setUserProfilePicture(jsonObject.getString("userProfilePicture"));
-                                likesList.add(likes);
-                            }
-                            modelFeed.setLikes(likesList);
-                        }
-
-                        if (jo.getJSONArray("comments")!=null) {
-                            ArrayList<Comments> commentsArrayList = new ArrayList<>();
-                            JSONArray commentsArray = jo.getJSONArray("comments");
-
-                            for (int j = 0; j < commentsArray.length(); j++) {
-
-                                JSONObject commentObj = commentsArray.getJSONObject(i);
-                                Comments comments = new Comments();
-
-                                comments.setId(commentObj.getString("id"));
-                                comments.setStatus(commentObj.getString("status"));
-                                comments.setUser(commentObj.getString("user"));
-                                comments.setAvatar(commentObj.getString("avatar"));
-                                comments.setComment(commentObj.getString("comment"));
-                                comments.setCommentDateTime(commentObj.getString("commentDateTime"));
-                                comments.setUserName(commentObj.getString("userName"));
-                                comments.setUserProfilePicture(commentObj.getString("userProfilePicture"));
-                                commentsArrayList.add(comments);
-                            }
-                            modelFeed.setComments(commentsArrayList);
-                        }*/
 
                         modelFeed.setRowType(1);
                         arrayList.add(modelFeed);
                     }
 
-                    Log.e("size","**"+arrayList.size());
+                    Log.e("size", "**" + arrayList.size());
                     adapterFeed = new AdapterFeed(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterFeed);
 
@@ -329,7 +323,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                }
+            } else if (position == 2) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 4) {
 
@@ -373,20 +373,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         if (context != null && isAdded())
             Toast.makeText(getActivity(), getResources().getString(R.string.problem_server), Toast.LENGTH_SHORT).show();
     }
-    /*@Override
-    public void onItemClickListener(int position, int flag) {
 
-        if (flag == 1) {
-
-            Fragment_Comments vendorListFragment = new Fragment_Comments();
-            *//*Bundle b = new Bundle();
-            b.putString(AppConstant.SERVICEID, arrayList.get(position).getServiceId());
-            b.putString(AppConstant.CATEGORYNAME, arrayList.get(position).getServiceName());*//*
-
-           *//* vendorListFragment.setArguments(b);
-            setFragment(vendorListFragment);*//*
-        }
-
-    }*/
 }
 

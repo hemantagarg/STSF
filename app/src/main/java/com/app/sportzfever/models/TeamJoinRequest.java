@@ -14,7 +14,7 @@ public class TeamJoinRequest
     private int rowType;
 
 
-    private String requestStatus;
+    private String requestStatus,notificationText;
 
 
 
@@ -345,5 +345,11 @@ public class TeamJoinRequest
     }
 
 
+    public String getNotificationText() {
+        return notificationText;
+    }
 
+    public void setNotificationText(String notificationText) {
+        this.notificationText = notificationText;
+    }
 }

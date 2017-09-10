@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.TeamJoinRequest;
-import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,14 +78,14 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
 
             TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
 
-           ((CustomViewHolder) holder).text_name.setText(m1.getTeamName());
-           ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
-           ((CustomViewHolder) holder).text_teamname.setText(m1.getEventType());
-           ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
+            ((CustomViewHolder) holder).text_name.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
+            ((CustomViewHolder) holder).text_teamname.setText(m1.getNotificationText());
+            ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
 
             /*((CustomViewHolder) holder).text_mess age.setText(m1.getNotificationText());*/
             //((CustomViewHolder) holder).text_date.setText(m1.getMatchDate());
-          if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
+            if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeamProfilePicture())
 
@@ -107,9 +106,9 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_event_type, text_date,text_teamname,text_location;
+        TextView text_name, text_event_type, text_date, text_teamname, text_location;
         ImageView image_team;
-Button btn_confirm,btn_reject;
+        Button btn_confirm, btn_reject;
 
         public CustomViewHolder(View view) {
             super(view);

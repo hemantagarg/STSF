@@ -12,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.sportzfever.R;
@@ -19,6 +20,7 @@ import com.app.sportzfever.iclasses.WebserviceAPIErrorHandler;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.models.VolleyErrorModel;
+import com.app.sportzfever.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -51,45 +53,42 @@ public class CommonAsyncTaskHashmap {
     }
 
 
-    public void getquery(String url) {
+    public void getqueryJsonNoProgress(String url,JSONObject jsonObject, int methodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
         Log.e("request", ": " + url);
-        pd.show();
-        final StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
+        JsonObjectRequest mJsonRequest = new JsonObjectRequest(
+                methodType,
                 url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("response", response.toString());
-                        if (pd != null)
-                            pd.cancel();
-                        try {
-                            if (response != null) {
-                                JSONObject jo = new JSONObject(response);
-                                if (listener != null)
-                                    listener.onPostSuccess(method, jo);
-                            } else {
-                                if (listener != null)
-                                    // listener.onPostRequestFailed(method, "Null data from server.");
-                                    Toast.makeText(context,
-                                            context.getResources().getString(R.string.problem_server),
-                                            Toast.LENGTH_LONG).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                jsonObject, new Response.Listener<JSONObject>() {
 
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("response", response.toString());
+                try {
+                    if (response != null) {
+
+                        if (listener != null)
+                            listener.onPostSuccess(method, response);
+                    } else {
+                        if (listener != null)
+                            // listener.onPostRequestFailed(method, "Null data from server.");
+                            Toast.makeText(context,
+                                    context.getResources().getString(R.string.problem_server),
+                                    Toast.LENGTH_LONG).show();
                     }
-                }, new Response.ErrorListener() {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
-                if (pd != null)
-                    pd.cancel();
+
                 try {
                     if (listener != null) {
+
                         VolleyErrorModel mVolleyErrorModel = WebserviceAPIErrorHandler.getInstance()
                                 .VolleyErrorHandlerReturningModel(error, context);
                         listener.onPostFail(method, mVolleyErrorModel.getStrMessage());
@@ -97,51 +96,70 @@ public class CommonAsyncTaskHashmap {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-        });
+        }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", AppConstant.TOKEN);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        queue.add(mJsonRequest);
+
+        mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+                GlobalConstants.ONE_SECOND_DELAY * 40, 0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 // Adding request to request queue
-        queue.add(jsonObjReq);
+        queue.add(mJsonRequest);
 
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+        mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
                 GlobalConstants.ONE_SECOND_DELAY * 40, 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 
     }
 
-    public void getqueryJson(String url, final HashMap<String, String> jsonBody) {
+    public void getqueryJsonbject(String url, JSONObject jsonObject, int MethodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url + jsonBody);
+        Log.e("request", ": " + url + jsonObject);
         pd.show();
-        final String requestBody = jsonBody.toString();
-        final StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+        JsonObjectRequest mJsonRequest = new JsonObjectRequest(
+                MethodType,
                 url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("response", response.toString());
-                        if (pd != null)
-                            pd.cancel();
-                        try {
-                            if (response != null) {
-                                JSONObject jo = new JSONObject(response);
-                                if (listener != null)
-                                    listener.onPostSuccess(method, jo);
-                            } else {
-                                if (listener != null)
-                                    // listener.onPostRequestFailed(method, "Null data from server.");
-                                    Toast.makeText(context,
-                                            context.getResources().getString(R.string.problem_server),
-                                            Toast.LENGTH_LONG).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                jsonObject, new Response.Listener<JSONObject>() {
 
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("response", response.toString());
+                if (pd != null)
+                    pd.cancel();
+                try {
+                    if (response != null) {
+
+                        if (listener != null)
+                            listener.onPostSuccess(method, response);
+                    } else {
+                        if (listener != null)
+                            // listener.onPostRequestFailed(method, "Null data from server.");
+                            Toast.makeText(context,
+                                    context.getResources().getString(R.string.problem_server),
+                                    Toast.LENGTH_LONG).show();
                     }
-                }, new Response.ErrorListener() {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -168,83 +186,16 @@ public class CommonAsyncTaskHashmap {
             }
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params = jsonBody;
+                params.put("Authorization", AppConstant.TOKEN);
                 return params;
             }
         };
-// Adding request to request queue
-        queue.add(jsonObjReq);
+        // Adding request to request queue
+        queue.add(mJsonRequest);
 
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                GlobalConstants.ONE_SECOND_DELAY * 40, 0,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-
-    }
-
-    public void getqueryJsonNoProgress(String url, final HashMap<String, String> jsonBody) {
-        // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url + jsonBody);
-
-        final String requestBody = jsonBody.toString();
-        final StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("response", response.toString());
-                        try {
-                            if (response != null) {
-                                JSONObject jo = new JSONObject(response);
-                                if (listener != null)
-                                    listener.onPostSuccess(method, jo);
-                            } else {
-                                if (listener != null)
-                                    // listener.onPostRequestFailed(method, "Null data from server.");
-                                    Toast.makeText(context,
-                                            context.getResources().getString(R.string.problem_server),
-                                            Toast.LENGTH_LONG).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    if (listener != null) {
-
-                        VolleyErrorModel mVolleyErrorModel = WebserviceAPIErrorHandler.getInstance()
-                                .VolleyErrorHandlerReturningModel(error, context);
-                        listener.onPostFail(method, mVolleyErrorModel.getStrMessage());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params = jsonBody;
-                return params;
-            }
-        };
-// Adding request to request queue
-        queue.add(jsonObjReq);
-
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+        mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
                 GlobalConstants.ONE_SECOND_DELAY * 40, 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 

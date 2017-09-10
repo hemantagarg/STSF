@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
@@ -121,6 +122,28 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
                 ((CustomViewHolder) holder).text_time.setText(AppUtils.getTimeFromDateString(m1.getDateTime()));
+
+                if (m1.getCommentsCount() > 0) {
+                    if (m1.getCommentsCount() > 1)
+                    ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount() + " Comments");
+                    else
+                        ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount() + " Comment");
+                }
+
+                if (m1.getLikeCount() > 0) {
+                    if (m1.getLikeCount() > 1)
+                        ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount() + " Likes");
+                    else
+                        ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount() + " Like");
+                }
+
+                if (m1.getShareCount() > 0) {
+                    if (m1.getShareCount() > 1)
+                        ((CustomViewHolder) holder).text_share.setText(m1.getShareCount() + " Shares");
+                    else
+                        ((CustomViewHolder) holder).text_share.setText(m1.getShareCount() + " Share");
+                }
+
                 ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -139,13 +162,18 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClickListener(i, 3);
                     }
                 });
+                ((CustomViewHolder) holder).ll_feed_images.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 4);
+                    }
+                });
 
-
-              /*  ArrayList<Images> imagesArrayList = m1.getImages();
+                ArrayList<Images> imagesArrayList = m1.getImages();
                 if (imagesArrayList != null && imagesArrayList.size() > 0) {
 
                     if (imagesArrayList.size() == 1) {
-                        ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).image_feed1.setVisibility(View.VISIBLE);
                         ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
 
                         if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
@@ -155,7 +183,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         }
                     } else if (imagesArrayList.size() > 1) {
-                        ((CustomViewHolder) holder).ll_feed_images.setVisibility(View.GONE);
+                        ((CustomViewHolder) holder).image_feed1.setVisibility(View.GONE);
                         ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.VISIBLE);
 
                         if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
@@ -171,8 +199,20 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         }
 
+                        if (imagesArrayList.size() > 2) {
+                            ((CustomViewHolder) holder).rl_moreimages.setVisibility(View.VISIBLE);
+                            ((CustomViewHolder) holder).text_imag_count.setText(imagesArrayList.size() - 2 + "");
+                        } else {
+                            ((CustomViewHolder) holder).rl_moreimages.setVisibility(View.GONE);
+                        }
+
+
+                    } else {
+                        ((CustomViewHolder) holder).image_feed1.setVisibility(View.GONE);
+                        ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
+
                     }
-                }*/
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

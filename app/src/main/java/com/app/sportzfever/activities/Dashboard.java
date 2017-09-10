@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -20,11 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
-import com.app.sportzfever.fragment.Fragment_MatchInvitationAvailability;
+import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
@@ -39,20 +42,24 @@ public class Dashboard extends AppCompatActivity
 
     private Context context;
     private Toolbar toolbar;
+    private View main_view;
     private static final String TAG = Dashboard.class.getSimpleName();
     private FrameLayout feed_container, freinds_container, event_container, notification_container, chat_container;
     private TabLayout tabLayout;
+    private AppBarLayout appBar;
     private int PERMISSION_ALL = 1;
     private String[] PERMISSIONS = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA,
     };
+    DrawerLayout drawer;
     private String mCurrentTab;
+    private ProgressBar api_loading_request;
     /*
       * Fragment instance
       * */
     private static Dashboard mInstance;
     public static volatile Fragment currentFragment;
-    private  HashMap<String, Stack<Fragment>> mStacks;
+    private HashMap<String, Stack<Fragment>> mStacks;
 
     /***********************************************
      * Function Name : getInstance
@@ -84,21 +91,47 @@ public class Dashboard extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        main_view = findViewById(R.id.main_view);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
+        appBar = (AppBarLayout) findViewById(R.id.appBar);
+        api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
         feed_container = (FrameLayout) findViewById(R.id.feed_container);
         freinds_container = (FrameLayout) findViewById(R.id.freinds_container);
         event_container = (FrameLayout) findViewById(R.id.event_container);
         chat_container = (FrameLayout) findViewById(R.id.chat_container);
         notification_container = (FrameLayout) findViewById(R.id.notification_container);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+*/
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                main_view.setTranslationX(slideOffset * drawerView.getWidth());
+                drawer.bringChildToFront(drawerView);
+                drawer.requestLayout();
+                //below line used to remove shadow of drawer
+                drawer.setScrimColor(Color.TRANSPARENT);
+            }//this method helps you to aside menu drawer
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    public void manageHeaderVisibitlity(boolean isVisible) {
+        if (isVisible) {
+            appBar.setVisibility(View.VISIBLE);
+        } else {
+            appBar.setVisibility(View.GONE);
+        }
     }
 
 
@@ -119,7 +152,7 @@ public class Dashboard extends AppCompatActivity
         pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
         pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
         pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
-        pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
+        pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
 
         setupTabIcons();
@@ -140,7 +173,17 @@ public class Dashboard extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        // activeFeedFragment();
+
+        if (mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed ||
+                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
+                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
+                mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
+                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+            manageHeaderVisibitlity(true);
+        } else {
+            manageHeaderVisibitlity(false);
+        }
+
     }
 
     private void setListener() {
@@ -169,7 +212,6 @@ public class Dashboard extends AppCompatActivity
                         } else
                             pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
 
-
                         break;
                     case 2:
                         tab.setIcon(R.drawable.calendar_sel);
@@ -192,16 +234,15 @@ public class Dashboard extends AppCompatActivity
                             pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
 
 
-
                         break;
                     case 4:
                         tab.setIcon(R.drawable.chat_sel);
                         if (mStacks.get(GlobalConstants.TAB_CHAT_BAR).size() > 0) {
-                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_MatchInvitationAvailability))
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain))
                                 AppUtils.showErrorLog(TAG, "Friens clicked");
                             activeChatFragment();
                         } else
-                            pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_MatchInvitationAvailability(), true);
+                            pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
 
 
                         break;
@@ -366,7 +407,18 @@ public class Dashboard extends AppCompatActivity
             }
             ft.commitAllowingStateLoss();
         }
+    }
 
+    /**
+     * This method is to set the get api loader
+     */
+    public void setProgressLoader(boolean loaderVisible) {
+        if (loaderVisible) {
+            api_loading_request.setVisibility(View.VISIBLE);
+
+        } else {
+            api_loading_request.setVisibility(View.GONE);
+        }
     }
 
     /*********************************************************************************
@@ -438,6 +490,16 @@ public class Dashboard extends AppCompatActivity
                         if (mStacks.get(mCurrentTab).size() > 0 && mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
                             AppUtils.showLog(TAG, " Current Fragment is Notification Fragment");
                             //  refreshProfileFragment();
+                        }
+
+                        if (mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+                            manageHeaderVisibitlity(true);
+                        } else {
+                            manageHeaderVisibitlity(false);
                         }
                         // refreshFragments();
                     }

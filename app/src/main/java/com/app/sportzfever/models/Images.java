@@ -1,10 +1,12 @@
 package com.app.sportzfever.models;
 
+import java.io.Serializable;
+
 /**
  * Created by hemanta on 02-09-2017.
  */
 
-public class Images {
+public class Images implements Serializable{
 
     private String statusId;
 

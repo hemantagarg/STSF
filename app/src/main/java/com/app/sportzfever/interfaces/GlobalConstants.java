@@ -12,4 +12,5 @@ public interface GlobalConstants {
     String TAB_CHAT_BAR = "tab_chat_bar";
     int ONE_SECOND_DELAY = 1000;
 
+
 }

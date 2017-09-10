@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
@@ -23,13 +24,13 @@ public class HeaderViewManager {
      * Debugging TAG
      */
     private String TAG = HeaderViewManager.class.getSimpleName();
-
+    private ProgressBar api_loading_request;
     /**
      * Header View Instance
      */
     private Toolbar toolbar;
     private TextView textHeaderTitle;
-    private ImageView headerLeftImage, headerRightImage;
+    private ImageView headerLeftImage, headerRightImage, image_logo;
 
     /**
      * Instance of Header View Manager
@@ -59,18 +60,43 @@ public class HeaderViewManager {
             textHeaderTitle = (TextView) mActivity.findViewById(R.id.textHeaderTitle);
 
             headerLeftImage = (ImageView) mActivity.findViewById(R.id.headerLeftImage);
+            image_logo = (ImageView) mActivity.findViewById(R.id.image_logo);
             headerRightImage = (ImageView) mActivity.findViewById(R.id.headerRightImage);
+            api_loading_request = (ProgressBar) mActivity.findViewById(R.id.api_loading_request);
         } else if (mView != null) {
             toolbar = (Toolbar) mView.findViewById(R.id.toolbar);
 
             textHeaderTitle = (TextView) mView.findViewById(R.id.textHeaderTitle);
 
             headerLeftImage = (ImageView) mView.findViewById(R.id.headerLeftImage);
+            image_logo = (ImageView) mView.findViewById(R.id.image_logo);
             headerRightImage = (ImageView) mView.findViewById(R.id.headerRightImage);
+            api_loading_request = (ProgressBar) mView.findViewById(R.id.api_loading_request);
+
         }
         manageClickOnViews(headerViewClickListener);
     }
 
+    /**
+     * This method is to set the get api loader
+     */
+    public void setProgressLoader(boolean loaderVisible, boolean isMultiViewHeader) {
+        if (!isMultiViewHeader) {
+            if (loaderVisible) {
+                api_loading_request.setVisibility(View.VISIBLE);
+                headerRightImage.setVisibility(View.GONE);
+            } else {
+                api_loading_request.setVisibility(View.GONE);
+                headerRightImage.setVisibility(View.GONE);
+            }
+        } else {
+            if (loaderVisible) {
+                api_loading_request.setVisibility(View.VISIBLE);
+            } else {
+                api_loading_request.setVisibility(View.GONE);
+            }
+        }
+    }
 
     /**
      * ManageClickOn Header view
@@ -138,6 +164,23 @@ public class HeaderViewManager {
                 AppUtils.showErrorLog(TAG,
                         "Header left image id is null");
             }
+        }
+
+    }
+
+    /**
+     * Manage Header Left View
+     *
+     * @param isVisibleImage
+     */
+    public void setLogoView(boolean isVisibleImage
+    ) {
+        if (!isVisibleImage) {
+            image_logo.setVisibility(View.GONE);
+        } else if (image_logo == null) {
+            AppUtils.showErrorLog(TAG, "Header Left View is null");
+        } else if (isVisibleImage) {
+            image_logo.setVisibility(View.VISIBLE);
         }
 
     }
