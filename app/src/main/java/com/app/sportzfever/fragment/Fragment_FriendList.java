@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.ActivityChat;
 import com.app.sportzfever.adapter.AdapterFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -107,17 +109,13 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        Intent in = new Intent(context, ActivityChat.class);
 
-     /*   Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserId(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
-        }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("conver_id", arrayList.get(position).getSearchId());
-        startActivity(in);*/
+        in.putExtra("reciever_id", arrayList.get(position).getFriendId());
+        in.putExtra("name", arrayList.get(position).getFriendName());
+        in.putExtra("image", arrayList.get(position).getFriendProfilePic());
+
+        startActivity(in);
     }
 
     private void getServicelistRefresh() {

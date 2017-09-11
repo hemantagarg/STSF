@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelChat;
-import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -81,7 +80,7 @@ public class AdapterChats extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             ((CustomViewHolder) holder).text_name.setText(m1.getSenderUsername());
             ((CustomViewHolder) holder).text_message.setText(m1.getMessage());
-            ((CustomViewHolder) holder).text_date.setText(AppUtils.getTimeFromDateString(m1.getSentTime()));
+            ((CustomViewHolder) holder).text_date.setText(m1.getSentTime());
             if (!m1.getSenderPic().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getSenderPic())

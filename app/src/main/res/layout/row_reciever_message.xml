@@ -50,6 +50,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/text_message"
                 android:layout_marginRight="@dimen/dp3"
+                android:layout_marginTop="@dimen/dp3"
                 android:text="cdcd"
                 android:textColor="#aaaaaa"
                 android:textSize="@dimen/text_size_11" />

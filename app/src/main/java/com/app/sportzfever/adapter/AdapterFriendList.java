@@ -78,7 +78,6 @@ public class AdapterFriendList extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof CustomViewHolder) {
 
             ModelFriendList m1 = (ModelFriendList) detail.get(i);
-            Log.e("name", m1.getFriendName());
             ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
             ((CustomViewHolder) holder).text_message.setText(m1.getMessage());
           //  ((CustomViewHolder) holder).text_date.setText(AppUtils.getTimeFromDateString(m1.getLastseen()));

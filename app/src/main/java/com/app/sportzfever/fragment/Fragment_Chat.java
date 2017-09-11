@@ -35,7 +35,6 @@ import java.util.ArrayList;
  */
 public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     RecyclerView list_request;
     Bundle b;
     Activity context;
@@ -109,16 +108,12 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
         Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getSenderid().equalsIgnoreCase(AppUtils.getUserId(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderid());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
-        }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("conver_id", arrayList.get(position).getSearchId());
+
+        in.putExtra("reciever_id", arrayList.get(position).getSenderid());
+        in.putExtra("name", arrayList.get(position).getSenderUsername());
+        in.putExtra("image", arrayList.get(position).getSenderPic());
+
         startActivity(in);
     }
 

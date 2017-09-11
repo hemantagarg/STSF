@@ -88,14 +88,14 @@ public class AdapterChatDetail extends RecyclerView.Adapter<RecyclerView.ViewHol
                 // configureViewHolder1(vh1, position);
                 ModelChat md1 = (ModelChat) detail.get(position);
                 vh1.text_message.setText(md1.getMessage());
-                vh1.text_date.setText(AppUtils.getTimeFromDateString(md1.getDate_time()));
+                vh1.text_date.setText(md1.getDate_time());
                 vh1.txtName.setText(md1.getSender_name());
                 break;
             case 2:
                 recieverHolder vh2 = (recieverHolder) holder;
                 ModelChat md2 = (ModelChat) detail.get(position);
                 vh2.text_message.setText(md2.getMessage());
-                vh2.text_date.setText(AppUtils.getTimeFromDateString(md2.getDate_time()));
+                vh2.text_date.setText(md2.getDate_time());
                 vh2.txtName.setText(md2.getSender_name());
                 break;
         }

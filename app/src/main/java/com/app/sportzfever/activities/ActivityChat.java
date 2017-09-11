@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterChatDetail;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -31,9 +33,10 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static com.app.sportzfever.R.id.edit_message;
 
 
 public class ActivityChat extends AppCompatActivity implements OnCustomItemClicListener, ApiResponse {
@@ -70,9 +73,11 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_MESSAGE_LIST + "user_id=" + AppUtils.getUserId(mActivity)
-                    + "&user_role=" + AppUtils.getUserRole(mActivity) + "&conver_id=" + conver_id;
-            new CommonAsyncTaskHashmap(1, mActivity, this).getqueryNoProgress(url);
+            //  http://sfscoring.betasportzfever.com/getChatboxData/1/8/0
+            String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_CHATBOX_DATA + AppUtils.getUserId(mActivity) + "/"
+                    + reciever_id + "/0";
+            //    String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_CHATBOX_DATA + "1/8/0";
+            new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -81,7 +86,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
     }
 
     private void init() {
-        edtMessage = (EditText) findViewById(R.id.edit_message);
+        edtMessage = (EditText) findViewById(edit_message);
         imgSendMessage = (ImageView) findViewById(R.id.send_message);
         image_user = (ImageView) findViewById(R.id.image_user);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,11 +102,6 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
         reciever_id = in.getExtras().getString("reciever_id");
         AppUtils.setChatUserId(mActivity, reciever_id);
 
-        if (in.hasExtra("serviceId")) {
-            serviceId = in.getStringExtra("serviceId");
-        }
-        conver_id = in.getExtras().getString("conver_id");
-        //=============================
         username.setText(in.getExtras().getString("name"));
 
         if (!in.getExtras().getString("image").equalsIgnoreCase("")) {
@@ -167,12 +167,21 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
 
     private void SendDataToServer() {
         if (AppUtils.isNetworkAvailable(mActivity)) {
-            //  dev.stackmindz.com/trendi/api/message.php?user_id=200&user_id_1=201&user_role=3&subject=test&service_id=2&msg=Hii&conver_id=
 
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.SEND_MESSAGE + "user_id=" + AppUtils.getUserId(mActivity)
-                    + "&user_id_1=" + reciever_id + "&user_role=" + AppUtils.getUserRole(mActivity) + "&conver_id=" + conver_id +
-                    "&service_id=" + serviceId + "&msg=" + edtMessage.getText().toString();
-            new CommonAsyncTaskHashmap(2, mActivity, this).getqueryNoProgress(url);
+            try {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("senderId", AppUtils.getUserId(mActivity));
+                jsonObject.put("recieverId", reciever_id);
+                jsonObject.put("message", edtMessage.getText().toString());
+
+                // http://sfscoring.betasportzfever.com/getNotifications/155
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEND_MESSAGE;
+                new CommonAsyncTaskHashmap(2, mActivity, this).getqueryJsonNoProgress(url, jsonObject, Request.Method.POST);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
@@ -185,33 +194,32 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
     }
 
     @Override
-    public void onPostSuccess(int method, JSONObject response) {
+    public void onPostSuccess(int method, JSONObject jObject) {
         try {
-            if (response != null) {
+            if (jObject != null) {
                 if (method == 1) {
 
-                    JSONObject commandResult = response.getJSONObject("commandResult");
+                    if (jObject.getString("result").equalsIgnoreCase("1")) {
+                        JSONArray messageList = jObject.getJSONArray("data");
 
-                    if (commandResult.getString("success").equalsIgnoreCase("1")) {
-
-                        JSONObject object = commandResult.getJSONObject("data");
-                        JSONArray messageList = object.getJSONArray("message");
-                        chatListData.clear();
+                        Log.e("messageList", "*" + messageList.length());
+                        Log.e("chatListData", "*" + chatListData.size());
 
                         for (int i = chatListData.size(); i < messageList.length(); i++) {
                             JSONObject chat = messageList.getJSONObject(i);
                             ModelChat chatData = new ModelChat();
-                            chatData.setSender_id(chat.getString("UserId"));
+                            chatData.setReceiverId(chat.getString("recieverId"));
+                            chatData.setSender_id(chat.getString("senderid"));
                             chatData.setRowType(1);
                             //     chatData.setReciever_id(chat.getString("receiverID"));
-                            chatData.setMessage(chat.getString("Message"));
-                            chatData.setSender_name(chat.getString("Name"));
-                            //  chatData.setReceiverName(chat.getString("receiverName"));
-                            chatData.setDate_time(chat.getString("Createdate"));
+                            chatData.setMessage(chat.getString("message"));
+                            chatData.setSender_name(chat.getString("senderName"));
+                            chatData.setReceiverName(chat.getString("recieverName"));
+                            chatData.setDate_time(chat.getString("sentOn") + " " + chat.getString("sentTime"));
                             chatListData.add(chatData);
                         }
 
-                        Collections.reverse(chatListData);
+                    //    Collections.reverse(chatListData);
                         adapterChatDetail.notifyDataSetChanged();
                         chatList.smoothScrollToPosition(chatListData.size() - 1);
                     }

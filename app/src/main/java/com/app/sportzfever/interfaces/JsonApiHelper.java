@@ -24,7 +24,6 @@ public interface JsonApiHelper {
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";
 
-    String SEND_MESSAGE = "";
-    String GET_MESSAGE_LIST="";
-    String GET_CHAT_LIST="";
+    String SEND_MESSAGE = "postUserChat";
+    String GET_CHATBOX_DATA ="getChatboxData/";
 }
