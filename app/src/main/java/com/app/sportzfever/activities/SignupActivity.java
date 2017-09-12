@@ -22,22 +22,20 @@ import com.app.sportzfever.utils.AppUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-public class LoginActivity extends AppCompatActivity implements ApiResponse {
+public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     private Activity mActivity;
-    private EditText edtEmail, edtPassword;
+    private EditText edtEmail, edtPassword,edtName,edtmobile;
     private Button btn_login;
-    private TextView createAccount, forgotPassword,signup;
+    private TextView createAccount, forgotPassword;
     private ImageView image_facebook, image_twitter;
     String latitude = "0.0", longitude = "0.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-        mActivity = LoginActivity.this;
+        setContentView(R.layout.activity_signup);
+        mActivity = SignupActivity.this;
         initViews();
         setListener();
 
@@ -48,11 +46,11 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
             @Override
             public void onClick(View view) {
 
-                if (!edtEmail.getText().toString().equalsIgnoreCase("") && !edtPassword.getText().toString().equalsIgnoreCase("")) {
+                if (!edtEmail.getText().toString().equalsIgnoreCase("") && !edtPassword.getText().toString().equalsIgnoreCase("")&& !edtName.getText().toString().equalsIgnoreCase("")&& !edtmobile.getText().toString().equalsIgnoreCase("")) {
 
                     if (AppUtils.isEmailValid(edtEmail.getText().toString())) {
 
-                        loginUser();
+                        signupUser();
                     } else {
                         edtEmail.setError(getString(R.string.enter_valid_emailid));
                         edtEmail.requestFocus();
@@ -64,29 +62,35 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                     } else if (edtPassword.getText().toString().equalsIgnoreCase("")) {
                         edtPassword.setError(getString(R.string.enter_password));
                         edtPassword.requestFocus();
+                    }else if (edtmobile.getText().toString().equalsIgnoreCase("")) {
+                        edtmobile.setError(getString(R.string.enter_mb));
+                        edtmobile.requestFocus();
+                    }else if (edtName.getText().toString().equalsIgnoreCase("")) {
+                        edtName.setError(getString(R.string.enter_name));
+                        edtName.requestFocus();
                     }
                 }
             }
         });
 
-        signup.setOnClickListener(new View.OnClickListener() {
+        createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 startActivity(new Intent(mActivity, SignupActivity.class));
             }
         });
-       /* forgotPassword.setOnClickListener(new View.OnClickListener() {
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //   startActivity(new Intent(mActivity, ForgotPassword.class));
             }
-        });*/
+        });
     }
 
 
-    private void loginUser() {
+    private void signupUser() {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
@@ -94,14 +98,14 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", edtEmail.getText().toString());
                 jsonObject.put("password", edtPassword.getText().toString());
-                jsonObject.put("isAppLogin", "true");
-                jsonObject.put("SF_USER_LOGIN", "true");
+                jsonObject.put("name", edtName.getText().toString());
+                jsonObject.put("phoneNumber", edtmobile.getText().toString());
                 jsonObject.put("deviceid", "dg");
                 jsonObject.put("devicetoken", AppUtils.getGcmRegistrationKey(mActivity));
                 jsonObject.put("devicetype", AppConstant.DEVICE_TYPE);
 
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SIGNUP;
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -117,10 +121,12 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
     private void initViews() {
 
         edtEmail = (EditText) findViewById(R.id.edtEmail);
+        edtmobile = (EditText) findViewById(R.id.edtmobile);
+        edtName = (EditText) findViewById(R.id.edtName);
         edtPassword = (EditText) findViewById(R.id.edtPassword);
         btn_login = (Button) findViewById(R.id.btn_login);
         createAccount = (TextView) findViewById(R.id.createAccount);
-        signup = (TextView) findViewById(R.id.signup);
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
         image_facebook = (ImageView) findViewById(R.id.image_facebook);
         image_twitter = (ImageView) findViewById(R.id.image_twitter);
 

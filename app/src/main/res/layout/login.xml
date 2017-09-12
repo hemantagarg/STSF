@@ -144,7 +144,7 @@
                 android:textSize="@dimen/text_size_13" />
 
             <com.app.sportzfever.utils.CustomTextView
-                android:id="@+id/forgotPassword"
+                android:id="@+id/signup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/createAccount"

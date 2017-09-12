@@ -10,6 +10,8 @@
     <string name="alert_internet_connection">Please check your internet connection.</string>
     <string name="hint_enter_email">Enter Email</string>
     <string name="hint_enter_password">Enter Password</string>
+    <string name="hint_enter_mbno">Enter Mobil Number</string>
+    <string name="hint_enter_name">Enter Name</string>
     <string name="sign_in">Sign in</string>
     <string name="log_in">Log In</string>
     <string name="enter_email">Please enter email</string>
@@ -17,7 +19,10 @@
     <string name="enter_valid_emailid">Please enter valid emailid</string>
     <string name="or">OR</string>
     <string name="title_activity_dashboard">Dashboard</string>
+    <string name="sign_up">Sign Up</string>
 
+    <string name="enter_name">Please enter Name</string>
+    <string name="enter_mb">Please enter Mobile Number</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
