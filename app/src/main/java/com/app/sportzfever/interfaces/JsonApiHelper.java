@@ -25,6 +25,9 @@ public interface JsonApiHelper {
     String DELETECOMMENT = "deleteComment/";
     String GET_JOINEDGROUPCHAT = "getJoinedGroups/";
     String SIGNUP = "sfSignUp";
+    String ACCEPTREJECTMATCHCHALLENGEINVITATION = "RespondToMatchchallengeInvitation/";
+    String ACCEPTREJECTSCORECHALLENGEINVITATION = "RespondToMatchScorerInvitation/";
+
     String SEND_MESSAGE = "postUserChat";
     String GET_CHATBOX_DATA ="getChatboxData/";
 }
