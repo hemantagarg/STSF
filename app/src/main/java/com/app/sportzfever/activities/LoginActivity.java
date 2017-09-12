@@ -22,14 +22,12 @@ import com.app.sportzfever.utils.AppUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
     private Activity mActivity;
     private EditText edtEmail, edtPassword;
     private Button btn_login;
-    private TextView createAccount, forgotPassword,signup;
+    private TextView createAccount, forgotPassword, signup;
     private ImageView image_facebook, image_twitter;
     String latitude = "0.0", longitude = "0.0";
 
@@ -138,19 +136,14 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                     JSONObject data = response.getJSONObject("data");
 
                     AppUtils.setUserId(mActivity, data.getString("SF_USER_ID"));
-                   /* AppUtils.setUserRole(mActivity, data.getString("UserType"));
                     AppUtils.setUserName(mActivity, data.getString("Name"));
                     AppUtils.setUseremail(mActivity, data.getString("Email"));
-                    AppUtils.setUserMobile(mActivity, data.getString("Mobile"));
-                    AppUtils.setUserImage(mActivity, data.getString("ProfilePic"));
-                    AppUtils.setCategories(mActivity, data.getJSONArray("services").toString());
-*/
+                    AppUtils.setUserImage(mActivity, data.getString("ProfilePicture"));
+                    startActivity(new Intent(mActivity, Dashboard.class));
                     finish();
-                   /* startActivity(new Intent(mActivity, VendorDashboard.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-                    finish();*/
                 } else {
 
-                    // Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

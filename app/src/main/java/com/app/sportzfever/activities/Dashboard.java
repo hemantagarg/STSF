@@ -1,7 +1,9 @@
 package com.app.sportzfever.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,10 +21,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
@@ -33,12 +36,13 @@ import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Stack;
 
-public class Dashboard extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class Dashboard extends AppCompatActivity {
 
     private Context context;
     private Toolbar toolbar;
@@ -58,8 +62,10 @@ public class Dashboard extends AppCompatActivity
       * Fragment instance
       * */
     private static Dashboard mInstance;
+    private TextView text_score, text_logout;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
+    private ImageView image_user;
 
     /***********************************************
      * Function Name : getInstance
@@ -82,47 +88,6 @@ public class Dashboard extends AppCompatActivity
             }
         }
         return true;
-    }
-
-    private void init() {
-        if (!hasPermissions(this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-        }
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        main_view = findViewById(R.id.main_view);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        appBar = (AppBarLayout) findViewById(R.id.appBar);
-        api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
-        feed_container = (FrameLayout) findViewById(R.id.feed_container);
-        freinds_container = (FrameLayout) findViewById(R.id.freinds_container);
-        event_container = (FrameLayout) findViewById(R.id.event_container);
-        chat_container = (FrameLayout) findViewById(R.id.chat_container);
-        notification_container = (FrameLayout) findViewById(R.id.notification_container);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-      /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-*/
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                main_view.setTranslationX(slideOffset * drawerView.getWidth());
-                drawer.bringChildToFront(drawerView);
-                drawer.requestLayout();
-                //below line used to remove shadow of drawer
-                drawer.setScrimColor(Color.TRANSPARENT);
-            }//this method helps you to aside menu drawer
-        };
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -159,6 +124,59 @@ public class Dashboard extends AppCompatActivity
         setListener();
     }
 
+    private void init() {
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        main_view = findViewById(R.id.main_view);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        text_logout = (TextView) findViewById(R.id.text_logout);
+        text_score = (TextView) findViewById(R.id.text_score);
+        tabLayout = (TabLayout) findViewById(R.id.tablayout);
+        appBar = (AppBarLayout) findViewById(R.id.appBar);
+        api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
+        feed_container = (FrameLayout) findViewById(R.id.feed_container);
+        freinds_container = (FrameLayout) findViewById(R.id.freinds_container);
+        event_container = (FrameLayout) findViewById(R.id.event_container);
+        chat_container = (FrameLayout) findViewById(R.id.chat_container);
+        notification_container = (FrameLayout) findViewById(R.id.notification_container);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+*/
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                main_view.setTranslationX(slideOffset * drawerView.getWidth());
+                drawer.bringChildToFront(drawerView);
+                drawer.requestLayout();
+                //below line used to remove shadow of drawer
+                drawer.setScrimColor(Color.TRANSPARENT);
+            }//this method helps you to aside menu drawer
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View header = navigationView.getHeaderView(0);
+        TextView text_username = (TextView) header.findViewById(R.id.text_name);
+        TextView text_email = (TextView) header.findViewById(R.id.text_email);
+        text_username.setText(AppUtils.getUserName(context));
+        text_email.setText(AppUtils.getUseremail(context));
+        image_user = (ImageView) header.findViewById(R.id.image_user);
+        if (!AppUtils.getUserImage(context).equalsIgnoreCase("")) {
+            Picasso.with(context).load(AppUtils.getUserImage(context)).placeholder(R.drawable.user).transform(new CircleTransform()).into(image_user);
+        }
+    }
+
+
     private void setupTabIcons() {
 
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.newsfeed_sel));
@@ -186,8 +204,38 @@ public class Dashboard extends AppCompatActivity
 
     }
 
-    private void setListener() {
+    private void setWhiteColor() {
+        text_score.setBackgroundColor(getResources().getColor(R.color.white));
+        text_logout.setBackgroundColor(getResources().getColor(R.color.white));
 
+        text_score.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
+    }
+
+    private void setListener() {
+        text_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_logout.setTextColor(getResources().getColor(R.color.red));
+                text_logout.setBackgroundResource(R.drawable.text_bg);
+                showLogoutBox();
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        text_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_score.setTextColor(getResources().getColor(R.color.red));
+                text_score.setBackgroundResource(R.drawable.text_bg);
+                Intent intent = new Intent(context, ScoreActivity.class);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -296,6 +344,44 @@ public class Dashboard extends AppCompatActivity
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
     }
+
+    private void showLogoutBox() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                Dashboard.this);
+
+        alertDialog.setTitle("LOG OUT !");
+
+        alertDialog.setMessage("Are you sure you want to Logout?");
+
+        alertDialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        AppUtils.setUserId(context, "");
+                        AppUtils.setUseremail(context, "");
+                        AppUtils.setUserName(context, "");
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+
+
+    }
+
 
     /*********************************************************************************
      * Function Name - activeFreindsFragment
@@ -520,31 +606,4 @@ public class Dashboard extends AppCompatActivity
         }
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_login) {
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivity(intent);
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }

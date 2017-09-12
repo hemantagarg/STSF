@@ -93,6 +93,21 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
                         .into(((CustomViewHolder) holder).image_team);
             }
 
+            ((CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 2);
+
+                }
+            });
+
+            ((CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
+
+                }
+            });
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }

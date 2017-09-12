@@ -13,8 +13,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.activities.ActivityChat;
-import com.app.sportzfever.adapter.AdapterChats;
+import com.app.sportzfever.activities.ActivityGroupChat;
 import com.app.sportzfever.adapter.AdapterGroupChats;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -22,8 +21,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModeJoinedGroup;
-import com.app.sportzfever.models.ModelChat;
-import com.app.sportzfever.models.ModelGroupChat;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -112,8 +109,8 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        Intent in = new Intent(context, ActivityChat.class);
 
+        Intent in = new Intent(context, ActivityGroupChat.class);
         in.putExtra("reciever_id", arrayList.get(position).getChatRoomId());
         in.putExtra("name", arrayList.get(position).getName());
         in.putExtra("image", arrayList.get(position).getProfilePicture());

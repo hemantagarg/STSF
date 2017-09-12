@@ -23,6 +23,9 @@ public class AppConstant {
     public static final String DEVICE_TYPE = "android";
     public static final String USER = "2";
     public static final String FREELANCER = "3";
+    public static final String ACCEPTED = "ACCEPTED";
+    public static final String REJECTED = "REJECTED";
+
     /*
        * Change this to your publishable key.
        *

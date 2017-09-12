@@ -27,7 +27,11 @@ public interface JsonApiHelper {
     String SIGNUP = "sfSignUp";
     String ACCEPTREJECTMATCHCHALLENGEINVITATION = "RespondToMatchchallengeInvitation/";
     String ACCEPTREJECTSCORECHALLENGEINVITATION = "RespondToMatchScorerInvitation/";
+    String RESPONDTOMATCHANDPRACTICEINVITATION = "RespondToMatchAndPractiseInvitation/";
+    String RESPONDTOTEAMJOININVITATIONFROMTEAM = "RespondToTeamJoinInvitationFromTeam/";
 
     String SEND_MESSAGE = "postUserChat";
+    String POST_GROUP_CHAT = "postGroupChat";
     String GET_CHATBOX_DATA ="getChatboxData/";
+    String GET_GROUP_CHATBOX_DATA ="getGroupChatboxData/";
 }

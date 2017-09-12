@@ -26,12 +26,19 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent intent=new Intent(getApplicationContext(),Dashboard.class);
-                startActivity(intent);
-                finish();
+                if (AppUtils.getUserId(getApplicationContext()).equalsIgnoreCase("")) {
+
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                    startActivity(intent);
+                    finish();
+                }
 
             }
-        },1000);
+        }, 1000);
 
     }
 }

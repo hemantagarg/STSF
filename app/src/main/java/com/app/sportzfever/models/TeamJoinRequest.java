@@ -1,7 +1,6 @@
 package com.app.sportzfever.models;
 
-public class TeamJoinRequest
-{
+public class TeamJoinRequest {
 
     public int getRowType() {
         return rowType;
@@ -12,10 +11,9 @@ public class TeamJoinRequest
     }
 
     private int rowType;
+    private int teamType;
 
-
-    private String requestStatus,notificationText;
-
+    private String requestStatus, notificationText;
 
 
     private String playerAvatarProfilePicture;
@@ -23,118 +21,95 @@ public class TeamJoinRequest
     private String playerAvatarId;
 
 
-
     private String playerAvatarName;
 
     private String requestSentAt;
 
-    public String getTeamName ()
-    {
+    public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName (String teamName)
-    {
+    public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
 
-    public String getId ()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTeamProfilePicture ()
-    {
+    public String getTeamProfilePicture() {
         return teamProfilePicture;
     }
 
-    public void setTeamProfilePicture (String teamProfilePicture)
-    {
+    public void setTeamProfilePicture(String teamProfilePicture) {
         this.teamProfilePicture = teamProfilePicture;
     }
 
-    public String getReadStatus ()
-    {
+    public String getReadStatus() {
         return readStatus;
     }
 
-    public void setReadStatus (String readStatus)
-    {
+    public void setReadStatus(String readStatus) {
         this.readStatus = readStatus;
     }
 
-    public String getRequestStatus ()
-    {
+    public String getRequestStatus() {
         return requestStatus;
     }
 
-    public void setRequestStatus (String requestStatus)
-    {
+    public void setRequestStatus(String requestStatus) {
         this.requestStatus = requestStatus;
     }
 
-    public String getTeamAvatarId ()
-    {
+    public String getTeamAvatarId() {
         return teamAvatarId;
     }
 
-    public void setTeamAvatarId (String teamAvatarId)
-    {
+    public void setTeamAvatarId(String teamAvatarId) {
         this.teamAvatarId = teamAvatarId;
     }
 
-    public String getPlayerAvatarProfilePicture ()
-    {
+    public String getPlayerAvatarProfilePicture() {
         return playerAvatarProfilePicture;
     }
 
-    public void setPlayerAvatarProfilePicture (String playerAvatarProfilePicture)
-    {
+    public void setPlayerAvatarProfilePicture(String playerAvatarProfilePicture) {
         this.playerAvatarProfilePicture = playerAvatarProfilePicture;
     }
 
-    public String getPlayerAvatarId ()
-    {
+    public String getPlayerAvatarId() {
         return playerAvatarId;
     }
 
-    public void setPlayerAvatarId (String playerAvatarId)
-    {
+    public void setPlayerAvatarId(String playerAvatarId) {
         this.playerAvatarId = playerAvatarId;
     }
 
-    public String getTeamId ()
-    {
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId (String teamId)
-    {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
-    public String getPlayerAvatarName ()
-    {
+    public String getPlayerAvatarName() {
         return playerAvatarName;
     }
 
-    public void setPlayerAvatarName (String playerAvatarName)
-    {
+    public void setPlayerAvatarName(String playerAvatarName) {
         this.playerAvatarName = playerAvatarName;
     }
 
-    public String getRequestSentAt ()
-    {
+    public String getRequestSentAt() {
         return requestSentAt;
     }
 
-    public void setRequestSentAt (String requestSentAt)
-    {
+    public void setRequestSentAt(String requestSentAt) {
         this.requestSentAt = requestSentAt;
     }
 
@@ -142,94 +117,72 @@ public class TeamJoinRequest
     private String inviteSentOn;
 
 
-
     private String oppositionTeamProfilePicture;
 
 
-
-
-    public String getInviteSentOn ()
-    {
+    public String getInviteSentOn() {
         return inviteSentOn;
     }
 
-    public void setInviteSentOn (String inviteSentOn)
-    {
+    public void setInviteSentOn(String inviteSentOn) {
         this.inviteSentOn = inviteSentOn;
     }
 
 
-
-    public String getEventTitle ()
-    {
+    public String getEventTitle() {
         return eventTitle;
     }
 
-    public void setEventTitle (String eventTitle)
-    {
+    public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
     }
 
-    public String getOppositionTeamProfilePicture ()
-    {
+    public String getOppositionTeamProfilePicture() {
         return oppositionTeamProfilePicture;
     }
 
-    public void setOppositionTeamProfilePicture (String oppositionTeamProfilePicture)
-    {
+    public void setOppositionTeamProfilePicture(String oppositionTeamProfilePicture) {
         this.oppositionTeamProfilePicture = oppositionTeamProfilePicture;
     }
 
-    public String getOppositionTeamId ()
-    {
+    public String getOppositionTeamId() {
         return oppositionTeamId;
     }
 
-    public void setOppositionTeamId (String oppositionTeamId)
-    {
+    public void setOppositionTeamId(String oppositionTeamId) {
         this.oppositionTeamId = oppositionTeamId;
     }
 
 
-
-
-    public String getMatchDate ()
-    {
+    public String getMatchDate() {
         return matchDate;
     }
 
-    public void setMatchDate (String matchDate)
-    {
+    public void setMatchDate(String matchDate) {
         this.matchDate = matchDate;
     }
 
-    public String getOppositionTeamName ()
-    {
+    public String getOppositionTeamName() {
         return oppositionTeamName;
     }
 
-    public void setOppositionTeamName (String oppositionTeamName)
-    {
+    public void setOppositionTeamName(String oppositionTeamName) {
         this.oppositionTeamName = oppositionTeamName;
     }
 
-    public String getOppositionTeamAvatarId ()
-    {
+    public String getOppositionTeamAvatarId() {
         return oppositionTeamAvatarId;
     }
 
-    public void setOppositionTeamAvatarId (String oppositionTeamAvatarId)
-    {
+    public void setOppositionTeamAvatarId(String oppositionTeamAvatarId) {
         this.oppositionTeamAvatarId = oppositionTeamAvatarId;
     }
 
-    public String getInviteStatus ()
-    {
+    public String getInviteStatus() {
         return inviteStatus;
     }
 
-    public void setInviteStatus (String inviteStatus)
-    {
+    public void setInviteStatus(String inviteStatus) {
         this.inviteStatus = inviteStatus;
     }
 
@@ -247,29 +200,21 @@ public class TeamJoinRequest
     private String oppositionTeamId;
 
 
-
-
-
-    public String getOppositionTeamAvatarProfilePicture ()
-    {
+    public String getOppositionTeamAvatarProfilePicture() {
         return oppositionTeamAvatarProfilePicture;
     }
 
-    public void setOppositionTeamAvatarProfilePicture (String oppositionTeamAvatarProfilePicture)
-    {
+    public void setOppositionTeamAvatarProfilePicture(String oppositionTeamAvatarProfilePicture) {
         this.oppositionTeamAvatarProfilePicture = oppositionTeamAvatarProfilePicture;
     }
 
-    public String getLocation ()
-    {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation (String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
-
 
 
     private String teamName;
@@ -297,50 +242,36 @@ public class TeamJoinRequest
     private String inviteStatus;
 
 
-
-
-
-
-
-    public String getEventId ()
-    {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId (String eventId)
-    {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
-    public String getAvatarId ()
-    {
+    public String getAvatarId() {
         return avatarId;
     }
 
-    public void setAvatarId (String avatarId)
-    {
+    public void setAvatarId(String avatarId) {
         this.avatarId = avatarId;
     }
 
-    public String getMatchId ()
-    {
+    public String getMatchId() {
         return matchId;
     }
 
-    public void setMatchId (String matchId)
-    {
+    public void setMatchId(String matchId) {
         this.matchId = matchId;
     }
 
 
-
-    public String getEventType ()
-    {
+    public String getEventType() {
         return eventType;
     }
 
-    public void setEventType (String eventType)
-    {
+    public void setEventType(String eventType) {
         this.eventType = eventType;
     }
 
@@ -351,5 +282,13 @@ public class TeamJoinRequest
 
     public void setNotificationText(String notificationText) {
         this.notificationText = notificationText;
+    }
+
+    public int getTeamType() {
+        return teamType;
+    }
+
+    public void setTeamType(int teamType) {
+        this.teamType = teamType;
     }
 }

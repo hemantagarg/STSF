@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="rehtd"
+                android:text=""
                 android:textColor="@color/textcolordark"
                 android:textSize="@dimen/text_size_13"
                 android:visibility="gone" />

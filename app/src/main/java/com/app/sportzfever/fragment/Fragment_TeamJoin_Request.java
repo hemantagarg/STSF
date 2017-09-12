@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterTeamJoinRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -151,17 +152,86 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
     @Override
     public void onItemClickListener(int position, int flag) {
 
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
+        if (flag == 1) {
+            if (arrayList.get(position).getTeamType() == 1) {
+                acceptMatchPracticeInvitation(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            } else if (arrayList.get(position).getTeamType() == 2) {
+                acceptMatchChallenge(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            } else if (arrayList.get(position).getTeamType() == 3) {
+                acceptScoreInvitation(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            } else if (arrayList.get(position).getTeamType() == 4) {
+                acceptTeamJoinInvitation(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            }
+        } else if (flag == 2) {
+            if (arrayList.get(position).getTeamType() == 1) {
+                acceptMatchPracticeInvitation(arrayList.get(position).getId(), AppConstant.REJECTED);
+            } else if (arrayList.get(position).getTeamType() == 2) {
+                acceptMatchChallenge(arrayList.get(position).getId(), AppConstant.REJECTED);
+            } else if (arrayList.get(position).getTeamType() == 3) {
+                acceptScoreInvitation(arrayList.get(position).getId(), AppConstant.REJECTED);
+            } else if (arrayList.get(position).getTeamType() == 4) {
+                acceptTeamJoinInvitation(arrayList.get(position).getId(), AppConstant.REJECTED);
+            }
         }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
     }
+
+    private void acceptScoreInvitation(String id, String accept) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTREJECTSCORECHALLENGEINVITATION + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void acceptMatchPracticeInvitation(String id, String accept) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.RESPONDTOMATCHANDPRACTICEINVITATION + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void acceptTeamJoinInvitation(String id, String accept) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.RESPONDTOTEAMJOININVITATIONFROMTEAM + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void acceptMatchChallenge(String id, String accept) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //    http://sfscoring.betasportzfever.com/RespondToMatchchallengeInvitation/41/REJECTED
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTREJECTMATCHCHALLENGEINVITATION + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void getServicelist() {
         try {
@@ -185,7 +255,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + AppUtils.getUserId(context)+"/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -218,6 +288,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest = new TeamJoinRequest();
 
                         teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setTeamType(1);
                         teamJoinRequest.setInviteStatus(jo.getString("inviteStatus"));
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
@@ -235,6 +306,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
 
                         teamJoinRequest.setId(jo.getString("id"));
                         teamJoinRequest.setEventType(jo.getString("eventType"));
+                        teamJoinRequest.setTeamType(2);
                         teamJoinRequest.setMatchDate(jo.getString("matchDate"));
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
                         teamJoinRequest.setNotificationText(jo.getString("notificationText"));
@@ -254,6 +326,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest.setId(jo.getString("id"));
                         teamJoinRequest.setMatchDate(jo.getString("matchDate"));
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
+                        teamJoinRequest.setTeamType(3);
                         //teamJoinRequest.setLocation(jo.getString("location"));
                         teamJoinRequest.setEventType(jo.getString("eventType"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
@@ -270,6 +343,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest = new TeamJoinRequest();
 
                         teamJoinRequest.setId(jo.getString("id"));
+                        teamJoinRequest.setTeamType(4);
                         teamJoinRequest.setRequestSentAt(jo.getString("requestSentAt"));
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
@@ -291,6 +365,13 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                     }
                 }
 
+            } else if (position == 11) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

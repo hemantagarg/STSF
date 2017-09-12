@@ -14,8 +14,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModeJoinedGroup;
-import com.app.sportzfever.models.ModelChat;
-import com.app.sportzfever.models.ModelGroupChat;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +46,7 @@ public class AdapterGroupChats extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_chats, parent, false);
+                    R.layout.row_group_chats, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
