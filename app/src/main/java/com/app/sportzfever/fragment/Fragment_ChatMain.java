@@ -80,7 +80,7 @@ public class Fragment_ChatMain extends BaseFragment {
                         setFragment(new Fragment_FriendList());
                         break;
                     case 2:
-                        setFragment(new Fragment_FriendList());
+                        setFragment(new Fragment_Group_Chat());
                         break;
 
 
