@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -82,7 +83,6 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void init() {
@@ -204,7 +204,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
 
                         Log.e("messageList", "*" + messageList.length());
                         Log.e("chatListData", "*" + chatListData.size());
-
+                        boolean isUpdated = false;
                         for (int i = chatListData.size(); i < messageList.length(); i++) {
                             JSONObject chat = messageList.getJSONObject(i);
                             ModelChat chatData = new ModelChat();
@@ -217,11 +217,21 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
                             chatData.setRecieverName(chat.getString("recieverName"));
                             chatData.setSentTime(chat.getString("sentOn") + " " + chat.getString("sentTime"));
                             chatListData.add(chatData);
+                            isUpdated = true;
                         }
 
-                    //    Collections.reverse(chatListData);
-                        adapterChatDetail.notifyDataSetChanged();
-                        chatList.smoothScrollToPosition(chatListData.size() - 1);
+                        if (isUpdated) {
+                            chatList.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    chatList.smoothScrollToPosition(adapterChatDetail.getItemCount());
+                                }
+                            });
+                            adapterChatDetail.notifyDataSetChanged();
+                            Collections.reverse(chatListData);
+                        }
+
+
                     }
                     if (isActivityVisible) {
                         syncData();
@@ -259,7 +269,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
                 SyncDataToServer();
 
             }
-        }, 3000);
+        }, 4000);
     }
 
     @Override

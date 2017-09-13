@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.ActivityChat;
+import com.app.sportzfever.activities.ActivityGroupChat;
 import com.app.sportzfever.adapter.AdapterChats;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -109,12 +110,22 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        Intent in = new Intent(context, ActivityChat.class);
 
-        in.putExtra("reciever_id", arrayList.get(position).getID());
-        in.putExtra("name", arrayList.get(position).getName());
-        in.putExtra("image", arrayList.get(position).getProfilePic());
-        startActivity(in);
+        if (arrayList.get(position).getTYPE().equalsIgnoreCase("USER")) {
+            Intent in = new Intent(context, ActivityChat.class);
+            in.putExtra("reciever_id", arrayList.get(position).getID());
+            in.putExtra("name", arrayList.get(position).getName());
+            in.putExtra("image", arrayList.get(position).getProfilePic());
+            startActivity(in);
+
+        } else if (arrayList.get(position).getTYPE().equalsIgnoreCase("GROUP")) {
+            Intent in = new Intent(context, ActivityGroupChat.class);
+
+            in.putExtra("reciever_id", arrayList.get(position).getID());
+            in.putExtra("name", arrayList.get(position).getName());
+            in.putExtra("image", arrayList.get(position).getProfilePic());
+            startActivity(in);
+        }
     }
 
     private void getServicelistRefresh() {
@@ -123,7 +134,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context)+ "/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {

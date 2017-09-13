@@ -25,6 +25,11 @@ public class AppConstant {
     public static final String FREELANCER = "3";
     public static final String ACCEPTED = "ACCEPTED";
     public static final String REJECTED = "REJECTED";
+    public static final String PUBLIC = "PUBLIC";
+    public static final String FRIENDS = "FRIENDS";
+    public static final String ONLYME = "ONLY ME";
+
+
 
     /*
        * Change this to your publishable key.

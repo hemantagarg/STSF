@@ -55,7 +55,7 @@ public class CommonAsyncTaskHashmap {
 
     public void getqueryJsonNoProgress(String url,JSONObject jsonObject, int methodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url);
+        Log.e("request", ": " + url+jsonObject);
         JsonObjectRequest mJsonRequest = new JsonObjectRequest(
                 methodType,
                 url,
@@ -130,7 +130,7 @@ public class CommonAsyncTaskHashmap {
 
     public void getqueryJsonbject(String url, JSONObject jsonObject, int MethodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url + jsonObject);
+        Log.e("request", ": " + url);
         pd.show();
         JsonObjectRequest mJsonRequest = new JsonObjectRequest(
                 MethodType,

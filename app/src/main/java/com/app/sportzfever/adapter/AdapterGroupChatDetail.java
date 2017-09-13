@@ -90,7 +90,7 @@ public class AdapterGroupChatDetail extends RecyclerView.Adapter<RecyclerView.Vi
                 vh1.text_message.setText(md1.getMessage());
                 vh1.text_date.setText(md1.getSentTime());
                 vh1.txtName.setText(md1.getSenderName());
-                vh1.txtName.setVisibility(View.VISIBLE);
+                vh1.txtName.setVisibility(View.GONE);
 
                 break;
             case 2:

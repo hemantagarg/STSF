@@ -20,6 +20,9 @@ public interface JsonApiHelper {
     String GET_FRIENDLIST = "getFriendsList/";
     String GET_RECENTCHAT = "getRecentChatData/";
     String SHAREFEED = "shareFeed";
+    String UPDATESTATUS = "updateStatus";
+    String DELETESTATUS = "deleteStatus/";
+    String CREATESTATUS = "createStatus";
     String POSTCOMMENT = "comment";
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";

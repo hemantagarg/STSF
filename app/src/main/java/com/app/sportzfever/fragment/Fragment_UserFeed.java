@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -52,6 +54,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+    private EditText edt_text_post;
+    private TextView text_post;
 
     public static Fragment_UserFeed fragment_userFeed;
     private final String TAG = Fragment_UserFeed.class.getSimpleName();
@@ -81,6 +85,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         super.onViewCreated(view, savedInstanceState);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
+        edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
+        text_post = (TextView) view.findViewById(R.id.text_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
@@ -101,6 +107,17 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             }
         });
 
+        text_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+               /* if (edt_text_post.getText().toString().equalsIgnoreCase("")) {
+                    Toast.makeText(context, "Please enter message", Toast.LENGTH_SHORT).show();
+                } else {
+                    postFeed();
+                }*/
+            }
+        });
 /*
         list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -199,13 +216,35 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         }
     }
 
+
+    private void postFeed() {
+        try {
+            skipCount = 0;
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", AppUtils.getUserId(context));
+                jsonObject.put("statusVisiblity", AppConstant.PUBLIC);
+                jsonObject.put("statusType", "text");
+                jsonObject.put("description", "text");
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
+                new CommonAsyncTaskHashmap(21, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void shareFeed(String id) {
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
-
                 jsonObject.put("userId", AppUtils.getUserId(context));
                 jsonObject.put("statusId", id);
 
@@ -219,6 +258,43 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             e.printStackTrace();
         }
     }
+
+    private void updateFeed(String id) {
+        try {
+            skipCount = 0;
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("description", edt_text_post.getText().toString());
+                jsonObject.put("statusId", id);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
+                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteFeed(String id) {
+        try {
+            skipCount = 0;
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
+                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
@@ -328,6 +404,15 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 21) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getServicelistRefresh();
+                    edt_text_post.setText("");
+
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

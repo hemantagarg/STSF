@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -202,25 +201,32 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
 
                         Log.e("messageList", "*" + messageList.length());
                         Log.e("chatListData", "*" + chatListData.size());
-
+                        boolean isUpdated = false;
                         for (int i = chatListData.size(); i < messageList.length(); i++) {
                             JSONObject chat = messageList.getJSONObject(i);
                             ModelChat chatData = new ModelChat();
-                          //  chatData.setReceiverId(chat.getString("recieverId"));
+                            //  chatData.setReceiverId(chat.getString("recieverId"));
                             chatData.setSenderid(chat.getString("senderId"));
                             chatData.setRowType(1);
                             //     chatData.setReciever_id(chat.getString("receiverID"));
                             chatData.setMessage(chat.getString("message"));
                             chatData.setSenderName(chat.getString("senderName"));
-                           // chatData.setReceiverName(chat.getString("recieverName"));
+                            // chatData.setReceiverName(chat.getString("recieverName"));
                             chatData.setSentTime(chat.getString("sentOn") + " " + chat.getString("sentTime"));
                             chatListData.add(chatData);
-
+                            isUpdated = true;
                         }
 
-                        Collections.reverse(chatListData);
-                        adapterChatDetail.notifyDataSetChanged();
-                        chatList.smoothScrollToPosition(chatListData.size() - 1);
+                        //   Collections.reverse(chatListData);
+                        if (isUpdated) {
+                            adapterChatDetail.notifyDataSetChanged();
+                            chatList.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    chatList.smoothScrollToPosition(adapterChatDetail.getItemCount());
+                                }
+                            });
+                        }
                     }
                     if (isActivityVisible) {
                         syncData();
