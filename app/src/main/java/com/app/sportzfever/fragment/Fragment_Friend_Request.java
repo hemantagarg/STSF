@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterFriendRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -148,19 +149,29 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (flag == 1) {
 
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
+                acceptTeamrequest(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+
+        }else if (flag == 2){
+            acceptTeamrequest(arrayList.get(position).getId(), AppConstant.REJECTED);
+
         }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
-    }
 
+    }
+    private void acceptTeamrequest(String id, String accept) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTFRIENDREQUEST + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void getServicelist() {
         try {
             skipCount = 0;

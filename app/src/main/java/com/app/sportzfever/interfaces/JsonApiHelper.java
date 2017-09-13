@@ -27,6 +27,7 @@ public interface JsonApiHelper {
     String SIGNUP = "sfSignUp";
     String ACCEPTREJECTMATCHCHALLENGEINVITATION = "RespondToMatchchallengeInvitation/";
     String ACCEPTREJECTSCORECHALLENGEINVITATION = "RespondToMatchScorerInvitation/";
+    String ACCEPTFRIENDREQUEST = "confirmFriend/";
     String RESPONDTOMATCHANDPRACTICEINVITATION = "RespondToMatchAndPractiseInvitation/";
     String RESPONDTOTEAMJOININVITATIONFROMTEAM = "RespondToTeamJoinInvitationFromTeam/";
 

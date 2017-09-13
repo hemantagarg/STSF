@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -84,11 +85,25 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<RecyclerView.View
            if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getUserProfilePicture())
-
+                        .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
 
+
+            ((AdapterFriendRequest.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
+
+                }
+            });   ((AdapterFriendRequest.CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 2);
+
+                }
+            });
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -105,7 +120,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<RecyclerView.View
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
 
-
+Button btn_confirm,btn_reject;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
@@ -113,6 +128,8 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<RecyclerView.View
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
+            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
+            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
 
         }
 

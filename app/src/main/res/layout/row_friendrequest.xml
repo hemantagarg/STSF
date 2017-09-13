@@ -73,6 +73,7 @@
                     android:weightSum="2">
 
                     <Button
+                        android:id="@+id/btn_confirm"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp30"
                         android:text="Accept"
@@ -81,6 +82,7 @@
                         android:textColor="@color/white"
                         android:layout_weight="1"/>
                     <Button
+                        android:id="@+id/btn_reject"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp30"
                         android:text="Reject"
