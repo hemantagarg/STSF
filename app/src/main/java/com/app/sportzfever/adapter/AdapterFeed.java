@@ -18,7 +18,6 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
-import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -212,6 +211,10 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
 
                     }
+                }else {
+                    ((CustomViewHolder) holder).image_feed1.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
