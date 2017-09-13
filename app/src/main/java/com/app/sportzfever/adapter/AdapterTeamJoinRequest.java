@@ -78,13 +78,15 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
 
             TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getNotificationText());
             ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
-            ((CustomViewHolder) holder).text_teamname.setText(m1.getNotificationText());
-            ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
+           /* ((CustomViewHolder) holder).text_teamname.setText(m1.getNotificationText());
+            ((CustomViewHolder) holder).text_location.setText(m1.getLocation());*/
 
             /*((CustomViewHolder) holder).text_mess age.setText(m1.getNotificationText());*/
             //((CustomViewHolder) holder).text_date.setText(m1.getMatchDate());
+
+
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeamProfilePicture())

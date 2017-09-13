@@ -103,14 +103,17 @@ public class AdapterUpcomingEvent extends RecyclerView.Adapter<RecyclerView.View
                         .into(((CustomViewHolder) holder).teamb);
             }
 
-            if (m1.getEventType().equalsIgnoreCase("EVENT")){
+            if (m1.getEventType().equalsIgnoreCase("MATCH")){
+                ((CustomViewHolder) holder).relmatchvs.setVisibility(View.VISIBLE);
+                ((CustomViewHolder) holder).text_title.setVisibility(View.GONE);
+
+
+            }else {
+
+
                 ((CustomViewHolder) holder).relmatchvs.setVisibility(View.GONE);
                 ((CustomViewHolder) holder).text_title.setText(m1.getTitle());
                 ((CustomViewHolder) holder).text_title.setVisibility(View.VISIBLE);
-
-            }else {
-                ((CustomViewHolder) holder).relmatchvs.setVisibility(View.VISIBLE);
-                ((CustomViewHolder) holder).text_title.setVisibility(View.GONE);
             }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

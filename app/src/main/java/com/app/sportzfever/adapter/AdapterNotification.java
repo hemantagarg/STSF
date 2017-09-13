@@ -76,8 +76,8 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ModelNotification m1 = (ModelNotification) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getActivity());
-            ((CustomViewHolder) holder).text_message.setText(m1.getNotificationText());
+           // ((CustomViewHolder) holder).text_name.setText(m1.getActivity());
+            ((CustomViewHolder) holder).text_name.setText(m1.getNotificationText());
             ((CustomViewHolder) holder).text_date.setText(m1.getDatetime());
           /*  if (!m1.getUserImage().equalsIgnoreCase("")) {
                 Picasso.with(mContext)

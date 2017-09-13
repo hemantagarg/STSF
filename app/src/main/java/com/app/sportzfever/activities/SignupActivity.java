@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +28,14 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     private Activity mActivity;
     private EditText edtEmail, edtPassword,edtName,edtmobile;
     private Button btn_login;
-    private TextView createAccount, forgotPassword;
+    private TextView createAccount, forgotPassword,signin;
     private ImageView image_facebook, image_twitter;
     String latitude = "0.0", longitude = "0.0";
-
+RelativeLayout rel_signin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.signup_new);
         mActivity = SignupActivity.this;
         initViews();
         setListener();
@@ -73,20 +74,14 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             }
         });
 
-        createAccount.setOnClickListener(new View.OnClickListener() {
+        rel_signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(mActivity, SignupActivity.class));
+                startActivity(new Intent(mActivity, LoginActivity.class));
             }
         });
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                //   startActivity(new Intent(mActivity, ForgotPassword.class));
-            }
-        });
     }
 
 
@@ -129,6 +124,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         forgotPassword = (TextView) findViewById(R.id.forgotPassword);
         image_facebook = (ImageView) findViewById(R.id.image_facebook);
         image_twitter = (ImageView) findViewById(R.id.image_twitter);
+        rel_signin = (RelativeLayout) findViewById(R.id.rel_signin);
 
     }
 
@@ -144,19 +140,14 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                     JSONObject data = response.getJSONObject("data");
 
                     AppUtils.setUserId(mActivity, data.getString("SF_USER_ID"));
-                   /* AppUtils.setUserRole(mActivity, data.getString("UserType"));
                     AppUtils.setUserName(mActivity, data.getString("Name"));
                     AppUtils.setUseremail(mActivity, data.getString("Email"));
-                    AppUtils.setUserMobile(mActivity, data.getString("Mobile"));
-                    AppUtils.setUserImage(mActivity, data.getString("ProfilePic"));
-                    AppUtils.setCategories(mActivity, data.getJSONArray("services").toString());
-*/
+                    AppUtils.setUserImage(mActivity, data.getString("ProfilePicture"));
+                    startActivity(new Intent(mActivity, Dashboard.class));
                     finish();
-                   /* startActivity(new Intent(mActivity, VendorDashboard.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-                    finish();*/
                 } else {
 
-                    // Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

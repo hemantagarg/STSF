@@ -41,15 +41,7 @@
             android:orientation="vertical"
             android:padding="@dimen/dp40">
 
-            <com.app.sportzfever.utils.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp10"
-                android:layout_marginLeft="@dimen/dp10"
-                android:paddingTop="@dimen/dp10"
-                android:text="@string/sign_in"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_15" />
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -87,44 +79,71 @@
                 android:textColor="@color/textcolordark"
                 android:textSize="@dimen/text_size_12"
                 android:visibility="gone" />
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_email"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp20"
                 android:layout_height="wrap_content">
-
             <EditText
-                android:id="@+id/edtEmail"
+                android:id="@+id/edtName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp20"
                 android:gravity="start"
-                android:hint="@string/hint_enter_email"
-                android:inputType="textEmailAddress"
-                android:padding="@dimen/dp14"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15" />
+                android:hint="@string/hint_enter_name"
+                android:inputType="text"
+                android:padding="@dimen/dp14" />
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_email1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="start"
+                android:hint="@string/hint_enter_email"
+                android:inputType="textEmailAddress"
+                android:padding="@dimen/dp14" />
+        </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtmobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+android:maxLength="10"
+                android:gravity="start"
+                android:hint="@string/hint_enter_mbno"
+                android:inputType="number"
+                android:padding="@dimen/dp14" />
+    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp10"
                 android:gravity="start"
                 android:hint="@string/hint_enter_password"
                 android:inputType="textPassword"
-                android:padding="@dimen/dp14"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15" />
-            </android.support.design.widget.TextInputLayout>
+                android:padding="@dimen/dp14" />
+</android.support.design.widget.TextInputLayout>
+
+
+
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
                 android:background="@color/logocolor"
                 android:text="@string/log_in"
                 android:textColor="@color/white"
@@ -133,7 +152,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_signup"
+            android:id="@+id/rel_signin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -146,19 +165,19 @@
                 android:layout_gravity="center_horizontal"
                 android:paddingBottom="@dimen/dp10"
                 android:paddingTop="@dimen/dp10"
-                android:text="Don't have an account?"
+                android:text="Existing User?"
                 android:textColor="@color/textcolordark"
                 android:textSize="@dimen/text_size_13" />
 
             <com.app.sportzfever.utils.CustomTextView
-                android:id="@+id/signup"
+                android:id="@+id/signin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/createAccount"
                 android:paddingBottom="@dimen/dp10"
                 android:paddingLeft="@dimen/dp10"
                 android:paddingTop="@dimen/dp10"
-                android:text="Sign up"
+                android:text="Sign in"
                 android:textColor="@color/red"
                 android:textSize="@dimen/text_size_13" />
 

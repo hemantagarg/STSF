@@ -121,7 +121,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
-                ((CustomViewHolder) holder).text_time.setText(AppUtils.getTimeFromDateString(m1.getDateTime()));
+                ((CustomViewHolder) holder).text_time.setText(m1.getDateTime());
 
                 if (m1.getCommentsCount() > 0) {
                     if (m1.getCommentsCount() > 1)

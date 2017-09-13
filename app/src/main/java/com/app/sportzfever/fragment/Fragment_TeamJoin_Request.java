@@ -293,6 +293,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         teamJoinRequest.setEventType(jo.getString("eventType"));
+                        teamJoinRequest.setNotificationText(jo.getString("notificationText"));
                         teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
                         teamJoinRequest.setRowType(1);
 
@@ -331,6 +332,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest.setEventType(jo.getString("eventType"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         teamJoinRequest.setEventTitle(jo.getString("eventTitle"));
+                        teamJoinRequest.setNotificationText(jo.getString("notificationText"));
                         teamJoinRequest.setOppositionTeamName(jo.getString("oppositionTeamName"));
                         teamJoinRequest.setRowType(1);
 
@@ -348,6 +350,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                         teamJoinRequest.setTeamName(jo.getString("teamName"));
                         teamJoinRequest.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         teamJoinRequest.setPlayerAvatarName(jo.getString("playerAvatarName"));
+                        teamJoinRequest.setNotificationText(jo.getString("notificationText"));
                         teamJoinRequest.setRowType(1);
 
                         arrayList.add(teamJoinRequest);

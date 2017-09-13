@@ -161,7 +161,7 @@ public class Fragment_MatchInvitationAvailability extends BaseFragment implement
         in.putExtra("searchID", arrayList.get(position).getSearchId());
         startActivity(in);*/
     }
-
+/*
     private void getServicelist() {
         try {
             skipCount = 0;
@@ -175,7 +175,7 @@ public class Fragment_MatchInvitationAvailability extends BaseFragment implement
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void getServicelistRefresh() {
 

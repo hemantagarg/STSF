@@ -65,8 +65,8 @@ public class Fragment_Team extends BaseFragment {
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("Friend");
-        tabLayout.getTabAt(1).setText("Team");
+        tabLayout.getTabAt(0).setText("Friend Invites");
+        tabLayout.getTabAt(1).setText("Team Invites");
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
     }

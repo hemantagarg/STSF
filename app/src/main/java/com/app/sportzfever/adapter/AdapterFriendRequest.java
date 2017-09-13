@@ -84,7 +84,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<RecyclerView.View
            if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getUserProfilePicture())
-                        .transform(new CircleTransform())
+
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
             }

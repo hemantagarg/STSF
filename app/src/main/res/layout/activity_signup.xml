@@ -85,14 +85,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp30"
-            android:background="@drawable/blue_button_selecor"
-            android:text="@string/log_in"
+            android:background="@color/logocolor"
+            android:text="@string/signup"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_15" />
 
 
         <RelativeLayout
+            android:id="@+id/rel_signin"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
             <com.app.sportzfever.utils.CustomTextView
@@ -121,41 +123,8 @@
         </RelativeLayout>
 
 
-        <com.app.sportzfever.utils.CustomTextView
-            android:id="@+id/textOr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp10"
-            android:text="@string/or"
-            android:textColor="@color/textcolordark"
-            android:textSize="@dimen/text_size_12" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/dp10"
-            android:weightSum="1">
-
-            <ImageView
-                android:id="@+id/image_facebook"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:layout_marginRight="@dimen/dp10"
-                android:layout_weight="1.69"
-                android:src="@drawable/fb" />
 
 
-            <ImageView
-                android:id="@+id/image_twitter"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:layout_marginLeft="@dimen/dp10"
-                android:src="@drawable/tw" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

@@ -36,7 +36,7 @@ public class ScoreActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         String url = "http://sfscoring.betasportzfever.com/scoring/" + AppUtils.getUserId(getApplicationContext()) + "/" + AppConstant.TOKEN;
         webview.loadUrl(url);
-
+Log.e("urltest",url);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

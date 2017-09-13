@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp30"
-            android:background="@drawable/blue_button_selecor"
+            android:background="@color/logocolor"
             android:text="@string/log_in"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_15" />

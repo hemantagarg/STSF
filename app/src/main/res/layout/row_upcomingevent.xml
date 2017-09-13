@@ -160,10 +160,10 @@
                             android:layout_alignParentLeft="true"
                             android:layout_below="@+id/teamb"
                             android:padding="@dimen/dp10"
-
-                            android:text="Madhav"
+                            android:maxLines="1"
+                            android:text="Madhavdsadsa"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_16" />
+                            android:textSize="@dimen/text_size_12" />
 
                         <TextView
                             android:id="@+id/text_teamname"
@@ -172,11 +172,14 @@
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/teamb"
                             android:padding="@dimen/dp10"
-                            android:text="vs"
+                            android:layout_toRightOf="@+id/text_name"
+                            android:maxLines="1"
+
+                            android:text="vsdsdsadsdsadss"
                             android:textColor="@color/black"
 
 
-                            android:textSize="@dimen/text_size_16" />
+                            android:textSize="@dimen/text_size_12" />
                     </RelativeLayout>
 
 
