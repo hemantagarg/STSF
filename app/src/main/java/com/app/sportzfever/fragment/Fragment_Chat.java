@@ -21,6 +21,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelChat;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -110,10 +111,9 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     public void onItemClickListener(int position, int flag) {
         Intent in = new Intent(context, ActivityChat.class);
 
-        in.putExtra("reciever_id", arrayList.get(position).getSenderid());
-        in.putExtra("name", arrayList.get(position).getSenderUsername());
-        in.putExtra("image", arrayList.get(position).getSenderPic());
-
+        in.putExtra("reciever_id", arrayList.get(position).getID());
+        in.putExtra("name", arrayList.get(position).getName());
+        in.putExtra("image", arrayList.get(position).getProfilePic());
         startActivity(in);
     }
 
@@ -123,7 +123,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + "1";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context)+ "/" + AppConstant.TOKEN;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {

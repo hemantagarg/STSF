@@ -88,8 +88,8 @@ public class AdapterGroupChatDetail extends RecyclerView.Adapter<RecyclerView.Vi
                 // configureViewHolder1(vh1, position);
                 ModelChat md1 = (ModelChat) detail.get(position);
                 vh1.text_message.setText(md1.getMessage());
-                vh1.text_date.setText(md1.getDate_time());
-                vh1.txtName.setText(md1.getSender_name());
+                vh1.text_date.setText(md1.getSentTime());
+                vh1.txtName.setText(md1.getSenderName());
                 vh1.txtName.setVisibility(View.VISIBLE);
 
                 break;
@@ -97,8 +97,8 @@ public class AdapterGroupChatDetail extends RecyclerView.Adapter<RecyclerView.Vi
                 recieverHolder vh2 = (recieverHolder) holder;
                 ModelChat md2 = (ModelChat) detail.get(position);
                 vh2.text_message.setText(md2.getMessage());
-                vh2.text_date.setText(md2.getDate_time());
-                vh2.txtName.setText(md2.getSender_name());
+                vh2.text_date.setText(md2.getSentTime());
+                vh2.txtName.setText(md2.getSenderName());
                 vh2.txtName.setVisibility(View.VISIBLE);
                 break;
         }
@@ -134,7 +134,7 @@ public class AdapterGroupChatDetail extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if (detail.get(position).getSender_id().equalsIgnoreCase(AppUtils.getUserId(mContext))) {
+        if (detail.get(position).getSenderid().equalsIgnoreCase(AppUtils.getUserId(mContext))) {
             return 1;
         } else {
             return 2;

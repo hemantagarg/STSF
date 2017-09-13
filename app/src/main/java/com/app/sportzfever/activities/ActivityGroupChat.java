@@ -147,10 +147,10 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
                         SimpleDateFormat sdf = new SimpleDateFormat(ISO_FORMAT);
                         long time = System.currentTimeMillis();
                         ModelChat chatData = new ModelChat();
-                        chatData.setSender_id(AppUtils.getUserId(mActivity));
+                        chatData.setSenderid(AppUtils.getUserId(mActivity));
                         chatData.setMessage(msg);
-                        chatData.setSender_name(AppUtils.getUserName(mActivity));
-                        chatData.setDate_time(sdf.format(date));
+                        chatData.setSenderName(AppUtils.getUserName(mActivity));
+                        chatData.setSentTime(sdf.format(date));
                         chatListData.add(chatData);
                         chatList.setAdapter(adapterChatDetail);
 
@@ -207,13 +207,13 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
                             JSONObject chat = messageList.getJSONObject(i);
                             ModelChat chatData = new ModelChat();
                           //  chatData.setReceiverId(chat.getString("recieverId"));
-                            chatData.setSender_id(chat.getString("senderId"));
+                            chatData.setSenderid(chat.getString("senderId"));
                             chatData.setRowType(1);
                             //     chatData.setReciever_id(chat.getString("receiverID"));
                             chatData.setMessage(chat.getString("message"));
-                            chatData.setSender_name(chat.getString("senderName"));
+                            chatData.setSenderName(chat.getString("senderName"));
                            // chatData.setReceiverName(chat.getString("recieverName"));
-                            chatData.setDate_time(chat.getString("sentOn") + " " + chat.getString("sentTime"));
+                            chatData.setSentTime(chat.getString("sentOn") + " " + chat.getString("sentTime"));
                             chatListData.add(chatData);
 
                         }
