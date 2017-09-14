@@ -93,8 +93,11 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        setData();
-
+        if (AppUtils.getGroupChatList(context).equalsIgnoreCase("")) {
+            getServicelistRefresh();
+        } else {
+            setData();
+        }
     }
 
     private void setData() {
@@ -165,6 +168,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
+                    AppUtils.setGroupChatList(context, data.toString());
                     arrayList.clear();
                     Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
@@ -185,6 +189,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
                     }
 
                 } else {
+                    AppUtils.setGroupChatList(context, "");
                     if (adapterGroupChats != null) {
                         arrayList.clear();
                         adapterGroupChats.notifyDataSetChanged();

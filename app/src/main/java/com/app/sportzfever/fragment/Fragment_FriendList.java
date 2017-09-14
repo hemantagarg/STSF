@@ -164,6 +164,7 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
+                    AppUtils.setFriendList(context, data.toString());
                     arrayList.clear();
                     Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
