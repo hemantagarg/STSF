@@ -111,11 +111,11 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             @Override
             public void onClick(View view) {
 
-               /* if (edt_text_post.getText().toString().equalsIgnoreCase("")) {
+                if (edt_text_post.getText().toString().equalsIgnoreCase("")) {
                     Toast.makeText(context, "Please enter message", Toast.LENGTH_SHORT).show();
                 } else {
                     postFeed();
-                }*/
+                }
             }
         });
 /*
@@ -219,7 +219,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void postFeed() {
         try {
-            skipCount = 0;
+
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
@@ -241,7 +241,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void shareFeed(String id) {
         try {
-            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
@@ -261,7 +260,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void updateFeed(String id) {
         try {
-            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
@@ -281,7 +279,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void deleteFeed(String id) {
         try {
-            skipCount = 0;
+
             if (AppUtils.isNetworkAvailable(context)) {
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
