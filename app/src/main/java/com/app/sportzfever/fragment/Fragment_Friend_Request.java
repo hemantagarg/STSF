@@ -151,7 +151,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
 
-                acceptTeamrequest(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            editComment(arrayList.get(position).getId(), AppConstant.ACCEPTED);
 
         }else if (flag == 2){
             acceptTeamrequest(arrayList.get(position).getId(), AppConstant.REJECTED);
@@ -163,7 +163,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTFRIENDREQUEST + id + "/" + accept;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -172,6 +172,33 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             e.printStackTrace();
         }
     }
+
+
+
+    private void editComment(String accept, String id) {
+        try {
+            AppUtils.onKeyBoardDown(context);
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("id",id);
+
+                jsonObject.put("requestStatus", accept);
+
+
+                // http://sfscoring.betasportzfever.com/getNotifications/155
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTFRIENDREQUEST;
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void getServicelist() {
         try {
             skipCount = 0;

@@ -24,6 +24,7 @@ public interface JsonApiHelper {
     String DELETESTATUS = "deleteStatus/";
     String CREATESTATUS = "createStatus";
     String POSTCOMMENT = "comment";
+    String SCORING = "scoring/";
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";
     String GET_JOINEDGROUPCHAT = "getJoinedGroups/";

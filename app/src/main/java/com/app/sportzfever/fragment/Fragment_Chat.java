@@ -58,7 +58,6 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             fragment_chat = new Fragment_Chat();
         return fragment_chat;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

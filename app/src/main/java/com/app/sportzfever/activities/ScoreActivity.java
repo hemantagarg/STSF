@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -38,7 +39,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String url = "http://sfscoring.betasportzfever.com/scoring/" + AppUtils.getUserId(getApplicationContext()) + "/" + AppConstant.TOKEN;
+        String url = JsonApiHelper.BASEURL + JsonApiHelper.SCORING+ AppUtils.getUserId(getApplicationContext()) + "/" + AppConstant.TOKEN;
         webview.loadUrl(url);
         Log.e("urltest", url);
 
