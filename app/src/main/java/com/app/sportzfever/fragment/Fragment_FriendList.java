@@ -77,9 +77,6 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
     public void onResume() {
         super.onResume();
 
-        if (!AppUtils.getUserId(context).equalsIgnoreCase("")) {
-         getServicelistRefresh();
-        }
     }
 
     @Override
@@ -94,7 +91,31 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+        setData();
+    }
 
+    private void setData() {
+        try {
+            String data1 = AppUtils.getFriendList(context);
+            JSONArray data = new JSONArray(data1);
+            arrayList.clear();
+            Gson gson = new Gson();
+            for (int i = 0; i < data.length(); i++) {
+
+                ModelFriendList modelFriendList = null;
+                try {
+                    modelFriendList = gson.fromJson(data.getJSONObject(i).toString(), ModelFriendList.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                arrayList.add(modelFriendList);
+            }
+            adapterFriendList = new AdapterFriendList(context, this, arrayList);
+            list_request.setAdapter(adapterFriendList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -124,7 +145,7 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getFriendsList/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDLIST + "1";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDLIST + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {

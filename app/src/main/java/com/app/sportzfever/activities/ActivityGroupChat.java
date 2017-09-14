@@ -142,7 +142,7 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
                     try {
                         Calendar calander = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                         Date date = calander.getTime();
-                        String ISO_FORMAT = "dd-MM-yyyy HH:mm";
+                        String ISO_FORMAT = "hh:mm";
                         SimpleDateFormat sdf = new SimpleDateFormat(ISO_FORMAT);
                         long time = System.currentTimeMillis();
                         ModelChat chatData = new ModelChat();

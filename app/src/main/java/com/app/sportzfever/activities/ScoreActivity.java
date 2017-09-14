@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.JsonApiHelper;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 
@@ -39,7 +38,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String url = JsonApiHelper.BASEURL + JsonApiHelper.SCORING+ AppUtils.getUserId(getApplicationContext()) + "/" + AppConstant.TOKEN;
+        String url = JsonApiHelper.BASEURL + JsonApiHelper.SCORING+ AppUtils.getUserId(getApplicationContext()) + "/" +  AppUtils.getAuthToken(context);
         webview.loadUrl(url);
         Log.e("urltest", url);
 
@@ -47,10 +46,11 @@ public class ScoreActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                progressbar.setVisibility(View.GONE);
             }
 
             public void onPageFinished(WebView view, String url) {
-                progressbar.setVisibility(View.GONE);
+
             }
 
             @Override

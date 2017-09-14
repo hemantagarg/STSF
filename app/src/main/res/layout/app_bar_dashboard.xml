@@ -32,6 +32,7 @@
                 android:id="@+id/search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_gravity="right"
                 android:layout_marginRight="@dimen/dp20"
                 android:src="@drawable/search_white" />

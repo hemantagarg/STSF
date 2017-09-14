@@ -14,7 +14,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.app.sportzfever.activities.Splash;
+import com.app.sportzfever.activities.Dashboard;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -34,20 +34,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData() != null) {
             //  Log.d("FCM", "Notification Message Body: " + remoteMessage.getNotification().getBody());
             Log.e("body", "*" + remoteMessage.getData());
-
-            sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("title"));
+            sendNotification(remoteMessage.getData().get("text"), remoteMessage.getData().get("title"), remoteMessage.getData().get("type"));
 //            sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTag());
         }
     }
 
 
-    private void sendNotification(String messageBody, String title) {
+    private void sendNotification(String messageBody, String title, String type) {
         PendingIntent pendingIntent;
         Log.e("title", "**" + title);
         Random r = new Random();
         int when = r.nextInt(1000);
-        Intent intent2 = new Intent(this, Splash.class);
+
+        Intent intent2 = new Intent(this, Dashboard.class);
         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent2.putExtra("type", type);
+
         pendingIntent = PendingIntent.getActivity(this, 0, intent2,
                 PendingIntent.FLAG_ONE_SHOT);
 

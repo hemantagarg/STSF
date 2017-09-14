@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -121,7 +120,29 @@ public class Dashboard extends AppCompatActivity {
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
 
         setupTabIcons();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("type")) {
+                tabLayout.getTabAt(1).select();
+             //   pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+            }
+        }
         setListener();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null) {
+            if (intent.hasExtra("type")) {
+                tabLayout.getTabAt(1).select();
+           //     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+            }
+        }
+
     }
 
     private void init() {
@@ -144,12 +165,11 @@ public class Dashboard extends AppCompatActivity {
         chat_container = (FrameLayout) findViewById(R.id.chat_container);
         notification_container = (FrameLayout) findViewById(R.id.notification_container);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-      /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-*/
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+       /* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -161,7 +181,7 @@ public class Dashboard extends AppCompatActivity {
             }//this method helps you to aside menu drawer
         };
         drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -230,10 +250,9 @@ public class Dashboard extends AppCompatActivity {
                 setWhiteColor();
                 text_score.setTextColor(getResources().getColor(R.color.red));
                 text_score.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(context, ScoreActivity.class);
                 startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

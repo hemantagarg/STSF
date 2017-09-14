@@ -54,10 +54,10 @@
                     android:layout_below="@+id/text_name"
                     android:layout_marginTop="@dimen/dp3"
                     android:maxLines="2"
-                    android:visibility="gone"
                     android:text="Reference site abouut lorel impsum, giving on its origins..."
                     android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_13" />
+                    android:textSize="@dimen/text_size_13"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -76,7 +76,8 @@
                     android:padding="@dimen/dp5"
                     android:text="2:17 Pm"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/text_size_11" />
+                    android:textSize="@dimen/text_size_11"
+                    android:visibility="gone" />
 
 
                 <TextView

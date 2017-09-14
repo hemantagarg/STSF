@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -46,6 +47,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
+    private TextView text_nodata;
     private String maxlistLength = "";
 
     public static Fragment_TeamJoin_Request fragment_teamJoin_request;
@@ -79,11 +81,17 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getServicelistRefresh();
     }
 
@@ -255,7 +263,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -361,8 +369,9 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    text_nodata.setVisibility(View.GONE);
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

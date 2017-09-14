@@ -11,10 +11,6 @@
         android:layout_height="match_parent"
         android:background="@color/layout_bg">
 
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <LinearLayout
                 android:id="@+id/rl_main_layout"
                 android:layout_width="match_parent"
@@ -100,6 +96,5 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -49,7 +48,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
     private EditText edtMessage;
     private Toolbar toolbar;
     private TextView username;
-    private String reciever_id = "", conver_id = "";
+    private String reciever_id = "";
     private ImageView imgSendMessage, image_user;
     private LinearLayoutManager layoutManager;
     private boolean loading = true, isActivityVisible = true;
@@ -121,6 +120,8 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isActivityVisible = false;
+        AppUtils.setIsChatVisible(mActivity, false);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
                     try {
                         Calendar calander = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                         Date date = calander.getTime();
-                        String ISO_FORMAT = "dd-MM-yyyy HH:mm";
+                        String ISO_FORMAT = "hh:mm";
                         SimpleDateFormat sdf = new SimpleDateFormat(ISO_FORMAT);
                         long time = System.currentTimeMillis();
                         ModelChat chatData = new ModelChat();
@@ -167,7 +168,6 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
 
     private void SendDataToServer() {
         if (AppUtils.isNetworkAvailable(mActivity)) {
-
             try {
 
                 JSONObject jsonObject = new JSONObject();
@@ -228,7 +228,7 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
                                 }
                             });
                             adapterChatDetail.notifyDataSetChanged();
-                            Collections.reverse(chatListData);
+                         //   Collections.reverse(chatListData);
                         }
 
 
@@ -267,9 +267,8 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
             @Override
             public void run() {
                 SyncDataToServer();
-
             }
-        }, 4000);
+        }, 5000);
     }
 
     @Override
@@ -278,4 +277,6 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
         isActivityVisible = false;
         AppUtils.setIsChatVisible(mActivity, false);
     }
+
+
 }

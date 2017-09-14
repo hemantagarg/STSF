@@ -21,6 +21,7 @@ import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.models.VolleyErrorModel;
 import com.app.sportzfever.utils.AppConstant;
+import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONObject;
 
@@ -53,9 +54,9 @@ public class CommonAsyncTaskHashmap {
     }
 
 
-    public void getqueryJsonNoProgress(String url,JSONObject jsonObject, int methodType) {
+    public void getqueryJsonNoProgress(String url, JSONObject jsonObject, int methodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url+jsonObject);
+        Log.e("request", ": " + url + jsonObject);
         JsonObjectRequest mJsonRequest = new JsonObjectRequest(
                 methodType,
                 url,
@@ -107,18 +108,11 @@ public class CommonAsyncTaskHashmap {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", AppConstant.TOKEN);
+                params.put("Authorization", AppUtils.getAuthToken(context));
                 return params;
             }
         };
         // Adding request to request queue
-        queue.add(mJsonRequest);
-
-        mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
-                GlobalConstants.ONE_SECOND_DELAY * 40, 0,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-// Adding request to request queue
         queue.add(mJsonRequest);
 
         mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
@@ -188,7 +182,7 @@ public class CommonAsyncTaskHashmap {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", AppConstant.TOKEN);
+                params.put("Authorization",  AppUtils.getAuthToken(context));
                 return params;
             }
         };
