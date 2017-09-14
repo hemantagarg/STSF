@@ -21,7 +21,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModeJoinedGroup;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -148,7 +147,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52'
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_JOINEDGROUPCHAT + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_JOINEDGROUPCHAT + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
@@ -186,7 +185,10 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
                     }
 
                 } else {
-
+                    if (adapterGroupChats != null) {
+                        arrayList.clear();
+                        adapterGroupChats.notifyDataSetChanged();
+                    }
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

@@ -125,7 +125,7 @@ public class Dashboard extends AppCompatActivity {
         if (intent != null) {
             if (intent.hasExtra("type")) {
                 tabLayout.getTabAt(1).select();
-             //   pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                //   pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
             }
         }
         setListener();
@@ -139,7 +139,7 @@ public class Dashboard extends AppCompatActivity {
         if (intent != null) {
             if (intent.hasExtra("type")) {
                 tabLayout.getTabAt(1).select();
-           //     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                //     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
             }
         }
 
@@ -380,6 +380,11 @@ public class Dashboard extends AppCompatActivity {
                         AppUtils.setUserId(context, "");
                         AppUtils.setUseremail(context, "");
                         AppUtils.setUserName(context, "");
+                        AppUtils.setGroupChatList(context, "");
+                        AppUtils.setFriendList(context, "");
+                        AppUtils.setChatList(context, "");
+                        AppUtils.setAuthToken(context, "");
+
                         Intent intent = new Intent(context, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -455,6 +460,7 @@ public class Dashboard extends AppCompatActivity {
         chat_container.setVisibility(View.VISIBLE);
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
+        refreshMessageFragment();
 
     }
 
@@ -511,6 +517,12 @@ public class Dashboard extends AppCompatActivity {
                 activeNotificationFragment();
             }
             ft.commitAllowingStateLoss();
+        }
+    }
+
+    private void refreshMessageFragment() {
+        if (currentFragment instanceof Fragment_ChatMain) {
+            ((Fragment_ChatMain) currentFragment).onResume();
         }
     }
 
