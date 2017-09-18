@@ -6,7 +6,9 @@ package com.app.sportzfever.interfaces;
 
 public interface JsonApiHelper {
 
-    String BASEURL = "http://sfscoring.betasportzfever.com/";
+    String BASEURL = JsonApiHelper.BASEURL_LIVE;
+    String BASEURL_LIVE = "http://sfscoring.sportzfever.com/";
+    String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
     String GET_NOTIFICATION = "getNotifications/";
@@ -31,12 +33,12 @@ public interface JsonApiHelper {
     String SIGNUP = "sfSignUp";
     String ACCEPTREJECTMATCHCHALLENGEINVITATION = "RespondToMatchchallengeInvitation/";
     String ACCEPTREJECTSCORECHALLENGEINVITATION = "RespondToMatchScorerInvitation/";
-    String ACCEPTFRIENDREQUEST = "confirmFriend/";
+    String ACCEPTFRIENDREQUEST = "confirmFriend";
     String RESPONDTOMATCHANDPRACTICEINVITATION = "RespondToMatchAndPractiseInvitation/";
     String RESPONDTOTEAMJOININVITATIONFROMTEAM = "RespondToTeamJoinInvitationFromTeam/";
 
     String SEND_MESSAGE = "postUserChat";
     String POST_GROUP_CHAT = "postGroupChat";
-    String GET_CHATBOX_DATA ="getChatboxData/";
-    String GET_GROUP_CHATBOX_DATA ="getGroupChatboxData/";
+    String GET_CHATBOX_DATA = "getChatboxData/";
+    String GET_GROUP_CHATBOX_DATA = "getGroupChatboxData/";
 }

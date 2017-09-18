@@ -21,7 +21,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModeJoinedGroup;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -94,8 +93,34 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        getServicelistRefresh();
+        if (AppUtils.getGroupChatList(context).equalsIgnoreCase("")) {
+            getServicelistRefresh();
+        } else {
+            setData();
+        }
+    }
 
+    private void setData() {
+        try {
+            String data1 = AppUtils.getGroupChatList(context);
+            JSONArray data = new JSONArray(data1);
+            arrayList.clear();
+            Gson gson = new Gson();
+            for (int i = 0; i < data.length(); i++) {
+
+                ModeJoinedGroup modeJoinedGroup = null;
+                try {
+                    modeJoinedGroup = gson.fromJson(data.getJSONObject(i).toString(), ModeJoinedGroup.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                arrayList.add(modeJoinedGroup);
+            }
+            adapterGroupChats = new AdapterGroupChats(getActivity(), this, arrayList);
+            list_request.setAdapter(adapterGroupChats);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -125,7 +150,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52'
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_JOINEDGROUPCHAT + AppUtils.getUserId(context)+ "/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_JOINEDGROUPCHAT + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
@@ -143,6 +168,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
+                    AppUtils.setGroupChatList(context, data.toString());
                     arrayList.clear();
                     Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
@@ -163,7 +189,11 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
                     }
 
                 } else {
-
+                    AppUtils.setGroupChatList(context, "");
+                    if (adapterGroupChats != null) {
+                        arrayList.clear();
+                        adapterGroupChats.notifyDataSetChanged();
+                    }
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

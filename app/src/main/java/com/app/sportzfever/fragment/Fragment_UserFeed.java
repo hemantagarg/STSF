@@ -92,7 +92,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
-        list_request.setNestedScrollingEnabled(false);
+        list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
         setlistener();
 
@@ -110,7 +110,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         text_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (edt_text_post.getText().toString().equalsIgnoreCase("")) {
                     Toast.makeText(context, "Please enter message", Toast.LENGTH_SHORT).show();
                 } else {
@@ -118,17 +117,17 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 }
             }
         });
-/*
-        list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        list_request.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
+                super.onScrolled(recyclerView, dx, dy);
                 if ((AppUtils.isNetworkAvailable(context))) {
 
                     if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
                         if (dy > 0) //check for scroll down
                         {
-
                             visibleItemCount = layoutManager.getChildCount();
                             totalItemCount = layoutManager.getItemCount();
                             pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
@@ -139,17 +138,18 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                                     modelFeed = new ModelFeed();
                                     modelFeed.setRowType(2);
                                     arrayList.add(modelFeed);
-                                    adapterFeed.notifyDataSetChanged();
+
+                                    recyclerView.post(new Runnable() {
+                                        public void run() {
+                                            adapterFeed.notifyItemInserted(arrayList.size() - 1);
+                                        }
+                                    });
 
                                     skipCount = skipCount + 10;
 
                                     try {
-
                                         if (AppUtils.isNetworkAvailable(context)) {
-
-                                            String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
-                                            //  new CommonAsyncTaskHashmap(1, context, Fragment_Chat.this).getqueryNoProgress(url);
-
+                                            onLoadMore();
                                         } else {
                                             Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                                         }
@@ -167,9 +167,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         Log.e("maxlength", "*" + arrayList.size());
                     }
                 }
+
             }
+
         });
-*/
 
     }
 
@@ -301,8 +302,24 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" +10+ "/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onLoadMore() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" +  AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -320,9 +337,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    //  maxlistLength = jObject.getString("total");
+                    maxlistLength = jObject.getString("totalFeedCount");
                     arrayList.clear();
-
                     Log.e("jsonsize", "**" + data.length());
                     for (int i = 0; i < data.length(); i++) {
 
@@ -397,6 +413,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
@@ -417,21 +434,71 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    // maxlistLength = jObject.getString("total");
+                    maxlistLength = jObject.getString("totalFeedCount");
                     JSONArray data = jObject.getJSONArray("data");
 
                     arrayList.remove(arrayList.size() - 1);
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
-
                         modelFeed = new ModelFeed();
-                        modelFeed.setMessage(jo.getString("message"));
+
+                        modelFeed.setId(jo.getString("id"));
+                        modelFeed.setFeedId(jo.getString("id"));
+                        modelFeed.setUser(jo.getString("user"));
+                        modelFeed.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
+                        modelFeed.setAvatarName(jo.getString("avatarName"));
+                        modelFeed.setOriginalAvatarProfilePicture(jo.getString("originalAvatarProfilePicture"));
+                        modelFeed.setOriginalAvatarName(jo.getString("originalAvatarName"));
+                        modelFeed.setOriginalAvatarType(jo.getString("originalAvatarType"));
+                        modelFeed.setAvatarSportName(jo.getString("avatarSportName"));
+                        modelFeed.setAvatarType(jo.getString("avatarType"));
+                        modelFeed.setUserName(jo.getString("userName"));
+                        modelFeed.setUserProfilePicture(jo.getString("userProfilePicture"));
+
+                        modelFeed.setStatusVisiblity(jo.getString("statusVisiblity"));
+                        modelFeed.setStatusType(jo.getString("statusType"));
+                        modelFeed.setDateTimeUpdated(jo.getString("dateTimeUpdated"));
+                        modelFeed.setDateTime(jo.getString("dateTime"));
+                        modelFeed.setDescription(jo.getString("description"));
+                        modelFeed.setOriginalAvatarSportName(jo.getString("originalAvatarSportName"));
+                        modelFeed.setAvatar(jo.getString("avatar"));
+                        modelFeed.setOriginalUserProfilePicture(jo.getString("originalUserProfilePicture"));
+                        modelFeed.setOriginalUserName(jo.getString("originalUserName"));
+
+                        modelFeed.setEvent(jo.getString("event"));
+                        modelFeed.setShares(jo.getString("shares"));
+                        modelFeed.setCommentsCount(jo.getInt("comments"));
+                        modelFeed.setLikeCount(jo.getInt("likes"));
+                        modelFeed.setShareCount(jo.getInt("shares"));
+
+                        modelFeed.setOriginalAvatar(jo.getString("originalAvatar"));
+                        modelFeed.setOriginalUser(jo.getString("originalUser"));
+                        modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
+                        modelFeed.setIsShared(jo.getString("isShared"));
+
+                        if (jo.getJSONArray("images") != null) {
+                            ArrayList<Images> imagesArrayList = new ArrayList<>();
+                            JSONArray imagesArray = jo.getJSONArray("images");
+                            for (int j = 0; j < imagesArray.length(); j++) {
+                                JSONObject jsonObject = imagesArray.getJSONObject(j);
+
+                                Images images = new Images();
+                                images.setId(jsonObject.getString("id"));
+                                images.setStatusId(jsonObject.getString("statusId"));
+                                images.setImage(jsonObject.getString("image"));
+                                if (jsonObject.has("album")) {
+                                    images.setAlbum(jsonObject.getString("album"));
+                                }
+                                imagesArrayList.add(images);
+                            }
+                            modelFeed.setImages(imagesArrayList);
+                        }
+
                         modelFeed.setRowType(1);
-                        modelFeed.setDate(jo.getString("message_date"));
-                        //   modelFeed.setUserImage(getResources().getString(R.string.img_url) + jo.getString("userImage"));
                         arrayList.add(modelFeed);
                     }
+
                     adapterFeed.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
@@ -439,6 +506,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         //  return;
                     }
                 } else {
+                  //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     adapterFeed.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
@@ -447,6 +515,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            if (position == 4) {
+                skipCount = skipCount - 10;
+                loading = true;
+            }
         }
 
     }

@@ -63,6 +63,7 @@
             android:name=".activities.Dashboard"
             android:label="@string/title_activity_dashboard"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

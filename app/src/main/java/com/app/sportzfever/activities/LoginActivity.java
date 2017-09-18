@@ -139,6 +139,9 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                     AppUtils.setUserName(mActivity, data.getString("Name"));
                     AppUtils.setUseremail(mActivity, data.getString("Email"));
                     AppUtils.setUserImage(mActivity, data.getString("ProfilePicture"));
+
+                    AppUtils.setAuthToken(mActivity,data.getString("SF_APP_TOKEN"));
+
                     startActivity(new Intent(mActivity, Dashboard.class));
                     finish();
                 } else {

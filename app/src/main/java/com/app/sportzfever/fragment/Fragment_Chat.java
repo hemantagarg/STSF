@@ -58,6 +58,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             fragment_chat = new Fragment_Chat();
         return fragment_chat;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,9 +77,6 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     public void onResume() {
         super.onResume();
 
-        if (!AppUtils.getUserId(context).equalsIgnoreCase("")) {
-            //    getServicelistRefresh();
-        }
     }
 
     @Override
@@ -93,8 +91,36 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        getServicelistRefresh();
+        if (AppUtils.getChatList(context).equalsIgnoreCase("")) {
+            getRecentChatList();
+        } else {
+            setData();
+        }
 
+    }
+
+    private void setData() {
+        try {
+            String data1 = AppUtils.getChatList(context);
+            JSONArray data = new JSONArray(data1);
+            arrayList.clear();
+            Gson gson = new Gson();
+            for (int i = 0; i < data.length(); i++) {
+
+                ModelChat modelChat = null;
+                try {
+                    modelChat = gson.fromJson(data.getJSONObject(i).toString(), ModelChat.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                arrayList.add(modelChat);
+            }
+            adapterChats = new AdapterChats(getActivity(), this, arrayList);
+            list_request.setAdapter(adapterChats);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -102,7 +128,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getServicelistRefresh();
+                getRecentChatList();
             }
         });
     }
@@ -127,13 +153,13 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         }
     }
 
-    private void getServicelistRefresh() {
+    private void getRecentChatList() {
         mSwipeRefreshLayout.setRefreshing(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" + AppConstant.TOKEN;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
@@ -145,12 +171,14 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
     }
 
 
+
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
+                    AppUtils.setChatList(context, data.toString());
                     arrayList.clear();
                     Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
@@ -207,15 +235,11 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
                     adapterChats.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
-
                 }
-
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
