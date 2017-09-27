@@ -7,8 +7,8 @@ package com.app.sportzfever.interfaces;
 public interface JsonApiHelper {
 
     String BASEURL = JsonApiHelper.BASEURL_LIVE;
-    String BASEURL_LIVE = "http://sfscoring.sportzfever.com/";
-    String TESTURL = "http://sfscoring.betasportzfever.com/";
+    String BASEURL_LIVE = "http://sfscoring.betasportzfever.com/";
+   // String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
     String GET_NOTIFICATION = "getNotifications/";
