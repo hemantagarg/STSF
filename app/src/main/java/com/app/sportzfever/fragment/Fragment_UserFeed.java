@@ -226,8 +226,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", AppUtils.getUserId(context));
                 jsonObject.put("statusVisiblity", AppConstant.PUBLIC);
-                jsonObject.put("statusType", "text");
-                jsonObject.put("description", "text");
+                jsonObject.put("statusType", "TEXT");
+                jsonObject.put("description",edt_text_post.getText().toString());
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
                 new CommonAsyncTaskHashmap(21, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);

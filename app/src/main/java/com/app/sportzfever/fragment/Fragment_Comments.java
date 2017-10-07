@@ -35,7 +35,6 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Comments;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -327,7 +326,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
 
 
     /**
-     * Open dialog for the name requirements
+     * Open dialog for the edit comment
      */
     private void openEditRequirements(final String id) {
         try {
