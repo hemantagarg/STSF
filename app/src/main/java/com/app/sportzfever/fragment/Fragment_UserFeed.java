@@ -3,6 +3,7 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +58,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     private EditText edt_text_post;
     private TextView text_post;
     int feedClickedPosition = 0;
+    private FloatingActionButton floating_post;
 
     public static Fragment_UserFeed fragment_userFeed;
     private final String TAG = Fragment_UserFeed.class.getSimpleName();
@@ -88,6 +90,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
         text_post = (TextView) view.findViewById(R.id.text_post);
+        floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
@@ -105,6 +108,12 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             @Override
             public void onRefresh() {
                 getServicelistRefresh();
+            }
+        });
+        floating_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_PostFeed(), true);
             }
         });
 

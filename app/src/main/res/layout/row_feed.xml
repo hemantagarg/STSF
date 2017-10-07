@@ -34,8 +34,8 @@
 
             <ImageView
                 android:id="@+id/image_viewers"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/text_sharePost"
                 android:layout_marginLeft="@dimen/dp10"
@@ -153,8 +153,8 @@
 
                                 <ImageView
                                     android:id="@+id/img_add"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/add_white" />
 
@@ -168,7 +168,7 @@
                                     android:gravity="center_vertical"
                                     android:text="2"
                                     android:textColor="@color/white"
-                                    android:textSize="20sp"
+                                    android:textSize="25sp"
                                     android:textStyle="bold" />
 
                             </RelativeLayout>
@@ -190,7 +190,8 @@
                 android:alpha=".3"
                 android:background="@color/view_color" />
 
-            <LinearLayout android:id="@+id/ll2"
+            <LinearLayout
+                android:id="@+id/ll2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view2"
@@ -231,6 +232,7 @@
 
 
             </LinearLayout>
+
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
@@ -239,7 +241,8 @@
                 android:alpha=".3"
                 android:background="@color/view_color" />
 
-            <LinearLayout android:id="@+id/ll_like"
+            <LinearLayout
+                android:id="@+id/ll_like"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view1"
@@ -285,8 +288,6 @@
 
 
             </LinearLayout>
-
-
 
 
         </RelativeLayout>

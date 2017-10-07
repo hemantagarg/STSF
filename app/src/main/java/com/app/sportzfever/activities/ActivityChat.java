@@ -1,5 +1,6 @@
 package com.app.sportzfever.activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.app.sportzfever.MyFirebaseMessagingService;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterChatDetail;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -66,7 +68,9 @@ public class ActivityChat extends AppCompatActivity implements OnCustomItemClicL
         adapterChatDetail = new AdapterChatDetail(mActivity, this, chatListData);
         chatList.setAdapter(adapterChatDetail);
         SyncDataToServer();
-
+        MyFirebaseMessagingService.value = 0;
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(MyFirebaseMessagingService.PushNotificationId);
     }
 
     private void SyncDataToServer() {

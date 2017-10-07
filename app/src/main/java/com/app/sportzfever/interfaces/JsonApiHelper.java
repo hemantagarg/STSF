@@ -33,6 +33,7 @@ public interface JsonApiHelper {
     String DELETESTATUS = "deleteStatus/";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";
     String CREATESTATUS = "createStatus";
+    String GETUSERALBUMS = "getUserAlbums/";
     String POSTCOMMENT = "comment";
     String SCORING = "scoring/";
     String VIEWALLMATCHESSCORE = "viewMatchScoreCard/";

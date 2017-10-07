@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class Fragment_Team extends BaseFragment {
         return view_about;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

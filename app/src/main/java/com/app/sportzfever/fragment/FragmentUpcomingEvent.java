@@ -89,6 +89,12 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
         getServicelistRefresh();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
+    }
+
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

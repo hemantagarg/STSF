@@ -20,7 +20,6 @@ import com.app.sportzfever.iclasses.WebserviceAPIErrorHandler;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.models.VolleyErrorModel;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONObject;
@@ -124,7 +123,7 @@ public class CommonAsyncTaskHashmap {
 
     public void getqueryJsonbject(String url, JSONObject jsonObject, int MethodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
-        Log.e("request", ": " + url);
+        Log.e("request", ": " + url + "  " + jsonObject);
         pd.show();
         JsonObjectRequest mJsonRequest = new JsonObjectRequest(
                 MethodType,
@@ -182,7 +181,7 @@ public class CommonAsyncTaskHashmap {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization",  AppUtils.getAuthToken(context));
+                params.put("Authorization", AppUtils.getAuthToken(context));
                 return params;
             }
         };

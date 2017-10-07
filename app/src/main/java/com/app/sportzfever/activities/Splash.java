@@ -13,14 +13,21 @@ import com.app.sportzfever.utils.AppUtils;
 
 public class Splash extends AppCompatActivity {
 
+    String type = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_splash);
 
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("type")) {
+                type = intent.getStringExtra("type");
+            }
+        }
         Log.e("gcm", AppUtils.getGcmRegistrationKey(getApplicationContext()));
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -33,6 +40,7 @@ public class Splash extends AppCompatActivity {
                     finish();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                    intent.putExtra("type", type);
                     startActivity(intent);
                     finish();
                 }

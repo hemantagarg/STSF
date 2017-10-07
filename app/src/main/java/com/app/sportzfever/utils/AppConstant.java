@@ -28,8 +28,9 @@ public class AppConstant {
     public static final String PUBLIC = "PUBLIC";
     public static final String FRIENDS = "FRIENDS";
     public static final String ONLYME = "ONLY ME";
-
-
+    public static final String PUSHTYPE_FRIEND = "FRIEND";
+    public static final String PUSHTYPE_TEAM = "TEAM";
+    public static final String PUSHTYPE_CHAT = "CHAT";
 
     /*
        * Change this to your publishable key.

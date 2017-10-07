@@ -19,7 +19,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelNotification;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -55,6 +54,12 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
         if (fragment_notification == null)
             fragment_notification = new Fragment_Notification();
         return fragment_notification;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
     @Override
@@ -186,7 +191,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

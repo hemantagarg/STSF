@@ -16,11 +16,11 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -66,6 +66,7 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
         getRecentChatList();
         getFreindList();
         getGroupChat();

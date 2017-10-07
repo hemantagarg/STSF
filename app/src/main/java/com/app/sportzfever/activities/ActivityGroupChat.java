@@ -1,5 +1,6 @@
 package com.app.sportzfever.activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.app.sportzfever.MyFirebaseMessagingService;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterGroupChatDetail;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -61,6 +63,9 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
         setContentView(R.layout.chat_detail);
         mActivity = this;
         init();
+        MyFirebaseMessagingService.value = 0;
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(MyFirebaseMessagingService.PushNotificationId);
         setListener();
         AppUtils.setIsChatVisible(mActivity, true);
         adapterChatDetail = new AdapterGroupChatDetail(mActivity, this, chatListData);

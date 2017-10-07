@@ -36,6 +36,7 @@ import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_Tournaments;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 import com.app.sportzfever.interfaces.GlobalConstants;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -124,8 +125,14 @@ public class Dashboard extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("type")) {
-                tabLayout.getTabAt(1).select();
-                //   pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                String type = intent.getStringExtra("type");
+                if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_FRIEND) || type.equalsIgnoreCase(AppConstant.PUSHTYPE_TEAM)) {
+                    tabLayout.getTabAt(1).select();
+                    pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                } else if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_CHAT)) {
+                    tabLayout.getTabAt(4).select();
+                    pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
+                }
             }
         }
         setListener();
@@ -138,8 +145,14 @@ public class Dashboard extends AppCompatActivity {
 
         if (intent != null) {
             if (intent.hasExtra("type")) {
-                tabLayout.getTabAt(1).select();
-                //     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                String type = intent.getStringExtra("type");
+                if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_FRIEND) || type.equalsIgnoreCase(AppConstant.PUSHTYPE_TEAM)) {
+                    tabLayout.getTabAt(1).select();
+                    pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+                } else if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_CHAT)) {
+                    tabLayout.getTabAt(4).select();
+                    pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
+                }
             }
         }
 
@@ -328,7 +341,6 @@ public class Dashboard extends AppCompatActivity {
                             activeNotificationFragment();
                         } else
                             pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
-
 
                         break;
                     case 4:

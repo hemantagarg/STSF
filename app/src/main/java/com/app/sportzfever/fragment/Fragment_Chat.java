@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.app.sportzfever.MyFirebaseMessagingService;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.ActivityChat;
 import com.app.sportzfever.activities.ActivityGroupChat;
@@ -91,6 +92,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         arrayList = new ArrayList<>();
         setlistener();
         getRecentChatList();
+
        /* if (AppUtils.getChatList(context).equalsIgnoreCase("")) {
 
         } else {
@@ -159,7 +161,7 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
 
             } else {
@@ -169,7 +171,6 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
             e.printStackTrace();
         }
     }
-
 
 
     @Override
