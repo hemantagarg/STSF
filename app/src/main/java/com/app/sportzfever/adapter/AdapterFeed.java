@@ -161,7 +161,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClickListener(i, 3);
                     }
                 });
-                ((CustomViewHolder) holder).ll_feed_images.setOnClickListener(new View.OnClickListener() {
+                ((CustomViewHolder) holder).text_like.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 5);
+                    }
+                });((CustomViewHolder) holder).image_feed2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 4);

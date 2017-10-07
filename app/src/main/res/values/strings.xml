@@ -32,4 +32,6 @@
     <string name="logout">Logout</string>
     <string name="score">Score</string>
     <string name="matches">Matches</string>
+    <string name="myprofile">Profile</string>
+    <string name="tournament">Tournament</string>
 </resources>

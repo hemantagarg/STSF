@@ -33,6 +33,7 @@ import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_Team;
+import com.app.sportzfever.fragment.Fragment_Tournaments;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.utils.AppUtils;
@@ -62,7 +63,7 @@ public class Dashboard extends AppCompatActivity {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout,text_matches;
+    private TextView text_score, text_logout,text_matches,text_tournament;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -157,6 +158,7 @@ public class Dashboard extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         text_logout = (TextView) findViewById(R.id.text_logout);
         text_score = (TextView) findViewById(R.id.text_score);
+        text_tournament = (TextView) findViewById(R.id.text_tournament);
         text_matches = (TextView) findViewById(R.id.text_matches);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
@@ -257,12 +259,23 @@ public class Dashboard extends AppCompatActivity {
                 startActivity(intent);
 
             }
+        });  text_tournament.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_tournament.setTextColor(getResources().getColor(R.color.red));
+                text_tournament.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
+
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Tournaments(), true);
+
+            }
         });    text_matches.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
-                text_score.setTextColor(getResources().getColor(R.color.red));
-                text_score.setBackgroundResource(R.drawable.text_bg);
+                text_matches.setTextColor(getResources().getColor(R.color.red));
+                text_matches.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
 
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);

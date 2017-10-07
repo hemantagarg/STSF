@@ -29,22 +29,43 @@
             android:layout_marginTop="@dimen/nav_header_height"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/text_matches"
+                android:id="@+id/text_myprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp20"
                 android:paddingBottom="@dimen/dp15"
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
+                android:text="@string/myprofile"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_17" />
+            <TextView
+                android:id="@+id/text_matches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingBottom="@dimen/dp15"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingTop="@dimen/dp15"
                 android:text="@string/matches"
                 android:textColor="@color/textcolordark"
                 android:textSize="@dimen/text_size_17" />
+            <TextView
+                android:id="@+id/text_tournament"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
+                android:paddingBottom="@dimen/dp15"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingTop="@dimen/dp15"
+                android:text="@string/tournament"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_17" />
             <TextView
                 android:id="@+id/text_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp20"
+
                 android:paddingBottom="@dimen/dp15"
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
