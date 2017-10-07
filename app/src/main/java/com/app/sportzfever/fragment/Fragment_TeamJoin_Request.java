@@ -187,7 +187,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTREJECTSCORECHALLENGEINVITATION + id + "/" + accept;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -201,7 +201,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.RESPONDTOMATCHANDPRACTICEINVITATION + id + "/" + accept;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -215,7 +215,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.RESPONDTOTEAMJOININVITATIONFROMTEAM + id + "/" + accept;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -230,7 +230,7 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/RespondToMatchchallengeInvitation/41/REJECTED
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTREJECTMATCHCHALLENGEINVITATION + id + "/" + accept;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();

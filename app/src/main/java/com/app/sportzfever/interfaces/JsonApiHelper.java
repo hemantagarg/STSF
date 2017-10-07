@@ -6,9 +6,9 @@ package com.app.sportzfever.interfaces;
 
 public interface JsonApiHelper {
 
-    String BASEURL = JsonApiHelper.BASEURL_LIVE;
+    String BASEURL = JsonApiHelper.TESTURL;
     String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
-   // String TESTURL = "http://sfscoring.betasportzfever.com/";
+    String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
     String GET_NOTIFICATION = "getNotifications/";
@@ -25,6 +25,7 @@ public interface JsonApiHelper {
     String GET_UPCOMINGMATCHES = "getAllUpcomingMatches/";
     String GET_RECENTCHAT = "getRecentChatData/";
     String SHAREFEED = "shareFeed";
+    String LIKEUNLIKEPOST = "likeAndUnlikePost";
     String UPDATESTATUS = "updateStatus";
     String DELETESTATUS = "deleteStatus/";
     String CREATESTATUS = "createStatus";

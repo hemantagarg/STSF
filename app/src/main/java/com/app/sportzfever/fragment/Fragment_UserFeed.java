@@ -56,6 +56,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     private String maxlistLength = "";
     private EditText edt_text_post;
     private TextView text_post;
+    int feedClickedPosition = 0;
 
     public static Fragment_UserFeed fragment_userFeed;
     private final String TAG = Fragment_UserFeed.class.getSimpleName();
@@ -193,14 +194,19 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             fragmentLikes.setArguments(b);
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentLikes, true);
         } else if (flag == 3) {
-
             shareFeed(arrayList.get(position).getFeedId());
 
-          /*  Fragment_Share fragment_share = new Fragment_Share();
+        } else if (flag == 6) {
+            feedClickedPosition = position;
+            likeFeed(arrayList.get(position).getFeedId());
+
+        } else if (flag == 5) {
+
+            Fragment_Share fragment_share = new Fragment_Share();
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragment_share.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);*/
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);
 
         } else if (flag == 4) {
 
@@ -227,10 +233,29 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 jsonObject.put("userId", AppUtils.getUserId(context));
                 jsonObject.put("statusVisiblity", AppConstant.PUBLIC);
                 jsonObject.put("statusType", "TEXT");
-                jsonObject.put("description",edt_text_post.getText().toString());
+                jsonObject.put("description", edt_text_post.getText().toString());
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
                 new CommonAsyncTaskHashmap(21, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void likeFeed(String id) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", AppUtils.getUserId(context));
+                jsonObject.put("feedId", id);
+                //   http://sfscoring.betasportzfever.com/likeAndUnlikePost
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.LIKEUNLIKEPOST;
+                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -258,6 +283,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             e.printStackTrace();
         }
     }
+
 
     private void updateFeed(String id) {
         try {
@@ -302,7 +328,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -318,7 +344,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
@@ -378,6 +404,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
+                        modelFeed.setIsLiked(jo.getString("isShared"));
 
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
@@ -426,7 +453,20 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     getServicelistRefresh();
-                    edt_text_post.setText("");
+
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 12) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    if (arrayList.get(feedClickedPosition).getIsLiked().equalsIgnoreCase("0")) {
+                        arrayList.get(feedClickedPosition).setIsLiked("1");
+                    } else {
+                        arrayList.get(feedClickedPosition).setIsLiked("0");
+                    }
+                    adapterFeed.notifyItemChanged(feedClickedPosition);
 
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -494,7 +534,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                             }
                             modelFeed.setImages(imagesArrayList);
                         }
-
                         modelFeed.setRowType(1);
                         arrayList.add(modelFeed);
                     }
@@ -506,7 +545,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         //  return;
                     }
                 } else {
-                  //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     adapterFeed.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;

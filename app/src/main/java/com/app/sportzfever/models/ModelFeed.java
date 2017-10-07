@@ -47,7 +47,7 @@ public class ModelFeed implements Serializable {
 
     private String originalAvatar;
 
-    private String originalUser;
+    private String originalUser, isLiked="0";
 
     private String userProfilePicture;
 
@@ -362,5 +362,13 @@ public class ModelFeed implements Serializable {
 
     public void setShareCount(int shareCount) {
         this.shareCount = shareCount;
+    }
+
+    public String getIsLiked() {
+        return isLiked;
+    }
+
+    public void setIsLiked(String isLiked) {
+        this.isLiked = isLiked;
     }
 }

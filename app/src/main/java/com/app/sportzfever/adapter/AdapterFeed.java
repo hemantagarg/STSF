@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -70,7 +71,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public ProgressViewHolder(View v) {
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar1);
-            this.progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+            this.progressBar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
         }
     }
 
@@ -87,7 +88,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
                     if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                         Picasso.with(mContext)
-                                .load(m1.getUserProfilePicture())
+                                .load(m1.getUserProfilePicture() + "&w=100&h=100")
                                 .transform(new CircleTransform())
                                 .placeholder(R.drawable.logo_sportz)
                                 .into(((CustomViewHolder) holder).image_viewers);
@@ -101,7 +102,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
                         if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(m1.getOriginalAvatarProfilePicture())
+                                    .load(m1.getOriginalAvatarProfilePicture() + "&w=100&h=100")
                                     .transform(new CircleTransform())
                                     .placeholder(R.drawable.logo_sportz)
                                     .into(((CustomViewHolder) holder).image_viewers);
@@ -111,7 +112,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         ((CustomViewHolder) holder).text_name.setText(m1.getOriginalUserName());
                         if (!m1.getOriginalUserProfilePicture().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(m1.getOriginalUserProfilePicture())
+                                    .load(m1.getOriginalUserProfilePicture() + "&w=100&h=100")
                                     .transform(new CircleTransform())
                                     .placeholder(R.drawable.logo_sportz)
                                     .into(((CustomViewHolder) holder).image_viewers);
@@ -122,34 +123,65 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
                 ((CustomViewHolder) holder).text_time.setText(m1.getDateTime());
 
+                if (m1.getIsLiked().equalsIgnoreCase("0")) {
+                    ((CustomViewHolder) holder).text_like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like_grey, 0, 0, 0);
+                    ((CustomViewHolder) holder).text_like.setTextColor(ContextCompat.getColor(mContext, R.color.text_hint_color));
+                } else {
+                    ((CustomViewHolder) holder).text_like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like_red, 0, 0, 0);
+                    ((CustomViewHolder) holder).text_like.setTextColor(ContextCompat.getColor(mContext, R.color.red_select));
+                }
+
+                if (m1.getIsShared().equalsIgnoreCase("0")) {
+                    ((CustomViewHolder) holder).text_share.setCompoundDrawablesWithIntrinsicBounds(R.drawable.share_grey, 0, 0, 0);
+                    ((CustomViewHolder) holder).text_share.setTextColor(ContextCompat.getColor(mContext, R.color.text_hint_color));
+                } else {
+                    ((CustomViewHolder) holder).text_share.setCompoundDrawablesWithIntrinsicBounds(R.drawable.share_red, 0, 0, 0);
+                    ((CustomViewHolder) holder).text_share.setTextColor(ContextCompat.getColor(mContext, R.color.red_select));
+                }
+
                 if (m1.getCommentsCount() > 0) {
+                    ((CustomViewHolder) holder).text_comment_count.setVisibility(View.VISIBLE);
                     if (m1.getCommentsCount() > 1)
-                    ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount() + " Comments");
+                        ((CustomViewHolder) holder).text_comment_count.setText(m1.getCommentsCount() + " Comments");
                     else
-                        ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount() + " Comment");
+                        ((CustomViewHolder) holder).text_comment_count.setText(m1.getCommentsCount() + " Comment");
+                } else {
+                    ((CustomViewHolder) holder).text_comment_count.setVisibility(View.GONE);
                 }
 
                 if (m1.getLikeCount() > 0) {
+                    ((CustomViewHolder) holder).text_like_count.setVisibility(View.VISIBLE);
                     if (m1.getLikeCount() > 1)
-                        ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount() + " Likes");
+                        ((CustomViewHolder) holder).text_like_count.setText(m1.getLikeCount() + " Likes");
                     else
-                        ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount() + " Like");
+                        ((CustomViewHolder) holder).text_like_count.setText(m1.getLikeCount() + " Like");
+                } else {
+                    ((CustomViewHolder) holder).text_like_count.setVisibility(View.GONE);
                 }
 
                 if (m1.getShareCount() > 0) {
+                    ((CustomViewHolder) holder).text_share_count.setVisibility(View.VISIBLE);
                     if (m1.getShareCount() > 1)
-                        ((CustomViewHolder) holder).text_share.setText(m1.getShareCount() + " Shares");
+                        ((CustomViewHolder) holder).text_share_count.setText(m1.getShareCount() + " Shares");
                     else
-                        ((CustomViewHolder) holder).text_share.setText(m1.getShareCount() + " Share");
+                        ((CustomViewHolder) holder).text_share_count.setText(m1.getShareCount() + " Share");
+                } else {
+                    ((CustomViewHolder) holder).text_share_count.setVisibility(View.GONE);
                 }
 
-                ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
+                if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {
+                    ((CustomViewHolder) holder).view2.setVisibility(View.VISIBLE);
+                } else {
+                    ((CustomViewHolder) holder).view2.setVisibility(View.GONE);
+                }
+
+                ((CustomViewHolder) holder).text_comment_count.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 1);
                     }
                 });
-                ((CustomViewHolder) holder).text_like.setOnClickListener(new View.OnClickListener() {
+                ((CustomViewHolder) holder).text_like_count.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 2);
@@ -161,12 +193,31 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClickListener(i, 3);
                     }
                 });
+                ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 1);
+                    }
+                });
+                ((CustomViewHolder) holder).text_like.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 6);
+                    }
+                });
+                ((CustomViewHolder) holder).text_share_count.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 5);
+                    }
+                });
                 ((CustomViewHolder) holder).ll_feed_images.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 4);
                     }
                 });
+
 
                 ArrayList<Images> imagesArrayList = m1.getImages();
                 if (imagesArrayList != null && imagesArrayList.size() > 0) {
@@ -177,7 +228,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(imagesArrayList.get(0).getImage())
+                                    .load(imagesArrayList.get(0).getImage() + "&h=400")
                                     .into(((CustomViewHolder) holder).image_feed1);
 
                         }
@@ -187,13 +238,13 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         if (!imagesArrayList.get(0).getImage().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(imagesArrayList.get(0).getImage())
+                                    .load(imagesArrayList.get(0).getImage() + "&w=400&h=400")
                                     .into(((CustomViewHolder) holder).image_feed2);
                         }
 
                         if (!imagesArrayList.get(1).getImage().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(imagesArrayList.get(1).getImage())
+                                    .load(imagesArrayList.get(1).getImage() + "&w=400&h=400")
                                     .into(((CustomViewHolder) holder).image_feed3);
 
                         }
@@ -211,7 +262,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
 
                     }
-                }else {
+                } else {
                     ((CustomViewHolder) holder).image_feed1.setVisibility(View.GONE);
                     ((CustomViewHolder) holder).ll_multiple_images.setVisibility(View.GONE);
 
@@ -232,16 +283,19 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_message, text_time, text_like, text_comment, text_share, text_imag_count, text_sharePost;
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        TextView text_name, text_message, text_time, text_like, text_comment, text_share,
+                text_imag_count, text_sharePost, text_like_count, text_comment_count, text_share_count;
         ImageView image_viewers, image_feed1, image_feed2, image_feed3;
         LinearLayout ll_feed_images, ll_multiple_images;
         RelativeLayout rl_moreimages;
+        View view2;
 
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
+
             this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
+            this.view2 = view.findViewById(R.id.view2);
             this.image_feed1 = (ImageView) view.findViewById(R.id.image_feed1);
             this.image_feed2 = (ImageView) view.findViewById(R.id.image_feed2);
             this.image_feed3 = (ImageView) view.findViewById(R.id.image_feed3);
@@ -251,6 +305,9 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_sharePost = (TextView) view.findViewById(R.id.text_sharePost);
             this.text_imag_count = (TextView) view.findViewById(R.id.text_imag_count);
+            this.text_like_count = (TextView) view.findViewById(R.id.text_like_count);
+            this.text_comment_count = (TextView) view.findViewById(R.id.text_comment_count);
+            this.text_share_count = (TextView) view.findViewById(R.id.text_share_count);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_like = (TextView) view.findViewById(R.id.text_like);
             this.text_time = (TextView) view.findViewById(R.id.text_time);
@@ -258,12 +315,6 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.text_comment = (TextView) view.findViewById(R.id.text_comment);
 
         }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
-        }
-
     }
 
     @Override

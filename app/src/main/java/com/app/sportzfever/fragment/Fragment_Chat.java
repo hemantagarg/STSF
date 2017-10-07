@@ -22,7 +22,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelChat;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -91,11 +90,12 @@ public class Fragment_Chat extends BaseFragment implements ApiResponse, OnCustom
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        if (AppUtils.getChatList(context).equalsIgnoreCase("")) {
-            getRecentChatList();
+        getRecentChatList();
+       /* if (AppUtils.getChatList(context).equalsIgnoreCase("")) {
+
         } else {
             setData();
-        }
+        }*/
 
     }
 

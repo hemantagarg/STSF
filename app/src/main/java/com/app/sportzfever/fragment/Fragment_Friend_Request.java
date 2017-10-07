@@ -165,7 +165,6 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
 
         } else if (flag == 2) {
             acceptTeamrequest(arrayList.get(position).getId(), AppConstant.REJECTED);
-
         }
 
     }

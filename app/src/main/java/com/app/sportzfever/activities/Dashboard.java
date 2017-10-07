@@ -114,14 +114,12 @@ public class Dashboard extends AppCompatActivity {
         mStacks.put(GlobalConstants.TAB_CHAT_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_EVENT_BAR, new Stack<Fragment>());
 
-        pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+       /* pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
         pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
         pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
-        pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
+        pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);*/
         pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
-
         setupTabIcons();
-
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("type")) {
@@ -223,15 +221,16 @@ public class Dashboard extends AppCompatActivity {
         } else {
             manageHeaderVisibitlity(false);
         }
-
     }
 
     private void setWhiteColor() {
         text_score.setBackgroundColor(getResources().getColor(R.color.white));
         text_logout.setBackgroundColor(getResources().getColor(R.color.white));
+        text_matches.setBackgroundColor(getResources().getColor(R.color.white));
 
         text_score.setTextColor(getResources().getColor(R.color.textcolordark));
         text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
     }
 
     private void setListener() {
@@ -257,12 +256,13 @@ public class Dashboard extends AppCompatActivity {
                 startActivity(intent);
 
             }
-        });    text_matches.setOnClickListener(new View.OnClickListener() {
+        });
+        text_matches.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
-                text_score.setTextColor(getResources().getColor(R.color.red));
-                text_score.setBackgroundResource(R.drawable.text_bg);
+                text_matches.setTextColor(getResources().getColor(R.color.red));
+                text_matches.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
 
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
@@ -323,7 +323,6 @@ public class Dashboard extends AppCompatActivity {
                             activeChatFragment();
                         } else
                             pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
-
 
                         break;
 
