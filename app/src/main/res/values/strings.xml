@@ -32,6 +32,17 @@
     <string name="logout">Logout</string>
     <string name="score">Score</string>
     <string name="matches">Matches</string>
+    <string name="sportavtar">Sports Avtar</string>
     <string name="myprofile">Profile</string>
     <string name="tournament">Tournament</string>
+    <string name="avtarname">Avatar Name : </string>
+    <string name="avtarbattingheld">Batting Hand : </string>
+    <string name="avtarjercynumber">Jersey Number : </string>
+    <string name="avtarbattingstyle">Batting Style : </string>
+    <string name="avtarbowling_style">Bowling Style : </string>
+    <string name="avtarbowling_held">Bowling Hand : </string>
+    <string name="avtarspeciality">Speciality : </string>
+    <string name="avtarfavouritefieldposition">Favourite Field Position : </string>
+    <string name="avtaraboutme">About me : </string>
+
 </resources>
