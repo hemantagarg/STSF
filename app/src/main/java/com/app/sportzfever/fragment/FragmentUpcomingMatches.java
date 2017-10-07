@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,12 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ViewMatchScoreCard;
-import com.app.sportzfever.adapter.AdapterPastMatches;
 import com.app.sportzfever.adapter.AdapterUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelPastMatches;
 import com.app.sportzfever.models.ModelUpcomingMatches;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -101,33 +98,14 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
             }
         });
 
-
-        list_request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ((AppUtils.isNetworkAvailable(context))) {
-                    Intent inte=new Intent(context, ViewMatchScoreCard.class);
-startActivity(inte);
-                }
-            }
-        });
-
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
 
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
-        }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
+        Intent inte = new Intent(context, ViewMatchScoreCard.class);
+        inte.putExtra("eventId", arrayList.get(position).getEventId());
+        startActivity(inte);
     }
 
     private void getServicelist() {
@@ -181,6 +159,7 @@ startActivity(inte);
                         modelUpcomingMatches = new ModelUpcomingMatches();
 
                         modelUpcomingMatches.setId(jo.getString("id"));
+                        modelUpcomingMatches.setEventId(jo.getString("eventId"));
 
                         modelUpcomingMatches.setLocation(jo.getString("location"));
                         modelUpcomingMatches.setTournamentName(jo.getString("tournamentName"));
@@ -188,7 +167,6 @@ startActivity(inte);
                         modelUpcomingMatches.setTeam2Name(jo.getString("team2Name"));
                         modelUpcomingMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
                         modelUpcomingMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
-
 
 
                         JSONObject j1 = jo.getJSONObject("matchDate");
@@ -239,12 +217,7 @@ startActivity(inte);
                         modelUpcomingMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
                         modelUpcomingMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
 
-
-
-
-
                         JSONObject j1 = jo.getJSONObject("matchDate");
-
 
                         modelUpcomingMatches.setTime(j1.getString("time"));
                         modelUpcomingMatches.setDate(j1.getString("date"));

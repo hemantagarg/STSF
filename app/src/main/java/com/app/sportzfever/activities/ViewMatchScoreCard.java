@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.JsonApiHelper;
-import com.app.sportzfever.utils.AppUtils;
 
 
 public class ViewMatchScoreCard extends AppCompatActivity {
@@ -27,6 +26,7 @@ public class ViewMatchScoreCard extends AppCompatActivity {
     ProgressBar progressbar;
     WebView webview;
     private BroadcastReceiver broadcastReceiver;
+    private String eventId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +35,13 @@ public class ViewMatchScoreCard extends AppCompatActivity {
 
         context = this;
         init();
-
+        Intent intent = getIntent();
+        if (intent.hasExtra("eventId")) {
+            eventId = intent.getStringExtra("eventId");
+        }
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String url = JsonApiHelper.BASEURL + JsonApiHelper.VIEWALLMATCHESSCORE+ AppUtils.getUserId(getApplicationContext()) + "/" +  AppUtils.getAuthToken(context);
+        String url = JsonApiHelper.WEBVIEWBASEURL + JsonApiHelper.VIEWALLMATCHESSCORE + eventId;
         webview.loadUrl(url);
         Log.e("urltest", url);
 
@@ -67,6 +70,13 @@ public class ViewMatchScoreCard extends AppCompatActivity {
             }
         });
 
+      /*  new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                webview.reload();
+            }
+        }, 30000);
+*/
     }
 
     @Override
@@ -94,7 +104,7 @@ public class ViewMatchScoreCard extends AppCompatActivity {
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Score");
+        getSupportActionBar().setTitle("Score Card");
         webview = (WebView) findViewById(R.id.webview);
     }
 
