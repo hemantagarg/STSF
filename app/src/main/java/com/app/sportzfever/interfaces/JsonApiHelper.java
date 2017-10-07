@@ -18,6 +18,7 @@ public interface JsonApiHelper {
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GET_UPCOMINGEVENTS = "getUpcomingEvent/";
     String GET_COMMENTS = "getComments/";
+    String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
     String GET_LIKES = "getLikes/";
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";
@@ -31,6 +32,7 @@ public interface JsonApiHelper {
     String LIKEUNLIKEPOST = "likeAndUnlikePost";
     String UPDATESTATUS = "updateStatus";
     String DELETESTATUS = "deleteStatus/";
+    String AVTARMYTEAMIADMIN = "getAvatarDetailsMyTeams/";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";
     String CREATESTATUS = "createStatus";
     String GETUSERALBUMS = "getUserAlbums/";

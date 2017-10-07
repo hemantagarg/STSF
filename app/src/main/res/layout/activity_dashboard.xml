@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <include
         android:id="@+id/main_view"
         layout="@layout/app_bar_dashboard"
@@ -37,6 +38,16 @@
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/myprofile"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_17" />
+            <TextView
+                android:id="@+id/text_sprtsavtar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/dp15"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingTop="@dimen/dp15"
+                android:text="@string/sportavtar"
                 android:textColor="@color/textcolordark"
                 android:textSize="@dimen/text_size_17" />
             <TextView

@@ -28,7 +28,9 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
+import com.app.sportzfever.fragment.FragmentAvtarBio;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
+import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
@@ -64,7 +66,7 @@ public class Dashboard extends AppCompatActivity {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament;
+    private TextView text_score, text_logout, text_matches, text_tournament,text_sprtsavtar;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -171,6 +173,7 @@ public class Dashboard extends AppCompatActivity {
         text_score = (TextView) findViewById(R.id.text_score);
         text_tournament = (TextView) findViewById(R.id.text_tournament);
         text_matches = (TextView) findViewById(R.id.text_matches);
+        text_sprtsavtar = (TextView) findViewById(R.id.text_sprtsavtar);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
@@ -271,6 +274,17 @@ public class Dashboard extends AppCompatActivity {
                 drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(context, ScoreActivity.class);
                 startActivity(intent);
+
+            }
+        });
+        text_sprtsavtar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_score.setTextColor(getResources().getColor(R.color.red));
+                text_score.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
 
             }
         });
