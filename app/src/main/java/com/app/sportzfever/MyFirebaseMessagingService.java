@@ -1,9 +1,5 @@
 package com.app.sportzfever;
 
-/**
- * Created by seocor1 on 9/14/2016.
- */
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;

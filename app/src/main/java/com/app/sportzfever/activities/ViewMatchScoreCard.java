@@ -49,11 +49,11 @@ public class ViewMatchScoreCard extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                progressbar.setVisibility(View.GONE);
+
             }
 
             public void onPageFinished(WebView view, String url) {
-
+                progressbar.setVisibility(View.GONE);
             }
 
             @Override

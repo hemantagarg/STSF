@@ -152,7 +152,6 @@ public class AppUtils {
     }
 
     public static void setChatUserId(Context context, String userId) {
-
         try {
             SharedPreferences preferences = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -167,6 +166,32 @@ public class AppUtils {
     }
 
     public static String getChatUserId(Context context) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            return preferences.getString("chatuser_id", "");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public static void setChatGroupId(Context context, String userId) {
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("chatGroup_id", userId);
+            editor.commit();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String getChatGroupId(Context context) {
 
         try {
             SharedPreferences preferences = PreferenceManager

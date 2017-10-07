@@ -98,7 +98,7 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //  getSupportActionBar().setTitle(in.getExtras().getString("name"));
         reciever_id = in.getExtras().getString("reciever_id");
-        AppUtils.setChatUserId(mActivity, reciever_id);
+        AppUtils.setChatGroupId(mActivity, reciever_id);
 
         username.setText(in.getExtras().getString("name"));
 
@@ -257,7 +257,6 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
 
 
     private void syncData() {
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -271,6 +270,7 @@ public class ActivityGroupChat extends AppCompatActivity implements OnCustomItem
     protected void onStop() {
         super.onStop();
         isActivityVisible = false;
+        AppUtils.setChatGroupId(mActivity, "");
         AppUtils.setIsChatVisible(mActivity, false);
     }
 }

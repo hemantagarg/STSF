@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.TeamJoinRequest;
 import com.app.sportzfever.models.UpcomingEvent;
 import com.squareup.picasso.Picasso;
 
@@ -80,22 +78,23 @@ public class AdapterUpcomingEvent extends RecyclerView.Adapter<RecyclerView.View
 
             UpcomingEvent m1 = (UpcomingEvent) detail.get(i);
 
-          ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
-          ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
+            ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
+            ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
             ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
-           ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
-           ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
-           ((CustomViewHolder) holder).text_date.setText(m1.getDate());
-           ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
-           ((CustomViewHolder) holder).text_time.setText(m1.getTime());
+            ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
+            ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
+            ((CustomViewHolder) holder).text_date.setText(m1.getDate());
+            ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
+            ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
-          if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
+            if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeam1ProfilePicture())
 
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).teama);
-            }if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
+            }
+            if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeam2ProfilePicture())
 
@@ -103,12 +102,12 @@ public class AdapterUpcomingEvent extends RecyclerView.Adapter<RecyclerView.View
                         .into(((CustomViewHolder) holder).teamb);
             }
 
-            if (m1.getEventType().equalsIgnoreCase("MATCH")){
+            if (m1.getEventType().equalsIgnoreCase("MATCH")) {
                 ((CustomViewHolder) holder).relmatchvs.setVisibility(View.VISIBLE);
                 ((CustomViewHolder) holder).text_title.setVisibility(View.GONE);
 
 
-            }else {
+            } else {
 
 
                 ((CustomViewHolder) holder).relmatchvs.setVisibility(View.GONE);
@@ -128,10 +127,11 @@ public class AdapterUpcomingEvent extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_event_type, text_date,text_teamname,text_location,text_day,text_month,text_time,text_title;
-        ImageView teama,teamb;
+        TextView text_name, text_event_type, text_date, text_teamname, text_location, text_day, text_month, text_time, text_title;
+        ImageView teama, teamb;
 
-RelativeLayout relmatchvs;
+        RelativeLayout relmatchvs;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
