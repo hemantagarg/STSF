@@ -63,7 +63,7 @@ public class Dashboard extends AppCompatActivity {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout,text_matches,text_tournament;
+    private TextView text_score, text_logout, text_matches, text_tournament;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -228,11 +228,13 @@ public class Dashboard extends AppCompatActivity {
     private void setWhiteColor() {
         text_score.setBackgroundColor(getResources().getColor(R.color.white));
         text_logout.setBackgroundColor(getResources().getColor(R.color.white));
+        text_tournament.setBackgroundColor(getResources().getColor(R.color.white));
         text_matches.setBackgroundColor(getResources().getColor(R.color.white));
 
         text_score.setTextColor(getResources().getColor(R.color.textcolordark));
         text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
         text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_tournament.setTextColor(getResources().getColor(R.color.textcolordark));
     }
 
     private void setListener() {
@@ -258,7 +260,8 @@ public class Dashboard extends AppCompatActivity {
                 startActivity(intent);
 
             }
-        });  text_tournament.setOnClickListener(new View.OnClickListener() {
+        });
+        text_tournament.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();

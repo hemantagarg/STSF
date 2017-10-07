@@ -220,7 +220,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 startActivity(intent);
             }
 
-        }else if (flag == 5) {
+        } else if (flag == 5) {
 
             likeFeed(arrayList.get(position).getFeedId());
 
@@ -230,7 +230,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void postFeed() {
         try {
-
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
@@ -322,29 +321,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } private void likeFeed(String id) {
+    }
 
 
-        try {
-
-            if (AppUtils.isNetworkAvailable(context)) {
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId", AppUtils.getUserId(context));
-                jsonObject.put("feedId", id);
-
-
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.LIKEANDUNLIKEFEED;
-                new CommonAsyncTaskHashmap(21, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }private void unlikeFeed(String id) {
+    private void unlikeFeed(String id) {
         try {
 
             if (AppUtils.isNetworkAvailable(context)) {
