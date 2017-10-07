@@ -33,6 +33,7 @@ public interface JsonApiHelper {
     String CREATESTATUS = "createStatus";
     String POSTCOMMENT = "comment";
     String SCORING = "scoring/";
+    String VIEWALLMATCHESSCORE = "viewMatchScoreCard/";
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";
     String GET_JOINEDGROUPCHAT = "getJoinedGroups/";

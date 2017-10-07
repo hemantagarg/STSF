@@ -1,10 +1,12 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterPastMatches;
 import com.app.sportzfever.adapter.AdapterUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -98,56 +101,17 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
             }
         });
 
-/*
-        list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        list_request.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onClick(View view) {
                 if ((AppUtils.isNetworkAvailable(context))) {
-
-                    if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
-                        if (dy > 0) //check for scroll down
-                        {
-                            visibleItemCount = layoutManager.getChildCount();
-                            totalItemCount = layoutManager.getItemCount();
-                            pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-                            if (loading) {
-                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                    loading = false;
-                                    modelNotification = new ModelNotification();
-                                    modelNotification.setRowType(2);
-                                    arrayList.add(modelNotification);
-                                    adapterNotification.notifyDataSetChanged();
-
-                                    skipCount = skipCount + 10;
-
-                                    try {
-
-                                        if (AppUtils.isNetworkAvailable(context)) {
-
-                                            String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
-                                            //  new CommonAsyncTaskHashmap(1, context, Fragment_Chat.this).getqueryNoProgress(url);
-
-                                        } else {
-                                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-
-                                    }
-                                    //Do pagination.. i.e. fetch new data
-                                }
-                            }
-                        }
-                    } else {
-
-                        Log.e("maxlength", "*" + arrayList.size());
-                    }
+                    Intent inte=new Intent(context, ViewMatchScoreCard.class);
+startActivity(inte);
                 }
             }
         });
-*/
+
 
     }
 
