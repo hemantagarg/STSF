@@ -1,12 +1,10 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +12,15 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
+import com.app.sportzfever.adapter.AdapterAlltournament;
 import com.app.sportzfever.adapter.AdapterPastMatches;
-import com.app.sportzfever.adapter.AdapterUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.ModelAllTournament;
 import com.app.sportzfever.models.ModelPastMatches;
-import com.app.sportzfever.models.ModelUpcomingMatches;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -35,16 +32,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentAllTournament extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
 
-    private AdapterUpcomingMatches adapterUpcomingMatches;
-    private ModelUpcomingMatches modelUpcomingMatches;
-    private ArrayList<ModelUpcomingMatches> arrayList;
+    private AdapterAlltournament adapterAlltournament;
+    private ModelAllTournament modelAllTournament;
+    private ArrayList<ModelAllTournament> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -53,12 +50,12 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
     private boolean loading = true;
     private String maxlistLength = "";
 
-    public static FragmentUpcomingMatches fragment_teamJoin_request;
-    private final String TAG = FragmentUpcomingMatches.class.getSimpleName();
+    public static FragmentAllTournament fragment_teamJoin_request;
+    private final String TAG = FragmentAllTournament.class.getSimpleName();
 
-    public static FragmentUpcomingMatches getInstance() {
+    public static FragmentAllTournament getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentUpcomingMatches();
+            fragment_teamJoin_request = new FragmentAllTournament();
         return fragment_teamJoin_request;
     }
 
@@ -101,17 +98,56 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
             }
         });
 
-
-        list_request.setOnClickListener(new View.OnClickListener() {
+/*
+        list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onClick(View view) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if ((AppUtils.isNetworkAvailable(context))) {
-                    Intent inte=new Intent(context, ViewMatchScoreCard.class);
-startActivity(inte);
+
+                    if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
+                        if (dy > 0) //check for scroll down
+                        {
+                            visibleItemCount = layoutManager.getChildCount();
+                            totalItemCount = layoutManager.getItemCount();
+                            pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                            if (loading) {
+                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                                    loading = false;
+                                    modelNotification = new ModelNotification();
+                                    modelNotification.setRowType(2);
+                                    arrayList.add(modelNotification);
+                                    adapterNotification.notifyDataSetChanged();
+
+                                    skipCount = skipCount + 10;
+
+                                    try {
+
+                                        if (AppUtils.isNetworkAvailable(context)) {
+
+                                            String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
+                                            //  new CommonAsyncTaskHashmap(1, context, Fragment_Chat.this).getqueryNoProgress(url);
+
+                                        } else {
+                                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+
+                                    }
+                                    //Do pagination.. i.e. fetch new data
+                                }
+                            }
+                        }
+                    } else {
+
+                        Log.e("maxlength", "*" + arrayList.size());
+                    }
                 }
             }
         });
-
+*/
 
     }
 
@@ -130,20 +166,6 @@ startActivity(inte);
         startActivity(in);*/
     }
 
-    private void getServicelist() {
-        try {
-            skipCount = 0;
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
@@ -152,7 +174,8 @@ startActivity(inte);
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGMATCHES + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTOURNAMENT + AppUtils.getAuthToken(context);
+
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -169,7 +192,7 @@ startActivity(inte);
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                if (jObject.getString("result").equalsIgnoreCase("OK")) {
                     JSONArray data = jObject.getJSONArray("data");
 
                     //  data = jObject.getString("total");
@@ -178,34 +201,25 @@ startActivity(inte);
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelUpcomingMatches = new ModelUpcomingMatches();
+                        modelAllTournament = new ModelAllTournament();
 
-                        modelUpcomingMatches.setId(jo.getString("id"));
+                        modelAllTournament.setId(jo.getString("id"));
 
-                        modelUpcomingMatches.setLocation(jo.getString("location"));
-                        modelUpcomingMatches.setTournamentName(jo.getString("tournamentName"));
-                        modelUpcomingMatches.setTeam1Name(jo.getString("team1Name"));
-                        modelUpcomingMatches.setTeam2Name(jo.getString("team2Name"));
-                        modelUpcomingMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
-                        modelUpcomingMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
+                        modelAllTournament.setName(jo.getString("name"));
+                        modelAllTournament.setSportName(jo.getString("sportName"));
 
 
+JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        modelAllTournament.setDatetime(jo1.getString("datetime"));
 
-                        JSONObject j1 = jo.getJSONObject("matchDate");
+                        modelAllTournament.setRowType(1);
 
-                        modelUpcomingMatches.setTime(j1.getString("time"));
-                        modelUpcomingMatches.setDate(j1.getString("date"));
-                        modelUpcomingMatches.setYear(j1.getString("year"));
-                        modelUpcomingMatches.setMonthName(j1.getString("monthName"));
-                        modelUpcomingMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelUpcomingMatches.setRowType(1);
-
-                        arrayList.add(modelUpcomingMatches);
+                        arrayList.add(modelAllTournament);
                     }
 
 
-                    adapterUpcomingMatches = new AdapterUpcomingMatches(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterUpcomingMatches);
+                    adapterAlltournament = new AdapterAlltournament(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterAlltournament);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -219,7 +233,7 @@ startActivity(inte);
 
             } else if (position == 4) {
 
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                if (jObject.getString("result").equalsIgnoreCase("OK")) {
                     JSONArray data = jObject.getJSONArray("data");
                     JSONObject eventtime = jObject.optJSONObject("startDate");
                     //  maxlistLength = jObject.getString("total");
@@ -230,30 +244,20 @@ startActivity(inte);
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelUpcomingMatches = new ModelUpcomingMatches();
+                        modelAllTournament = new ModelAllTournament();
 
-                        modelUpcomingMatches.setLocation(jo.getString("location"));
-                        modelUpcomingMatches.setTournamentName(jo.getString("tournamentName"));
-                        modelUpcomingMatches.setTeam1Name(jo.getString("team1Name"));
-                        modelUpcomingMatches.setTeam2Name(jo.getString("team2Name"));
-                        modelUpcomingMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
-                        modelUpcomingMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
+                        modelAllTournament.setId(jo.getString("id"));
+
+                        modelAllTournament.setName(jo.getString("name"));
+                        modelAllTournament.setSportName(jo.getString("sportName"));
 
 
+                        JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        modelAllTournament.setDatetime(jo1.getString("datetime"));
 
+                        modelAllTournament.setRowType(1);
 
-
-                        JSONObject j1 = jo.getJSONObject("matchDate");
-
-
-                        modelUpcomingMatches.setTime(j1.getString("time"));
-                        modelUpcomingMatches.setDate(j1.getString("date"));
-                        modelUpcomingMatches.setYear(j1.getString("year"));
-                        modelUpcomingMatches.setMonthName(j1.getString("monthName"));
-                        modelUpcomingMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelUpcomingMatches.setRowType(1);
-
-                        arrayList.add(modelUpcomingMatches);
+                        arrayList.add(modelAllTournament);
                     }/* for (int i = 0; i < eventtime.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
@@ -271,14 +275,14 @@ startActivity(inte);
                         arrayList.add(upcomingEvent);
                     }*/
 
-                    adapterUpcomingMatches.notifyDataSetChanged();
+                    adapterAlltournament.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterUpcomingMatches.notifyDataSetChanged();
+                    adapterAlltournament.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
                 }

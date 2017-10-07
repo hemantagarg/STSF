@@ -7,7 +7,7 @@ package com.app.sportzfever.interfaces;
 public interface JsonApiHelper {
 
     String BASEURL = JsonApiHelper.TESTURL;
-    String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
+   // String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
     String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
@@ -21,6 +21,8 @@ public interface JsonApiHelper {
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";
     String GET_PASTMATCHES = "getAllPastMatches/";
+    String GET_ALLTOURNAMENT = "getAllUpcomingTournaments/";
+    String GET_ALLMYTOURNAMENT = "getAllTournamentsByOrganiser/";
     String GET_LIVEMATCHES = "getAllLiveMatches/";
     String GET_UPCOMINGMATCHES = "getAllUpcomingMatches/";
     String GET_RECENTCHAT = "getRecentChatData/";
@@ -28,9 +30,11 @@ public interface JsonApiHelper {
     String LIKEUNLIKEPOST = "likeAndUnlikePost";
     String UPDATESTATUS = "updateStatus";
     String DELETESTATUS = "deleteStatus/";
+    String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";
     String CREATESTATUS = "createStatus";
     String POSTCOMMENT = "comment";
     String SCORING = "scoring/";
+    String VIEWALLMATCHESSCORE = "viewMatchScoreCard/";
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";
     String GET_JOINEDGROUPCHAT = "getJoinedGroups/";
