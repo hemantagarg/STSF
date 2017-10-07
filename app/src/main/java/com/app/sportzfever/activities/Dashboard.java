@@ -30,6 +30,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
+import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
@@ -61,7 +62,7 @@ public class Dashboard extends AppCompatActivity {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout;
+    private TextView text_score, text_logout,text_matches;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -156,6 +157,7 @@ public class Dashboard extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         text_logout = (TextView) findViewById(R.id.text_logout);
         text_score = (TextView) findViewById(R.id.text_score);
+        text_matches = (TextView) findViewById(R.id.text_matches);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
@@ -253,6 +255,17 @@ public class Dashboard extends AppCompatActivity {
                 drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(context, ScoreActivity.class);
                 startActivity(intent);
+
+            }
+        });    text_matches.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_score.setTextColor(getResources().getColor(R.color.red));
+                text_score.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
+
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
