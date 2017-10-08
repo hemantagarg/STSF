@@ -241,6 +241,102 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         }
     }
 
+
+    private void submitMultiPost() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", AppUtils.getUserId(context));
+            jsonObject.put("statusVisiblity", spinnerShareWith.getSelectedItem().toString());
+            jsonObject.put("statusType", "TEXT");
+            jsonObject.put("description", edt_text_post.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+/*
+        FileMultipartRequest multipartRequest = new FileMultipartRequest(requestingUrl,
+                mCPImageByetArray, SessionManager.getInstance(mActivity).getAccountID(),
+                SessionManager.getInstance(mActivity).getNetworkID(),
+                SessionManager.getInstance(mActivity).getToken(), mStrSSIDName,
+                mStrTitle, mStrSwitchCPStatus, mStrMsg, mStrRedirectUrl, mStrSwitchRedirectUrlStatus, mStrSessionTime,
+                mStrSwitchEulaStatus, mStrEulaContent, true,
+                new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        NetgearUtils.showInfoLog(TAG, "Upload Success response :" + response);
+                        String resultResponse = new String(response.data);
+                        NetgearUtils.showLog(TAG, "resultResponse : " + resultResponse);
+                        int resultCode = -1;
+                        String message = "";
+                        boolean status = false;
+                        try {
+                            JSONObject mResponse = new JSONObject(resultResponse);
+                            if (mResponse != null) {
+                                if (mResponse.has(JSON_APIkeyHelper.RESPONSE)) {
+                                    JSONObject responseObject = mResponse.getJSONObject(JSON_APIkeyHelper.RESPONSE);
+                                    if (responseObject != null) {
+                                        if (responseObject.has(JSON_APIkeyHelper.RESULTCODE)) {
+                                            resultCode = responseObject.getInt(JSON_APIkeyHelper.RESULTCODE);
+                                        }
+                                        if (responseObject.has(JSON_APIkeyHelper.MESSAGE)) {
+                                            message = responseObject.getString(JSON_APIkeyHelper.MESSAGE);
+                                        }
+                                        if (responseObject.has(JSON_APIkeyHelper.STATUS)) {
+                                            status = responseObject.getBoolean(JSON_APIkeyHelper.STATUS);
+                                        }
+                                    } else {
+                                        NetgearUtils.showLog(TAG, "reponse object null");
+                                    }
+                                }
+
+                                if (status) {
+
+                                    CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, "", false, message, true,
+                                            mActivity.getResources().getString(R.string.ok), true, new ChoiceDialogClickListener() {
+                                                @Override
+                                                public void onClickOfPositive() {
+                                                    wantToSaveChanges = false;
+                                                    onBackPressed();
+                                                }
+
+                                                @Override
+                                                public void onClickOfNegative() {
+
+                                                }
+                                            }, true);
+                                } else {
+                                    CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, "", false, message, true,
+                                            mActivity.getResources().getString(R.string.ok), true, null, true);
+                                }
+
+                            } else {
+//                                CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, strTitle, strMsg, strBtnTxt, null);
+                                NetgearUtils.showLog(TAG, "mResponse is null");
+                            }
+                            NetgearUtils.showLog(TAG, "result : " + message);
+                        } catch (Exception e) {
+                            NetgearUtils.showLog(TAG, "Error : " + e);
+                        }
+                        hideProgressDialog();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(final VolleyError error) {
+                NetgearUtils.hideExtraProgressDialog();
+                hideProgressDialog();
+
+                CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity,
+                        mActivity.getResources().getString(R.string.error), false,
+                        mActivity.getResources().getString(R.string.timeout)
+                        , true,
+                        mActivity.getResources().getString(R.string.ok), true, null, false);
+                NetgearUtils.showErrorLog(TAG, "Upload Error response :" + error);
+            }
+        }, mActivity);
+*/
+
+    }
+
     private void submitPost() {
         Charset encoding = Charset.forName("UTF-8");
         MultipartEntity reqEntity = new MultipartEntity();
@@ -249,7 +345,6 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
-
          /*   ArrayList<FileBody> list = new ArrayList<>();
             if (!selectedimagespath.equalsIgnoreCase("")) {
 

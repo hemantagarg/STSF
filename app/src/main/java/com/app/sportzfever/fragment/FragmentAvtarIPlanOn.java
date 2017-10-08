@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAvtarIAdmin;
 import com.app.sportzfever.adapter.AdapterAvtarIPlayOn;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -37,7 +37,6 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterAvtarIPlayOn adapterAvtarIPlayOn;
     private ModelAvtarMyTeam modelAvtarMyTeam;
     private ArrayList<ModelAvtarMyTeam> arrayList;
@@ -46,6 +45,7 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
+    private TextView text_nodata;
     private boolean loading = true;
     private String maxlistLength = "";
 
@@ -80,6 +80,7 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -98,7 +99,6 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
         });
 
 
-
     }
 
     @Override
@@ -108,7 +108,6 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
     }
 
 
-
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
@@ -116,7 +115,7 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.AVTARMYTEAMIADMIN + 173+"/"+AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.AVTARMYTEAMIADMIN + 173 + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -166,7 +165,6 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                         arrayList.add(modelAvtarMyTeam);
                     }
 
-
                     adapterAvtarIPlayOn = new AdapterAvtarIPlayOn(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterAvtarIPlayOn);
 
@@ -174,7 +172,16 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Team found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Team found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

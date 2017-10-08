@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
@@ -46,6 +47,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
+    private TextView text_nodata;
     private String maxlistLength = "";
 
     public static FragmentAvtarIAdminTeam fragment_teamJoin_request;
@@ -78,6 +80,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
@@ -97,7 +100,6 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         });
 
 
-
     }
 
     @Override
@@ -107,7 +109,6 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
     }
 
 
-
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
@@ -115,7 +116,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.AVTARMYTEAMIADMIN + 173+"/"+AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.AVTARMYTEAMIADMIN + 173 + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -173,7 +174,16 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Team found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Team found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

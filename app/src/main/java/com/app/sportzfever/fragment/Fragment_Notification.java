@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
@@ -38,6 +39,8 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     private Context context;
     private AdapterNotification adapterNotification;
     private ModelNotification modelNotification;
+
+    private TextView text_nodata;
     private ArrayList<ModelNotification> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
@@ -84,6 +87,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -241,8 +245,16 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Notification found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Notification found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

@@ -260,9 +260,15 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    text_nodata.setVisibility(View.GONE);
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Friend Request found");
+                    }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Friend Request found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

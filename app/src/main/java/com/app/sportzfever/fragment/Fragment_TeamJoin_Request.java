@@ -369,9 +369,15 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    text_nodata.setVisibility(View.GONE);
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Team invite found");
+                    }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Team invite found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

@@ -21,14 +21,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.sportzfever.R;
+import com.app.sportzfever.adapter.DrawerListAdapter;
+import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
-import com.app.sportzfever.fragment.FragmentAvtarBio;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -37,16 +40,26 @@ import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_Tournaments;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
+import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
+import com.app.sportzfever.interfaces.JsonApiHelper;
+import com.app.sportzfever.models.DrawerListModel;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Stack;
 
-public class Dashboard extends AppCompatActivity {
+public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     private Context context;
     private Toolbar toolbar;
@@ -55,10 +68,14 @@ public class Dashboard extends AppCompatActivity {
     private FrameLayout feed_container, freinds_container, event_container, notification_container, chat_container;
     private TabLayout tabLayout;
     private AppBarLayout appBar;
+    private ExpandableListView expendableView;
+    private LinkedHashMap<String, List<DrawerListModel>> alldata;
+    private ArrayList<String> groupnamelist;
     private int PERMISSION_ALL = 1;
     private String[] PERMISSIONS = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA,
     };
+    private DrawerListAdapter listAdapter;
     DrawerLayout drawer;
     private String mCurrentTab;
     private ProgressBar api_loading_request;
@@ -66,10 +83,11 @@ public class Dashboard extends AppCompatActivity {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament,text_sprtsavtar;
+    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
+    private int lastExpandedPosition;
 
     /***********************************************
      * Function Name : getInstance
@@ -138,6 +156,7 @@ public class Dashboard extends AppCompatActivity {
             }
         }
         setListener();
+        getMenuData();
     }
 
 
@@ -164,6 +183,14 @@ public class Dashboard extends AppCompatActivity {
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
+
+        alldata = new LinkedHashMap<>();
+        groupnamelist = new ArrayList<>();
+        expendableView = (ExpandableListView) findViewById(R.id.expendableView);
+        listAdapter = new DrawerListAdapter(this, groupnamelist, alldata);
+        expendableView.setAdapter(listAdapter);
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -246,8 +273,10 @@ public class Dashboard extends AppCompatActivity {
         text_logout.setBackgroundColor(getResources().getColor(R.color.white));
         text_tournament.setBackgroundColor(getResources().getColor(R.color.white));
         text_matches.setBackgroundColor(getResources().getColor(R.color.white));
+        text_sprtsavtar.setBackgroundColor(getResources().getColor(R.color.white));
 
         text_score.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_sprtsavtar.setTextColor(getResources().getColor(R.color.textcolordark));
         text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
         text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
         text_tournament.setTextColor(getResources().getColor(R.color.textcolordark));
@@ -265,6 +294,27 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        expendableView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //Nothing here ever fires
+                System.err.println("child clicked");
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+        expendableView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (lastExpandedPosition != -1
+                        && groupPosition != lastExpandedPosition) {
+                    expendableView.collapseGroup(lastExpandedPosition);
+                }
+                lastExpandedPosition = groupPosition;
+            }
+        });
         text_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,8 +331,8 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
-                text_score.setTextColor(getResources().getColor(R.color.red));
-                text_score.setBackgroundResource(R.drawable.text_bg);
+                text_sprtsavtar.setTextColor(getResources().getColor(R.color.red));
+                text_sprtsavtar.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
 
@@ -457,7 +507,6 @@ public class Dashboard extends AppCompatActivity {
 
         alertDialog.show();
 
-
     }
 
 
@@ -592,6 +641,23 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
+    private void getMenuData() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //   https://sfscoring.betasportzfever.com/getAllSport/59a5e6bfea3964e9a8e4278d26aec647
+             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETALLSPORT + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /*********************************************************************************
      * Function Name - popFragments
      * <p/>
@@ -691,4 +757,54 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPostSuccess(int method, JSONObject jObject) {
+        try {
+            if (method == 1) {
+                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+
+                    JSONArray servicearr = jObject.getJSONArray("data");
+
+/*
+                    for (int i = 0; i < servicearr.length(); i++) {
+                        JSONObject headerobj = servicearr.getJSONObject(i);
+                        groupnamelist.add(headerobj.getString("CategoryName"));
+                        ArrayList<DrawerListModel> list = new ArrayList<>();
+                        JSONArray arr = headerobj.getJSONArray("subcategories");
+                        if (arr.length() > 0) {
+                            for (int j = 0; j < arr.length(); j++) {
+                                JSONObject obj = arr.getJSONObject(j);
+
+                                DrawerListModel model = new DrawerListModel();
+                                model.setId(obj.getString("SubCategoryId"));
+                                model.setCat_id(headerobj.getString("CategoryId"));
+                                model.setName(obj.getString("SubCategoryName"));
+                                list.add(model);
+                            }
+                            alldata.put(groupnamelist.get(i), list);
+                        }
+                    }
+*/
+                    ArrayList<DrawerListModel> list = new ArrayList<>();
+                    groupnamelist.add("Sportz Avtar");
+                    DrawerListModel model = new DrawerListModel();
+                    model.setName("Cricket");
+                    list.add(model);
+                    alldata.put(groupnamelist.get(0), list);
+                    listAdapter.notifyDataSetChanged();
+
+                } else {
+
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onPostFail(int method, String response) {
+
+    }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
@@ -44,6 +45,7 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
     private ArrayList<ModelLiveMatches> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
+    private TextView text_nodata;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
@@ -76,7 +78,7 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -239,8 +241,16 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Live Matches found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Live Matches found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

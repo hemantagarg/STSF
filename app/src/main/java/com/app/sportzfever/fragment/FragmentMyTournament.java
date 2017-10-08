@@ -8,19 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterMyTournament;
-import com.app.sportzfever.adapter.AdapterPastMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournament;
-import com.app.sportzfever.models.ModelPastMatches;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -38,7 +37,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
+    private TextView text_nodata;
     private AdapterMyTournament adapterMyTournament;
     private ModelAllTournament modelAllTournament;
     private ArrayList<ModelAllTournament> arrayList;
@@ -76,7 +75,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -174,7 +173,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                  String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLMYTOURNAMENT +2 + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLMYTOURNAMENT + 2 + "/" + AppUtils.getAuthToken(context);
 
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
@@ -202,24 +201,16 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                         JSONObject jo = data.getJSONObject(i);
 
                         modelAllTournament = new ModelAllTournament();
-
                         modelAllTournament.setId(jo.getString("id"));
-
                         modelAllTournament.setName(jo.getString("name"));
                         modelAllTournament.setSportName(jo.getString("sportName"));
                         modelAllTournament.setTournamentState(jo.getString("tournamentState"));
 
-
-                        JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
                         modelAllTournament.setDatetime(jo1.getString("datetime"));
-
                         modelAllTournament.setRowType(1);
-
                         arrayList.add(modelAllTournament);
-
-
                     }
-
 
                     adapterMyTournament = new AdapterMyTournament(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterMyTournament);
@@ -227,8 +218,16 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Tournament found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Tournament found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -256,7 +255,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                         modelAllTournament.setTournamentState(jo.getString("tournamentState"));
 
 
-                        JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
                         modelAllTournament.setDatetime(jo1.getString("datetime"));
 
                         modelAllTournament.setRowType(1);

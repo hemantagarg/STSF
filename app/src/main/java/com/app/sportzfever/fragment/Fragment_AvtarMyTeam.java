@@ -12,19 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
-import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.JsonApiHelper;
-import com.app.sportzfever.utils.AppUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +23,7 @@ import java.util.List;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_AvtarMyTeam extends BaseFragment  {
+public class Fragment_AvtarMyTeam extends BaseFragment {
 
 
     private Bundle b;
@@ -66,11 +57,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment  {
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(true);
-
-
     }
-
-
 
 
     @Override
@@ -95,11 +82,8 @@ public class Fragment_AvtarMyTeam extends BaseFragment  {
                         setFragment(new FragmentAvtarIAdminTeam());
                         break;
                     case 1:
-                        setFragment(new FragmentLiveMatches());
+                        setFragment(new FragmentAvtarIPlanOn());
                         break;
-
-
-
                 }
             }
 
@@ -128,7 +112,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment  {
 
         tabLayout.addTab(tabLayout.newTab().setText("Teams That I Admin"));
         tabLayout.addTab(tabLayout.newTab().setText("Teams That I Play On"));
-      //  tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
+        //  tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
 
       /*  tabLayout.getTabAt(0).setText("Chat");
         tabLayout.getTabAt(1).setText("Contacts");
@@ -145,8 +129,6 @@ public class Fragment_AvtarMyTeam extends BaseFragment  {
 
         viewPager.setAdapter(adapter);
     }
-
-
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

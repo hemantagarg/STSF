@@ -8,19 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterAlltournament;
-import com.app.sportzfever.adapter.AdapterPastMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournament;
-import com.app.sportzfever.models.ModelPastMatches;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -46,6 +45,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
+    private TextView text_nodata;
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
@@ -80,6 +80,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
@@ -209,14 +210,11 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                         modelAllTournament.setSportName(jo.getString("sportName"));
 
 
-JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
                         modelAllTournament.setDatetime(jo1.getString("datetime"));
-
                         modelAllTournament.setRowType(1);
-
                         arrayList.add(modelAllTournament);
                     }
-
 
                     adapterAlltournament = new AdapterAlltournament(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterAlltournament);
@@ -225,7 +223,16 @@ JSONObject jo1=jo.getJSONObject("tournamentStartDate");
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Tournament found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Tournament found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -252,7 +259,7 @@ JSONObject jo1=jo.getJSONObject("tournamentStartDate");
                         modelAllTournament.setSportName(jo.getString("sportName"));
 
 
-                        JSONObject jo1=jo.getJSONObject("tournamentStartDate");
+                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
                         modelAllTournament.setDatetime(jo1.getString("datetime"));
 
                         modelAllTournament.setRowType(1);

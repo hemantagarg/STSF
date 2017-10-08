@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
@@ -44,6 +45,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
     private ArrayList<ModelPastMatches> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
+    private TextView text_nodata;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
@@ -81,6 +83,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -227,7 +230,6 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
                         modelPastMatches.setSecondBattingWickets(jo.getString("secondBattingWickets"));
 
 
-
                         JSONObject j1 = jo.getJSONObject("matchDate");
 
                         modelPastMatches.setTime(j1.getString("time"));
@@ -240,15 +242,22 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
                         arrayList.add(modelPastMatches);
                     }
 
-
                     adapterPastMatches = new AdapterPastMatches(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterPastMatches);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Past Matches found");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Past Matches found");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
