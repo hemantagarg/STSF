@@ -15,6 +15,16 @@ public class ModelAvtarMyTeam
 
     private String captain;
 
+    public String getTeamProfilePicture() {
+        return teamProfilePicture;
+    }
+
+    public void setTeamProfilePicture(String teamProfilePicture) {
+        this.teamProfilePicture = teamProfilePicture;
+    }
+
+    private String teamProfilePicture;
+
     public String getTeamName ()
     {
         return teamName;

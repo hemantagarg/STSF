@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardElevation="0sp"
+    card_view:cardElevation="2sp"
     card_view:cardUseCompatPadding="false">
 
     <RelativeLayout

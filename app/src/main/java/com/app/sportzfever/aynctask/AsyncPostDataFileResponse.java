@@ -62,7 +62,7 @@ public class AsyncPostDataFileResponse extends AsyncTask<String, Void, String> {
 */
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("Content-Type", "undefined");
-        httppost.addHeader("token", AppUtils.getAuthToken(context));
+        httppost.addHeader("Authorization", AppUtils.getAuthToken(context));
         try {
             httppost.setEntity(requestData);
             // Execute HTTP Post Request

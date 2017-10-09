@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -78,15 +79,14 @@ public class AdapterAvtarIPlayOn extends RecyclerView.Adapter<RecyclerView.ViewH
             ModelAvtarMyTeam m1 = (ModelAvtarMyTeam) detail.get(i);
 
           ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
-/*
-
-            if (!m1.getTeam1profilePicture().equalsIgnoreCase("")) {
+            if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getTeam1profilePicture())
-                        .transform(new CircleTransform())
+                        .load(m1.getTeamProfilePicture())
+
                         .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_avtar);
-            }*/
+                        .into(((AdapterAvtarIPlayOn.CustomViewHolder) holder).image_avtar);
+            }
+
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

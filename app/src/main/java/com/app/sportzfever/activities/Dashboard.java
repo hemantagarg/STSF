@@ -32,6 +32,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.DrawerListAdapter;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
+import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -83,7 +84,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar;
+    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -198,6 +199,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         text_logout = (TextView) findViewById(R.id.text_logout);
         text_score = (TextView) findViewById(R.id.text_score);
+        text_myprofile = (TextView) findViewById(R.id.text_myprofile);
         text_tournament = (TextView) findViewById(R.id.text_tournament);
         text_matches = (TextView) findViewById(R.id.text_matches);
         text_sprtsavtar = (TextView) findViewById(R.id.text_sprtsavtar);
@@ -299,7 +301,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 //Nothing here ever fires
                 System.err.println("child clicked");
-                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentAvtar_Details(), true);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -323,6 +325,17 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 text_score.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(context, ScoreActivity.class);
+                startActivity(intent);
+
+            }
+        }); text_myprofile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_score.setTextColor(getResources().getColor(R.color.red));
+                text_score.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
+                Intent intent = new Intent(context, ActivityAbout.class);
                 startActivity(intent);
 
             }

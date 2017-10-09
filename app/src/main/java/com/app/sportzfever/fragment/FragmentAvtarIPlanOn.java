@@ -3,6 +3,7 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -79,9 +80,9 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        layoutManager = new LinearLayoutManager(context);
+        layoutManager = new GridLayoutManager(context, 2);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -150,6 +151,8 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                         modelAvtarMyTeam.setOwner(jo.getString("owner"));
                         modelAvtarMyTeam.setCaptain(jo.getString("captain"));
                         modelAvtarMyTeam.setLocation(jo.getString("location"));
+                        modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
+                        modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         modelAvtarMyTeam.setRowType(1);
 
 
@@ -202,12 +205,13 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
 
                         modelAvtarMyTeam = new ModelAvtarMyTeam();
 
+
                         modelAvtarMyTeam.setTeamId(jo.getString("teamId"));
                         modelAvtarMyTeam.setOwner(jo.getString("owner"));
                         modelAvtarMyTeam.setCaptain(jo.getString("captain"));
                         modelAvtarMyTeam.setLocation(jo.getString("location"));
-                        modelAvtarMyTeam.setRowType(1);
-
+                        modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
+                        modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                  /*       JSONObject j1 = jo.getJSONObject("matchDate");
 
                         modelPastMatches.setTime(j1.getString("time"));

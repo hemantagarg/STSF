@@ -3,6 +3,7 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -62,7 +63,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this com.app.justclap.fragment
+
 
         View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
         context = getActivity();
@@ -81,8 +82,8 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager = new GridLayoutManager(context, 2);
+
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -151,6 +152,8 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
                         modelAvtarMyTeam.setOwner(jo.getString("owner"));
                         modelAvtarMyTeam.setCaptain(jo.getString("captain"));
                         modelAvtarMyTeam.setLocation(jo.getString("location"));
+                        modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
+                        modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         modelAvtarMyTeam.setRowType(1);
 
 
