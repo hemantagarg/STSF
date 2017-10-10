@@ -59,7 +59,9 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
         View view_about = inflater.inflate(R.layout.fragment_chat_main, container, false);
         context = getActivity();
         b = getArguments();
-
+        getRecentChatList();
+        getFreindList();
+        getGroupChat();
         return view_about;
     }
 
@@ -67,10 +69,6 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(true);
-        getRecentChatList();
-        getFreindList();
-        getGroupChat();
-
     }
 
     private void getFreindList() {

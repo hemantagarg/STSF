@@ -33,11 +33,14 @@ import com.app.sportzfever.adapter.DrawerListAdapter;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
+import com.app.sportzfever.fragment.FragmentGallery;
+import com.app.sportzfever.fragment.FragmentStats;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
+import com.app.sportzfever.fragment.Fragment_PostFeed;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_Tournaments;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
@@ -84,7 +87,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
+    private TextView text_score,text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -122,6 +125,13 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
     }
 
+    public void manageFooterVisibitlity(boolean isVisible) {
+        if (isVisible) {
+            tabLayout.setVisibility(View.VISIBLE);
+        } else {
+            tabLayout.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +213,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         text_tournament = (TextView) findViewById(R.id.text_tournament);
         text_matches = (TextView) findViewById(R.id.text_matches);
         text_sprtsavtar = (TextView) findViewById(R.id.text_sprtsavtar);
+        text_gallery = (TextView) findViewById(R.id.text_gallery);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
@@ -265,6 +276,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
             manageHeaderVisibitlity(true);
+            manageFooterVisibitlity(true);
         } else {
             manageHeaderVisibitlity(false);
         }
@@ -274,6 +286,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         text_score.setBackgroundColor(getResources().getColor(R.color.white));
         text_logout.setBackgroundColor(getResources().getColor(R.color.white));
         text_tournament.setBackgroundColor(getResources().getColor(R.color.white));
+        text_gallery.setBackgroundColor(getResources().getColor(R.color.white));
         text_matches.setBackgroundColor(getResources().getColor(R.color.white));
         text_sprtsavtar.setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -281,6 +294,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         text_sprtsavtar.setTextColor(getResources().getColor(R.color.textcolordark));
         text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
         text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_gallery.setTextColor(getResources().getColor(R.color.textcolordark));
         text_tournament.setTextColor(getResources().getColor(R.color.textcolordark));
     }
 
@@ -372,6 +386,16 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 drawer.closeDrawer(GravityCompat.START);
 
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
+            }
+        });  text_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setWhiteColor();
+                text_gallery.setTextColor(getResources().getColor(R.color.red));
+                text_gallery.setBackgroundResource(R.drawable.text_bg);
+                drawer.closeDrawer(GravityCompat.START);
+
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentGallery(), true);
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -746,12 +770,14 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
-                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof FragmentGallery) {
                             manageHeaderVisibitlity(true);
+                            manageFooterVisibitlity(true);
                         } else {
                             manageHeaderVisibitlity(false);
                         }
-                        // refreshFragments();
+                        refreshFragments();
                     }
                 }
             } else {
@@ -770,11 +796,17 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
     }
 
+    private void refreshFragments() {
+        if (currentFragment instanceof Fragment_PostFeed) {
+            ((Fragment_PostFeed) currentFragment).onResume();
+        }
+    }
+
     @Override
     public void onPostSuccess(int method, JSONObject jObject) {
         try {
             if (method == 1) {
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
 
                     JSONArray servicearr = jObject.getJSONArray("data");
 

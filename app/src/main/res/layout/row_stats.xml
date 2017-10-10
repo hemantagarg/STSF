@@ -1,0 +1,517 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:id="@+id/linear11"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/text_selected_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/text_selected_bg"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardElevation="2sp"
+                    android:padding="@dimen/dp5"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_match"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_matchscore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="MATCHES"
+                        android:textColor="@color/stats"
+
+                        android:textStyle="bold" />
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view11"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_inns"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_innsscore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="Inns"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view21"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_Runs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_Runsscore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="RUNS"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+
+            android:background="@color/text_selected_bg"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_hs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_hslive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="HS"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_SR"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_SRlive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="SR"
+                        android:textColor="@color/stats"
+
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_hundred"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="14"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_hundredlive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="100"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+
+            android:background="@color/text_selected_bg"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_fifty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="510"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_fiftylive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="50"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_sixfour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="4s/6s"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_sixfourlive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="4s/6s"
+                        android:textColor="@color/stats"
+
+                        android:textStyle="bold" />
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_Ct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_Ctlive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="CT"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+
+            android:background="@color/text_selected_bg"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    card_view:cardCornerRadius="2dp">
+
+                    <TextView
+                        android:id="@+id/text_St"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp5"
+                        android:text="12"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_Stlive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:paddingTop="@dimen/dp15"
+                        android:text="ST"
+                        android:textColor="@color/stats"
+                        android:textStyle="bold" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerInParent="true"
+                    android:text="4s/6s"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_avtar"
+                    android:layout_centerInParent="true"
+                    android:text="TEXT"
+                    android:textColor="@color/logocolor"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_avtar"
+                    android:layout_centerInParent="true"
+                    android:text="CT"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_avtar"
+                    android:layout_centerInParent="true"
+                    android:text="TEXT"
+                    android:textColor="@color/logocolor"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

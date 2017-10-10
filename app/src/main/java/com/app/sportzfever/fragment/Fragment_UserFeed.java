@@ -82,6 +82,11 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         return view_about;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageFooterVisibitlity(true);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

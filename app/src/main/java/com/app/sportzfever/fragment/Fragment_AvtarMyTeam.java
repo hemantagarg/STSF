@@ -56,7 +56,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
+      //  Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
 
