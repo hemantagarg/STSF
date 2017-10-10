@@ -364,12 +364,9 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             reqEntity.addPart("statusType", statusType);
             reqEntity.addPart("description", description);
 
-
             if (AppUtils.isNetworkAvailable(context)) {
-
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
                 new AsyncPostDataFileResponse(context, Fragment_PostFeed.this, 1, reqEntity, url);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -425,7 +422,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             if (position == 1) {
                 HeaderViewManager.getInstance().setProgressLoader(false, false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+//                    JSONArray data = jObject.getJSONArray("data");
 
                 } else {
                 }

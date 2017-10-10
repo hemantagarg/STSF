@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
@@ -84,7 +85,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
+    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -272,12 +273,14 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     private void setWhiteColor() {
         text_score.setBackgroundColor(getResources().getColor(R.color.white));
+        text_myprofile.setBackgroundColor(getResources().getColor(R.color.white));
         text_logout.setBackgroundColor(getResources().getColor(R.color.white));
         text_tournament.setBackgroundColor(getResources().getColor(R.color.white));
         text_matches.setBackgroundColor(getResources().getColor(R.color.white));
         text_sprtsavtar.setBackgroundColor(getResources().getColor(R.color.white));
 
         text_score.setTextColor(getResources().getColor(R.color.textcolordark));
+        text_myprofile.setTextColor(getResources().getColor(R.color.textcolordark));
         text_sprtsavtar.setTextColor(getResources().getColor(R.color.textcolordark));
         text_logout.setTextColor(getResources().getColor(R.color.textcolordark));
         text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
@@ -296,6 +299,17 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             }
         });
 
+        expendableView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
+                if (position == 4) {
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                return false;
+            }
+        });
+
         expendableView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -307,14 +321,23 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             }
         });
         expendableView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
             @Override
             public void onGroupExpand(int groupPosition) {
-                if (lastExpandedPosition != -1
+                if (groupPosition == 1) {
+                    if (!expendableView.isGroupExpanded(groupPosition)) {
+                        expendableView.expandGroup(groupPosition);
+                    } else {
+                        expendableView.collapseGroup(groupPosition);
+                    }
+                } else {
+                    expendableView.collapseGroup(groupPosition);
+                }
+
+              /*  if (lastExpandedPosition != -1 && groupPosition == 1
                         && groupPosition != lastExpandedPosition) {
                     expendableView.collapseGroup(lastExpandedPosition);
                 }
-                lastExpandedPosition = groupPosition;
+                lastExpandedPosition = groupPosition;*/
             }
         });
         text_score.setOnClickListener(new View.OnClickListener() {
@@ -328,12 +351,13 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 startActivity(intent);
 
             }
-        }); text_myprofile.setOnClickListener(new View.OnClickListener() {
+        });
+        text_myprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
-                text_score.setTextColor(getResources().getColor(R.color.red));
-                text_score.setBackgroundResource(R.drawable.text_bg);
+                text_myprofile.setTextColor(getResources().getColor(R.color.red));
+                text_myprofile.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(context, ActivityAbout.class);
                 startActivity(intent);
@@ -657,9 +681,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void getMenuData() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //   https://sfscoring.betasportzfever.com/getAllSport/59a5e6bfea3964e9a8e4278d26aec647
+                //  https://sfscoring.betasportzfever.com/getMenu/1/479a44a634f82b0394f78352d302ec36
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETALLSPORT + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETMENU + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -774,36 +798,32 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     public void onPostSuccess(int method, JSONObject jObject) {
         try {
             if (method == 1) {
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
 
-                    JSONArray servicearr = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONArray servicearr = data.getJSONArray("Menu");
 
-/*
                     for (int i = 0; i < servicearr.length(); i++) {
                         JSONObject headerobj = servicearr.getJSONObject(i);
-                        groupnamelist.add(headerobj.getString("CategoryName"));
+                        groupnamelist.add(headerobj.getString("MenuTitle"));
                         ArrayList<DrawerListModel> list = new ArrayList<>();
-                        JSONArray arr = headerobj.getJSONArray("subcategories");
+                        JSONArray arr = headerobj.getJSONArray("Menucategories");
+                        Log.e("Menucategories", arr.toString());
+
                         if (arr.length() > 0) {
                             for (int j = 0; j < arr.length(); j++) {
                                 JSONObject obj = arr.getJSONObject(j);
 
                                 DrawerListModel model = new DrawerListModel();
-                                model.setId(obj.getString("SubCategoryId"));
-                                model.setCat_id(headerobj.getString("CategoryId"));
-                                model.setName(obj.getString("SubCategoryName"));
+                                model.setSubMenu1Id(obj.getString("SubMenu1Id"));
+                                model.setSubMenu1AvatarId(obj.getString("SubMenu1AvatarId"));
+                                model.setName(obj.getString("SubMenu1Name"));
                                 list.add(model);
                             }
                             alldata.put(groupnamelist.get(i), list);
                         }
                     }
-*/
-                    ArrayList<DrawerListModel> list = new ArrayList<>();
-                    groupnamelist.add("Sportz Avtar");
-                    DrawerListModel model = new DrawerListModel();
-                    model.setName("Cricket");
-                    list.add(model);
-                    alldata.put(groupnamelist.get(0), list);
+
                     listAdapter.notifyDataSetChanged();
 
                 } else {

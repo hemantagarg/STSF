@@ -1,208 +1,204 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-
-   >
-
+    android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<TextView
-    android:id="@+id/avtar_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/avtarname"
-    android:textStyle="bold"
-    android:textColor="@color/logocolor"
-    android:padding="@dimen/dp10"
-    /><TextView
-        android:id="@+id/avtar_namelive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/avtarname"
-        android:layout_toRightOf="@+id/avtar_name"
-        android:textStyle="bold"
-        android:singleLine="true"
-        android:padding="@dimen/dp10"
-        />
+
+        <TextView
+            android:id="@+id/avtar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarname"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/avtar_namelive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/avtar_name"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text="@string/avtarname"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_battingheld"
             android:layout_width="wrap_content"
-            android:textColor="@color/logocolor"
-            android:layout_below="@+id/avtar_name"
-            android:text="@string/avtarbattingheld"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:layout_below="@+id/avtar_name"
             android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarbattingheld"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_battingheldlive"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/avtar_name"
             android:layout_toRightOf="@+id/avtar_battingheld"
-            android:text="@string/avtarbattingheld"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:singleLine="true"
             android:padding="@dimen/dp10"
-            />
+            android:singleLine="true"
+            android:text="@string/avtarbattingheld"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/avtar_jercynumber"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_battingheld"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_battingheld"
+            android:padding="@dimen/dp10"
             android:text="@string/avtarjercynumber"
             android:textColor="@color/logocolor"
-            android:textStyle="bold"
-            android:padding="@dimen/dp10"
-            />
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_jercynumberlive"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_battingheld"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_battingheld"
             android:layout_toRightOf="@+id/avtar_jercynumber"
-            android:text="@string/avtarjercynumber"
-            android:textStyle="bold"
+            android:padding="@dimen/dp10"
             android:singleLine="true"
-            android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarjercynumber"
+            android:textStyle="bold" />
+
         <TextView
-    android:id="@+id/avtar_battingstyle"
-    android:layout_width="wrap_content"
-            android:textColor="@color/logocolor"
-        android:layout_below="@+id/avtar_jercynumber"
-    android:layout_height="wrap_content"
-        android:text="@string/avtarbattingstyle"
-            android:textStyle="bold"
+            android:id="@+id/avtar_battingstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_jercynumber"
             android:padding="@dimen/dp10"
-    />
+            android:text="@string/avtarbattingstyle"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_battingstylelive"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_jercynumber"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_jercynumber"
             android:layout_toRightOf="@+id/avtar_battingstyle"
-            android:text="@string/avtarbattingstyle"
-            android:textStyle="bold"
-            android:singleLine="true"
             android:padding="@dimen/dp10"
-            />
+            android:singleLine="true"
+            android:text="@string/avtarbattingstyle"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_bowlingstyle"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_battingstyle"
             android:layout_height="wrap_content"
-            android:text="@string/avtarbowling_style"
-            android:textStyle="bold"
-            android:textColor="@color/logocolor"
+            android:layout_below="@+id/avtar_battingstyle"
             android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarbowling_style"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_bowlingstylelive"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_battingstyle"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_battingstyle"
 
             android:layout_toRightOf="@+id/avtar_bowlingstyle"
-            android:text="@string/avtarbowling_style"
-            android:textStyle="bold"
-            android:singleLine="true"
             android:padding="@dimen/dp10"
-            />
+            android:singleLine="true"
+            android:text="@string/avtarbowling_style"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_bowlinghand"
             android:layout_width="wrap_content"
-            android:textColor="@color/logocolor"
-            android:layout_below="@+id/avtar_bowlingstyle"
             android:layout_height="wrap_content"
-            android:text="@string/avtarbowling_held"
-            android:textStyle="bold"
+            android:layout_below="@+id/avtar_bowlingstyle"
             android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarbowling_held"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_bowlinghandlive"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_bowlingstyle"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_bowlingstyle"
             android:layout_toRightOf="@+id/avtar_bowlinghand"
-            android:text="@string/avtarbowling_held"
-            android:textStyle="bold"
+            android:padding="@dimen/dp10"
             android:singleLine="true"
-            android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarbowling_held"
+            android:textStyle="bold" />
+
         <TextView
-    android:id="@+id/avtar_speciality"
-    android:layout_width="wrap_content"
+            android:id="@+id/avtar_speciality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/avtar_bowlinghand"
-            android:text="@string/avtarspeciality"
-    android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/logocolor"
             android:padding="@dimen/dp10"
-    />
+            android:text="@string/avtarspeciality"
+            android:textColor="@color/logocolor"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/avtar_specialitylive"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/avtar_bowlinghand"
-            android:text="@string/avtarspeciality"
-
             android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_bowlinghand"
+
             android:layout_toRightOf="@+id/avtar_speciality"
-            android:textStyle="bold"
-            android:singleLine="true"
             android:padding="@dimen/dp10"
-            />
+            android:singleLine="true"
+            android:text="@string/avtarspeciality"
+            android:textStyle="bold" />
+
         <TextView
-    android:id="@+id/avtar_favouritefieldposition"
-    android:layout_width="wrap_content"
+            android:id="@+id/avtar_favouritefieldposition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_speciality"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarfavouritefieldposition"
             android:textColor="@color/logocolor"
-        android:layout_below="@+id/avtar_speciality"
-        android:text="@string/avtarfavouritefieldposition"
-    android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:padding="@dimen/dp10"
-    />
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_favouritefieldpositionlive"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/avtar_speciality"
             android:layout_toRightOf="@+id/avtar_favouritefieldposition"
-            android:text="@string/avtarfavouritefieldposition"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:padding="@dimen/dp10"
             android:singleLine="true"
-            android:padding="@dimen/dp10"
-            />
+            android:text="@string/avtarfavouritefieldposition"
+            android:textStyle="bold" />
+
         <TextView
-    android:id="@+id/avtar_aboutme"
-    android:layout_width="wrap_content"
+            android:id="@+id/avtar_aboutme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/avtar_favouritefieldposition"
-            android:text="@string/avtaraboutme"
-            android:textStyle="bold"
             android:padding="@dimen/dp10"
+            android:text="@string/avtaraboutme"
             android:textColor="@color/logocolor"
-    android:layout_height="wrap_content"
-    />
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/avtar_aboutmelive"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/avtar_favouritefieldposition"
-            android:text="@string/avtaraboutme"
 
             android:layout_toRightOf="@+id/avtar_aboutme"
-            android:textStyle="bold"
             android:padding="@dimen/dp10"
-            android:layout_height="wrap_content"
-            />
+            android:text="@string/avtaraboutme"
+            android:textStyle="bold" />
     </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

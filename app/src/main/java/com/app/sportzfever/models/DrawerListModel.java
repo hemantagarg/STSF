@@ -5,7 +5,7 @@ public class DrawerListModel {
 
     private String id;
     private String category;
-    private String cat_id;
+    private String cat_id,SubMenu1Id,SubMenu1AvatarId;
     private String name;
     private String pic;
     private String status;
@@ -60,6 +60,19 @@ public class DrawerListModel {
     }
 
 
+    public String getSubMenu1AvatarId() {
+        return SubMenu1AvatarId;
+    }
 
+    public void setSubMenu1AvatarId(String subMenu1AvatarId) {
+        SubMenu1AvatarId = subMenu1AvatarId;
+    }
 
+    public String getSubMenu1Id() {
+        return SubMenu1Id;
+    }
+
+    public void setSubMenu1Id(String subMenu1Id) {
+        SubMenu1Id = subMenu1Id;
+    }
 }

@@ -59,17 +59,18 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
         View view_about = inflater.inflate(R.layout.fragment_chat_main, container, false);
         context = getActivity();
         b = getArguments();
-
+        getRecentChatList();
+        getFreindList();
+        getGroupChat();
         return view_about;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         Dashboard.getInstance().manageHeaderVisibitlity(true);
-        getRecentChatList();
-        getFreindList();
-        getGroupChat();
+
 
     }
 
@@ -90,7 +91,6 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
 
     private void getRecentChatList() {
         try {
-
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_RECENTCHAT + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
