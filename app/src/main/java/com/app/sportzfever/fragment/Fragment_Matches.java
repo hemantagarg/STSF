@@ -1,5 +1,6 @@
 package com.app.sportzfever.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -18,8 +19,10 @@ import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -36,11 +39,12 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
 
 
     private Bundle b;
-    private Context context;
+    private Activity context;
     private TabLayout tabLayout;
     private FrameLayout frameLayout;
     private ViewPager viewPager;
     private ConnectionDetector cd;
+    View view_about;
 
     public static Fragment_Matches fragment_team;
     private final String TAG = Fragment_Matches.class.getSimpleName();
@@ -55,22 +59,57 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view_about = inflater.inflate(R.layout.fragment_chat_main, container, false);
+        view_about = inflater.inflate(R.layout.fragment_matches_main, container, false);
         context = getActivity();
         b = getArguments();
-
+        manageHeaderView();
         return view_about;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
-        getRecentChatList();
-        getFreindList();
-        getGroupChat();
 
     }
+
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Matches");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
 
     private void getFreindList() {
         try {
@@ -87,37 +126,6 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
         }
     }
 
-    private void getRecentChatList() {
-        try {
-
-            if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIVEMATCHES +AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void getGroupChat() {
-        try {
-            if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getRecentChat/1/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52'
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGMATCHES + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -197,28 +205,8 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
     @Override
     public void onPostSuccess(int method, JSONObject jObject) {
         try {
-            if (method == 11) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
 
-                    AppUtils.setFriendList(context, data.toString());
-                }
 
-            } else if (method == 12) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    AppUtils.setGroupChatList(context, data.toString());
-                }
-
-            } else if (method == 1) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    AppUtils.setChatList(context, data.toString());
-                }
-
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

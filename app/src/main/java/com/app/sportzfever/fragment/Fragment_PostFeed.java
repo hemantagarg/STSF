@@ -359,6 +359,9 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e("statusVisibility",spinnerShareWith.getSelectedItem().toString());
             Log.e("statusType","TEXT");
             Log.e("description",edt_text_post.getText().toString());
+            Log.e("Content-Type","undefined");
+            Log.e("Authorization",AppUtils.getAuthToken(context));
+
             reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);

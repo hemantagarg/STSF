@@ -76,6 +76,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
         return view;
     }
+
+
 /*
     private void getData() {
 
@@ -106,6 +108,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
 
     private void initViews() {
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
         image_back = (ImageView) view.findViewById(R.id.image_back);
         imge_user = (ImageView) view.findViewById(R.id.imge_user);
         imge_banner = (ImageView) view.findViewById(R.id.imge_banner);
@@ -150,7 +153,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         adapter.addFrag(tab4, "Reviews");
 
 
-        FragmentAvtarBio tab1 = new FragmentAvtarBio();
+        FragmentStats tab1 = new FragmentStats();
       /*  Bundle b1 = new Bundle();
         b1.putString("business", arrayList.get(0).getBussinessDetailsArray());
 
@@ -210,6 +213,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
 
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
     }
 
 

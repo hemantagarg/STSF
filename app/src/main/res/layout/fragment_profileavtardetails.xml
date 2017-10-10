@@ -27,7 +27,7 @@
                 <RelativeLayout
                     android:id="@+id/rl_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="120dp">
 
                     <ImageView
                         android:id="@+id/imge_banner"
@@ -39,22 +39,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#7722808f" />
+                    <ImageView
+                        android:id="@+id/image_back"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_margin="@dimen/dp10"
+                        android:src="@drawable/left_arrow"
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/imge_user"
                         android:layout_width="@dimen/dp_60"
                         android:layout_height="@dimen/dp_60"
                         android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/image_back"
+                        android:layout_marginLeft="@dimen/dp10"
                         android:layout_marginTop="@dimen/dp10"
                         android:src="@drawable/user" />
 
-                    <ImageView
-                        android:id="@+id/image_back"
-                        android:layout_width="30dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="@dimen/dp10"
-                        android:visibility="gone"
-                        android:src="@drawable/left_arrow" />
 
                     <com.app.sportzfever.utils.CustomTextView
                         android:id="@+id/text_username"
@@ -70,8 +72,6 @@
                         android:textStyle="bold" />
 
 
-
-
                     <com.app.sportzfever.utils.CustomTextView
                         android:id="@+id/text_address"
                         android:layout_width="wrap_content"
@@ -83,8 +83,6 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12"
                         android:textStyle="bold" />
-
-
 
 
                 </RelativeLayout>
