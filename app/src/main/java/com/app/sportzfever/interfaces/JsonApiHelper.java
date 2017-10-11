@@ -26,6 +26,7 @@ public interface JsonApiHelper {
     String GET_FRIENDLIST = "getFriendsList/";
     String GET_PASTMATCHES = "getAllPastMatches/";
     String GET_ALLTOURNAMENT = "getAllUpcomingTournaments/";
+    String GET_ALLTOURNAMENTMATCHES = "getTournamentMatchDetails/";
     String GET_ALLMYTOURNAMENT = "getAllTournamentsByOrganiser/";
     String GET_LIVEMATCHES = "getAllLiveMatches/";
     String GET_UPCOMINGMATCHES = "getAllUpcomingMatches/";
@@ -35,6 +36,9 @@ public interface JsonApiHelper {
     String UPDATESTATUS = "updateStatus";
     String DELETESTATUS = "deleteStatus/";
     String AVTARMYTEAMIADMIN = "getAvatarDetailsMyTeams/";
+    String ALLTOURNAMNENTTEAM = "getTeamsInTournament/";
+    String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
+    String ALLTOURNAMNENTPOINTTABLES = "getGroupAndTeams/";
     String GALLERY = "getAlbums/";
     String STATS = "getPlayerStats/";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";

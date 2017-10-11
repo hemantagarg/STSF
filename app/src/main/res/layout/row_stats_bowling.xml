@@ -40,7 +40,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_match"
+                        android:id="@+id/text_bow_match"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -84,7 +84,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_inns"
+                        android:id="@+id/text_bow_inns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -128,7 +128,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_Runs"
+                        android:id="@+id/text_bow_Runs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -180,7 +180,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_hs"
+                        android:id="@+id/text_bow_over"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="HS"
+                        android:text="OVER"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -220,7 +220,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_SR"
+                        android:id="@+id/text_bow_wicket"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="SR"
+                        android:text="WICKETS"
                         android:textColor="@color/stats"
 
                         android:textStyle="bold" />
@@ -264,7 +264,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_hundred"
+                        android:id="@+id/text_bow_best"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -280,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="100"
+                        android:text="BEST"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -316,7 +316,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_fifty"
+                        android:id="@+id/text_bow_sw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -332,7 +332,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="50"
+                        android:text="5W"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -357,7 +357,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_sixfour"
+                        android:id="@+id/text_bow_avg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -373,7 +373,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="4s"
+                        android:text="Avg"
                         android:textColor="@color/stats"
 
                         android:textStyle="bold" />
@@ -399,7 +399,7 @@
                     card_view:cardCornerRadius="2dp">
 
                     <TextView
-                        android:id="@+id/text_six"
+                        android:id="@+id/text_bower"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -415,7 +415,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="6s"
+                        android:text="E/R"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
 
@@ -451,7 +451,7 @@
                     card_view:cardUseCompatPadding="true">
 
                     <TextView
-                        android:id="@+id/text_Ct"
+                        android:id="@+id/text_bow_sr"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -468,7 +468,7 @@
 
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="CT"
+                        android:text="S/R   "
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -480,7 +480,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
-
+android:visibility="invisible"
 
                 android:orientation="vertical">
 
