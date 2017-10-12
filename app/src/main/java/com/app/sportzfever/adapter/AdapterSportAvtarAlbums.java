@@ -14,8 +14,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
-import com.app.sportzfever.models.ModelStats;
+import com.app.sportzfever.models.ModelTournamentAlbums;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,16 +22,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterStats extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterSportAvtarAlbums extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelStats> detail;
+    ArrayList<ModelTournamentAlbums> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterStats(Context context, OnCustomItemClicListener lis, ArrayList<ModelStats> list) {
+    public AdapterSportAvtarAlbums(Context context, OnCustomItemClicListener lis, ArrayList<ModelTournamentAlbums> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -47,7 +46,7 @@ public class AdapterStats extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_stats, parent, false);
+                    R.layout.row_avtar_albums, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -77,22 +76,18 @@ public class AdapterStats extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelStats m1 = (ModelStats) detail.get(i);
+            ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(i);
 
-          ((CustomViewHolder) holder).text_match.setText(m1.getTotalMatch());
-          ((CustomViewHolder) holder).text_inns.setText(m1.getTotalInnings());
-          ((CustomViewHolder) holder).text_Runs.setText(m1.getTotalRuns());
-          ((CustomViewHolder) holder).text_hs.setText(m1.getHighestScore());
-          ((CustomViewHolder) holder).text_SR.setText(m1.getStrikeRate());
-          ((CustomViewHolder) holder).text_hundred.setText(m1.getTotal100());
-          ((CustomViewHolder) holder).text_fifty.setText(m1.getTotal50());
-          ((CustomViewHolder) holder).text_sixfour.setText(m1.getTotalFours());
-          ((CustomViewHolder) holder).text_Ct.setText(m1.getTotalCatches());
-          ((CustomViewHolder) holder).text_St.setText(m1.getTotalStumping());
-          ((CustomViewHolder) holder).text_six.setText(m1.getTotalSixes());
+          ((CustomViewHolder) holder).text_avtarteamname.setVisibility(View.GONE);
 
 
+            if (!m1.getImage().equalsIgnoreCase("")) {
+                Picasso.with(mContext)
+                        .load(m1.getImage())
 
+                        .placeholder(R.drawable.newsfeed)
+                        .into(((CustomViewHolder) holder).image_avtar);
+            }
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
@@ -107,8 +102,8 @@ public class AdapterStats extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_match,text_inns,text_six,text_Runs,text_hs,text_SR,text_hundred,text_fifty,text_sixfour,text_Ct,text_St;
-
+        TextView text_avtarteamname;
+        ImageView image_avtar;
 
 RelativeLayout relmatchvs;
         public CustomViewHolder(View view) {
@@ -118,19 +113,9 @@ RelativeLayout relmatchvs;
 
 
 
-            this.text_match = (TextView) view.findViewById(R.id.text_match);
+            this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
 
-            this.text_inns = (TextView) view.findViewById(R.id.text_inns);
-            this.text_inns = (TextView) view.findViewById(R.id.text_inns);
-            this.text_Runs = (TextView) view.findViewById(R.id.text_Runs);
-            this.text_hs = (TextView) view.findViewById(R.id.text_hs);
-            this.text_SR = (TextView) view.findViewById(R.id.text_SR);
-            this.text_hundred = (TextView) view.findViewById(R.id.text_hundred);
-            this.text_fifty = (TextView) view.findViewById(R.id.text_fifty);
-            this.text_sixfour = (TextView) view.findViewById(R.id.text_sixfour);
-            this.text_Ct = (TextView) view.findViewById(R.id.text_Ct);
-            this.text_St = (TextView) view.findViewById(R.id.text_St);
-            this.text_six = (TextView) view.findViewById(R.id.text_six);
+            this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
 
 
 
@@ -145,7 +130,7 @@ RelativeLayout relmatchvs;
 
     @Override
     public int getItemViewType(int position) {
-        ModelStats m1 = (ModelStats) detail.get(position);
+        ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

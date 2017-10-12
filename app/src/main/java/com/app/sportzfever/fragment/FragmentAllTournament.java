@@ -98,7 +98,12 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                 getServicelistRefresh();
             }
         });
+        list_request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
 /*
         list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -193,7 +198,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
 
                     //  data = jObject.getString("total");

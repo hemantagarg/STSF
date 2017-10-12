@@ -1,0 +1,82 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/ll_stats"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp20"
+            android:layout_marginRight="@dimen/dp20"
+            android:layout_marginTop="@dimen/dp10"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+
+            <Button
+                android:id="@+id/btn_batting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_bg_selected"
+                android:text="All"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btn_bowling"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_bg_unselected"
+                android:text="Semi Final"
+                android:textColor="@color/button_bg_color" />
+
+            <Button
+                android:id="@+id/btn_fielding"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_bg_unselected"
+                android:text="Final"
+                android:textColor="@color/button_bg_color" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No data found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rl_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ll_stats">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_request"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp3"
+                android:visibility="visible">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

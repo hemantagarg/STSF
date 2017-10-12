@@ -35,6 +35,13 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
+import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
+import com.app.sportzfever.fragment.FragmentStats;
+import com.app.sportzfever.fragment.FragmentTournamentAlbums;
+import com.app.sportzfever.fragment.FragmentTournamentAllMatches;
+import com.app.sportzfever.fragment.FragmentTournamentPoints;
+import com.app.sportzfever.fragment.FragmentTournamentTeam;
+import com.app.sportzfever.fragment.FragmentTournament_Details;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -52,11 +59,9 @@ import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -87,7 +92,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
+    private TextView text_score,text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -421,7 +426,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 text_gallery.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
 
-                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentGallery(), true);
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentSportsTeamDetailList(), true);
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

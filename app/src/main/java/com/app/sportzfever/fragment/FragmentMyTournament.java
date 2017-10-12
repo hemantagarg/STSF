@@ -191,7 +191,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
 
                     //  data = jObject.getString("total");
