@@ -37,7 +37,10 @@ public interface JsonApiHelper {
     String DELETESTATUS = "deleteStatus/";
     String AVTARMYTEAMIADMIN = "getAvatarDetailsMyTeams/";
     String ALLTOURNAMNENTTEAM = "getTeamsInTournament/";
+    String ALLSPORTTEAMDETIAL = "getTeamProfile/";
     String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
+    String ALLSPORTAVTARALBUMS = "getAlbumsAvatar//";
+    String ALLSPORTAVTARALBUMSDETAILS = "getAlbumsImages/";
     String ALLTOURNAMNENTPOINTTABLES = "getGroupAndTeams/";
     String GALLERY = "getAlbums/";
     String STATS = "getPlayerStats/";

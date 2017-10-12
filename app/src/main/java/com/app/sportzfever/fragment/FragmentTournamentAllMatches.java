@@ -3,12 +3,14 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,14 +18,12 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterAllTournamentMatches;
-import com.app.sportzfever.adapter.AdapterPastMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournamentMatches;
-import com.app.sportzfever.models.ModelPastMatches;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -41,11 +41,11 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
+    private Button btn_batting, btn_bowling, btn_fielding;
     private AdapterAllTournamentMatches adapterAllTournamentMatches;
     private ModelAllTournamentMatches modelAllTournamentMatches;
     private ArrayList<ModelAllTournamentMatches> arrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+   // private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private TextView text_nodata;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -68,7 +68,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_matches, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_tournament_matches, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -81,11 +81,14 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+       // mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
+        //mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        btn_fielding = (Button) view.findViewById(R.id.btn_fielding);
+        btn_bowling = (Button) view.findViewById(R.id.btn_bowling);
+        btn_batting = (Button) view.findViewById(R.id.btn_batting);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -95,14 +98,50 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     }
 
     private void setlistener() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    /*    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 getServicelistRefresh();
             }
-        });
+        });*/
+        btn_batting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                btn_batting.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
+                btn_bowling.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_fielding.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.white));
+                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+            }
+        });
+        btn_bowling.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                btn_bowling.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
+                btn_batting.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_fielding.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.white));
+                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+            }
+        });
+        btn_fielding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                btn_fielding.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
+                btn_bowling.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_batting.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.white));
+                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+
+            }
+        });
 /*
         list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -234,9 +273,9 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                     adapterAllTournamentMatches = new AdapterAllTournamentMatches(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterAllTournamentMatches);
 
-                    if (mSwipeRefreshLayout != null) {
+                   /* if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                    }*/
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
@@ -247,9 +286,9 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Past Matches found");
 
-                    if (mSwipeRefreshLayout != null) {
+                    /*if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                    }*/
                 }
 
             } else if (position == 4) {

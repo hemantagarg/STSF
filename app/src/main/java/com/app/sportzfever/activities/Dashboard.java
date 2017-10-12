@@ -34,11 +34,13 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
+import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentStats;
 import com.app.sportzfever.fragment.FragmentTournamentAlbums;
 import com.app.sportzfever.fragment.FragmentTournamentAllMatches;
 import com.app.sportzfever.fragment.FragmentTournamentPoints;
 import com.app.sportzfever.fragment.FragmentTournamentTeam;
+import com.app.sportzfever.fragment.FragmentTournament_Details;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -397,7 +399,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 text_gallery.setBackgroundResource(R.drawable.text_bg);
                 drawer.closeDrawer(GravityCompat.START);
 
-                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentTournamentPoints(), true);
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentSportsTeamDetailList(), true);
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

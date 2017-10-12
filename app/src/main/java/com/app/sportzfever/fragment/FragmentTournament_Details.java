@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,35 +17,27 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
-import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
-
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
-import com.app.sportzfever.utils.CircleTransform;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+public class FragmentTournament_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
 
 
-public class FragmentAvtar_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
-
-
-    public static FragmentAvtar_Details vendorProfileFragment;
+    public static FragmentTournament_Details vendorProfileFragment;
     private Activity mActivity;
     private View view;
-    private final String TAG = FragmentAvtar_Details.class.getSimpleName();
+    private final String TAG = FragmentTournament_Details.class.getSimpleName();
     private TabLayout tabLayout;
     private TextView text_username, text_address;
     private ImageView image_back, imge_user, imge_banner;
@@ -55,9 +46,9 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private ArrayList<ModelAvtarMyTeam> arrayList;
     private String vendorId = "";
 
-    public static FragmentAvtar_Details getInstance() {
+    public static FragmentTournament_Details getInstance() {
         if (vendorProfileFragment == null)
-            vendorProfileFragment = new FragmentAvtar_Details();
+            vendorProfileFragment = new FragmentTournament_Details();
         return vendorProfileFragment;
     }
 
@@ -128,10 +119,12 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("Bio");
-        tabLayout.getTabAt(1).setText("My Teams");
-        tabLayout.getTabAt(2).setText("Stats");
-        tabLayout.getTabAt(3).setText("Photos");
+        tabLayout.getTabAt(0).setText("Matches");
+        tabLayout.getTabAt(1).setText("Fixtures");
+        tabLayout.getTabAt(2).setText("Points Table");
+        tabLayout.getTabAt(3).setText("Teams");
+        tabLayout.getTabAt(4).setText("Albums");
+//        tabLayout.getTabAt(5).setText("Tournament Talk");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -139,29 +132,34 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        FragmentAvtarBio tab2 = new FragmentAvtarBio();
+        FragmentTournamentAllMatches tab2 = new FragmentTournamentAllMatches();
        /* Bundle b = new Bundle();
         b.putString("services", arrayList.get(0).getServies());
         tab2.setArguments(b);*/
         adapter.addFrag(tab2, "services");
 
 
-        Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
+        FragmentTournamentAlbums tab4 = new FragmentTournamentAlbums();
      /*   Bundle b3 = new Bundle();
         b3.putString("reviews", arrayList.get(0).getRatingArray());
         tab4.setArguments(b3);*/
         adapter.addFrag(tab4, "Reviews");
+        FragmentTournamentPoints tab5 = new FragmentTournamentPoints();
+     /*   Bundle b3 = new Bundle();
+        b3.putString("reviews", arrayList.get(0).getRatingArray());
+        tab4.setArguments(b3);*/
+        adapter.addFrag(tab5, "Tournament");
 
 
-        FragmentStats tab1 = new FragmentStats();
+        FragmentTournamentTeam tab1 = new FragmentTournamentTeam();
       /*  Bundle b1 = new Bundle();
         b1.putString("business", arrayList.get(0).getBussinessDetailsArray());
 
         tab1.setArguments(b1);*/
         adapter.addFrag(tab1, "About Us");
 
-        FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
-       /* Bundle b2 = new Bundle();
+       FragmentTournamentAlbums tab3 = new FragmentTournamentAlbums();
+     /*   Bundle b2 = new Bundle();
         b2.putString("gallery", arrayList.get(0).getPortfolioDetailsArray());
         tab3.setArguments(b2);*/
         adapter.addFrag(tab3, "Portfolio");

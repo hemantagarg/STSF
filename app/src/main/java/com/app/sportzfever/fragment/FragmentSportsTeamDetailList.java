@@ -14,15 +14,16 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterTournamentAlbums;
-import com.app.sportzfever.adapter.AdapterTournamentPointTable;
+import com.app.sportzfever.adapter.AdapterSportTeamList;
+import com.app.sportzfever.adapter.AdapterStats;
+import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAllTournamentPointTables;
-import com.app.sportzfever.models.ModelTournamentAlbums;
+import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.models.ModelTournamentTeam;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -34,16 +35,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentTournamentPoints extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentSportsTeamDetailList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
 
-    private AdapterTournamentPointTable adapterTournamentPointTable;
-    private ModelAllTournamentPointTables modelAllTournamentPointTables;
-    private ArrayList<ModelAllTournamentPointTables> arrayList;
+    private AdapterSportTeamList adapterSportTeamList;
+    private ModelSportTeamList modelSportTeamList;
+    private ArrayList<ModelSportTeamList> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -53,12 +54,12 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
     private TextView text_nodata;
     private String maxlistLength = "";
 
-    public static FragmentTournamentPoints fragment_teamJoin_request;
-    private final String TAG = FragmentTournamentPoints.class.getSimpleName();
+    public static FragmentSportsTeamDetailList fragment_teamJoin_request;
+    private final String TAG = FragmentSportsTeamDetailList.class.getSimpleName();
 
-    public static FragmentTournamentPoints getInstance() {
+    public static FragmentSportsTeamDetailList getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentTournamentPoints();
+            fragment_teamJoin_request = new FragmentSportsTeamDetailList();
         return fragment_teamJoin_request;
     }
 
@@ -119,7 +120,7 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTPOINTTABLES + 3 + "/" +AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + 23 + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -138,19 +139,9 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-
-                    JSONArray jobj=jObject.getJSONArray("data");
-
-                    for (int i = 0; i < jobj.length(); i++) {
-
-                        JSONObject jo = jobj.getJSONObject(i);
-
-                        modelAllTournamentPointTables = new ModelAllTournamentPointTables();
-                        modelAllTournamentPointTables.setGroupId(jo.getString("groupId"));
-                        modelAllTournamentPointTables.setGroupName(jo.getString("groupname"));
-                        arrayList.add(modelAllTournamentPointTables);
-                    }
                     JSONArray data = jObject.getJSONArray("data");
+
+                    //  maxlistLength = jObject.getString("total");
 
 
                     arrayList.clear();
@@ -158,26 +149,30 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelAllTournamentPointTables = new ModelAllTournamentPointTables();
+                        modelSportTeamList = new ModelSportTeamList();
 
-                        modelAllTournamentPointTables.setId(jo.getString("id"));
+                        modelSportTeamList.setOwnerName(jo.getString("ownerName"));
 
-                        modelAllTournamentPointTables.setTeamName(jo.getString("teamName"));
-                        modelAllTournamentPointTables.setMatches(jo.getString("matches"));
-                        modelAllTournamentPointTables.setWon(jo.getString("won"));
-                        modelAllTournamentPointTables.setLost(jo.getString("lost"));
-                        modelAllTournamentPointTables.setPoints(jo.getString("points"));
-                        modelAllTournamentPointTables.setNetRunRate(jo.getString("netRunRate"));
-                        modelAllTournamentPointTables.setRowType(1);
+                       /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
+                        modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/
+                        modelSportTeamList.setRowType(1);
 
 
+                       /* JSONObject j1 = jo.getJSONObject("matchDate");
 
-                        arrayList.add(modelAllTournamentPointTables);
+                        modelPastMatches.setTime(j1.getString("time"));
+                        modelPastMatches.setDate(j1.getString("date"));
+                        modelPastMatches.setYear(j1.getString("year"));
+                        modelPastMatches.setMonthName(j1.getString("monthName"));
+                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
+                        modelPastMatches.setRowType(1);
+*/
+                        arrayList.add(modelSportTeamList);
                     }
 
 
-                    adapterTournamentPointTable = new AdapterTournamentPointTable(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterTournamentPointTable);
+                    adapterSportTeamList = new AdapterSportTeamList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterSportTeamList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -198,6 +193,66 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
                     }
                 }
 
+            } else if (position == 4) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
+                    //  maxlistLength = jObject.getString("total");
+
+
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < data.length(); i++) {
+
+                        JSONObject jo = jtaemown.getJSONObject(i);
+
+                        modelSportTeamList = new ModelSportTeamList();
+
+
+                   /*     modelTournamentTeam.setTeamId(jo.getString("teamId"));
+
+                        modelTournamentTeam.setTeamName(jo.getString("teamName"));
+                        modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        modelTournamentTeam.setRowType(1);
+*/
+                 /*       JSONObject j1 = jo.getJSONObject("matchDate");
+
+                        modelPastMatches.setTime(j1.getString("time"));
+                        modelPastMatches.setDate(j1.getString("date"));
+                        modelPastMatches.setYear(j1.getString("year"));
+                        modelPastMatches.setMonthName(j1.getString("monthName"));
+                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
+                        modelPastMatches.setRowType(1);*/
+
+                        arrayList.add(modelSportTeamList);
+                    }/* for (int i = 0; i < eventtime.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        upcomingEvent = new UpcomingEvent();
+
+                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
+
+
+
+
+
+                        upcomingEvent.setRowType(1);
+
+                        arrayList.add(upcomingEvent);
+                    }*/
+
+                    adapterSportTeamList.notifyDataSetChanged();
+                    loading = true;
+                    if (data.length() == 0) {
+                        skipCount = skipCount - 10;
+                        //  return;
+                    }
+                } else {
+                    adapterSportTeamList.notifyDataSetChanged();
+                    skipCount = skipCount - 10;
+                    loading = true;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
