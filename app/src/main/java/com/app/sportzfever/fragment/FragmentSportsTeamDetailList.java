@@ -139,19 +139,19 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-
+                    JSONObject data = jObject.getJSONObject("data");
+JSONArray jarr=data.getJSONArray("teamProfile");
                     //  maxlistLength = jObject.getString("total");
 
 
                     arrayList.clear();
-                    for (int i = 0; i < data.length(); i++) {
+                    for (int i = 0; i < jarr.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = jarr.getJSONObject(i);
 
                         modelSportTeamList = new ModelSportTeamList();
 
-                        modelSportTeamList.setOwnerName(jo.getString("ownerName"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
 
                        /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
                         modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/

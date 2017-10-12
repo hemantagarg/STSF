@@ -37,6 +37,7 @@
                 android:layout_marginLeft="40dp"
                 android:dividerHeight="@dimen/dp0"
                 android:groupIndicator="@null"
+
                 android:paddingTop="@dimen/dp10" />
 
             <TextView
