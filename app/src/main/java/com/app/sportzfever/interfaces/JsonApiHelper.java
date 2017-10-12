@@ -17,6 +17,7 @@ public interface JsonApiHelper {
     String GET_TEAMJOINREQUEST = "getAllTeamInvitation/";
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GETALLSPORT = "getAllSport/";
+    String GETMENU = "getMenu/";
     String GET_UPCOMINGEVENTS = "getUpcomingEvent/";
     String GET_COMMENTS = "getComments/";
     String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
