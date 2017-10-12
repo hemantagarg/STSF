@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,20 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
-import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,7 +30,6 @@ import java.util.List;
  * Created by admin on 06-01-2016.
  */
 public class Fragment_Tournaments extends BaseFragment implements ApiResponse {
-
 
     private Bundle b;
     private Activity context;

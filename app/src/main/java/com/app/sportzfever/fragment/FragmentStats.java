@@ -3,8 +3,6 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,17 +14,14 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAvtarIAdmin;
 import com.app.sportzfever.adapter.AdapterStats;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.models.ModelStats;
 import com.app.sportzfever.utils.AppUtils;
-import com.google.android.gms.maps.model.Dash;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +35,7 @@ import java.util.ArrayList;
 public class FragmentStats extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
-    private RecyclerView list_request;
+    private RecyclerView list_batting, list_bowling;
     private Bundle b;
     private Context context;
     private AdapterStats adapterStats;
@@ -57,6 +52,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
 
     public static FragmentStats fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
+    private String avtarid = "";
 
     public static FragmentStats getInstance() {
         if (fragment_teamJoin_request == null)
@@ -79,22 +75,34 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
     @Override
     public void onResume() {
         super.onResume();
-      //  Dashboard.getInstance().manageHeaderVisibitlity(true);
+        //  Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
+
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+        }
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        list_request = (RecyclerView) view.findViewById(R.id.list_request);
+        list_batting = (RecyclerView) view.findViewById(R.id.list_batting);
+        list_bowling = (RecyclerView) view.findViewById(R.id.list_bowling);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        list_request.setLayoutManager(layoutManager);
+        list_batting.setLayoutManager(layoutManager);
+        list_bowling.setLayoutManager(new LinearLayoutManager(context));
         btn_fielding = (Button) view.findViewById(R.id.btn_fielding);
         btn_bowling = (Button) view.findViewById(R.id.btn_bowling);
         btn_batting = (Button) view.findViewById(R.id.btn_batting);
         arrayList = new ArrayList<>();
+        getBundle();
         setlistener();
 
         getServicelistRefresh();
@@ -112,6 +120,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.white));
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                list_bowling.setVisibility(View.GONE);
+                list_batting.setVisibility(View.VISIBLE);
             }
         });
         btn_bowling.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +134,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.white));
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                list_bowling.setVisibility(View.VISIBLE);
+                list_batting.setVisibility(View.GONE);
             }
         });
         btn_fielding.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +148,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.white));
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                list_bowling.setVisibility(View.GONE);
+                list_batting.setVisibility(View.GONE);
 
             }
         });
@@ -156,7 +170,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.STATS + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.STATS + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -197,11 +211,9 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                     modelStats.setTotalSixes(jbatsman.getString("totalSixes"));
 
                     modelStats.setRowType(1);
-
                     arrayList.add(modelStats);
-
                     adapterStats = new AdapterStats(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterStats);
+                    list_batting.setAdapter(adapterStats);
 
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);

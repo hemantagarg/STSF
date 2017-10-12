@@ -15,16 +15,13 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterTournamentAlbums;
-import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentAlbums;
-import com.app.sportzfever.models.ModelTournamentTeam;
 import com.app.sportzfever.utils.AppUtils;
-import com.google.gson.stream.JsonWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +53,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
     public static FragmentTournamentAlbums fragment_teamJoin_request;
     private final String TAG = FragmentTournamentAlbums.class.getSimpleName();
+    private String id="";
 
     public static FragmentTournamentAlbums getInstance() {
         if (fragment_teamJoin_request == null)
@@ -89,10 +87,18 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
-        setlistener();
-
+        getBundle();
         getServicelistRefresh();
+        setlistener();
     }
+
+    private void getBundle() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id = bundle.getString("id");
+        }
+    }
+
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -120,7 +126,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTALBUMS + 1 + "/" +  21 + "/" + 0 + "/" +AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTALBUMS + 1 + "/" +  id + "/" + 0 + "/" +AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

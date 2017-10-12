@@ -2,6 +2,7 @@ package com.app.sportzfever.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.drawerlistitem, null);
         }
         TextView text = (TextView) convertView.findViewById(R.id.lblListItem);
-
+        Log.e("childclick adapter", groupPosition + childPosition + "*" + model.getName());
         text.setText(model.getName());
 
       /*  convertView.setOnClickListener(new View.OnClickListener() {

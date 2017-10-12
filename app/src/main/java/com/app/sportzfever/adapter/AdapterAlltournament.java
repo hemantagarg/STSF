@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,9 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournament;
-import com.app.sportzfever.models.ModelPastMatches;
-import com.app.sportzfever.utils.CircleTransform;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -81,14 +77,18 @@ public class AdapterAlltournament extends RecyclerView.Adapter<RecyclerView.View
 
             ModelAllTournament m1 = (ModelAllTournament) detail.get(i);
 
-
-
-
-
             ((CustomViewHolder) holder).text_name.setText(detail.get(i).getName());
             ((CustomViewHolder) holder).text_date.setText(detail.get(i).getDatetime());
-            ((CustomViewHolder) holder).text_sportname.setText("Sport"+" : "+detail.get(i).getSportName());
-            ((CustomViewHolder) holder).text_status.setText("Status"+" : "+detail.get(i).getTournamentState());
+            ((CustomViewHolder) holder).text_sportname.setText("Sport" + " : " + detail.get(i).getSportName());
+            ((CustomViewHolder) holder).text_status.setText("Status" + " : " + detail.get(i).getTournamentState());
+
+            ((CustomViewHolder) holder).btn_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
+                }
+            });
+
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -101,30 +101,22 @@ public class AdapterAlltournament extends RecyclerView.Adapter<RecyclerView.View
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name,text_sportname,text_status,text_score1, text_event_matchdate,text_event_type, text_date,text_teamname,text_location,text_day,text_month,text_time,text_title;
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        TextView text_name, text_sportname, text_status, text_score1, text_event_matchdate, text_event_type, text_date, text_teamname, text_location, text_day, text_month, text_time, text_title;
         Button btn_view;
 
-RelativeLayout relmatchvs;
+        RelativeLayout relmatchvs;
+
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
+
 
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.text_sportname = (TextView) view.findViewById(R.id.text_sportname);
             this.text_status = (TextView) view.findViewById(R.id.text_status);
             this.btn_view = (Button) view.findViewById(R.id.btn_view);
-
-
-
         }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
-        }
-
     }
 
     @Override

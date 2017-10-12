@@ -69,13 +69,20 @@
 
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_request"
+                android:id="@+id/list_batting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/dp3"
-                android:visibility="visible">
+                android:visibility="visible" />
 
-            </android.support.v7.widget.RecyclerView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_bowling"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp3"
+                android:visibility="gone" />
+
 
         </RelativeLayout>
     </RelativeLayout>

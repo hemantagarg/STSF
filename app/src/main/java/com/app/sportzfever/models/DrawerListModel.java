@@ -8,7 +8,7 @@ public class DrawerListModel {
     private String cat_id,SubMenu1Id,SubMenu1AvatarId;
     private String name;
     private String pic;
-    private String status;
+    private String status,teamId;
 
 
     public String getCat_id() {
@@ -74,5 +74,13 @@ public class DrawerListModel {
 
     public void setSubMenu1Id(String subMenu1Id) {
         SubMenu1Id = subMenu1Id;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

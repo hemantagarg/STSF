@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournamentPointTables;
-import com.app.sportzfever.models.ModelTournamentTeam;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,15 +15,14 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSportTeamList;
-import com.app.sportzfever.adapter.AdapterStats;
-import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
-import com.app.sportzfever.models.ModelTournamentTeam;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -40,7 +39,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
     private RecyclerView list_request;
     private Bundle b;
-    private Context context;
+    private Activity context;
 
     private AdapterSportTeamList adapterSportTeamList;
     private ModelSportTeamList modelSportTeamList;
@@ -53,9 +52,10 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
     private boolean loading = true;
     private TextView text_nodata;
     private String maxlistLength = "";
-
+    View view_about;
     public static FragmentSportsTeamDetailList fragment_teamJoin_request;
     private final String TAG = FragmentSportsTeamDetailList.class.getSimpleName();
+    private String id = "";
 
     public static FragmentSportsTeamDetailList getInstance() {
         if (fragment_teamJoin_request == null)
@@ -68,12 +68,22 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                              Bundle savedInstanceState) {
 
 
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        view_about = inflater.inflate(R.layout.fragment_gallery, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
+        manageHeaderView();
         return view_about;
+    }
+
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+
+            id = bundle.getString("id");
+
+        }
     }
 
 
@@ -89,9 +99,9 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
-        setlistener();
-
+        getBundle();
         getServicelistRefresh();
+        setlistener();
     }
 
     private void setlistener() {
@@ -112,6 +122,44 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
     }
 
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Players");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
@@ -120,7 +168,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + 23 + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + id + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -139,19 +187,16 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
 
-                    //  maxlistLength = jObject.getString("total");
-
-
+                    JSONArray teamProfile = data.getJSONArray("teamProfile");
                     arrayList.clear();
-                    for (int i = 0; i < data.length(); i++) {
+                    for (int i = 0; i < teamProfile.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = teamProfile.getJSONObject(i);
 
                         modelSportTeamList = new ModelSportTeamList();
-
-                        modelSportTeamList.setOwnerName(jo.getString("ownerName"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
 
                        /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
                         modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/

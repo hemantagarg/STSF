@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +17,17 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
-import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
-
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
-import com.app.sportzfever.utils.CircleTransform;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 
 public class FragmentAvtar_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
@@ -53,7 +43,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private Button btn_booknow;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
-    private String vendorId = "";
+    private String id = "";
 
     public static FragmentAvtar_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -101,7 +91,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         Bundle bundle = getArguments();
         if (bundle != null) {
 
-            vendorId = bundle.getString(AppConstant.VENDORID);
+            id = bundle.getString("id");
 
         }
     }
@@ -140,30 +130,29 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         FragmentAvtarBio tab2 = new FragmentAvtarBio();
-       /* Bundle b = new Bundle();
-        b.putString("services", arrayList.get(0).getServies());
-        tab2.setArguments(b);*/
+        Bundle b = new Bundle();
+        b.putString("avtarid", id);
+        tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
 
         Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
-     /*   Bundle b3 = new Bundle();
-        b3.putString("reviews", arrayList.get(0).getRatingArray());
-        tab4.setArguments(b3);*/
+        Bundle b3 = new Bundle();
+        b3.putString("avtarid", id);
+        tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
 
         FragmentStats tab1 = new FragmentStats();
-      /*  Bundle b1 = new Bundle();
-        b1.putString("business", arrayList.get(0).getBussinessDetailsArray());
-
-        tab1.setArguments(b1);*/
+        Bundle b1 = new Bundle();
+        b1.putString("avtarid", id);
+        tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
         FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
-       /* Bundle b2 = new Bundle();
-        b2.putString("gallery", arrayList.get(0).getPortfolioDetailsArray());
-        tab3.setArguments(b2);*/
+        Bundle b2 = new Bundle();
+        b2.putString("avtarid", id);
+        tab3.setArguments(b2);
         adapter.addFrag(tab3, "Portfolio");
 
         viewPager.setAdapter(adapter);
@@ -260,7 +249,6 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     public void onClick(View view) {
 
         switch (view.getId()) {
-
 
 
         }

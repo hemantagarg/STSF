@@ -104,7 +104,7 @@
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/logocolor"
                 app:tabIndicatorHeight="@dimen/dp2"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="#797d80" />
 

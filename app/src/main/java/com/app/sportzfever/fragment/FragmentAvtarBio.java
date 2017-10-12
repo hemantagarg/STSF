@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,15 +13,12 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
-import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
-import com.app.sportzfever.models.UpcomingEvent;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -40,8 +36,6 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
-
     private ModelAvtarProfile modelAvtarProfile;
     private ArrayList<ModelAvtarProfile> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,9 +45,10 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
-    private TextView avtar_namelive,avtar_battingheldlive,avtar_jercynumberlive,avtar_battingstylelive,avtar_bowlingstylelive,avtar_specialitylive,avtar_favouritefieldpositionlive,avtar_aboutmelive;
+    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
     public static FragmentAvtarBio fragment_teamJoin_request;
     private final String TAG = FragmentAvtarBio.class.getSimpleName();
+    private String avtarid = "";
 
     public static FragmentAvtarBio getInstance() {
         if (fragment_teamJoin_request == null)
@@ -80,7 +75,6 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
         super.onViewCreated(view, savedInstanceState);
 
 
-
         avtar_namelive = (TextView) view.findViewById(R.id.avtar_namelive);
         avtar_battingheldlive = (TextView) view.findViewById(R.id.avtar_battingheldlive);
         avtar_jercynumberlive = (TextView) view.findViewById(R.id.avtar_jercynumberlive);
@@ -92,16 +86,22 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
 
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-
+        getBundle();
         setlistener();
-
         getServicelistRefresh();
     }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+
+            avtarid = bundle.getString("avtarid");
+
+        }
+    }
+
     private void setlistener() {
-
-
 
 
     }
@@ -116,11 +116,10 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
-            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_AVTARPROFILEBIO + "173"+"/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_AVTARPROFILEBIO + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -141,7 +140,6 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     JSONObject data = jObject.getJSONObject("data");
                     JSONArray jarray = data.getJSONArray("AvatarDetails");
                     //  data = jObject.getString("total");
-
 
                     JSONObject jo = jarray.getJSONObject(0);
 

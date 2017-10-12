@@ -48,7 +48,9 @@
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/myprofile"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/text_gallery"
                 android:layout_width="match_parent"
@@ -58,7 +60,9 @@
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/gallery"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/text_sprtsavtar"
                 android:layout_width="match_parent"
@@ -75,37 +79,37 @@
                 android:id="@+id/text_matches"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:paddingBottom="@dimen/dp15"
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/matches"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/text_tournament"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:paddingBottom="@dimen/dp15"
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/tournament"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/text_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:paddingBottom="@dimen/dp15"
                 android:paddingLeft="@dimen/dp_50"
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/score"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/text_logout"
@@ -116,7 +120,8 @@
                 android:paddingTop="@dimen/dp15"
                 android:text="@string/logout"
                 android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_17" />
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
 
 
         </LinearLayout>

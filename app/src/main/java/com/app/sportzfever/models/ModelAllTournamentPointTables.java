@@ -22,7 +22,7 @@ public class ModelAllTournamentPointTables implements Serializable{
 
     private String groupId;
 
-    private String teamProfilePicture;
+    private String teamProfilePicture="";
 
     private String matches;
 

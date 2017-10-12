@@ -2,11 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="@color/white">
 
     <include
         android:id="@+id/rl_header"
-        layout="@layout/header_layout"/>
+        layout="@layout/header_layout" />
 
     <TextView
         android:id="@+id/text_nodata"
@@ -21,24 +22,17 @@
     <RelativeLayout
         android:id="@+id/rl_main_layout"
         android:layout_width="match_parent"
-        android:layout_below="@+id/rl_header"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout1"
+        <ExpandableListView
+            android:id="@+id/expendableView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp5">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_request"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp3"
-                android:visibility="visible">
-
-            </android.support.v7.widget.RecyclerView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp10"
+            android:dividerHeight="@dimen/dp0"
+            android:groupIndicator="@null"
+            android:paddingTop="@dimen/dp10" />
 
 
     </RelativeLayout>

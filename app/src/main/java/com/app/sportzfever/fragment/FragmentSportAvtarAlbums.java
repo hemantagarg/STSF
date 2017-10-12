@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSportAvtarAlbums;
-import com.app.sportzfever.adapter.AdapterTournamentAlbums;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -54,6 +53,7 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
 
     public static FragmentSportAvtarAlbums fragment_teamJoin_request;
     private final String TAG = FragmentSportAvtarAlbums.class.getSimpleName();
+    private String avtarid = "";
 
     public static FragmentSportAvtarAlbums getInstance() {
         if (fragment_teamJoin_request == null)
@@ -87,10 +87,20 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        getBundle();
         setlistener();
 
         getServicelistRefresh();
     }
+
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+        }
+    }
+
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -114,11 +124,10 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
-            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMS + 1 + "/" +  21 + "/" + 0 + "/" +AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMS + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -138,7 +147,7 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
-                    JSONObject jobj=jObject.getJSONObject("data");
+                    JSONObject jobj = jObject.getJSONObject("data");
                     JSONArray data = jobj.getJSONArray("images");
 
                     //  maxlistLength = jObject.getString("total");
@@ -153,7 +162,7 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
 
                         modelTournamentAlbums.setId(jo.getString("id"));
 
-                       // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
+                        // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
                         modelTournamentAlbums.setImage(jo.getString("image"));
                         modelTournamentAlbums.setRowType(1);
 

@@ -14,14 +14,12 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAvtarIAdmin;
 import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.models.ModelTournamentTeam;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -55,6 +53,7 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
 
     public static FragmentTournamentTeam fragment_teamJoin_request;
     private final String TAG = FragmentTournamentTeam.class.getSimpleName();
+    private String id = "";
 
     public static FragmentTournamentTeam getInstance() {
         if (fragment_teamJoin_request == null)
@@ -88,10 +87,19 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        getBundle();
         setlistener();
 
         getServicelistRefresh();
     }
+
+    private void getBundle() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id = bundle.getString("id");
+        }
+    }
+
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -119,7 +127,7 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTTEAM + 3 + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTTEAM + id + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
