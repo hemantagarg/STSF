@@ -36,6 +36,7 @@ import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -345,8 +346,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
-         /*   ArrayList<FileBody> list = new ArrayList<>();
-            if (!selectedimagespath.equalsIgnoreCase("")) {
+            ArrayList<FileBody> list = new ArrayList<>();
+          /*  if (!selectedimagespath.equalsIgnoreCase("")) {
 
                 for (int i = 0; i < imagesPath.size(); i++) {
                     FileBody filebodyimage = new FileBody(new File(imagesPath.get(i)));
@@ -356,11 +357,11 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             }*/
 
             Log.e("user", AppUtils.getUserId(context));
-            Log.e("statusVisibility",spinnerShareWith.getSelectedItem().toString());
-            Log.e("statusType","TEXT");
-            Log.e("description",edt_text_post.getText().toString());
-            Log.e("Content-Type","undefined");
-            Log.e("Authorization",AppUtils.getAuthToken(context));
+            Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
+            Log.e("statusType", "TEXT");
+            Log.e("description", edt_text_post.getText().toString());
+            Log.e("Content-Type", "undefined");
+            Log.e("Authorization", AppUtils.getAuthToken(context));
 
             reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);

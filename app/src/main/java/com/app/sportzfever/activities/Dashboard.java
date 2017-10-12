@@ -35,7 +35,6 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
-import com.app.sportzfever.fragment.FragmentStats;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -88,8 +87,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
-    private TextView text_score,text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
+    private TextView text_score, text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
@@ -317,6 +315,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         expendableView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
+                Log.e("group click", "clicked" + position);
                 if (position == 4) {
                     pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
                     drawer.closeDrawer(GravityCompat.START);
@@ -338,6 +337,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         expendableView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
+                Log.e("group expand click", "clicked" + groupPosition);
                 if (groupPosition == 1) {
                     if (!expendableView.isGroupExpanded(groupPosition)) {
                         expendableView.expandGroup(groupPosition);
@@ -412,7 +412,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
             }
-        });  text_gallery.setOnClickListener(new View.OnClickListener() {
+        });
+        text_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
