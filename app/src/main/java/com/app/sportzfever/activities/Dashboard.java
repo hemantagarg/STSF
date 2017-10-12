@@ -92,7 +92,6 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     private TextView text_score,text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
