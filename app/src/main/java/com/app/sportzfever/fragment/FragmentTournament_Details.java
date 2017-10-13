@@ -22,7 +22,6 @@ import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONObject;
@@ -32,7 +31,6 @@ import java.util.List;
 
 
 public class FragmentTournament_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
-
 
     public static FragmentTournament_Details vendorProfileFragment;
     private Activity mActivity;
@@ -44,7 +42,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     private Button btn_booknow;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
-    private String vendorId = "";
+    private String id = "";
 
     public static FragmentTournament_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -56,7 +54,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_profileavtardetails, container, false);
+        view = inflater.inflate(R.layout.fragment_tournamentdetails, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
@@ -69,31 +67,10 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     }
 
 
-/*
-    private void getData() {
-
-        //  http://dev.stackmindz.com/trendi/api/getvendordetail.php?freelancer_id=200
-
-        if (AppUtils.isNetworkAvailable(mActivity)) {
-
-            // http://dev.stackmindz.com/trendi/api/change-password.php?user_id=199&current_pwd=admin&new_pwd=123456&confirm_pwd=123456
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.GETVENDORDETAIL + "freelancer_id=" + vendorId;
-
-            new CommonAsyncTaskHashmap(1, mActivity, this).getquery(url);
-
-        } else {
-            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-        }
-
-    }*/
-
     private void getBundle() {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
-
-            vendorId = bundle.getString(AppConstant.VENDORID);
-
+            id = bundle.getString("id");
         }
     }
 
@@ -107,7 +84,6 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         text_username = (TextView) view.findViewById(R.id.text_username);
         text_address = (TextView) view.findViewById(R.id.text_address);
-
 
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,35 +109,35 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         FragmentTournamentAllMatches tab2 = new FragmentTournamentAllMatches();
-       /* Bundle b = new Bundle();
-        b.putString("services", arrayList.get(0).getServies());
-        tab2.setArguments(b);*/
+        Bundle b = new Bundle();
+        b.putString("id", id);
+        tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
 
         FragmentTournamentAlbums tab4 = new FragmentTournamentAlbums();
-     /*   Bundle b3 = new Bundle();
-        b3.putString("reviews", arrayList.get(0).getRatingArray());
-        tab4.setArguments(b3);*/
+        Bundle b3 = new Bundle();
+        b3.putString("id", id);
+        tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
+
         FragmentTournamentPoints tab5 = new FragmentTournamentPoints();
-     /*   Bundle b3 = new Bundle();
-        b3.putString("reviews", arrayList.get(0).getRatingArray());
-        tab4.setArguments(b3);*/
+        Bundle b4 = new Bundle();
+        b4.putString("id", id);
+        tab5.setArguments(b4);
         adapter.addFrag(tab5, "Tournament");
 
 
         FragmentTournamentTeam tab1 = new FragmentTournamentTeam();
-      /*  Bundle b1 = new Bundle();
-        b1.putString("business", arrayList.get(0).getBussinessDetailsArray());
-
-        tab1.setArguments(b1);*/
+        Bundle b1 = new Bundle();
+        b1.putString("id", id);
+        tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-       FragmentTournamentAlbums tab3 = new FragmentTournamentAlbums();
-     /*   Bundle b2 = new Bundle();
-        b2.putString("gallery", arrayList.get(0).getPortfolioDetailsArray());
-        tab3.setArguments(b2);*/
+        FragmentTournamentAlbums tab3 = new FragmentTournamentAlbums();
+        Bundle b2 = new Bundle();
+        b2.putString("id", id);
+        tab3.setArguments(b2);
         adapter.addFrag(tab3, "Portfolio");
 
         viewPager.setAdapter(adapter);
@@ -258,7 +234,6 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     public void onClick(View view) {
 
         switch (view.getId()) {
-
 
 
         }

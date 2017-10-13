@@ -35,13 +35,8 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
+import com.app.sportzfever.fragment.FragmentMenuTeamList;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
-import com.app.sportzfever.fragment.FragmentStats;
-import com.app.sportzfever.fragment.FragmentTournamentAlbums;
-import com.app.sportzfever.fragment.FragmentTournamentAllMatches;
-import com.app.sportzfever.fragment.FragmentTournamentPoints;
-import com.app.sportzfever.fragment.FragmentTournamentTeam;
-import com.app.sportzfever.fragment.FragmentTournament_Details;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
@@ -59,9 +54,11 @@ import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -80,6 +77,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private ExpandableListView expendableView;
     private LinkedHashMap<String, List<DrawerListModel>> alldata;
     private ArrayList<String> groupnamelist;
+    private ArrayList<String> groupnamelistId = new ArrayList<>();
     private int PERMISSION_ALL = 1;
     private String[] PERMISSIONS = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA,
@@ -92,11 +90,12 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
       * Fragment instance
       * */
     private static Dashboard mInstance;
-    private TextView text_score,text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar,text_myprofile;
+    private TextView text_score, text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
     private ImageView image_user;
     private int lastExpandedPosition;
+    private JSONArray menucategoriesArrayTeam;
 
     /***********************************************
      * Function Name : getInstance
@@ -171,8 +170,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 }
             }
         }
-        setListener();
+
         getMenuData();
+        setListener();
     }
 
 
@@ -320,8 +320,40 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         expendableView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
-                if (position == 4) {
+                Log.e("group click", "clicked" + position);
+                if (groupnamelistId.get(position).equalsIgnoreCase("1")) {
+                    if (!expendableView.isGroupExpanded(position)) {
+                        expendableView.expandGroup(position);
+                    } else {
+                        expendableView.collapseGroup(position);
+                    }
+                    //  drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("2")) {
+                    FragmentMenuTeamList fragmentMenuTeamList = new FragmentMenuTeamList();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("array", menucategoriesArrayTeam.toString());
+                    fragmentMenuTeamList.setArguments(bundle);
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentMenuTeamList, true);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("3")) {
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentGallery(), true);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("4")) {
                     pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("5")) {
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Tournaments(), true);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("6")) {
+                    Intent intent = new Intent(context, ScoreActivity.class);
+                    startActivity(intent);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("7")) {
+                    Intent intent = new Intent(context, ActivityAbout.class);
+                    startActivity(intent);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if (groupnamelistId.get(position).equalsIgnoreCase("8")) {
+                    showLogoutBox();
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 return false;
@@ -333,31 +365,43 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 //Nothing here ever fires
                 System.err.println("child clicked");
-                pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentAvtar_Details(), true);
+                List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
+                Log.e("child clicked", list.get(childPosition).getSubMenu1AvatarId());
+                String avtarid = list.get(childPosition).getSubMenu1AvatarId();
+                FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", avtarid);
+                fragmentAvtar_details.setArguments(bundle);
+                pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
+/*
         expendableView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                if (groupPosition == 1) {
+                Log.e("group expand click", "clicked" + groupPosition);
+                if (groupPosition == 0) {
                     if (!expendableView.isGroupExpanded(groupPosition)) {
-                        expendableView.expandGroup(groupPosition);
-                    } else {
                         expendableView.collapseGroup(groupPosition);
+                    } else {
+                        expendableView.expandGroup(groupPosition);
                     }
                 } else {
                     expendableView.collapseGroup(groupPosition);
                 }
 
-              /*  if (lastExpandedPosition != -1 && groupPosition == 1
+              */
+/*  if (lastExpandedPosition != -1 && groupPosition == 1
                         && groupPosition != lastExpandedPosition) {
                     expendableView.collapseGroup(lastExpandedPosition);
                 }
-                lastExpandedPosition = groupPosition;*/
+                lastExpandedPosition = groupPosition;*//*
+
             }
         });
+*/
         text_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -415,7 +459,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
             }
-        });  text_gallery.setOnClickListener(new View.OnClickListener() {
+        });
+        text_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setWhiteColor();
@@ -842,24 +887,30 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     for (int i = 0; i < servicearr.length(); i++) {
                         JSONObject headerobj = servicearr.getJSONObject(i);
                         groupnamelist.add(headerobj.getString("MenuTitle"));
-                        ArrayList<DrawerListModel> list = new ArrayList<>();
-                        JSONArray arr = headerobj.getJSONArray("Menucategories");
-                        Log.e("Menucategories", arr.toString());
+                        groupnamelistId.add(headerobj.getString("MenuId"));
 
-                        if (arr.length() > 0) {
-                            for (int j = 0; j < arr.length(); j++) {
-                                JSONObject obj = arr.getJSONObject(j);
+                        if (headerobj.getString("MenuId").equalsIgnoreCase("2")) {
+                            menucategoriesArrayTeam = headerobj.getJSONArray("Menucategories");
+                        }
+                        ArrayList<DrawerListModel> list = new ArrayList<>();
+                        JSONArray menucategoriesArray = headerobj.getJSONArray("Menucategories");
+                        Log.e("Menucategories", menucategoriesArray.toString());
+
+                        if (menucategoriesArray.length() > 0) {
+                            for (int j = 0; j < menucategoriesArray.length(); j++) {
+                                JSONObject obj = menucategoriesArray.getJSONObject(j);
 
                                 DrawerListModel model = new DrawerListModel();
                                 model.setSubMenu1Id(obj.getString("SubMenu1Id"));
                                 model.setSubMenu1AvatarId(obj.getString("SubMenu1AvatarId"));
                                 model.setName(obj.getString("SubMenu1Name"));
-                                list.add(model);
+                                if (!headerobj.getString("MenuId").equalsIgnoreCase("2")) {
+                                    list.add(model);
+                                }
                             }
                             alldata.put(groupnamelist.get(i), list);
                         }
                     }
-
                     listAdapter.notifyDataSetChanged();
 
                 } else {

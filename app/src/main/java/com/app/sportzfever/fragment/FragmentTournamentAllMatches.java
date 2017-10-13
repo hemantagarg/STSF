@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,7 +44,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     private AdapterAllTournamentMatches adapterAllTournamentMatches;
     private ModelAllTournamentMatches modelAllTournamentMatches;
     private ArrayList<ModelAllTournamentMatches> arrayList;
-   // private SwipeRefreshLayout mSwipeRefreshLayout;
+    // private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private TextView text_nodata;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -56,6 +55,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
 
     public static FragmentTournamentAllMatches fragment_teamJoin_request;
     private final String TAG = FragmentTournamentAllMatches.class.getSimpleName();
+    private String id = "";
 
     public static FragmentTournamentAllMatches getInstance() {
         if (fragment_teamJoin_request == null)
@@ -81,7 +81,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       // mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
+        // mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         //mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
@@ -92,10 +92,18 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
-        setlistener();
-
+        getBundle();
         getServicelistRefresh();
+        setlistener();
     }
+
+    private void getBundle() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id = bundle.getString("id");
+        }
+    }
+
 
     private void setlistener() {
     /*    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -204,7 +212,6 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
     }
 
 
-
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
@@ -212,7 +219,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTOURNAMENTMATCHES +3+"/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTOURNAMENTMATCHES + id + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -324,7 +331,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                         modelAllTournamentMatches.setSecondBattingWickets(jo.getString("secondBattingWickets"));
                         modelAllTournamentMatches.setStageName(jo.getString("stageName"));
 
-                       JSONObject j1 = jo.getJSONObject("matchDate");
+                        JSONObject j1 = jo.getJSONObject("matchDate");
 
                         modelAllTournamentMatches.setTime(j1.getString("time"));
                         modelAllTournamentMatches.setDate(j1.getString("date"));

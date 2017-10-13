@@ -1,6 +1,6 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,15 +15,14 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSportTeamList;
-import com.app.sportzfever.adapter.AdapterStats;
-import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
-import com.app.sportzfever.models.ModelTournamentTeam;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -139,19 +138,19 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-JSONArray jarr=data.getJSONArray("teamProfile");
+                    JSONArray data = jObject.getJSONArray("data");
+
                     //  maxlistLength = jObject.getString("total");
 
 
                     arrayList.clear();
-                    for (int i = 0; i < jarr.length(); i++) {
+                    for (int i = 0; i < data.length(); i++) {
 
-                        JSONObject jo = jarr.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
                         modelSportTeamList = new ModelSportTeamList();
 
-                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                        modelSportTeamList.setOwnerName(jo.getString("ownerName"));
 
                        /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
                         modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/

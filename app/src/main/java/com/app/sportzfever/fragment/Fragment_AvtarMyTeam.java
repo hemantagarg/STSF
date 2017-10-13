@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.app.sportzfever.R;
-import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
 
     public static Fragment_AvtarMyTeam fragment_team;
     private final String TAG = Fragment_AvtarMyTeam.class.getSimpleName();
+    private String avtarid = "";
 
     public static Fragment_AvtarMyTeam getInstance() {
         if (fragment_team == null)
@@ -56,7 +56,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-      //  Dashboard.getInstance().manageHeaderVisibitlity(true);
+        //  Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
 
@@ -69,9 +69,23 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
 
         setupTabIcons();
         setListener();
-        setFragment(new FragmentAvtarIAdminTeam());
+        getBundle();
+        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
+        Bundle b = new Bundle();
+        b.putString("avtarid", avtarid);
+        fragmentAvtarIAdminTeam.setArguments(b);
+        setFragment(fragmentAvtarIAdminTeam);
 
     }
+
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+        }
+    }
+
 
     private void setListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -79,10 +93,18 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        setFragment(new FragmentAvtarIAdminTeam());
+                        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
+                        Bundle b = new Bundle();
+                        b.putString("avtarid", avtarid);
+                        fragmentAvtarIAdminTeam.setArguments(b);
+                        setFragment(fragmentAvtarIAdminTeam);
                         break;
                     case 1:
-                        setFragment(new FragmentAvtarIPlanOn());
+                        FragmentAvtarIPlanOn fragmentAvtarIPlanOn = new FragmentAvtarIPlanOn();
+                        Bundle b1 = new Bundle();
+                        b1.putString("avtarid", avtarid);
+                        fragmentAvtarIPlanOn.setArguments(b1);
+                        setFragment(fragmentAvtarIPlanOn);
                         break;
                 }
             }
