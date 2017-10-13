@@ -121,7 +121,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
-                ((CustomViewHolder) holder).text_time.setText(m1.getDateTime());
+                ((CustomViewHolder) holder).text_time.setText(m1.getDateString());
 
                 if (m1.getIsLiked().equalsIgnoreCase("0")) {
                     ((CustomViewHolder) holder).text_like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like_grey, 0, 0, 0);

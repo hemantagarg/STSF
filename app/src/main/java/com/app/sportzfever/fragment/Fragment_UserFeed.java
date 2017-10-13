@@ -416,6 +416,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setAvatarSportName(jo.getString("avatarSportName"));
                         modelFeed.setAvatarType(jo.getString("avatarType"));
                         modelFeed.setUserName(jo.getString("userName"));
+                        modelFeed.setDateString(jo.getString("dateString"));
                         modelFeed.setUserProfilePicture(jo.getString("userProfilePicture"));
 
                         modelFeed.setStatusVisiblity(jo.getString("statusVisiblity"));

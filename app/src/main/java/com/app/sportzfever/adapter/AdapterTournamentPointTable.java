@@ -78,21 +78,21 @@ public class AdapterTournamentPointTable extends RecyclerView.Adapter<RecyclerVi
 
             ModelAllTournamentPointTables m1 = (ModelAllTournamentPointTables) detail.get(i);
 
-          ((CustomViewHolder) holder).pointtable_match.setText(m1.getGroupName());
+          ((CustomViewHolder) holder).pointtable_match.setText(m1.getMatches());
           ((CustomViewHolder) holder).pointtable_won.setText(m1.getWon());
           ((CustomViewHolder) holder).pointtable_lost.setText(m1.getLost());
           ((CustomViewHolder) holder).pointtable_nrr.setText(m1.getNetRunRate());
           ((CustomViewHolder) holder).pointtable_points.setText(m1.getPoints());
           ((CustomViewHolder) holder).pointtable_teamname.setText(m1.getTeamName());
 
-
+/*
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeamProfilePicture())
 
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_avtar);
-            }
+            }*/
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

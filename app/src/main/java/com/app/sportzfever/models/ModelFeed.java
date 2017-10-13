@@ -14,6 +14,16 @@ public class ModelFeed implements Serializable {
 
     private String originalUserProfilePicture;
 
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+    private String dateString;
+
     private String dateTime;
 
     private String statusType;

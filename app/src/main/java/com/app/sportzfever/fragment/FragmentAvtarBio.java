@@ -61,7 +61,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragement_avtarbio, container, false);
+        View view_about = inflater.inflate(R.layout.fragement_avtarbio_new, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -138,10 +138,10 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    JSONArray jarray = data.getJSONArray("AvatarDetails");
+                    //JSONArray jarray = data.getJSONArray("AvatarDetails");
                     //  data = jObject.getString("total");
 
-                    JSONObject jo = jarray.getJSONObject(0);
+                    JSONObject jo = data.getJSONObject("AvatarDetails");
 
                     modelAvtarProfile = new ModelAvtarProfile();
 

@@ -66,7 +66,7 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
                              Bundle savedInstanceState) {
 
 
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_tournamentpoints, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -83,7 +83,7 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        layoutManager = new GridLayoutManager(context, 2);
+        layoutManager = new LinearLayoutManager(context);
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
