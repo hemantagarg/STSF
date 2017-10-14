@@ -68,6 +68,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
     public int getChildrenCount(int groupPosition) {
         List childList = _listDataChild.get(_listDataHeader.get(groupPosition));
         if (childList != null && !childList.isEmpty()) {
+            Log.e("childlidtsize : ", "&&" + childList.size());
             return childList.size();
         }
         return 0;

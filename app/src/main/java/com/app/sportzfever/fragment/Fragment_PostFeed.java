@@ -1,9 +1,10 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.adapter.AdapterAlbumPhotoList;
+import com.app.sportzfever.adapter.AdapterPhotoList;
 import com.app.sportzfever.aynctask.AsyncPostDataFileResponse;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
@@ -29,6 +32,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Likes;
+import com.app.sportzfever.models.ModelGallery;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
@@ -42,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +59,7 @@ import static android.app.Activity.RESULT_OK;
 public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private Bundle b;
-    private Context context;
+    private Activity context;
     private Likes likes;
     View mView;
     private EditText edt_text_post, edt_albumname;
@@ -75,7 +80,10 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
     private Spinner spinner_album;
     private LinearLayout linear_album;
     private RecyclerView recyclerPhotos, recyclerAlbumPhotos;
-
+    private ArrayList<ModelGallery> arrayListPhotos = new ArrayList<>();
+    private ArrayList<ModelGallery> arrayListPhotosAlbum = new ArrayList<>();
+    private AdapterPhotoList adapterPhotoList;
+    private AdapterAlbumPhotoList adapterAlbumPhotoList;
 
     public static Fragment_PostFeed getInstance() {
         if (fragment_friend_request == null)
@@ -115,6 +123,18 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         spinner_album = (Spinner) mView.findViewById(R.id.spinner_album);
         rl_photo = (RelativeLayout) mView.findViewById(R.id.rl_photo);
         rl_album = (RelativeLayout) mView.findViewById(R.id.rl_album);
+
+        recyclerPhotos = (RecyclerView) mView.findViewById(R.id.recyclerPhotos);
+        recyclerAlbumPhotos = (RecyclerView) mView.findViewById(R.id.recyclerAlbumPhotos);
+        recyclerPhotos.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerAlbumPhotos.setLayoutManager(new GridLayoutManager(context, 2));
+
+        adapterAlbumPhotoList = new AdapterAlbumPhotoList(context, this, arrayListPhotosAlbum);
+        recyclerAlbumPhotos.setAdapter(adapterAlbumPhotoList);
+        adapterPhotoList = new AdapterPhotoList(context, this, arrayListPhotos);
+        recyclerPhotos.setAdapter(adapterPhotoList);
+
+
         listShare.add(AppConstant.PUBLIC);
         listShare.add(AppConstant.FRIENDS);
         listShare.add(AppConstant.ONLYME);
@@ -166,7 +186,19 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
                 if (edt_text_post.getText().toString().equalsIgnoreCase("")) {
                     Toast.makeText(context, "Please enter message", Toast.LENGTH_SHORT).show();
                 } else {
-                    submitPost();
+                    if (isAlbum) {
+                        if (spinner_album.getSelectedItemPosition() == 0) {
+                            if (!edt_albumname.getText().toString().equalsIgnoreCase("")) {
+                                submitPost();
+                            } else {
+                                edt_albumname.setError("Please enter album name");
+                                edt_albumname.requestFocus();
+                            }
+                        }
+                    } else {
+                        submitPost();
+                    }
+
                 }
             }
         });
@@ -176,6 +208,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             public void onClick(View view) {
                 isAlbum = false;
                 linear_album.setVisibility(View.GONE);
+                recyclerPhotos.setVisibility(View.VISIBLE);
+                recyclerAlbumPhotos.setVisibility(View.GONE);
                 rl_photo.setBackgroundColor(ContextCompat.getColor(context, R.color.text_selected_bg));
                 rl_album.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 Intent intent = new Intent(context, AlbumSelectActivity.class);
@@ -188,6 +222,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             @Override
             public void onClick(View view) {
                 isAlbum = true;
+                recyclerPhotos.setVisibility(View.GONE);
+                recyclerAlbumPhotos.setVisibility(View.VISIBLE);
                 rl_photo.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 rl_album.setBackgroundColor(ContextCompat.getColor(context, R.color.text_selected_bg));
                 Intent intent = new Intent(context, AlbumSelectActivity.class);
@@ -199,13 +235,11 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         spinner_album.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-
                 if (position == 0) {
                     edt_albumname.setVisibility(View.VISIBLE);
                 } else {
                     edt_albumname.setVisibility(View.GONE);
                 }
-
             }
 
             @Override
@@ -227,115 +261,39 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             selectedimagespath = "";
             imagesPath = new ArrayList<>();
             for (int i = 0, l = images.size(); i < l; i++) {
-
                 imagesPath.add(images.get(i).path);
                 stringBuffer.append(images.get(i).path + ",");
             }
 
             selectedimagespath = Arrays.deepToString(imagesPath.toArray());
             Log.e("selectedImagesPath", "*" + selectedimagespath);
+
+
             if (isAlbum) {
                 linear_album.setVisibility(View.VISIBLE);
+                for (int i = 0; i < imagesPath.size(); i++) {
+                    ModelGallery modelGallery = new ModelGallery();
+                    File file = new File(imagesPath.get(i));
+                    modelGallery.setFileImage(file);
+                    modelGallery.setImage(imagesPath.get(i));
+                    arrayListPhotosAlbum.add(modelGallery);
+                }
+                adapterAlbumPhotoList.notifyDataSetChanged();
+
             } else {
+                for (int i = 0; i < imagesPath.size(); i++) {
+                    ModelGallery modelGallery = new ModelGallery();
+                    File file = new File(imagesPath.get(i));
+                    modelGallery.setFileImage(file);
+                    modelGallery.setImage(imagesPath.get(i));
+                    modelGallery.setImageDesc("");
+                    arrayListPhotos.add(modelGallery);
+                }
+                adapterPhotoList.notifyDataSetChanged();
+
                 linear_album.setVisibility(View.GONE);
             }
         }
-    }
-
-
-    private void submitMultiPost() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("userId", AppUtils.getUserId(context));
-            jsonObject.put("statusVisiblity", spinnerShareWith.getSelectedItem().toString());
-            jsonObject.put("statusType", "TEXT");
-            jsonObject.put("description", edt_text_post.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-/*
-        FileMultipartRequest multipartRequest = new FileMultipartRequest(requestingUrl,
-                mCPImageByetArray, SessionManager.getInstance(mActivity).getAccountID(),
-                SessionManager.getInstance(mActivity).getNetworkID(),
-                SessionManager.getInstance(mActivity).getToken(), mStrSSIDName,
-                mStrTitle, mStrSwitchCPStatus, mStrMsg, mStrRedirectUrl, mStrSwitchRedirectUrlStatus, mStrSessionTime,
-                mStrSwitchEulaStatus, mStrEulaContent, true,
-                new Response.Listener<NetworkResponse>() {
-                    @Override
-                    public void onResponse(NetworkResponse response) {
-                        NetgearUtils.showInfoLog(TAG, "Upload Success response :" + response);
-                        String resultResponse = new String(response.data);
-                        NetgearUtils.showLog(TAG, "resultResponse : " + resultResponse);
-                        int resultCode = -1;
-                        String message = "";
-                        boolean status = false;
-                        try {
-                            JSONObject mResponse = new JSONObject(resultResponse);
-                            if (mResponse != null) {
-                                if (mResponse.has(JSON_APIkeyHelper.RESPONSE)) {
-                                    JSONObject responseObject = mResponse.getJSONObject(JSON_APIkeyHelper.RESPONSE);
-                                    if (responseObject != null) {
-                                        if (responseObject.has(JSON_APIkeyHelper.RESULTCODE)) {
-                                            resultCode = responseObject.getInt(JSON_APIkeyHelper.RESULTCODE);
-                                        }
-                                        if (responseObject.has(JSON_APIkeyHelper.MESSAGE)) {
-                                            message = responseObject.getString(JSON_APIkeyHelper.MESSAGE);
-                                        }
-                                        if (responseObject.has(JSON_APIkeyHelper.STATUS)) {
-                                            status = responseObject.getBoolean(JSON_APIkeyHelper.STATUS);
-                                        }
-                                    } else {
-                                        NetgearUtils.showLog(TAG, "reponse object null");
-                                    }
-                                }
-
-                                if (status) {
-
-                                    CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, "", false, message, true,
-                                            mActivity.getResources().getString(R.string.ok), true, new ChoiceDialogClickListener() {
-                                                @Override
-                                                public void onClickOfPositive() {
-                                                    wantToSaveChanges = false;
-                                                    onBackPressed();
-                                                }
-
-                                                @Override
-                                                public void onClickOfNegative() {
-
-                                                }
-                                            }, true);
-                                } else {
-                                    CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, "", false, message, true,
-                                            mActivity.getResources().getString(R.string.ok), true, null, true);
-                                }
-
-                            } else {
-//                                CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity, strTitle, strMsg, strBtnTxt, null);
-                                NetgearUtils.showLog(TAG, "mResponse is null");
-                            }
-                            NetgearUtils.showLog(TAG, "result : " + message);
-                        } catch (Exception e) {
-                            NetgearUtils.showLog(TAG, "Error : " + e);
-                        }
-                        hideProgressDialog();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(final VolleyError error) {
-                NetgearUtils.hideExtraProgressDialog();
-                hideProgressDialog();
-
-                CustomDialogUtils.customAlertDialogWithGradiantBtn(mActivity,
-                        mActivity.getResources().getString(R.string.error), false,
-                        mActivity.getResources().getString(R.string.timeout)
-                        , true,
-                        mActivity.getResources().getString(R.string.ok), true, null, false);
-                NetgearUtils.showErrorLog(TAG, "Upload Error response :" + error);
-            }
-        }, mActivity);
-*/
-
     }
 
     private void submitPost() {
@@ -346,15 +304,38 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
-            ArrayList<FileBody> list = new ArrayList<>();
-          /*  if (!selectedimagespath.equalsIgnoreCase("")) {
+            if (isAlbum) {
+                if (arrayListPhotosAlbum.size() > 0) {
+                    for (int i = 0; i < arrayListPhotosAlbum.size(); i++) {
+                        FileBody filebodyimage = new FileBody(new File(arrayListPhotosAlbum.get(i).getImage()));
+                        StringBody desc = new StringBody(arrayListPhotosAlbum.get(i).getImageDesc(), encoding);
+                        reqEntity.addPart("statusImages[" + i + "]", filebodyimage);
+                        reqEntity.addPart("statusImagesDesc[" + i + "]", desc);
 
-                for (int i = 0; i < imagesPath.size(); i++) {
-                    FileBody filebodyimage = new FileBody(new File(imagesPath.get(i)));
-                    list.add(filebodyimage);
+                        Log.e("image_desc", "*" + arrayListPhotosAlbum.get(i).getImageDesc());
+                    }
                 }
-                reqEntity.addPart("statusImages", list);
-            }*/
+                if (spinner_album.getSelectedItemPosition() == 0) {
+                    StringBody name = new StringBody(edt_albumname.getText().toString(), encoding);
+                    StringBody isNewAlbum = new StringBody("yes", encoding);
+                    reqEntity.addPart("album", name);
+                    reqEntity.addPart("isNewAlbum", isNewAlbum);
+                } else {
+                    StringBody name = new StringBody(listAlbumId.get(spinner_album.getSelectedItemPosition()), encoding);
+                    reqEntity.addPart("album", name);
+                    StringBody isNewAlbum = new StringBody("no", encoding);
+                    reqEntity.addPart("isNewAlbum", isNewAlbum);
+                }
+
+            } else {
+                if (arrayListPhotos.size() > 0) {
+                    for (int i = 0; i < arrayListPhotos.size(); i++) {
+                        FileBody filebodyimage = new FileBody(new File(arrayListPhotos.get(i).getImage()));
+                        reqEntity.addPart("statusImages[" + i + "]", filebodyimage);
+                    }
+                }
+            }
+
 
             Log.e("user", AppUtils.getUserId(context));
             Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
@@ -427,6 +408,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
                 HeaderViewManager.getInstance().setProgressLoader(false, false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 //                    JSONArray data = jObject.getJSONArray("data");
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    context.onBackPressed();
 
                 } else {
                 }

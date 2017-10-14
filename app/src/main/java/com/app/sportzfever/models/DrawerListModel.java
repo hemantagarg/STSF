@@ -5,10 +5,10 @@ public class DrawerListModel {
 
     private String id;
     private String category;
-    private String cat_id,SubMenu1Id,SubMenu1AvatarId;
+    private String cat_id, SubMenu1Id, SubMenu1AvatarId;
     private String name;
     private String pic;
-    private String status,teamId;
+    private String status, teamId = "";
 
 
     public String getCat_id() {

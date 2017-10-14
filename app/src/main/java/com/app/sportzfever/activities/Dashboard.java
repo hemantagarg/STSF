@@ -77,7 +77,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private ExpandableListView expendableView;
     private LinkedHashMap<String, List<DrawerListModel>> alldata;
     private ArrayList<String> groupnamelist;
-    private ArrayList<String> groupnamelistId = new ArrayList<>();
+    private ArrayList<String> groupnamelistId ;
     private int PERMISSION_ALL = 1;
     private String[] PERMISSIONS = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA,
@@ -202,10 +202,10 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
         alldata = new LinkedHashMap<>();
         groupnamelist = new ArrayList<>();
+        groupnamelistId = new ArrayList<>();
         expendableView = (ExpandableListView) findViewById(R.id.expendableView);
         listAdapter = new DrawerListAdapter(this, groupnamelist, alldata);
         expendableView.setAdapter(listAdapter);
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

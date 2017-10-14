@@ -1,12 +1,13 @@
 package com.app.sportzfever.models;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
  * Created by hemanta on 10-09-2017.
  */
 
-public class ModelGallery implements Serializable{
+public class ModelGallery implements Serializable {
 
     public int getRowType() {
         return RowType;
@@ -16,65 +17,71 @@ public class ModelGallery implements Serializable{
         RowType = rowType;
     }
 
-    private int RowType=1;
+    private int RowType = 1;
     private String albumName;
 
     private String albumId;
 
-    private String image;
+    private String image, imageDesc;
+    private File fileImage;
 
     private String user;
 
     private String totalImage;
 
-    public String getAlbumName ()
-    {
+    public String getAlbumName() {
         return albumName;
     }
 
-    public void setAlbumName (String albumName)
-    {
+    public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
 
-    public String getAlbumId ()
-    {
+    public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId (String albumId)
-    {
+    public void setAlbumId(String albumId) {
         this.albumId = albumId;
     }
 
-    public String getImage ()
-    {
+    public String getImage() {
         return image;
     }
 
-    public void setImage (String image)
-    {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public String getUser ()
-    {
+    public String getUser() {
         return user;
     }
 
-    public void setUser (String user)
-    {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public String getTotalImage ()
-    {
+    public String getTotalImage() {
         return totalImage;
     }
 
-    public void setTotalImage (String totalImage)
-    {
+    public void setTotalImage(String totalImage) {
         this.totalImage = totalImage;
     }
 
+    public File getFileImage() {
+        return fileImage;
+    }
+
+    public void setFileImage(File fileImage) {
+        this.fileImage = fileImage;
+    }
+
+    public String getImageDesc() {
+        return imageDesc;
+    }
+
+    public void setImageDesc(String imageDesc) {
+        this.imageDesc = imageDesc;
+    }
 }

@@ -55,7 +55,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_profileavtardetails, container, false);
+        view = inflater.inflate(R.layout.fragment_tournamentdetails, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
@@ -119,9 +119,10 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("Bio");
-        tabLayout.getTabAt(1).setText("My Teams");
-        tabLayout.getTabAt(2).setText("Stats");
-        tabLayout.getTabAt(3).setText("Photos");
+        tabLayout.getTabAt(1).setText("Feed");
+        tabLayout.getTabAt(2).setText("My Teams");
+        tabLayout.getTabAt(3).setText("Stats");
+        tabLayout.getTabAt(4).setText("Photos");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -135,13 +136,17 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
+        Fragment_AvtarFeed feed = new Fragment_AvtarFeed();
+        Bundle b11 = new Bundle();
+        b11.putString("avtarid", id);
+        feed.setArguments(b11);
+        adapter.addFrag(feed, "feed");
 
         Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
         Bundle b3 = new Bundle();
         b3.putString("avtarid", id);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
-
 
         FragmentStats tab1 = new FragmentStats();
         Bundle b1 = new Bundle();

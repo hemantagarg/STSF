@@ -169,7 +169,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
                 //Nothing here ever fires
                 System.err.println("child clicked");
                 List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
-                Log.e("getTeamId", list.get(childPosition).getTeamId());
+                Log.e("getTeamId", "**" + list.get(childPosition).getTeamId());
                 String avtarid = list.get(childPosition).getTeamId();
                 FragmentSportsTeamDetailList fragmentAvtar_details = new FragmentSportsTeamDetailList();
                 Bundle bundle = new Bundle();
