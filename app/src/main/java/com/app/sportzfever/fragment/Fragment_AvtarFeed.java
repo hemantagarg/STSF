@@ -388,7 +388,8 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeedByAvatar/1/69/10/479a44a634f82b0394f78352d302ec36
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
+               // String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
