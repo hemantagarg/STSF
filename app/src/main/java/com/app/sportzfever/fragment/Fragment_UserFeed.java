@@ -439,7 +439,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
-                        modelFeed.setIsLiked(jo.getString("isShared"));
+                        modelFeed.setIsLiked(jo.getString("isUserLiked"));
 
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
@@ -551,7 +551,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
-
+                        modelFeed.setIsLiked(jo.getString("isUserLiked"));
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
                             JSONArray imagesArray = jo.getJSONArray("images");

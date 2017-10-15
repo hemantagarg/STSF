@@ -12,6 +12,7 @@ public interface JsonApiHelper {
     String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
+    String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
     String GET_AVTARFEEDS = "getFeedByAvatar/";
     String GET_NOTIFICATION = "getNotifications/";
     String GET_FRIENDREQUEST = "getFriendRequests/";

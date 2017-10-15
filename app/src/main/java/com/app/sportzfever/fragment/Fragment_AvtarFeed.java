@@ -52,17 +52,18 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
-    private int skipCount = 0;
+    private int skipCount = 10;
     private boolean loading = true;
     private String maxlistLength = "";
     private EditText edt_text_post;
+    private TextView text_nodata;
     private TextView text_post;
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
 
     public static Fragment_AvtarFeed fragment_userFeed;
     private final String TAG = Fragment_AvtarFeed.class.getSimpleName();
-    private String avtarid="";
+    private String avtarid = "";
 
     public static Fragment_AvtarFeed getInstance() {
         if (fragment_userFeed == null)
@@ -103,6 +104,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_post = (TextView) view.findViewById(R.id.text_post);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -367,12 +369,12 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
-            skipCount = 0;
+            skipCount = 10;
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                //     String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -385,9 +387,8 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private void onLoadMore() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                //  http://sfscoring.betasportzfever.com/getFeedByAvatar/1/69/10/479a44a634f82b0394f78352d302ec36
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
@@ -406,7 +407,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    maxlistLength = jObject.getString("totalFeedCount");
+                    maxlistLength = jObject.getString("totalFeeds");
                     arrayList.clear();
                     Log.e("jsonsize", "**" + data.length());
                     for (int i = 0; i < data.length(); i++) {
@@ -448,7 +449,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
-                        modelFeed.setIsLiked(jo.getString("isShared"));
+                        modelFeed.setIsLiked(jo.getString("isUserLiked"));
 
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
@@ -480,7 +481,14 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -518,7 +526,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    maxlistLength = jObject.getString("totalFeedCount");
+                    maxlistLength = jObject.getString("totalFeeds");
                     JSONArray data = jObject.getJSONArray("data");
 
                     arrayList.remove(arrayList.size() - 1);
@@ -560,7 +568,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                         modelFeed.setOriginalUser(jo.getString("originalUser"));
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
-
+                        modelFeed.setIsLiked(jo.getString("isUserLiked"));
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
                             JSONArray imagesArray = jo.getJSONArray("images");
@@ -591,6 +599,9 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     adapterFeed.notifyDataSetChanged();
+                    if (arrayList.size() > 0) {
+                        arrayList.remove(arrayList.size() - 1);
+                    }
                     skipCount = skipCount - 10;
                     loading = true;
 
