@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.DrawerListAdapter;
+import com.app.sportzfever.adapter.TeamDrawerListAdapter;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
@@ -40,7 +40,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
     private TextView text_nodata;
     View view_about;
     private int lastExpandedPosition;
-    private DrawerListAdapter listAdapter;
+    private TeamDrawerListAdapter listAdapter;
 
     public static FragmentMenuTeamList fragment_teamJoin_request;
     private final String TAG = FragmentMenuTeamList.class.getSimpleName();
@@ -115,7 +115,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
         alldata = new LinkedHashMap<>();
         groupnamelist = new ArrayList<>();
         expendableView = (ExpandableListView) view.findViewById(R.id.expendableView);
-        listAdapter = new DrawerListAdapter(context, groupnamelist, alldata);
+        listAdapter = new TeamDrawerListAdapter(context, groupnamelist, alldata);
         expendableView.setAdapter(listAdapter);
         setData();
         setlistener();

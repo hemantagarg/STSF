@@ -577,7 +577,6 @@ public class ModelStats implements Serializable{
 
     private String totalWickets;
 
-    private String totalInning;
 
     private String teamProfile;
 
@@ -652,16 +651,6 @@ public class ModelStats implements Serializable{
     public void setTotalWickets (String totalWickets)
     {
         this.totalWickets = totalWickets;
-    }
-
-    public String getTotalInning ()
-    {
-        return totalInning;
-    }
-
-    public void setTotalInning (String totalInning)
-    {
-        this.totalInning = totalInning;
     }
 
 

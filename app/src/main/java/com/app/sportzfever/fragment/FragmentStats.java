@@ -14,7 +14,8 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterStats;
+import com.app.sportzfever.adapter.AdapterBattingStats;
+import com.app.sportzfever.adapter.AdapterBowlingStats;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -23,7 +24,6 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelStats;
 import com.app.sportzfever.utils.AppUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,9 +38,10 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
     private RecyclerView list_batting, list_bowling;
     private Bundle b;
     private Context context;
-    private AdapterStats adapterStats;
+    private AdapterBattingStats adapterBattingStats;
+    private AdapterBowlingStats adapterBowlingStats;
     private ModelStats modelStats;
-    private ArrayList<ModelStats> arrayList;
+    private ArrayList<ModelStats> arrayListBatting, arrayListBowling;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
@@ -66,7 +67,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
 
         View view_about = inflater.inflate(R.layout.fragment_stats, container, false);
         context = getActivity();
-        arrayList = new ArrayList<>();
+        arrayListBatting = new ArrayList<>();
+        arrayListBowling = new ArrayList<>();
         b = getArguments();
 
         return view_about;
@@ -101,7 +103,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
         btn_fielding = (Button) view.findViewById(R.id.btn_fielding);
         btn_bowling = (Button) view.findViewById(R.id.btn_bowling);
         btn_batting = (Button) view.findViewById(R.id.btn_batting);
-        arrayList = new ArrayList<>();
+        arrayListBatting = new ArrayList<>();
         getBundle();
         setlistener();
 
@@ -194,7 +196,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                     //  maxlistLength = jObject.getString("total");
                     JSONObject jbatsman = data.getJSONObject("batsman");
 
-                    arrayList.clear();
+                    arrayListBatting.clear();
 
                     modelStats = new ModelStats();
 
@@ -211,81 +213,56 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                     modelStats.setTotalSixes(jbatsman.getString("totalSixes"));
 
                     modelStats.setRowType(1);
-                    arrayList.add(modelStats);
-                    adapterStats = new AdapterStats(getActivity(), this, arrayList);
-                    list_batting.setAdapter(adapterStats);
+                    arrayListBatting.add(modelStats);
+                    adapterBattingStats = new AdapterBattingStats(getActivity(), this, arrayListBatting);
+                    list_batting.setAdapter(adapterBattingStats);
 
-                    if (arrayList.size() > 0) {
+                    if (arrayListBatting.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
                         text_nodata.setText("No Team found");
                     }
+
+                    JSONObject jBowling = data.getJSONObject("bowler");
+
+                    arrayListBowling.clear();
+                    modelStats = new ModelStats();
+
+                    modelStats.setTotalMatch(data.getString("totalMatch"));
+                    modelStats.setTotalStumping(data.getString("totalStumping"));
+                    modelStats.setTotalCatches(data.getString("totalCatches"));
+                    modelStats.setEconomyRate(jBowling.getString("economyRate"));
+                    modelStats.setStrikeRate(jBowling.getString("strikrate"));
+                    modelStats.setAvg(jBowling.getString("avg"));
+                    modelStats.setTotalExtraRuns(jBowling.getString("totalExtraRuns"));
+                    modelStats.setTotalInnings(jBowling.getString("totalInning"));
+                    modelStats.setTotalMaidenOver(jBowling.getString("totalMaidenOver"));
+                    modelStats.setTotalOvers(jBowling.getString("totalOvers"));
+                    modelStats.setTotalRuns(jBowling.getString("totalRuns"));
+                    modelStats.setTotalWickets(jBowling.getString("totalWickets"));
+                    modelStats.setBest(jBowling.getString("best"));
+                    modelStats.setFiveWickets(jBowling.getString("fiveWickets"));
+
+                    modelStats.setRowType(1);
+                    arrayListBowling.add(modelStats);
+                    adapterBowlingStats = new AdapterBowlingStats(getActivity(), this, arrayListBowling);
+                    list_bowling.setAdapter(adapterBowlingStats);
+
+                    if (arrayListBatting.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("No Team found");
+                    }
+
+
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Team found");
 
                 }
 
-            } else if (position == 4) {
-
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
-                    //  maxlistLength = jObject.getString("total");
-
-
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = jtaemown.getJSONObject(i);
-
-                        modelStats = new ModelStats();
-
-                      /*  modelAvtarMyTeam.setTeamId(jo.getString("teamId"));
-                        modelAvtarMyTeam.setOwner(jo.getString("owner"));
-                        modelAvtarMyTeam.setCaptain(jo.getString("captain"));
-                        modelAvtarMyTeam.setLocation(jo.getString("location"));*/
-                        modelStats.setRowType(1);
-
-                 /*       JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);*/
-
-                        arrayList.add(modelStats);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
-                    adapterStats.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
-                } else {
-                    adapterStats.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
-                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -268,7 +268,6 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             selectedimagespath = Arrays.deepToString(imagesPath.toArray());
             Log.e("selectedImagesPath", "*" + selectedimagespath);
 
-
             if (isAlbum) {
                 linear_album.setVisibility(View.VISIBLE);
                 for (int i = 0; i < imagesPath.size(); i++) {

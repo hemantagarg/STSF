@@ -151,8 +151,6 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
                     JSONArray data = jobj.getJSONArray("images");
 
                     //  maxlistLength = jObject.getString("total");
-
-
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 

@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -40,7 +39,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
     private RecyclerView list_request;
     private Bundle b;
-    private Context context;
+    private Activity context;
 
     private AdapterSportTeamList adapterSportTeamList;
     private ModelSportTeamList modelSportTeamList;
@@ -51,6 +50,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
+    private View view_about;
     private TextView text_nodata;
     private String maxlistLength = "";
 
@@ -68,14 +68,50 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                              Bundle savedInstanceState) {
 
 
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        view_about = inflater.inflate(R.layout.fragment_teamdetail, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
         return view_about;
     }
 
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Players");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -89,6 +125,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        manageHeaderView();
         setlistener();
 
         getServicelistRefresh();
@@ -139,19 +176,16 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    //  maxlistLength = jObject.getString("total");
-
-
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONArray teamProfile = data.getJSONArray("teamProfile");
                     arrayList.clear();
-                    for (int i = 0; i < data.length(); i++) {
+                    for (int i = 0; i < teamProfile.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = teamProfile.getJSONObject(i);
 
                         modelSportTeamList = new ModelSportTeamList();
 
-                        modelSportTeamList.setOwnerName(jo.getString("ownerName"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
 
                        /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
                         modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/
