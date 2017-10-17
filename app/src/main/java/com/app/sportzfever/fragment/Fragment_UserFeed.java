@@ -1,7 +1,11 @@
 package com.app.sportzfever.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,7 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,7 +126,11 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         floating_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_PostFeed(), true);
+                Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", AppUtils.getUserId(context));
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });
 
@@ -234,13 +246,86 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 startActivity(intent);
             }
 
-        } else if (flag == 5) {
-
-            likeFeed(arrayList.get(position).getFeedId());
-
+        } else if (flag == 9) {
+            showMenuDialog(position);
         }
     }
 
+
+    private void showMenuDialog(final int position) {
+
+        final CharSequence[] items = {"Edit Post", "Delete Post", "Cancel"
+        };
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                context);
+        alertDialog.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Edit Post")) {
+                    dialog.dismiss();
+                    openEditRequirements(arrayList.get(position).getFeedId());
+
+                } else if (items[item].equals("Delete Post")) {
+                    deleteFeed(arrayList.get(position).getFeedId());
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        alertDialog.show();
+
+    }
+
+    /**
+     * Open dialog for the edit comment
+     */
+    private void openEditRequirements(final String id) {
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_post_dialog, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (!edt_comment.getText().toString().equalsIgnoreCase("")) {
+                        updateFeed(edt_comment.getText().toString(), id);
+                        dialog.dismiss();
+                    } else {
+                        edt_comment.setError("Please enter comment");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
 
     private void postFeed() {
         try {
@@ -302,16 +387,16 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     }
 
 
-    private void updateFeed(String id) {
+    private void updateFeed(String text, String id) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("description", edt_text_post.getText().toString());
+                jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
-                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -323,28 +408,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void deleteFeed(String id) {
         try {
-
             if (AppUtils.isNetworkAvailable(context)) {
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
-                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void unlikeFeed(String id) {
-        try {
-
-            if (AppUtils.isNetworkAvailable(context)) {
-
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
-                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -478,6 +545,20 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 10) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 11) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

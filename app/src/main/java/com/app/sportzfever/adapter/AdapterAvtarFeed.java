@@ -19,7 +19,6 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
-import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterAvtarFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ArrayList<ModelFeed> detail;
     Context mContext;
@@ -37,7 +36,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_PROG = 0;
 
 
-    public AdapterFeed(Context context, OnCustomItemClicListener lis, ArrayList<ModelFeed> list) {
+    public AdapterAvtarFeed(Context context, OnCustomItemClicListener lis, ArrayList<ModelFeed> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -170,11 +169,11 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((CustomViewHolder) holder).text_share_count.setVisibility(View.GONE);
                 }
 
-                if (m1.getUser().equalsIgnoreCase(AppUtils.getUserId(mContext))) {
+              /*  if (m1.getAvatar().equalsIgnoreCase(AppUtils.getAvtarId(mContext))) {
                     ((CustomViewHolder) holder).image_menu.setVisibility(View.VISIBLE);
                 } else {
                     ((CustomViewHolder) holder).image_menu.setVisibility(View.GONE);
-                }
+                }*/
 
 
                 if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {

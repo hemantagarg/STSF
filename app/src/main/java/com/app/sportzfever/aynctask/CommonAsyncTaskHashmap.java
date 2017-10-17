@@ -121,6 +121,76 @@ public class CommonAsyncTaskHashmap {
 
     }
 
+    public void getqueryJsonbjectNoProgress(String url, JSONObject jsonObject, int MethodType) {
+        // String url = context.getResources().getString(R.string.base_url) + addurl;
+        Log.e("request", ": " + url + "  " + jsonObject);
+        JsonObjectRequest mJsonRequest = new JsonObjectRequest(
+                MethodType,
+                url,
+                jsonObject, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("response", response.toString());
+                try {
+                    if (response != null) {
+
+                        if (listener != null)
+                            listener.onPostSuccess(method, response);
+                    } else {
+                        if (listener != null)
+                            // listener.onPostRequestFailed(method, "Null data from server.");
+                            Toast.makeText(context,
+                                    context.getResources().getString(R.string.problem_server),
+                                    Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                // hide the progress dialog
+                try {
+                    if (listener != null) {
+
+                        VolleyErrorModel mVolleyErrorModel = WebserviceAPIErrorHandler.getInstance()
+                                .VolleyErrorHandlerReturningModel(error, context);
+                        listener.onPostFail(method, mVolleyErrorModel.getStrMessage());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", AppUtils.getAuthToken(context));
+                return params;
+            }
+        };
+        // Adding request to request queue
+        queue.add(mJsonRequest);
+
+        mJsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+                GlobalConstants.ONE_SECOND_DELAY * 40, 0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+
+    }
+
+
     public void getqueryJsonbject(String url, JSONObject jsonObject, int MethodType) {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
         Log.e("request", ": " + url + "  " + jsonObject);

@@ -134,8 +134,50 @@ public class AppUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
+
+    public static String getUserId(Context context) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            return preferences.getString("user_id", "");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static void setAvtarId(Context context, String image) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("avtar_id", image);
+
+            editor.commit();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static String getAvtarId(Context context) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            return preferences.getString("avtar_id", "");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public static void setIsChatVisible(Context context, Boolean userId) {
 
         try {
@@ -177,6 +219,7 @@ public class AppUtils {
         }
         return "";
     }
+
     public static void setChatGroupId(Context context, String userId) {
         try {
             SharedPreferences preferences = PreferenceManager
@@ -215,19 +258,6 @@ public class AppUtils {
             e.printStackTrace();
         }
         return true;
-    }
-
-    public static String getUserId(Context context) {
-
-        try {
-            SharedPreferences preferences = PreferenceManager
-                    .getDefaultSharedPreferences(context);
-            return preferences.getString("user_id", "");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return "";
     }
 
 
@@ -308,6 +338,7 @@ public class AppUtils {
         }
 
     }
+
     public static String getAuthToken(Context context) {
 
         try {
@@ -337,6 +368,7 @@ public class AppUtils {
         }
 
     }
+
     public static String getGroupChatList(Context context) {
 
         try {

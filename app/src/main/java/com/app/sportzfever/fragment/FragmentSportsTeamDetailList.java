@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSportTeamList;
@@ -158,7 +159,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + 23 + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -186,21 +187,13 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                         modelSportTeamList = new ModelSportTeamList();
 
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
-
-                       /* modelTournamentTeam.setTeamName(jo.getString("teamName"));
-                        modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));*/
+                        modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
+                        modelSportTeamList.setSpeciality(jo.getString("speciality"));
+                        modelSportTeamList.setRequestStatus(jo.getString("requestStatus"));
+                        modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
                         modelSportTeamList.setRowType(1);
 
-
-                       /* JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);
-*/
                         arrayList.add(modelSportTeamList);
                     }
 

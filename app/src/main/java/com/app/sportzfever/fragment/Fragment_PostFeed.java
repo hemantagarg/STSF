@@ -84,6 +84,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
     private ArrayList<ModelGallery> arrayListPhotosAlbum = new ArrayList<>();
     private AdapterPhotoList adapterPhotoList;
     private AdapterAlbumPhotoList adapterAlbumPhotoList;
+    private String userid ="" ;
 
     public static Fragment_PostFeed getInstance() {
         if (fragment_friend_request == null)
@@ -110,8 +111,17 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
 
         init();
         setlistener();
+        getBundle();
         manageHeaderView();
         getAlbums();
+    }
+
+    private void getBundle() {
+        Bundle b = getArguments();
+        if (b != null) {
+            userid = b.getString("id");
+        }
+
     }
 
     private void init() {
@@ -299,7 +309,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         Charset encoding = Charset.forName("UTF-8");
         MultipartEntity reqEntity = new MultipartEntity();
         try {
-            StringBody userId = new StringBody(AppUtils.getUserId(context), encoding);
+            StringBody userId = new StringBody(userid, encoding);
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
@@ -336,7 +346,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             }
 
 
-            Log.e("user", AppUtils.getUserId(context));
+            Log.e("user", userid);
             Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
             Log.e("statusType", "TEXT");
             Log.e("description", edt_text_post.getText().toString());
@@ -372,7 +382,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
 
                 JSONObject jsonObject = new JSONObject();
                 //     http://sfscoring.betasportzfever.com/getUserAlbums/203/59a5e6bfea3964e9a8e4278d26aec647
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETUSERALBUMS + AppUtils.getUserId(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETUSERALBUMS + userid;
                 new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, jsonObject, Request.Method.GET);
 
             } else {

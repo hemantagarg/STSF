@@ -21,6 +21,14 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/dp5">
 
+            <ImageView android:id="@+id/image_menu"
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp30"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/dp5"
+                android:src="@drawable/menu_dotsicon" />
+
             <TextView
                 android:id="@+id/text_sharePost"
                 android:layout_width="wrap_content"

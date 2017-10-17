@@ -106,10 +106,14 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
 
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
-        if (isExpanded)
-            image.setImageResource(R.drawable.arrow_down);
-        else
+        if (isExpanded) {
+            List childList = _listDataChild.get(_listDataHeader.get(groupPosition));
+            if (childList != null && !childList.isEmpty()) {
+                image.setImageResource(R.drawable.arrow_down);
+            }
+        } else {
             image.setImageResource(R.drawable.arrow_right);
+        }
         return convertView;
     }
 

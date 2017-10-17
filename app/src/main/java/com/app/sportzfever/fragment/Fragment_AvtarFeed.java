@@ -19,7 +19,7 @@ import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ImagesListActivity;
-import com.app.sportzfever.adapter.AdapterFeed;
+import com.app.sportzfever.adapter.AdapterAvtarFeed;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -45,7 +45,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterFeed adapterFeed;
+    private AdapterAvtarFeed adapterFeed;
     private ModelFeed modelFeed;
     private ArrayList<ModelFeed> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -129,7 +129,11 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         floating_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_PostFeed(), true);
+                Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", AppUtils.getAvtarId(context));
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });
 
@@ -372,9 +376,9 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
             skipCount = 10;
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                //     String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                //   String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -388,8 +392,8 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeedByAvatar/1/69/10/479a44a634f82b0394f78352d302ec36
-               // String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + skipCount + "/" + AppUtils.getUserId(context) + "/" + avtarid + "/" + AppUtils.getAuthToken(context);
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                // String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
@@ -408,76 +412,77 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    maxlistLength = jObject.getString("totalFeeds");
-                    arrayList.clear();
-                    Log.e("jsonsize", "**" + data.length());
-                    for (int i = 0; i < data.length(); i++) {
+                    if (data.length() > 0) {
+                        maxlistLength = jObject.getString("totalFeeds");
+                        arrayList.clear();
+                        Log.e("jsonsize", "**" + data.length());
+                        for (int i = 0; i < data.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
-                        modelFeed = new ModelFeed();
+                            JSONObject jo = data.getJSONObject(i);
+                            modelFeed = new ModelFeed();
 
-                        modelFeed.setId(jo.getString("id"));
-                        modelFeed.setFeedId(jo.getString("id"));
-                        modelFeed.setUser(jo.getString("user"));
-                        modelFeed.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
-                        modelFeed.setAvatarName(jo.getString("avatarName"));
-                        modelFeed.setOriginalAvatarProfilePicture(jo.getString("originalAvatarProfilePicture"));
-                        modelFeed.setOriginalAvatarName(jo.getString("originalAvatarName"));
-                        modelFeed.setOriginalAvatarType(jo.getString("originalAvatarType"));
-                        modelFeed.setAvatarSportName(jo.getString("avatarSportName"));
-                        modelFeed.setAvatarType(jo.getString("avatarType"));
-                        modelFeed.setUserName(jo.getString("userName"));
-                        modelFeed.setDateString(jo.getString("dateString"));
-                        modelFeed.setUserProfilePicture(jo.getString("userProfilePicture"));
+                            modelFeed.setId(jo.getString("id"));
+                            modelFeed.setFeedId(jo.getString("id"));
+                            modelFeed.setUser(jo.getString("user"));
+                            modelFeed.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
+                            modelFeed.setAvatarName(jo.getString("avatarName"));
+                            modelFeed.setOriginalAvatarProfilePicture(jo.getString("originalAvatarProfilePicture"));
+                            modelFeed.setOriginalAvatarName(jo.getString("originalAvatarName"));
+                            modelFeed.setOriginalAvatarType(jo.getString("originalAvatarType"));
+                            modelFeed.setAvatarSportName(jo.getString("avatarSportName"));
+                            modelFeed.setAvatarType(jo.getString("avatarType"));
+                            modelFeed.setUserName(jo.getString("userName"));
+                            modelFeed.setDateString(jo.getString("dateString"));
+                            modelFeed.setUserProfilePicture(jo.getString("userProfilePicture"));
 
-                        modelFeed.setStatusVisiblity(jo.getString("statusVisiblity"));
-                        modelFeed.setStatusType(jo.getString("statusType"));
-                        modelFeed.setDateTimeUpdated(jo.getString("dateTimeUpdated"));
-                        modelFeed.setDateTime(jo.getString("dateTime"));
-                        modelFeed.setDescription(jo.getString("description"));
-                        modelFeed.setOriginalAvatarSportName(jo.getString("originalAvatarSportName"));
-                        modelFeed.setAvatar(jo.getString("avatar"));
-                        modelFeed.setOriginalUserProfilePicture(jo.getString("originalUserProfilePicture"));
-                        modelFeed.setOriginalUserName(jo.getString("originalUserName"));
+                            modelFeed.setStatusVisiblity(jo.getString("statusVisiblity"));
+                            modelFeed.setStatusType(jo.getString("statusType"));
+                            modelFeed.setDateTimeUpdated(jo.getString("dateTimeUpdated"));
+                            modelFeed.setDateTime(jo.getString("dateTime"));
+                            modelFeed.setDescription(jo.getString("description"));
+                            modelFeed.setOriginalAvatarSportName(jo.getString("originalAvatarSportName"));
+                            modelFeed.setAvatar(jo.getString("avatar"));
+                            modelFeed.setOriginalUserProfilePicture(jo.getString("originalUserProfilePicture"));
+                            modelFeed.setOriginalUserName(jo.getString("originalUserName"));
 
-                        modelFeed.setEvent(jo.getString("event"));
-                        modelFeed.setShares(jo.getString("shares"));
-                        modelFeed.setCommentsCount(jo.getInt("comments"));
-                        modelFeed.setLikeCount(jo.getInt("likes"));
-                        modelFeed.setShareCount(jo.getInt("shares"));
+                            modelFeed.setEvent(jo.getString("event"));
+                            modelFeed.setShares(jo.getString("shares"));
+                            modelFeed.setCommentsCount(jo.getInt("comments"));
+                            modelFeed.setLikeCount(jo.getInt("likes"));
+                            modelFeed.setShareCount(jo.getInt("shares"));
 
-                        modelFeed.setOriginalAvatar(jo.getString("originalAvatar"));
-                        modelFeed.setOriginalUser(jo.getString("originalUser"));
-                        modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
-                        modelFeed.setIsShared(jo.getString("isShared"));
-                        modelFeed.setIsLiked(jo.getString("isUserLiked"));
+                            modelFeed.setOriginalAvatar(jo.getString("originalAvatar"));
+                            modelFeed.setOriginalUser(jo.getString("originalUser"));
+                            modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
+                            modelFeed.setIsShared(jo.getString("isShared"));
+                            modelFeed.setIsLiked(jo.getString("isUserLiked"));
 
-                        if (jo.getJSONArray("images") != null) {
-                            ArrayList<Images> imagesArrayList = new ArrayList<>();
-                            JSONArray imagesArray = jo.getJSONArray("images");
-                            for (int j = 0; j < imagesArray.length(); j++) {
-                                JSONObject jsonObject = imagesArray.getJSONObject(j);
+                            if (jo.getJSONArray("images") != null) {
+                                ArrayList<Images> imagesArrayList = new ArrayList<>();
+                                JSONArray imagesArray = jo.getJSONArray("images");
+                                for (int j = 0; j < imagesArray.length(); j++) {
+                                    JSONObject jsonObject = imagesArray.getJSONObject(j);
 
-                                Images images = new Images();
-                                images.setId(jsonObject.getString("id"));
-                                images.setStatusId(jsonObject.getString("statusId"));
-                                images.setImage(jsonObject.getString("image"));
-                                if (jsonObject.has("album")) {
-                                    images.setAlbum(jsonObject.getString("album"));
+                                    Images images = new Images();
+                                    images.setId(jsonObject.getString("id"));
+                                    images.setStatusId(jsonObject.getString("statusId"));
+                                    images.setImage(jsonObject.getString("image"));
+                                    if (jsonObject.has("album")) {
+                                        images.setAlbum(jsonObject.getString("album"));
+                                    }
+                                    imagesArrayList.add(images);
                                 }
-                                imagesArrayList.add(images);
+                                modelFeed.setImages(imagesArrayList);
                             }
-                            modelFeed.setImages(imagesArrayList);
+
+                            modelFeed.setRowType(1);
+                            arrayList.add(modelFeed);
                         }
 
-                        modelFeed.setRowType(1);
-                        arrayList.add(modelFeed);
+                        Log.e("size", "**" + arrayList.size());
+                        adapterFeed = new AdapterAvtarFeed(getActivity(), this, arrayList);
+                        list_request.setAdapter(adapterFeed);
                     }
-
-                    Log.e("size", "**" + arrayList.size());
-                    adapterFeed = new AdapterFeed(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterFeed);
-
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

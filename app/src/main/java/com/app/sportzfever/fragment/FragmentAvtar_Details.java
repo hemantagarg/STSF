@@ -90,9 +90,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-
             id = bundle.getString("id");
-
+            AppUtils.setAvtarId(mActivity, id);
         }
     }
 

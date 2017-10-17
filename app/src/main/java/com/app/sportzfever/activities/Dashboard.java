@@ -77,7 +77,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private ExpandableListView expendableView;
     private LinkedHashMap<String, List<DrawerListModel>> alldata;
     private ArrayList<String> groupnamelist;
-    private ArrayList<String> groupnamelistId ;
+    private ArrayList<String> groupnamelistId;
     private int PERMISSION_ALL = 1;
     private String[] PERMISSIONS = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA,
@@ -321,14 +321,15 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
                 Log.e("group click", "clicked" + position);
-                if (groupnamelistId.get(position).equalsIgnoreCase("1")) {
+               /* if (groupnamelistId.get(position).equalsIgnoreCase("1")) {
                     if (!expendableView.isGroupExpanded(position)) {
                         expendableView.expandGroup(position);
                     } else {
                         expendableView.collapseGroup(position);
                     }
                     //  drawer.closeDrawer(GravityCompat.START);
-                } else if (groupnamelistId.get(position).equalsIgnoreCase("2")) {
+                } else*/
+                if (groupnamelistId.get(position).equalsIgnoreCase("2")) {
                     FragmentMenuTeamList fragmentMenuTeamList = new FragmentMenuTeamList();
                     Bundle bundle = new Bundle();
                     bundle.putString("array", menucategoriesArrayTeam.toString());
@@ -377,31 +378,17 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 return true;
             }
         });
-/*
         expendableView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
                 Log.e("group expand click", "clicked" + groupPosition);
-                if (groupPosition == 0) {
-                    if (!expendableView.isGroupExpanded(groupPosition)) {
-                        expendableView.collapseGroup(groupPosition);
-                    } else {
-                        expendableView.expandGroup(groupPosition);
-                    }
-                } else {
-                    expendableView.collapseGroup(groupPosition);
-                }
-
-              */
-/*  if (lastExpandedPosition != -1 && groupPosition == 1
+                if (lastExpandedPosition != -1 && groupPosition == 1
                         && groupPosition != lastExpandedPosition) {
                     expendableView.collapseGroup(lastExpandedPosition);
                 }
-                lastExpandedPosition = groupPosition;*//*
-
+                lastExpandedPosition = groupPosition;
             }
         });
-*/
         text_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
