@@ -81,7 +81,7 @@ public class AdapterComments extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
             ((CustomViewHolder) holder).text_message.setText(m1.getComment());
-            ((CustomViewHolder) holder).text_date.setText(m1.getCommentDateTime());
+            //((CustomViewHolder) holder).text_date.setText(m1.getCommentDateTime());
             if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getUserProfilePicture())

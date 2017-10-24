@@ -429,7 +429,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
 
                         comments = new Comments();
                         comments.setComment(jo.getString("comment"));
-                        comments.setCommentDateTime(jo.getString("commentDateTime"));
+                       // comments.setCommentDateTime(jo.getString("commentDateTime"));
                         comments.setId(jo.getString("id"));
                         comments.setUserName(jo.getString("userName"));
                         comments.setUserProfilePicture(jo.getString("userProfilePicture "));
@@ -475,7 +475,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
 
                         comments = new Comments();
                         comments.setComment(jo.getString("comment"));
-                        comments.setCommentDateTime(jo.getString("commentDateTime"));
+                       // comments.setCommentDateTime(jo.getString("commentDateTime"));
                         comments.setId(jo.getString("id"));
                         comments.setUserName(jo.getString("userName"));
                         comments.setUserProfilePicture(jo.getString("userProfilePicture "));
