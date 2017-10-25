@@ -11,7 +11,7 @@ public class ModelAvtarMyTeam
 
     private String owner;
 
-    private String teamId;
+    private String teamId,sportName;
 
     private String captain;
 
@@ -95,4 +95,11 @@ public class ModelAvtarMyTeam
 
     private int rowType;
 
+    public String getSportName() {
+        return sportName;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
 }

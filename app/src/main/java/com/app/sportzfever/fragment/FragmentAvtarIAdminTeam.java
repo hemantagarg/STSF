@@ -168,6 +168,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
                         modelAvtarMyTeam.setTeamId(jo.getString("teamId"));
                         modelAvtarMyTeam.setOwner(jo.getString("owner"));
                         modelAvtarMyTeam.setCaptain(jo.getString("captain"));
+                        modelAvtarMyTeam.setSportName(jo.getString("sportName"));
                         modelAvtarMyTeam.setLocation(jo.getString("location"));
                         modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
                         modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));

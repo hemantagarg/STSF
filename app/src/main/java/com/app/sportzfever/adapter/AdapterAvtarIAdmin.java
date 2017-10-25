@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
-import com.app.sportzfever.models.ModelPastMatches;
-import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -80,8 +78,8 @@ public class AdapterAvtarIAdmin extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             ModelAvtarMyTeam m1 = (ModelAvtarMyTeam) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
-
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).text_avtarteamdesc.setText(m1.getSportName());
 
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -104,21 +102,19 @@ public class AdapterAvtarIAdmin extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname;
+        TextView text_avtarteamname,text_avtarteamdesc;
         ImageView image_avtar;
 
-RelativeLayout relmatchvs;
+        RelativeLayout relmatchvs;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
 
-
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-
+            this.text_avtarteamdesc = (TextView) view.findViewById(R.id.text_avtarteamdesc);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
 
 
         }

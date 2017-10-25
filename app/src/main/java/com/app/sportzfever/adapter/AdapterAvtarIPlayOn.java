@@ -78,7 +78,7 @@ public class AdapterAvtarIPlayOn extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ModelAvtarMyTeam m1 = (ModelAvtarMyTeam) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeamProfilePicture())
@@ -103,21 +103,14 @@ public class AdapterAvtarIPlayOn extends RecyclerView.Adapter<RecyclerView.ViewH
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView text_avtarteamname;
         ImageView image_avtar;
+        RelativeLayout relmatchvs;
 
-RelativeLayout relmatchvs;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
-
-
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
-
-
         }
 
         @Override
