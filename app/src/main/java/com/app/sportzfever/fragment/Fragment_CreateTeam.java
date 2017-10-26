@@ -66,8 +66,15 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragement_create_team);
-        context=this;
+        context = this;
         init();
+        GPSTracker gps = new GPSTracker(context);
+        if (gps.isGPSEnabled) {
+            latitude = gps.getLatitude() + "";
+            longitude = gps.getLongitude() + "";
+        } else {
+            gps.showSettingsAlert();
+        }
         setlistener();
         manageHeaderView();
     }
@@ -246,8 +253,8 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
                 jsonObject.put("description", edt_about_team.getText().toString());
                 jsonObject.put("location", edt_location.getText().toString());
                 jsonObject.put("players", "113");
-                jsonObject.put("lat", "-345.9777");
-                jsonObject.put("lng", "90.0887");
+                jsonObject.put("lat", latitude);
+                jsonObject.put("lng", longitude);
                 //http://sfscoring.betasportzfever.com/createTeamAvatar
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATE_TEAM_AVTAR;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
