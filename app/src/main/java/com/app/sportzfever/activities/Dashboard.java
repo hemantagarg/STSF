@@ -368,6 +368,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 System.err.println("child clicked");
                 List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
                 Log.e("child clicked", list.get(childPosition).getSubMenu1AvatarId());
+                AppUtils.setSelectedSportId(context, list.get(childPosition).getSubMenu1Id());
                 String avtarid = list.get(childPosition).getSubMenu1AvatarId();
                 FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
                 Bundle bundle = new Bundle();

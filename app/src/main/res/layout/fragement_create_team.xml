@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/rl_header"
+        layout="@layout/header_layout" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/dp20"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:hint="Team name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/edt_team_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@color/text_selected_bg"
+                android:hint="Your team name"
+                android:padding="@dimen/dp15"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp15"
+                android:hint="Sports The Team Plays"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@color/text_selected_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_sports"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:padding="@dimen/dp10" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp15"
+                android:hint="About Team"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/edt_about_team"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@color/text_selected_bg"
+                android:hint="Say something about your team..."
+                android:maxHeight="@dimen/dp100"
+                android:padding="@dimen/dp15"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp15"
+                android:hint="Team Logo"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/edt_team_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/btn_browse"
+                    android:background="@color/text_selected_bg"
+                    android:maxLines="1"
+                    android:padding="@dimen/dp15"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <Button
+                    android:id="@+id/btn_browse"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/green_button_selecor"
+                    android:text="Browse"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp15"
+                android:hint="Location"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edt_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:background="@color/text_selected_bg"
+                    android:hint="Team Location"
+                    android:maxLines="3"
+                    android:padding="@dimen/dp15"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <ImageView android:id="@+id/image_map"
+                    android:layout_width="@dimen/dp30"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/blumap" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_create_team"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp20"
+                android:background="@drawable/blue_button_selecor"
+                android:text="Create Team"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

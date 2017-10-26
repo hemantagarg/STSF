@@ -26,12 +26,13 @@ import org.json.JSONObject;
 public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     private Activity mActivity;
-    private EditText edtEmail, edtPassword,edtName,edtmobile;
+    private EditText edtEmail, edtPassword, edtName, edtmobile;
     private Button btn_login;
-    private TextView createAccount, forgotPassword,signin;
+    private TextView createAccount, forgotPassword, signin;
     private ImageView image_facebook, image_twitter;
     String latitude = "0.0", longitude = "0.0";
-RelativeLayout rel_signin;
+    RelativeLayout rel_signin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ RelativeLayout rel_signin;
             @Override
             public void onClick(View view) {
 
-                if (!edtEmail.getText().toString().equalsIgnoreCase("") && !edtPassword.getText().toString().equalsIgnoreCase("")&& !edtName.getText().toString().equalsIgnoreCase("")&& !edtmobile.getText().toString().equalsIgnoreCase("")) {
+                if (!edtEmail.getText().toString().equalsIgnoreCase("") && !edtPassword.getText().toString().equalsIgnoreCase("") && !edtName.getText().toString().equalsIgnoreCase("") && !edtmobile.getText().toString().equalsIgnoreCase("")) {
 
                     if (AppUtils.isEmailValid(edtEmail.getText().toString())) {
 
@@ -63,10 +64,10 @@ RelativeLayout rel_signin;
                     } else if (edtPassword.getText().toString().equalsIgnoreCase("")) {
                         edtPassword.setError(getString(R.string.enter_password));
                         edtPassword.requestFocus();
-                    }else if (edtmobile.getText().toString().equalsIgnoreCase("")) {
+                    } else if (edtmobile.getText().toString().equalsIgnoreCase("")) {
                         edtmobile.setError(getString(R.string.enter_mb));
                         edtmobile.requestFocus();
-                    }else if (edtName.getText().toString().equalsIgnoreCase("")) {
+                    } else if (edtName.getText().toString().equalsIgnoreCase("")) {
                         edtName.setError(getString(R.string.enter_name));
                         edtName.requestFocus();
                     }

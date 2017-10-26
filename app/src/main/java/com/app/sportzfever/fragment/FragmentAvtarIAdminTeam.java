@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -94,7 +95,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new GridLayoutManager(context, 2);
-        floating_addteam=(FloatingActionButton)view.findViewById(R.id.floating_addteam);
+        floating_addteam = (FloatingActionButton) view.findViewById(R.id.floating_addteam);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         getBundle();
@@ -115,7 +116,8 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         floating_addteam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(context,Fragment_CreateTeam.class);
+                startActivity(intent);
             }
         });
     }
@@ -173,17 +175,6 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
                         modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
                         modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         modelAvtarMyTeam.setRowType(1);
-
-
-                       /* JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);
-*/
                         arrayList.add(modelAvtarMyTeam);
                     }
 

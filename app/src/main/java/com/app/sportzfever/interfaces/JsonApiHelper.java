@@ -24,6 +24,7 @@ public interface JsonApiHelper {
     String GET_COMMENTS = "getComments/";
     String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
     String GET_LIKES = "getLikes/";
+    String CREATE_TEAM_AVTAR = "createTeamAvatar";
     String GET_USERABOUT = "getUserProfile/";
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";

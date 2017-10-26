@@ -97,7 +97,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp20"
             android:layout_marginTop="@dimen/dp20"
-            android:background="@drawable/blue_button_selecor"
+            android:background="@drawable/grey_button_selecor"
             android:text="Submit"
             android:textColor="@color/white" />
 

@@ -37,11 +37,9 @@ import java.util.ArrayList;
  */
 public class FragmentSportsTeamDetailList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Activity context;
-
     private AdapterSportTeamList adapterSportTeamList;
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayList;
@@ -136,12 +134,9 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
     }
 
     @Override

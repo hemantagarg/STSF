@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:visibility="gone"
-        android:background="@drawable/blue_button_selecor"
+        android:background="@drawable/grey_button_selecor"
         android:text="Skip"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16" />

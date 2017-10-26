@@ -87,7 +87,7 @@
                         android:layout_height="@dimen/dp30"
                         android:text="Reject"
                         android:layout_margin="@dimen/dp10"
-                        android:background="@drawable/blue_button_selecor"                        android:textColor="@color/white"
+                        android:background="@drawable/grey_button_selecor"                        android:textColor="@color/white"
                         android:layout_weight="1"/>
                 </LinearLayout>
 

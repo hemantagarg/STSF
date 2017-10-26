@@ -147,8 +147,6 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
                     JSONArray jtaemown = data.getJSONArray("teamThatIP");
-                    //  maxlistLength = jObject.getString("total");
-
 
                     arrayList.clear();
                     for (int i = 0; i < jtaemown.length(); i++) {
@@ -162,19 +160,10 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                         modelAvtarMyTeam.setCaptain(jo.getString("captain"));
                         modelAvtarMyTeam.setLocation(jo.getString("location"));
                         modelAvtarMyTeam.setTeamName(jo.getString("teamName"));
+                        modelAvtarMyTeam.setSportName(jo.getString("sportName"));
                         modelAvtarMyTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
                         modelAvtarMyTeam.setRowType(1);
 
-
-                       /* JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);
-*/
                         arrayList.add(modelAvtarMyTeam);
                     }
 
