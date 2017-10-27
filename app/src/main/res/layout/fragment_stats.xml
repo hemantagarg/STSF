@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button_bg_selected"
+                android:background="@color/logocolor"
                 android:text="Batting"
                 android:textColor="@color/white" />
 
@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_bg_unselected"
                 android:text="Bowling"
-                android:textColor="@color/button_bg_color" />
+                android:textColor="@color/logocolor" />
 
             <Button
                 android:id="@+id/btn_fielding"
@@ -45,8 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/button_bg_unselected"
-                android:text="Fielding"
-                android:textColor="@color/button_bg_color" />
+                android:text="Performance"
+                android:textColor="@color/logocolor" />
 
 
         </LinearLayout>

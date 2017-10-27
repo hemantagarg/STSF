@@ -120,8 +120,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_fielding.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.white));
-                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
-                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
                 list_batting.setVisibility(View.VISIBLE);
             }
@@ -134,8 +134,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_batting.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_fielding.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.white));
-                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
-                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.VISIBLE);
                 list_batting.setVisibility(View.GONE);
             }
@@ -148,8 +148,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_batting.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.white));
-                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
-                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.button_bg_color));
+                btn_batting.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
                 list_batting.setVisibility(View.GONE);
 

@@ -14,9 +14,9 @@
         android:textSize="@dimen/text_size_16"
         android:visibility="gone" />
 
-    <include
+    <!--<include
         android:id="@+id/rl_header"
-        layout="@layout/header_layout" />
+        layout="@layout/header_layout" />-->
 
     <RelativeLayout
         android:id="@+id/rl_main_layout"

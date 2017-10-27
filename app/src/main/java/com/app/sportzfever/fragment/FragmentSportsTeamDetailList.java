@@ -124,7 +124,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
-        manageHeaderView();
+       // manageHeaderView();
         setlistener();
 
         getServicelistRefresh();

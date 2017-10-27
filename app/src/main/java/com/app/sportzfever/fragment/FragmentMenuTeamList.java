@@ -171,7 +171,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
                 List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
                 Log.e("getTeamId", "**" + list.get(childPosition).getTeamId());
                 String avtarid = list.get(childPosition).getTeamId();
-                FragmentSportsTeamDetailList fragmentAvtar_details = new FragmentSportsTeamDetailList();
+                Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", avtarid);
                 fragmentAvtar_details.setArguments(bundle);
