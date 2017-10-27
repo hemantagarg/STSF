@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp20"
                 android:layout_marginTop="@dimen/dp20"
-                android:background="@drawable/blue_button_selecor"
+                android:background="@color/logocolor"
                 android:text="Create Team"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_15" />

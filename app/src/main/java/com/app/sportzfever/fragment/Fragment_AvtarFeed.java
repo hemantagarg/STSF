@@ -52,7 +52,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
-    private int skipCount = 10;
+    private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
     private EditText edt_text_post;
@@ -373,7 +373,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
-            skipCount = 10;
+            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);

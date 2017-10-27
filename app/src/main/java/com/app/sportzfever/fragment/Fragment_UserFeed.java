@@ -254,7 +254,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void showMenuDialog(final int position) {
 
-        final CharSequence[] items = {"Edit Post", "Delete Post", "Cancel"
+        final CharSequence[] items = {"Edit Post", "Delete Post"
         };
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
                 context);
@@ -268,8 +268,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 } else if (items[item].equals("Delete Post")) {
                     deleteFeed(arrayList.get(position).getFeedId());
 
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
                 }
             }
         });
@@ -395,7 +393,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+"/";
                 new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
 
             } else {

@@ -70,7 +70,7 @@
                     android:layout_toLeftOf="@+id/text_date"
                     android:text="Madhav"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_16" />
+                    android:textSize="@dimen/text_size_14" />
 
                 <TextView
                     android:id="@+id/text_time"
@@ -81,7 +81,7 @@
                     android:maxLines="2"
                     android:text="2 hours ago"
                     android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_12" />
+                    android:textSize="@dimen/text_size_11" />
 
             </RelativeLayout>
 

@@ -252,7 +252,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
                 jsonObject.put("name", edt_team_name.getText().toString());
                 jsonObject.put("description", edt_about_team.getText().toString());
                 jsonObject.put("location", edt_location.getText().toString());
-                jsonObject.put("players", "113");
+               // jsonObject.put("players", "113");
                 jsonObject.put("lat", latitude);
                 jsonObject.put("lng", longitude);
                 //http://sfscoring.betasportzfever.com/createTeamAvatar
