@@ -129,7 +129,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         floating_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
+                Fragment_PostAvtarFeed fragment_postFeed = new Fragment_PostAvtarFeed();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getAvtarId(context));
                 fragment_postFeed.setArguments(bundle);

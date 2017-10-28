@@ -27,6 +27,7 @@ public class ModelAllTournament implements Serializable{
     private String noOfTeam;
 
     private String aboutTournament;
+    private String date;
 
     public String getDatetime() {
         return datetime;
@@ -284,4 +285,11 @@ public class ModelAllTournament implements Serializable{
 
     private int rowType;
 
+    public void setdate(String date) {
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
 }

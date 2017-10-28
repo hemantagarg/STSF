@@ -97,8 +97,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else {
                     ((CustomViewHolder) holder).text_sharePost.setVisibility(View.VISIBLE);
-                    ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
+                    if (AppUtils.getUserId(mContext).equalsIgnoreCase(m1.getUser())) {
+                        ((CustomViewHolder) holder).text_sharePost.setText("You shared this post");
 
+                    } else {
+                        ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
+                    }
                     if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
                         ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
                         if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {

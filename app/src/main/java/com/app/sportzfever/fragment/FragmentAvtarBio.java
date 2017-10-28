@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -21,7 +22,6 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
 import com.app.sportzfever.utils.AppUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,7 +120,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_AVTARPROFILEBIO + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url,null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -155,6 +155,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     modelAvtarProfile.setSpeciality(jo.getString("speciality"));
                     modelAvtarProfile.setFavouriteFieldPosition(jo.getString("favouriteFieldPosition"));
                     modelAvtarProfile.setJersyNumber(jo.getString("jersyNumber"));
+                    modelAvtarProfile.setSportName(jo.getString("sportName"));
 
                     avtar_namelive.setText(modelAvtarProfile.getName());
                     avtar_battingheldlive.setText(modelAvtarProfile.getBattingHand());
@@ -169,6 +170,8 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
 
                     modelAvtarProfile.setRowType(1);
 
+                    FragmentAvtar_Details.getInstance().setUserData(modelAvtarProfile.getAvatarProfilePicture(),
+                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName());
 
                 }
 

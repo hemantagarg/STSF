@@ -27,7 +27,7 @@ public class ModelAvtarProfile {
 
     private String speciality;
 
-    private String jersyNumber;
+    private String jersyNumber,sportName;
 
     private String favouriteFieldPosition;
 
@@ -210,4 +210,11 @@ public class ModelAvtarProfile {
     }
 
 
+    public String getSportName() {
+        return sportName;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
 }

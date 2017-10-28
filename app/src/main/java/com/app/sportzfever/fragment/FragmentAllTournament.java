@@ -164,6 +164,9 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         FragmentTournament_Details tab2 = new FragmentTournament_Details();
         Bundle b = new Bundle();
         b.putString("id", arrayList.get(position).getId());
+        b.putString("name", arrayList.get(position).getName());
+        b.putString("date", arrayList.get(position).getDate());
+        b.putString("image", arrayList.get(position).getProfilePicture());
         tab2.setArguments(b);
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
 
@@ -194,6 +197,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
@@ -205,15 +209,15 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                         JSONObject jo = data.getJSONObject(i);
 
                         modelAllTournament = new ModelAllTournament();
-
                         modelAllTournament.setId(jo.getString("id"));
-
                         modelAllTournament.setName(jo.getString("name"));
                         modelAllTournament.setSportName(jo.getString("sportName"));
-
+                        modelAllTournament.setProfilePicture(jo.getString("profilePicture"));
+                        modelAllTournament.setSportName(jo.getString("sportName"));
 
                         JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("datetime"));
+                        modelAllTournament.setDatetime(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " " + jo1.getString("year"));
+                        modelAllTournament.setdate(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " Onwards");
                         modelAllTournament.setRowType(1);
                         arrayList.add(modelAllTournament);
                     }

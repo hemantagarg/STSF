@@ -56,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_PostAvtarFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private Bundle b;
     private Activity context;
@@ -69,8 +69,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
     private String selectedimagespath = "";
     private TextView text_post;
     private RelativeLayout rl_photo, rl_album;
-    public static Fragment_PostFeed fragment_friend_request;
-    private final String TAG = Fragment_PostFeed.class.getSimpleName();
+    public static Fragment_PostAvtarFeed fragment_friend_request;
+    private final String TAG = Fragment_PostAvtarFeed.class.getSimpleName();
     private String feedId = "";
     private boolean isAlbum = false;
     private ArrayAdapter<String> adapterShare, adapterAlbum;
@@ -84,12 +84,11 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
     private ArrayList<ModelGallery> arrayListPhotosAlbum = new ArrayList<>();
     private AdapterPhotoList adapterPhotoList;
     private AdapterAlbumPhotoList adapterAlbumPhotoList;
-    private String userid ="" ;
-    private String useridn ="203" ;
+    private String userid = "";
 
-    public static Fragment_PostFeed getInstance() {
+    public static Fragment_PostAvtarFeed getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_PostFeed();
+            fragment_friend_request = new Fragment_PostAvtarFeed();
         return fragment_friend_request;
     }
 
@@ -311,6 +310,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         MultipartEntity reqEntity = new MultipartEntity();
         try {
             StringBody userId = new StringBody(AppUtils.getUserId(context), encoding);
+            StringBody avtarId = new StringBody(AppUtils.getAvtarId(context), encoding);
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
@@ -354,14 +354,15 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e("Content-Type", "undefined");
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
-            reqEntity.addPart("user",userId);
+            reqEntity.addPart("avatar", avtarId);
+            reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);
             reqEntity.addPart("description", description);
 
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
-                new AsyncPostDataFileResponse(context, Fragment_PostFeed.this, 1, reqEntity, url);
+                new AsyncPostDataFileResponse(context, Fragment_PostAvtarFeed.this, 1, reqEntity, url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }

@@ -2,6 +2,8 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -55,7 +58,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_tournamentdetails, container, false);
+        view = inflater.inflate(R.layout.fragment_avtar_details, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
@@ -63,28 +66,45 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+        setCollapsingToolbar();
 
         return view;
     }
 
-
-/*
-    private void getData() {
-
-        //  http://dev.stackmindz.com/trendi/api/getvendordetail.php?freelancer_id=200
-
-        if (AppUtils.isNetworkAvailable(mActivity)) {
-
-            // http://dev.stackmindz.com/trendi/api/change-password.php?user_id=199&current_pwd=admin&new_pwd=123456&confirm_pwd=123456
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.GETVENDORDETAIL + "freelancer_id=" + vendorId;
-
-            new CommonAsyncTaskHashmap(1, mActivity, this).getquery(url);
-
-        } else {
-            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+    public void setUserData(String image, String name, String sportname) {
+        if (image != null && !image.equalsIgnoreCase("")) {
+            Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
+            Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
         }
+        text_username.setText(name);
+        text_address.setText(sportname);
 
-    }*/
+    }
+
+    private void setCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.appBar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset < 100) {
+                    collapsingToolbarLayout.setTitle(text_username.getText().toString());
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
+    }
+
 
     private void getBundle() {
 

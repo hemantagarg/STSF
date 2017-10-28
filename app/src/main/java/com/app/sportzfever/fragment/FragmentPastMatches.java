@@ -200,6 +200,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");

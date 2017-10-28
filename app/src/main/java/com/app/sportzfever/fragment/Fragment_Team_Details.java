@@ -2,6 +2,8 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -38,10 +42,11 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
     private View view;
     private final String TAG = Fragment_Team_Details.class.getSimpleName();
     private TabLayout tabLayout;
-    private TextView text_username, text_address;
+    private TextView text_username, text_address, mTvTotalPlayers, mTvTotalFans, mTvTotalMatches;
     private ImageView image_back, imge_user, imge_banner;
-    private Button btn_booknow;
+    private Button btn_join_team, btn_follow_team;
     private ViewPager viewPager;
+    private LinearLayout ll_follow;
     private ArrayList<ModelAvtarMyTeam> arrayList;
     private String id = "";
 
@@ -55,7 +60,7 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_tournamentdetails, container, false);
+        view = inflater.inflate(R.layout.fragment_team_details, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
@@ -63,8 +68,68 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
-
+        setCollapsingToolbar();
         return view;
+    }
+
+    public void setUserData(JSONObject data) {
+        try {
+            String bannerimage = data.getString("profilePicture");
+            String captainName = data.getString("captainName");
+            String managerName = data.getString("ownerName");
+            String teamName = data.getString("teamName");
+            String isActive = data.getString("isActive");
+            String totalPlayersInTeam = data.getString("totalPlayersInTeam");
+            String fansCount = data.getString("fansCount");
+            String matchplayed = data.getString("fansCount");
+            String image = data.getString("ownerPic");
+
+            if (isActive.equalsIgnoreCase("1")) {
+                ll_follow.setVisibility(View.GONE);
+            } else {
+                ll_follow.setVisibility(View.VISIBLE);
+            }
+
+            if (image != null && !image.equalsIgnoreCase("")) {
+                Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
+            }
+            if (bannerimage != null && !bannerimage.equalsIgnoreCase("")) {
+                Picasso.with(mActivity).load(bannerimage).placeholder(R.drawable.logo).into(imge_banner);
+            }
+            text_username.setText(teamName);
+            text_address.setText(captainName + " (Captain)" + "\n" + managerName + " (Manager)");
+            mTvTotalPlayers.setText("Players" + "\n" + totalPlayersInTeam);
+            mTvTotalFans.setText("Fans" + "\n" + fansCount);
+            mTvTotalMatches.setText("Matches Played" + "\n" + matchplayed);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.appBar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset < 100) {
+                    collapsingToolbarLayout.setTitle(text_username.getText().toString());
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
     }
 
 
@@ -105,7 +170,12 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         text_username = (TextView) view.findViewById(R.id.text_username);
         text_address = (TextView) view.findViewById(R.id.text_address);
-
+        mTvTotalFans = (TextView) view.findViewById(R.id.mTvTotalFans);
+        mTvTotalMatches = (TextView) view.findViewById(R.id.mTvTotalMatches);
+        mTvTotalPlayers = (TextView) view.findViewById(R.id.mTvTotalPlayers);
+        btn_follow_team = (Button) view.findViewById(R.id.btn_follow_team);
+        btn_join_team = (Button) view.findViewById(R.id.btn_join_team);
+        ll_follow = (LinearLayout) view.findViewById(R.id.ll_follow);
 
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override

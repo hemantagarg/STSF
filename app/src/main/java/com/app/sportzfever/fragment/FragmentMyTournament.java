@@ -190,6 +190,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
@@ -207,7 +208,8 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                         modelAllTournament.setTournamentState(jo.getString("tournamentState"));
 
                         JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("datetime"));
+                        modelAllTournament.setDatetime(jo1.getString("date")+" "+jo1.getString("ShortMonthName")+" "+jo1.getString("year"));
+
                         modelAllTournament.setRowType(1);
                         arrayList.add(modelAllTournament);
                     }
