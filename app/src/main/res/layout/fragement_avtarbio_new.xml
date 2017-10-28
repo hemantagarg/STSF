@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -7,364 +7,344 @@
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:visibility="gone">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
-    </android.support.design.widget.AppBarLayout>
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appBar">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="@dimen/dp10"
+        android:background="@color/white">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+        <ImageView
+            android:id="@+id/img_profilepic"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/personalinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp10"
+            android:text="PERSONAL INFO"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
             android:layout_margin="@dimen/dp10"
-            android:background="@color/white">
+            android:src="@drawable/edit_icon"
+            android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/img_profilepic"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_launcher"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/avtar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/img_profilepic"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/name"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/personalinfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp10"
-                android:text="PERSONAL INFO"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/avtar_namelive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/img_profilepic"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/dp10"
-                android:src="@drawable/edit_icon"
-                android:visibility="gone" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/personalinfo"
+            android:alpha=".3"
+            android:background="@color/view_color"
+            android:padding="@dimen/dp10"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/avtar_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/img_profilepic"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/name"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/avtar_namelive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/img_profilepic"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/personalinfo"
-                android:alpha=".3"
-                android:background="@color/view_color"
-                android:padding="@dimen/dp10"
-                android:visibility="gone" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_name"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_name"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
 
-            <TextView
-                android:id="@+id/avtar_battingheld"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_name"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="Batting Hand :"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_battingheld"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_name"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="Batting Hand :"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_battingheldlive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_name"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_battingheldlive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_name"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_battingheldlive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
-
-
-            <TextView
-                android:id="@+id/avtar_jercynumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_battingheld"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarjercynumber"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/avtar_jercynumberlive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_battingheld"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_jercynumberlive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_battingheldlive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
 
-            <TextView
-                android:id="@+id/avtar_battingstyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_jercynumber"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarbattingstyle"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_jercynumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_battingheld"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarjercynumber"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_battingstylelive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_jercynumber"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_jercynumberlive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_battingheld"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_battingstylelive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_jercynumberlive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
-            <TextView
-                android:id="@+id/avtar_bowlingstyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_battingstyle"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarbowling_style"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_bowlingstylelive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_battingstyle"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_battingstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_jercynumber"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarbattingstyle"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_bowlingstylelive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <TextView
+            android:id="@+id/avtar_battingstylelive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_jercynumber"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_bowlinghand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_bowlingstyle"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarbowling_held"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_battingstylelive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
-            <TextView
-                android:id="@+id/avtar_bowlinghandlive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_bowlingstyle"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_bowlingstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_battingstyle"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarbowling_style"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_bowlinghandlive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <TextView
+            android:id="@+id/avtar_bowlingstylelive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_battingstyle"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_speciality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/avtar_bowlinghand"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarspeciality"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_bowlingstylelive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
-                />
+        <TextView
+            android:id="@+id/avtar_bowlinghand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_bowlingstyle"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarbowling_held"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_specialitylive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_bowlinghand"
-                android:layout_margin="@dimen/dp5"
-                android:padding="@dimen/dp10"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_bowlinghandlive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_bowlingstyle"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_specialitylive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_bowlinghandlive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
-            <TextView
-                android:id="@+id/avtar_favouritefieldposition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_speciality"
-                android:layout_marginTop="@dimen/dp10"
-                android:padding="@dimen/dp10"
-                android:text="Physical Attributes"
+        <TextView
+            android:id="@+id/avtar_speciality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/avtar_bowlinghand"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarspeciality"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold"
 
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:visibility="gone" />
+            />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_favouritefieldposition"
-                android:alpha=".3"
-                android:background="@color/view_color"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/avtar_specialitylive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_bowlinghand"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp10"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/avtar_heigt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_favouritefieldposition"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtarfavouritefieldposition"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_specialitylive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
 
-            <TextView
-                android:id="@+id/avtar_favouritefieldpositionlive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_favouritefieldposition"
-                android:padding="@dimen/dp10"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/avtar_favouritefieldposition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_speciality"
+            android:layout_marginTop="@dimen/dp10"
+            android:padding="@dimen/dp10"
+            android:text="Physical Attributes"
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avtar_favouritefieldpositionlive"
-                android:alpha=".3"
-                android:background="@color/view_color" />
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/avtar_weight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/avtar_heigt"
-                android:padding="@dimen/dp10"
-                android:text="@string/avtaraboutme"
-                android:textColor="@color/text_hint_color"
-                android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_favouritefieldposition"
+            android:alpha=".3"
+            android:background="@color/view_color"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/avtar_aboutmelive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/avtar_favouritefieldpositionlive"
-                android:padding="@dimen/dp10"
-                android:text=""
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-        </RelativeLayout>
-    </ScrollView>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/avtar_heigt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_favouritefieldposition"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtarfavouritefieldposition"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/avtar_favouritefieldpositionlive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_favouritefieldposition"
+            android:padding="@dimen/dp10"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/avtar_favouritefieldpositionlive"
+            android:alpha=".3"
+            android:background="@color/view_color" />
+
+        <TextView
+            android:id="@+id/avtar_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avtar_heigt"
+            android:padding="@dimen/dp10"
+            android:text="@string/avtaraboutme"
+            android:textColor="@color/text_hint_color"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/avtar_aboutmelive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/avtar_favouritefieldpositionlive"
+            android:padding="@dimen/dp10"
+            android:text=""
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

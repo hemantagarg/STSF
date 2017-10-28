@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission
         android:name="com.app.justclap.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -44,9 +47,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name="eu.janmuller.android.simplecropimage.CropImage" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBHR7-9cYahSHaS1WFX6hkkmdU20kBYckI" />
+            android:value="AIzaSyBeiOo2v8acuEwNVBeJ9Na2NUWk1owSpzc" />
 
         <activity
             android:name=".activities.PickLocation"

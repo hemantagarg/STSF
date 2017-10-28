@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,16 +14,15 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAvtarIPlayOn;
 import com.app.sportzfever.adapter.AdapterGallery;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.models.ModelGallery;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -92,7 +90,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
-        HeaderViewManager.getInstance().setProgressLoader(false,false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
 
     }
 
@@ -152,7 +150,11 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
+        FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
+        Bundle b = new Bundle();
+        b.putString("galleryid", arrayList.get(position).getAlbumId());
+        fragmentGalleryDetails.setArguments(b);
+        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
 
     }
 
@@ -184,8 +186,6 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    //maxlistLength = jObject.getString("total");
-
 
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
@@ -199,10 +199,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
                         modelGallery.setTotalImage(jo.getString("totalImage"));
                         modelGallery.setAlbumId(jo.getString("albumId"));
                         modelGallery.setUser(jo.getString("user"));
-
                         modelGallery.setRowType(1);
-
-
                         arrayList.add(modelGallery);
                     }
 

@@ -48,5 +48,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:9.4.0'
     testCompile 'junit:junit:4.12'
     compile files('libs/httpmime-4.2.5.jar')
+    compile project(':simple-crop-image-lib')
 }
 apply plugin: 'com.google.gms.google-services'

@@ -22,7 +22,7 @@ public class ModelGallery implements Serializable {
 
     private String albumId;
 
-    private String image, imageDesc;
+    private String image, imageDesc,uploadDate;
     private File fileImage;
 
     private String user;
@@ -83,5 +83,13 @@ public class ModelGallery implements Serializable {
 
     public void setImageDesc(String imageDesc) {
         this.imageDesc = imageDesc;
+    }
+
+    public String getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }

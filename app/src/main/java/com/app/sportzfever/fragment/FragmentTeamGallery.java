@@ -14,11 +14,12 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterGalleryDetail;
+import com.app.sportzfever.adapter.AdapterGallery;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -34,13 +35,13 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentGalleryDetails extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentTeamGallery extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Activity context;
-    private AdapterGalleryDetail adapterGallery;
+    private AdapterGallery adapterGallery;
     private ModelGallery modelGallery;
     private ArrayList<ModelGallery> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -50,15 +51,14 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
     private int skipCount = 0;
     private TextView text_nodata;
     private boolean loading = true;
-    String galleryid = "";
-    private String maxlistLength = "";
     View view_about;
-    public static FragmentGalleryDetails fragment_teamJoin_request;
-    private final String TAG = FragmentGalleryDetails.class.getSimpleName();
+    public static FragmentTeamGallery fragment_teamJoin_request;
+    private final String TAG = FragmentTeamGallery.class.getSimpleName();
+    private String avtarid = "", teamavtarid = "";
 
-    public static FragmentGalleryDetails getInstance() {
+    public static FragmentTeamGallery getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentGalleryDetails();
+            fragment_teamJoin_request = new FragmentTeamGallery();
         return fragment_teamJoin_request;
     }
 
@@ -67,13 +67,22 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        view_about = inflater.inflate(R.layout.fragment_gallery, container, false);
+        view_about = inflater.inflate(R.layout.fragment_team_gallery, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-        manageHeaderView();
         return view_about;
     }
+
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+            teamavtarid = bundle.getString("teamavtarid");
+        }
+    }
+
 
     /*******************************************************************
      * Function name - manageHeaderView
@@ -137,12 +146,6 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
         getServicelistRefresh();
     }
 
-    private void getBundle() {
-
-        Bundle b = getArguments();
-        galleryid = b.getString("galleryid");
-    }
-
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -152,12 +155,16 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
             }
         });
 
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
 
+        FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
+        Bundle b = new Bundle();
+        b.putString("galleryid", arrayList.get(position).getAlbumId());
+        fragmentGalleryDetails.setArguments(b);
+        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
 
     }
 
@@ -167,10 +174,10 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    https://sfscoring.betasportzfever.com/getAlbumsImages/1/21/0/479a44a634f82b0394f78352d302ec36
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMSDETAILS + AppUtils.getUserId(context) + "/" +
-                        galleryid + "/0/" + AppUtils.getAuthToken(context);
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMS + teamavtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -187,27 +194,27 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    maxlistLength = data.getString("totalImage");
-                    JSONArray images = data.getJSONArray("images");
+                    JSONArray data = jObject.getJSONArray("data");
+                    //maxlistLength = jObject.getString("total");
+
 
                     arrayList.clear();
-                    for (int i = 0; i < images.length(); i++) {
+                    for (int i = 0; i < data.length(); i++) {
 
-                        JSONObject jo = images.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
                         modelGallery = new ModelGallery();
-
                         modelGallery.setImage(jo.getString("image"));
-                        modelGallery.setImageDesc(jo.getString("description"));
-                        modelGallery.setAlbumId(jo.getString("id"));
-                        modelGallery.setUploadDate(jo.getString("uploadDate"));
-
+                        modelGallery.setAlbumName(jo.getString("albumName"));
+                        modelGallery.setTotalImage(jo.getString("totalImage"));
+                        modelGallery.setAlbumId(jo.getString("albumId"));
+                        modelGallery.setUser(jo.getString("user"));
                         modelGallery.setRowType(1);
+
                         arrayList.add(modelGallery);
                     }
 
-                    adapterGallery = new AdapterGalleryDetail(getActivity(), this, arrayList);
+                    adapterGallery = new AdapterGallery(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterGallery);
 
                     if (mSwipeRefreshLayout != null) {
@@ -218,11 +225,11 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Data found");
+                        text_nodata.setText("No Team found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Data found");
+                    text_nodata.setText("No Team found");
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

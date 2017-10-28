@@ -31,7 +31,7 @@
                 <RelativeLayout
                     android:id="@+id/rl_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="235dp"
+                    android:layout_height="260dp"
                     android:layout_marginBottom="@dimen/dp2">
 
                     <ImageView
@@ -73,7 +73,7 @@
                         android:layout_below="@+id/text_username"
                         android:layout_centerHorizontal="true"
                         android:text="captain"
-                        android:textAllCaps="true"
+                        android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12"
                         android:textStyle="bold" />
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_address"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/dp5"
                         android:orientation="horizontal">

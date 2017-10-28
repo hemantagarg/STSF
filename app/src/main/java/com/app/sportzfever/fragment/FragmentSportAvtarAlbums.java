@@ -159,7 +159,6 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
                         modelTournamentAlbums = new ModelTournamentAlbums();
 
                         modelTournamentAlbums.setId(jo.getString("id"));
-
                         // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
                         modelTournamentAlbums.setImage(jo.getString("image"));
                         modelTournamentAlbums.setRowType(1);

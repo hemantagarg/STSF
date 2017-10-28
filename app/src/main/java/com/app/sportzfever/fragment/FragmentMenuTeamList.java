@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -171,12 +172,16 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
                 List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
                 Log.e("getTeamId", "**" + list.get(childPosition).getTeamId());
                 String avtarid = list.get(childPosition).getTeamId();
-                Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
-                Bundle bundle = new Bundle();
-                bundle.putString("id", avtarid);
-                fragmentAvtar_details.setArguments(bundle);
-
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                if (avtarid.equalsIgnoreCase("")) {
+                    Intent intent = new Intent(context, Fragment_CreateTeam.class);
+                    startActivity(intent);
+                } else {
+                    Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", avtarid);
+                    fragmentAvtar_details.setArguments(bundle);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                }
                 return true;
             }
         });

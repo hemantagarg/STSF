@@ -98,14 +98,13 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15"
                 android:textStyle="bold"
-                android:visibility="gone" />
-
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp10"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/edt_team_logo"

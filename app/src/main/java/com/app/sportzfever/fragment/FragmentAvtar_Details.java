@@ -17,16 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
+import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -43,10 +47,10 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private TabLayout tabLayout;
     private TextView text_username, text_address;
     private ImageView image_back, imge_user, imge_banner;
-    private Button btn_booknow;
+    private Button btn_follow_team;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
-    private String id = "";
+    private String id = "", isTeamfollower = "";
 
     public static FragmentAvtar_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -67,17 +71,60 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
         setCollapsingToolbar();
-
+        setListener();
         return view;
     }
 
-    public void setUserData(String image, String name, String sportname) {
+    public void setUserData(String image, String name, String sportname, String isTeamfollower) {
         if (image != null && !image.equalsIgnoreCase("")) {
             Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
             Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
         }
         text_username.setText(name);
         text_address.setText(sportname);
+        this.isTeamfollower = isTeamfollower;
+        if (isTeamfollower.equalsIgnoreCase("1")) {
+            btn_follow_team.setText("Following");
+        } else {
+            btn_follow_team.setText("Follow");
+        }
+
+    }
+
+    private void setListener() {
+
+        btn_follow_team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (isTeamfollower.equalsIgnoreCase("1")) {
+                    followUnfollowTeam("UNFOLLOw");
+                } else {
+                    followUnfollowTeam("FOLLOw");
+                }
+            }
+        });
+    }
+
+    private void followUnfollowTeam(String type) {
+
+        if (AppUtils.isNetworkAvailable(mActivity)) {
+
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
+                jsonObject.put("avatarId", AppUtils.getAvtarId(mActivity));
+                jsonObject.put("type", type);
+
+                //  https://sfscoring.betasportzfever.com/followUnfollow
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -125,7 +172,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         text_username = (TextView) view.findViewById(R.id.text_username);
         text_address = (TextView) view.findViewById(R.id.text_address);
-
+        btn_follow_team = (Button) view.findViewById(R.id.btn_follow_team);
 
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +232,25 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     @Override
     public void onPostSuccess(int method, JSONObject response) {
+        try {
+            if (method == 1) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+
+                    //  JSONObject data = response.getJSONObject("data");
+                    if (isTeamfollower.equalsIgnoreCase("1")) {
+                        isTeamfollower = "0";
+                        btn_follow_team.setText("Follow");
+                    } else {
+                        isTeamfollower = "1";
+                        btn_follow_team.setText("Following");
+                    }
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

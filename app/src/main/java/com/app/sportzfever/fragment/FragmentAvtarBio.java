@@ -45,7 +45,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
-    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
+    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive,avtar_bowlinghandlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
     public static FragmentAvtarBio fragment_teamJoin_request;
     private final String TAG = FragmentAvtarBio.class.getSimpleName();
     private String avtarid = "";
@@ -78,6 +78,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
         avtar_namelive = (TextView) view.findViewById(R.id.avtar_namelive);
         avtar_battingheldlive = (TextView) view.findViewById(R.id.avtar_battingheldlive);
         avtar_jercynumberlive = (TextView) view.findViewById(R.id.avtar_jercynumberlive);
+        avtar_bowlinghandlive = (TextView) view.findViewById(R.id.avtar_bowlinghandlive);
         avtar_battingstylelive = (TextView) view.findViewById(R.id.avtar_battingstylelive);
         avtar_bowlingstylelive = (TextView) view.findViewById(R.id.avtar_bowlingstylelive);
         avtar_specialitylive = (TextView) view.findViewById(R.id.avtar_specialitylive);
@@ -152,6 +153,8 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     modelAvtarProfile.setAvatarType(jo.getString("avatarType"));
                     modelAvtarProfile.setBattingHand(jo.getString("battingHand"));
                     modelAvtarProfile.setBattingStyle(jo.getString("battingStyle"));
+                    modelAvtarProfile.setBowlingStyle(jo.getString("bowlingStyle"));
+                    modelAvtarProfile.setBowlingHand(jo.getString("bowlingHand"));
                     modelAvtarProfile.setSpeciality(jo.getString("speciality"));
                     modelAvtarProfile.setFavouriteFieldPosition(jo.getString("favouriteFieldPosition"));
                     modelAvtarProfile.setJersyNumber(jo.getString("jersyNumber"));
@@ -164,6 +167,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     avtar_battingstylelive.setText(modelAvtarProfile.getBattingStyle());
 
                     avtar_bowlingstylelive.setText(modelAvtarProfile.getBowlingStyle());
+                    avtar_bowlinghandlive.setText(modelAvtarProfile.getBowlingHand());
                     avtar_specialitylive.setText(modelAvtarProfile.getSpeciality());
                     avtar_favouritefieldpositionlive.setText(modelAvtarProfile.getFavouriteFieldPosition());
                     avtar_aboutmelive.setText(modelAvtarProfile.getDescription());
@@ -171,7 +175,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     modelAvtarProfile.setRowType(1);
 
                     FragmentAvtar_Details.getInstance().setUserData(modelAvtarProfile.getAvatarProfilePicture(),
-                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName());
+                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName(),jo.getString("isTeamfollower"));
 
                 }
 

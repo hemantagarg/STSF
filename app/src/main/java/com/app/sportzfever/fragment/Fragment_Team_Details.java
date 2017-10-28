@@ -19,23 +19,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
+import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fragment_Team_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
+public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
 
     public static Fragment_Team_Details vendorProfileFragment;
@@ -49,8 +52,9 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
     private RelativeLayout rl_banner;
     private ViewPager viewPager;
     private LinearLayout ll_follow;
-    private ArrayList<ModelAvtarMyTeam> arrayList;
+    String isTeamMember = "", isTeamfollower = "";
     private String id = "";
+    private String teamAvatarId = "";
 
     public static Fragment_Team_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -71,7 +75,22 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
         setCollapsingToolbar();
+        setListener();
         return view;
+    }
+
+    private void setListener() {
+
+        btn_follow_team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isTeamfollower.equalsIgnoreCase("1")) {
+                    followUnfollowTeam("UNFOLLOw");
+                } else {
+                    followUnfollowTeam("FOLLOw");
+                }
+            }
+        });
     }
 
     public void setUserData(JSONObject data) {
@@ -80,23 +99,32 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
             String captainName = data.getString("captainName");
             String managerName = data.getString("ownerName");
             String teamName = data.getString("teamName");
+            teamAvatarId = data.getString("teamAvatarId");
             String isActive = data.getString("isActive");
             String totalPlayersInTeam = data.getString("totalPlayersInTeam");
             String fansCount = data.getString("fansCount");
             String matchplayed = data.getString("fansCount");
+            isTeamMember = data.getString("isTeamMember");
             String image = data.getString("ownerPic");
+            isTeamfollower = data.getString("isTeamfollower");
 
-            if (isActive.equalsIgnoreCase("1")) {
-                ll_follow.setVisibility(View.GONE);
-                final float scale = getContext().getResources().getDisplayMetrics().density;
+            if (isTeamMember.equalsIgnoreCase("1")) {
+                btn_join_team.setText("Leave Team");
+                btn_follow_team.setText("Leave Team");
+                /* final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (235 * scale + 0.5f);
-                rl_banner.getLayoutParams().height = pixels;
+                rl_banner.getLayoutParams().height = pixels;*/
 
             } else {
-                final float scale = getContext().getResources().getDisplayMetrics().density;
+                btn_join_team.setText("Join Team");
+              /*  final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (260 * scale + 0.5f);
-                rl_banner.getLayoutParams().height = pixels;
-                ll_follow.setVisibility(View.VISIBLE);
+                rl_banner.getLayoutParams().height = pixels;*/
+            }
+            if (isTeamfollower.equalsIgnoreCase("1")) {
+                btn_follow_team.setText("Following");
+            } else {
+                btn_follow_team.setText("Follow");
             }
 
             if (image != null && !image.equalsIgnoreCase("")) {
@@ -142,23 +170,27 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
     }
 
 
-/*
-    private void getData() {
-
-        //  http://dev.stackmindz.com/trendi/api/getvendordetail.php?freelancer_id=200
+    private void followUnfollowTeam(String type) {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
-            // http://dev.stackmindz.com/trendi/api/change-password.php?user_id=199&current_pwd=admin&new_pwd=123456&confirm_pwd=123456
-            String url = JsonApiHelper.BASEURL + JsonApiHelper.GETVENDORDETAIL + "freelancer_id=" + vendorId;
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
+                jsonObject.put("avatarId", teamAvatarId);
+                jsonObject.put("type", type);
 
-            new CommonAsyncTaskHashmap(1, mActivity, this).getquery(url);
-
+                //  https://sfscoring.betasportzfever.com/followUnfollow
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
 
-    }*/
+    }
 
     private void getBundle() {
 
@@ -167,6 +199,7 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
             id = bundle.getString("id");
             AppUtils.setAvtarId(mActivity, id);
         }
+        //   getData();
     }
 
 
@@ -185,7 +218,7 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         btn_follow_team = (Button) view.findViewById(R.id.btn_follow_team);
         btn_join_team = (Button) view.findViewById(R.id.btn_join_team);
         ll_follow = (LinearLayout) view.findViewById(R.id.ll_follow);
-        rl_banner= (RelativeLayout) view.findViewById(R.id.rl_banner);
+        rl_banner = (RelativeLayout) view.findViewById(R.id.rl_banner);
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,9 +247,10 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_AvtarFeed feed = new Fragment_AvtarFeed();
+        Fragment_TeamFeed feed = new Fragment_TeamFeed();
         Bundle b11 = new Bundle();
         b11.putString("avtarid", id);
+        b11.putString("teamAvatarId", teamAvatarId);
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
@@ -226,13 +260,14 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
-        FragmentGallery tab1 = new FragmentGallery();
+        FragmentTeamGallery tab1 = new FragmentTeamGallery();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
+        b1.putString("teamavtarid", teamAvatarId);
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-        FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
+        FragmentTeamGallery tab3 = new FragmentTeamGallery();
         Bundle b2 = new Bundle();
         b2.putString("avtarid", id);
         tab3.setArguments(b2);
@@ -244,7 +279,25 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
 
     @Override
     public void onPostSuccess(int method, JSONObject response) {
+        try {
+            if (method == 1) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
 
+                    //  JSONObject data = response.getJSONObject("data");
+                    if (isTeamfollower.equalsIgnoreCase("1")) {
+                        isTeamfollower = "0";
+                        btn_follow_team.setText("Follow");
+                    } else {
+                        isTeamfollower = "1";
+                        btn_follow_team.setText("Following");
+                    }
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -327,15 +380,5 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_CHAT_BAR, fragment, true);
     }
 
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-
-        }
-
-    }
 
 }

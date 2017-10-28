@@ -17,12 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
+import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
 import com.squareup.picasso.Picasso;
@@ -40,7 +43,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     private View view;
     private final String TAG = FragmentTournament_Details.class.getSimpleName();
     private TabLayout tabLayout;
-    private TextView text_username, text_address;
+    private TextView text_username, text_address,text_date;
     private ImageView image_back, imge_user, imge_banner;
     private Button btn_booknow;
     private ViewPager viewPager;
@@ -70,6 +73,22 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
     }
 
 
+    private void getData() {
+
+        // https://sfscoring.betasportzfever.com/getTournamentDetail/3/59a5e6bfea3964e9a8e4278d26aec647
+
+        if (AppUtils.isNetworkAvailable(mActivity)) {
+
+            String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TOURNAMENT_DETAIL + id + "/" + AppUtils.getAuthToken(mActivity);
+
+            new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+        } else {
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     private void getBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -80,9 +99,8 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
                 Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
                 Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
             }
-            text_username.setText(bundle.getString("name"));
-            text_address.setText(bundle.getString("date"));
-
+            text_date.setText(bundle.getString("date"));
+            getData();
         }
     }
 
@@ -119,6 +137,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         text_username = (TextView) view.findViewById(R.id.text_username);
         text_address = (TextView) view.findViewById(R.id.text_address);
+        text_date = (TextView) view.findViewById(R.id.text_date);
 
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +200,18 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
 
     @Override
     public void onPostSuccess(int method, JSONObject response) {
+        try {
+            if (method == 1) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
 
+                    JSONObject data = response.getJSONObject("data");
+                    text_username.setText(data.getString("name"));
+                    text_address.setText(data.getString("location"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
