@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
     private TextView text_username, text_address, mTvTotalPlayers, mTvTotalFans, mTvTotalMatches;
     private ImageView image_back, imge_user, imge_banner;
     private Button btn_join_team, btn_follow_team;
+    private RelativeLayout rl_banner;
     private ViewPager viewPager;
     private LinearLayout ll_follow;
     private ArrayList<ModelAvtarMyTeam> arrayList;
@@ -86,7 +88,14 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
 
             if (isActive.equalsIgnoreCase("1")) {
                 ll_follow.setVisibility(View.GONE);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                int pixels = (int) (235 * scale + 0.5f);
+                rl_banner.getLayoutParams().height = pixels;
+
             } else {
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                int pixels = (int) (260 * scale + 0.5f);
+                rl_banner.getLayoutParams().height = pixels;
                 ll_follow.setVisibility(View.VISIBLE);
             }
 
@@ -176,7 +185,7 @@ public class Fragment_Team_Details extends BaseFragment implements View.OnClickL
         btn_follow_team = (Button) view.findViewById(R.id.btn_follow_team);
         btn_join_team = (Button) view.findViewById(R.id.btn_join_team);
         ll_follow = (LinearLayout) view.findViewById(R.id.ll_follow);
-
+        rl_banner= (RelativeLayout) view.findViewById(R.id.rl_banner);
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
