@@ -50,7 +50,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
     private int skipCount = 0;
     private TextView text_nodata;
     private boolean loading = true;
-    String galleryid = "";
+    String galleryid = "",title="";
     private String maxlistLength = "";
     View view_about;
     public static FragmentGalleryDetails fragment_teamJoin_request;
@@ -71,7 +71,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-        manageHeaderView();
+
         return view_about;
     }
 
@@ -86,7 +86,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
         Dashboard.getInstance().manageFooterVisibitlity(false);
 
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Gallery");
+        HeaderViewManager.getInstance().setHeading(true, title);
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -116,7 +116,6 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
     @Override
     public void onResume() {
         super.onResume();
-        // Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
     @Override
@@ -133,7 +132,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
         arrayList = new ArrayList<>();
         getBundle();
         setlistener();
-
+        manageHeaderView();
         getServicelistRefresh();
     }
 
@@ -141,6 +140,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
 
         Bundle b = getArguments();
         galleryid = b.getString("galleryid");
+        title = b.getString("title");
     }
 
     private void setlistener() {
@@ -157,6 +157,8 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
 
     @Override
     public void onItemClickListener(int position, int flag) {
+
+
 
 
     }

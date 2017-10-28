@@ -163,6 +163,7 @@ public class FragmentTeamGallery extends BaseFragment implements ApiResponse, On
         FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
         Bundle b = new Bundle();
         b.putString("galleryid", arrayList.get(position).getAlbumId());
+        b.putString("title", arrayList.get(position).getAlbumName());
         fragmentGalleryDetails.setArguments(b);
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
 

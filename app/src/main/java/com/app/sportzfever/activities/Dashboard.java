@@ -831,8 +831,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
-                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification ||
-                                mStacks.get(mCurrentTab).lastElement() instanceof FragmentGallery) {
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification ) {
                             manageHeaderVisibitlity(true);
                             manageFooterVisibitlity(true);
                         } else {

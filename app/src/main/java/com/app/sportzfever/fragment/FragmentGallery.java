@@ -116,7 +116,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
     @Override
     public void onResume() {
         super.onResume();
-        // Dashboard.getInstance().manageHeaderVisibitlity(true);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
     }
 
     @Override
@@ -153,6 +153,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
         Bundle b = new Bundle();
         b.putString("galleryid", arrayList.get(position).getAlbumId());
+        b.putString("title", arrayList.get(position).getAlbumName());
         fragmentGalleryDetails.setArguments(b);
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
 
