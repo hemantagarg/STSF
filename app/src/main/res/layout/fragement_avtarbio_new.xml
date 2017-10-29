@@ -53,6 +53,7 @@
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
             android:text="@string/name"
+            android:visibility="gone"
             android:textColor="@color/text_hint_color"
             android:textStyle="bold" />
 
@@ -66,6 +67,7 @@
             android:padding="@dimen/dp10"
             android:singleLine="true"
             android:text=""
+            android:visibility="gone"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
