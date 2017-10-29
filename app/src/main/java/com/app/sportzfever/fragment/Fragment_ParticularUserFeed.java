@@ -48,7 +48,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_request;
     private Bundle b;
@@ -68,12 +68,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
 
-    public static Fragment_UserFeed fragment_userFeed;
-    private final String TAG = Fragment_UserFeed.class.getSimpleName();
+    public static Fragment_ParticularUserFeed fragment_userFeed;
+    private final String TAG = Fragment_ParticularUserFeed.class.getSimpleName();
+    private String avtarid = "";
 
-    public static Fragment_UserFeed getInstance() {
+    public static Fragment_ParticularUserFeed getInstance() {
         if (fragment_userFeed == null)
-            fragment_userFeed = new Fragment_UserFeed();
+            fragment_userFeed = new Fragment_ParticularUserFeed();
         return fragment_userFeed;
     }
 
@@ -93,7 +94,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageFooterVisibitlity(true);
     }
 
     @Override
@@ -111,8 +111,9 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         list_request.setLayoutManager(layoutManager);
         list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
+        floating_post.setVisibility(View.GONE);
+        getBundle();
         setlistener();
-
         getServicelistRefresh();
     }
 
@@ -387,6 +388,16 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         }
     }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+
+            avtarid = bundle.getString("avtarid");
+
+        }
+    }
+
     private void likeFeed(String id) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
@@ -468,7 +479,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

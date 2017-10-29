@@ -76,7 +76,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         return view;
     }
 
-    public void setUserData(String image, String name, String sportname, String isTeamfollower) {
+    public void setUserData(String image, String name, String sportname) {
         if (image != null && !image.equalsIgnoreCase("")) {
             Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
             Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
@@ -84,11 +84,11 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         text_username.setText(name);
         text_address.setText(sportname);
         this.isTeamfollower = isTeamfollower;
-        if (isTeamfollower.equalsIgnoreCase("1")) {
+    /*    if (isTeamfollower.equalsIgnoreCase("1")) {
             btn_follow_team.setText("Unfriend");
         } else {
             btn_follow_team.setText("Friend");
-        }
+        }*/
 
     }
 
@@ -184,7 +184,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("About");
-        tabLayout.getTabAt(1).setText("Feed");
+        tabLayout.getTabAt(1).setText("SportsLine");
         tabLayout.getTabAt(2).setText("Friends");
         tabLayout.getTabAt(3).setText("Following");
         tabLayout.getTabAt(4).setText("Photos");
@@ -201,7 +201,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_UserFeed feed = new Fragment_UserFeed();
+        Fragment_ParticularUserFeed feed = new Fragment_ParticularUserFeed();
         Bundle b11 = new Bundle();
         b11.putString("avtarid", id);
         feed.setArguments(b11);

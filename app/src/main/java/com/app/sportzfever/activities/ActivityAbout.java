@@ -1,19 +1,14 @@
 package com.app.sportzfever.activities;
 
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.sportzfever.MyFirebaseMessagingService;
 import com.app.sportzfever.R;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -25,20 +20,13 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 
 public class ActivityAbout extends AppCompatActivity implements OnCustomItemClicListener, ApiResponse {
 
     private Context mActivity;
-    private RecyclerView chatList;
-    private ArrayList<ModelAboutMe> chatListData;
     ImageView img_profilepic;
     private Toolbar toolbar;
     private TextView avtar_namelive, avtar_battingheldlive, avtar_weightlive, avtar_heigtlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_bowlinghandlive, avtar_specialitylive;
-    private LinearLayoutManager layoutManager;
-    private boolean loading = true, isActivityVisible = true;
-    private String maxlistLength = "", serviceId = "";
     private ModelAboutMe modelAboutMe;
 
     @Override
@@ -49,10 +37,6 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
         init();
         setListener();
         getServicelistRefresh();
-
-        MyFirebaseMessagingService.value = 0;
-        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(MyFirebaseMessagingService.PushNotificationId);
     }
 
 
@@ -70,24 +54,16 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
         avtar_weightlive = (TextView) findViewById(R.id.avtar_weightlive);
         img_profilepic = (ImageView) findViewById(R.id.img_profilepic);
 
-        Intent in = getIntent();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Profile");
-
-
-        layoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.setStackFromEnd(true);
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isActivityVisible = false;
-        AppUtils.setIsChatVisible(mActivity, false);
     }
 
     @Override
@@ -172,23 +148,12 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (isActivityVisible) {
-
-            }
 
         }
     }
 
     @Override
     public void onPostFail(int method, String response) {
-
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        isActivityVisible = false;
 
     }
 

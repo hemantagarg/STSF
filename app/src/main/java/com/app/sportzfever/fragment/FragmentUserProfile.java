@@ -2,12 +2,10 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +14,12 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.ModelAboutMe;
 import com.app.sportzfever.models.ModelAvtarProfile;
 import com.app.sportzfever.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,23 +31,15 @@ import java.util.ArrayList;
  */
 public class FragmentUserProfile extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
-    private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private ModelAvtarProfile modelAvtarProfile;
     private ArrayList<ModelAvtarProfile> arrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private LinearLayoutManager layoutManager;
-    private int skipCount = 0;
-    private boolean loading = true;
-    private String maxlistLength = "";
-    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive,avtar_bowlinghandlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
     public static FragmentUserProfile fragment_teamJoin_request;
     private final String TAG = FragmentUserProfile.class.getSimpleName();
     private String avtarid = "";
+    private TextView avtar_namelive, avtar_battingheldlive, avtar_weightlive, avtar_heigtlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_bowlinghandlive, avtar_specialitylive;
+    private ModelAboutMe modelAboutMe;
+    ImageView img_profilepic;
 
     public static FragmentUserProfile getInstance() {
         if (fragment_teamJoin_request == null)
@@ -61,7 +52,7 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragement_avtarbio_new, container, false);
+        View view_about = inflater.inflate(R.layout.fragement_user_profile, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -73,20 +64,17 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         avtar_namelive = (TextView) view.findViewById(R.id.avtar_namelive);
         avtar_battingheldlive = (TextView) view.findViewById(R.id.avtar_battingheldlive);
         avtar_jercynumberlive = (TextView) view.findViewById(R.id.avtar_jercynumberlive);
-        avtar_bowlinghandlive = (TextView) view.findViewById(R.id.avtar_bowlinghandlive);
         avtar_battingstylelive = (TextView) view.findViewById(R.id.avtar_battingstylelive);
         avtar_bowlingstylelive = (TextView) view.findViewById(R.id.avtar_bowlingstylelive);
+        avtar_bowlinghandlive = (TextView) view.findViewById(R.id.avtar_bowlinghandlive);
         avtar_specialitylive = (TextView) view.findViewById(R.id.avtar_specialitylive);
-        avtar_favouritefieldpositionlive = (TextView) view.findViewById(R.id.avtar_favouritefieldpositionlive);
-        avtar_aboutmelive = (TextView) view.findViewById(R.id.avtar_aboutmelive);
+        avtar_heigtlive = (TextView) view.findViewById(R.id.avtar_heigtlive);
+        avtar_weightlive = (TextView) view.findViewById(R.id.avtar_weightlive);
+        img_profilepic = (ImageView) view.findViewById(R.id.img_profilepic);
 
-        layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         getBundle();
         setlistener();
         getServicelistRefresh();
@@ -118,10 +106,8 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
         Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_AVTARPROFILEBIO + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url,null, Request.Method.GET);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + avtarid + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -139,44 +125,35 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    //JSONArray jarray = data.getJSONArray("AvatarDetails");
-                    //  data = jObject.getString("total");
+                    JSONObject jdob = data.getJSONObject("dateOfBirth");
 
-                    JSONObject jo = data.getJSONObject("AvatarDetails");
+                    modelAboutMe = new ModelAboutMe();
 
-                    modelAvtarProfile = new ModelAvtarProfile();
+                    modelAboutMe.setUserId(data.getString("userId"));
 
-                    modelAvtarProfile.setAvatarId(jo.getString("avatarId"));
-                    modelAvtarProfile.setName(jo.getString("name"));
-                    modelAvtarProfile.setDescription(jo.getString("description"));
-                    modelAvtarProfile.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
-                    modelAvtarProfile.setAvatarType(jo.getString("avatarType"));
-                    modelAvtarProfile.setBattingHand(jo.getString("battingHand"));
-                    modelAvtarProfile.setBattingStyle(jo.getString("battingStyle"));
-                    modelAvtarProfile.setBowlingStyle(jo.getString("bowlingStyle"));
-                    modelAvtarProfile.setBowlingHand(jo.getString("bowlingHand"));
-                    modelAvtarProfile.setSpeciality(jo.getString("speciality"));
-                    modelAvtarProfile.setFavouriteFieldPosition(jo.getString("favouriteFieldPosition"));
-                    modelAvtarProfile.setJersyNumber(jo.getString("jersyNumber"));
-                    modelAvtarProfile.setSportName(jo.getString("sportName"));
+                    modelAboutMe.setUserName(data.getString("userName"));
+                    modelAboutMe.setGender(data.getString("gender"));
+                    modelAboutMe.setHometown(data.getString("hometown"));
+                    modelAboutMe.setCurrentLocation(data.getString("currentLocation"));
+                    modelAboutMe.setProfilePicture(data.getString("profilePicture"));
+                    modelAboutMe.setHeight(data.getString("height"));
+                    modelAboutMe.setAbout(data.getString("about"));
+                    modelAboutMe.setWeight(data.getString("weight"));
 
-                    avtar_namelive.setText(modelAvtarProfile.getName());
-                    avtar_battingheldlive.setText(modelAvtarProfile.getBattingHand());
-                    avtar_jercynumberlive.setText(modelAvtarProfile.getJersyNumber());
-
-                    avtar_battingstylelive.setText(modelAvtarProfile.getBattingStyle());
-
-                    avtar_bowlingstylelive.setText(modelAvtarProfile.getBowlingStyle());
-                    avtar_bowlinghandlive.setText(modelAvtarProfile.getBowlingHand());
-                    avtar_specialitylive.setText(modelAvtarProfile.getSpeciality());
-                    avtar_favouritefieldpositionlive.setText(modelAvtarProfile.getFavouriteFieldPosition());
-                    avtar_aboutmelive.setText(modelAvtarProfile.getDescription());
-
-                    modelAvtarProfile.setRowType(1);
-
-                    FragmentUser_Details.getInstance().setUserData(modelAvtarProfile.getAvatarProfilePicture(),
-                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName(),jo.getString("isTeamfollower"));
-
+                    avtar_namelive.setText(modelAboutMe.getUserName());
+                    avtar_jercynumberlive.setText(modelAboutMe.getGender());
+                    avtar_battingstylelive.setText(AppUtils.getUseremail(context));
+                    avtar_bowlingstylelive.setText(modelAboutMe.getHometown());
+                    avtar_bowlinghandlive.setText(modelAboutMe.getCurrentLocation());
+                    avtar_specialitylive.setText(modelAboutMe.getAbout());
+                    avtar_heigtlive.setText(modelAboutMe.getHeight() + " " + modelAboutMe.getHeightUnit());
+                    avtar_weightlive.setText(modelAboutMe.getWeight());
+                    avtar_battingheldlive.setText(jdob.getString("date") + " " + jdob.getString("monthName") + " " + jdob.getString("year"));
+                    if (!modelAboutMe.getProfilePicture().equalsIgnoreCase("")) {
+                        Picasso.with(context).load(modelAboutMe.getProfilePicture()).placeholder(R.drawable.ic_launcher).into(img_profilepic);
+                    }
+                    modelAboutMe.setRowType(1);
+                    FragmentUser_Details.getInstance().setUserData(modelAboutMe.getProfilePicture(), modelAboutMe.getUserName(), modelAboutMe.getCurrentLocation());
                 }
 
             }
