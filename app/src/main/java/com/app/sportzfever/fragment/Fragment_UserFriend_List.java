@@ -14,12 +14,14 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterFriendRequest;
+import com.app.sportzfever.adapter.AdapterUserFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.FriendRequest;
+import com.app.sportzfever.models.ModelUserFriendList;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -32,16 +34,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_Friend_Request extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_UserFriend_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterFriendRequest adapterFriendRequest;
-    private FriendRequest friendrequest;
+    private AdapterUserFriendList adapterUserFriendList;
+    private ModelUserFriendList userFriendList;
     private TextView text_nodata;
-    private ArrayList<FriendRequest> arrayList;
+    private ArrayList<ModelUserFriendList> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -50,12 +52,12 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     private boolean loading = true;
     private String maxlistLength = "";
 
-    public static Fragment_Friend_Request fragment_friend_request;
-    private final String TAG = Fragment_Friend_Request.class.getSimpleName();
+    public static Fragment_UserFriend_List fragment_friend_request;
+    private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
 
-    public static Fragment_Friend_Request getInstance() {
+    public static Fragment_UserFriend_List getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_Friend_Request();
+            fragment_friend_request = new Fragment_UserFriend_List();
         return fragment_friend_request;
     }
 
@@ -104,56 +106,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             }
         });
 
-/*
-        list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if ((AppUtils.isNetworkAvailable(context))) {
 
-                    if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
-                        if (dy > 0) //check for scroll down
-                        {
-                            visibleItemCount = layoutManager.getChildCount();
-                            totalItemCount = layoutManager.getItemCount();
-                            pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-                            if (loading) {
-                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                    loading = false;
-                                    modelNotification = new ModelNotification();
-                                    modelNotification.setRowType(2);
-                                    arrayList.add(modelNotification);
-                                    adapterNotification.notifyDataSetChanged();
-
-                                    skipCount = skipCount + 10;
-
-                                    try {
-
-                                        if (AppUtils.isNetworkAvailable(context)) {
-
-                                            String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
-                                            //  new CommonAsyncTaskHashmap(1, context, Fragment_Chat.this).getqueryNoProgress(url);
-
-                                        } else {
-                                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-
-                                    }
-                                    //Do pagination.. i.e. fetch new data
-                                }
-                            }
-                        }
-                    } else {
-
-                        Log.e("maxlength", "*" + arrayList.size());
-                    }
-                }
-            }
-        });
-*/
 
     }
 
@@ -161,27 +114,26 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
 
-            acceptTeamrequest(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+            acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
 
-        } else if (flag == 2) {
-            acceptTeamrequest(arrayList.get(position).getId(), AppConstant.REJECTED);
         }
 
     }
 
 
-    private void acceptTeamrequest(String id, String accept) {
+    private void acceptTeamrequest(String id, String ADDFRIEND) {
         try {
             AppUtils.onKeyBoardDown(context);
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
 
-                jsonObject.put("id", id);
-                jsonObject.put("requestStatus", accept);
+                jsonObject.put("fromUserId", id);
+                jsonObject.put("toUserId", AppUtils.getUserId(context));
+                jsonObject.put("type", ADDFRIEND);
 
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTFRIENDREQUEST;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
                 new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -192,20 +144,6 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     }
 
 
-    private void getServicelist() {
-        try {
-            skipCount = 0;
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void getServicelistRefresh() {
 
@@ -214,7 +152,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FRIENDREQUEST + AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + 8 + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -238,23 +176,19 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        friendrequest = new FriendRequest();
-                        friendrequest.setUserName(jo.getString("userName"));
-                        friendrequest.setId(jo.getString("id"));
-                        friendrequest.setFriendUserId(jo.getString("friendUserId"));
-                        friendrequest.setRequestStatus(jo.getString("requestStatus"));
-                        friendrequest.setReadStatus(jo.getString("readStatus"));
-                        friendrequest.setFriendUserName(jo.getString("friendUserName"));
-                        friendrequest.setUserProfilePicture(jo.getString("userProfilePicture"));
-                        friendrequest.setRequestSentAt(jo.getString("requestSentAt"));
-                        friendrequest.setFriendUserProfilePicture(jo.getString("friendUserProfilePicture"));
+                        userFriendList = new ModelUserFriendList();
+                        userFriendList.setFriendId(jo.getString("friendId"));
+                        userFriendList.setFriendName(jo.getString("friendName"));
+                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
+                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
+                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
 
-                        friendrequest.setRowType(1);
+                        userFriendList.setRowType(1);
 
-                        arrayList.add(friendrequest);
+                        arrayList.add(userFriendList);
                     }
-                    adapterFriendRequest = new AdapterFriendRequest(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterFriendRequest);
+                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterUserFriendList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -263,11 +197,11 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Friend Request found");
+                        text_nodata.setText("No Friend found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Friend Request found");
+                    text_nodata.setText("No Friend  found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -284,27 +218,26 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        friendrequest = new FriendRequest();
-                        friendrequest.setUserName(jo.getString("userName"));
-                        friendrequest.setId(jo.getString("id"));
-                        friendrequest.setId(jo.getString("id"));
-                        friendrequest.setFriendUserId(jo.getString("friendUserId"));
-                        friendrequest.setRequestStatus(jo.getString("requestStatus"));
-                        friendrequest.setReadStatus(jo.getString("readStatus"));
-                        friendrequest.setFriendUserName(jo.getString("friendUserName"));
+                        userFriendList = new ModelUserFriendList();
+                        userFriendList = new ModelUserFriendList();
+                        userFriendList.setFriendId(jo.getString("friendId"));
+                        userFriendList.setFriendName(jo.getString("friendName"));
+                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
+                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
+                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
 
-                        friendrequest.setRowType(1);
+                        userFriendList.setRowType(1);
 
-                        arrayList.add(friendrequest);
+                        arrayList.add(userFriendList);
                     }
-                    adapterFriendRequest.notifyDataSetChanged();
+                    adapterUserFriendList.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterFriendRequest.notifyDataSetChanged();
+                    adapterUserFriendList.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
                 }

@@ -16,6 +16,7 @@ public interface JsonApiHelper {
     String GET_AVTARFEEDS = "getFeedByAvatar/";
     String GET_NOTIFICATION = "getNotifications/";
     String GET_FRIENDREQUEST = "getFriendRequests/";
+    String GET_USERFRIENDLIST = "getFriendsOfUser/";
     String GET_TEAMJOINREQUEST = "getAllTeamInvitation/";
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GETALLSPORT = "getAllSport/";
@@ -64,6 +65,7 @@ public interface JsonApiHelper {
     String ACCEPTREJECTMATCHCHALLENGEINVITATION = "RespondToMatchchallengeInvitation/";
     String ACCEPTREJECTSCORECHALLENGEINVITATION = "RespondToMatchScorerInvitation/";
     String ACCEPTFRIENDREQUEST = "confirmFriend";
+    String ADDASFRIEND = "friendUnfriend";
     String RESPONDTOMATCHANDPRACTICEINVITATION = "RespondToMatchAndPractiseInvitation/";
     String RESPONDTOTEAMJOININVITATIONFROMTEAM = "RespondToTeamJoinInvitationFromTeam/";
 
