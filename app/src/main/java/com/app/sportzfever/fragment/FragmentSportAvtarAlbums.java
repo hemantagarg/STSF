@@ -65,8 +65,7 @@ public class FragmentSportAvtarAlbums extends BaseFragment implements ApiRespons
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_avtar_photos, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();

@@ -254,25 +254,45 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void showMenuDialog(final int position) {
 
-        final CharSequence[] items = {"Edit Post", "Delete Post"
-        };
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                context);
-        alertDialog.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Edit Post")) {
-                    dialog.dismiss();
-                    openEditRequirements(arrayList.get(position).getFeedId());
+        if (arrayList.get(position).getIsShared().equalsIgnoreCase("1")) {
+            final CharSequence[] items = {"Delete Post"
+            };
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                    context);
+            alertDialog.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Delete Post")) {
+                        deleteFeed(arrayList.get(position).getFeedId());
 
-                } else if (items[item].equals("Delete Post")) {
-                    deleteFeed(arrayList.get(position).getFeedId());
-
+                    }
                 }
-            }
-        });
+            });
 
-        alertDialog.show();
+            alertDialog.show();
+
+        } else {
+            final CharSequence[] items = {"Edit Post", "Delete Post"
+            };
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                    context);
+            alertDialog.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Edit Post")) {
+                        dialog.dismiss();
+                        openEditRequirements(arrayList.get(position).getFeedId());
+
+                    } else if (items[item].equals("Delete Post")) {
+                        deleteFeed(arrayList.get(position).getFeedId());
+
+                    }
+                }
+            });
+
+            alertDialog.show();
+
+        }
 
     }
 
@@ -393,7 +413,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+"/";
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
                 new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
 
             } else {

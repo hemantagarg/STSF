@@ -59,7 +59,6 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
 
     private void init() {
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         //==============================================

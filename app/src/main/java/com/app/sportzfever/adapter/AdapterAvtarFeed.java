@@ -19,6 +19,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
+import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -169,11 +170,11 @@ public class AdapterAvtarFeed extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((CustomViewHolder) holder).text_share_count.setVisibility(View.GONE);
                 }
 
-              /*  if (m1.getAvatar().equalsIgnoreCase(AppUtils.getAvtarId(mContext))) {
+                if (m1.getAvatar().equalsIgnoreCase(AppUtils.getAvtarId(mContext))) {
                     ((CustomViewHolder) holder).image_menu.setVisibility(View.VISIBLE);
                 } else {
                     ((CustomViewHolder) holder).image_menu.setVisibility(View.GONE);
-                }*/
+                }
 
 
                 if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {
