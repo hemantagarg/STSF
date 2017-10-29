@@ -17,6 +17,8 @@ public interface JsonApiHelper {
     String GET_NOTIFICATION = "getNotifications/";
     String GET_FRIENDREQUEST = "getFriendRequests/";
     String GET_USERFRIENDLIST = "getFriendsOfUser/";
+    String GET_FOLLOWERLIST = "getAvatarFollowers/";
+    String GET_FOLLOWINGLIST = "getFollowingAvatarsByUser/";
     String GET_TEAMJOINREQUEST = "getAllTeamInvitation/";
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GETALLSPORT = "getAllSport/";
