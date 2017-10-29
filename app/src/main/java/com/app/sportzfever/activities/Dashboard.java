@@ -863,6 +863,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void refreshFragments() {
         if (currentFragment instanceof Fragment_PostFeed) {
             ((Fragment_PostFeed) currentFragment).onResume();
+        } if (currentFragment instanceof FragmentMenuTeamList) {
+            ((FragmentMenuTeamList) currentFragment).onResume();
         }
     }
 
@@ -896,13 +898,15 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 if (headerobj.getString("MenuId").equalsIgnoreCase("2")) {
                                     menucategoriesArrayTeam = obj.getJSONArray("SubMenu1Teams");
                                     AppUtils.setTeamList(context, menucategoriesArrayTeam.toString());
-                                    FragmentMenuTeamList.getInstance().setData(menucategoriesArrayTeam);
                                 }
                             }
                             alldata.put(groupnamelist.get(i), list);
                         }
                     }
                     listAdapter.notifyDataSetChanged();
+                    if (currentFragment instanceof FragmentMenuTeamList) {
+                        ((FragmentMenuTeamList) currentFragment).onResume();
+                    }
                 }
             }
         } catch (JSONException e) {

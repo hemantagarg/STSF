@@ -101,6 +101,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
     @Override
     public void onResume() {
         super.onResume();
+        setData();
     }
 
     @Override
@@ -112,20 +113,15 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
         list_request.setLayoutManager(new GridLayoutManager(context, 2));
         listAdapter = new TeamDrawerListAdapter(context, this, teamlist);
         list_request.setAdapter(listAdapter);
-        setData(new JSONArray());
-
     }
 
 
-    public void setData(JSONArray menucategoriesArrayTeam) {
+    public void setData() {
         try {
-            JSONArray teams;
-            if (menucategoriesArrayTeam != null && menucategoriesArrayTeam.length() > 0) {
-                teams = menucategoriesArrayTeam;
-            } else {
-                String array = AppUtils.getTeamList(context);
-                teams = new JSONArray(array);
-            }
+            teamlist.clear();
+            String array = AppUtils.getTeamList(context);
+            JSONArray teams = new JSONArray(array);
+
             for (int i = 0; i < teams.length(); i++) {
                 JSONObject headerobj = teams.getJSONObject(i);
                 modelSportTeamList = new ModelSportTeamList();
