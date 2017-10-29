@@ -144,13 +144,6 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
                         JSONObject data = jObject.getJSONObject("data");
                         JSONObject jdob = data.getJSONObject("dateOfBirth");
 
-                     /*   modelAboutMe.setUserId(jdob.getString("date"));
-                        modelAboutMe.setUserId(jdob.getString("monthName"));
-                        modelAboutMe.setUserId(jdob.getString("year"));
-
-
-*/
-
                         modelAboutMe = new ModelAboutMe();
 
                         modelAboutMe.setUserId(data.getString("userId"));
@@ -175,12 +168,8 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
                         avtar_battingheldlive.setText(jdob.getString("date") + " " + jdob.getString("monthName") + " " + jdob.getString("year"));
                         if (!modelAboutMe.getProfilePicture().equalsIgnoreCase("")) {
                             Picasso.with(mActivity).load(modelAboutMe.getProfilePicture()).placeholder(R.drawable.ic_launcher).into(img_profilepic);
-
                         }
-
                         modelAboutMe.setRowType(1);
-
-
                     }
 
                 }
