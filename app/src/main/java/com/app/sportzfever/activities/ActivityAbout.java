@@ -32,7 +32,6 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
 
     private Context mActivity;
     private RecyclerView chatList;
-
     private ArrayList<ModelAboutMe> chatListData;
     ImageView img_profilepic;
     private Toolbar toolbar;
@@ -60,8 +59,6 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
     private void init() {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        //==============================================
         avtar_namelive = (TextView) findViewById(R.id.avtar_namelive);
         avtar_battingheldlive = (TextView) findViewById(R.id.avtar_battingheldlive);
         avtar_jercynumberlive = (TextView) findViewById(R.id.avtar_jercynumberlive);

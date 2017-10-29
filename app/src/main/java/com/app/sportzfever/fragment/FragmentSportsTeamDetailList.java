@@ -55,6 +55,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
     public static FragmentSportsTeamDetailList fragment_teamJoin_request;
     private final String TAG = FragmentSportsTeamDetailList.class.getSimpleName();
+    private String avtarid = "";
 
     public static FragmentSportsTeamDetailList getInstance() {
         if (fragment_teamJoin_request == null)
@@ -124,10 +125,16 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
-       // manageHeaderView();
+        // manageHeaderView();
+        getBundle();
         setlistener();
 
         getServicelistRefresh();
+    }
+
+    private void getBundle() {
+        Bundle b = getArguments();
+        avtarid = b.getString("avtarid");
     }
 
     private void setlistener() {
@@ -153,7 +160,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + 23 + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
@@ -176,7 +183,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                     JSONObject data = jObject.getJSONObject("data");
 
 
-                   Fragment_Team_Details.getInstance().setUserData(data);
+                    Fragment_Team_Details.getInstance().setUserData(data);
 
                     JSONArray teamProfile = data.getJSONArray("teamProfile");
                     arrayList.clear();

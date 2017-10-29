@@ -38,12 +38,13 @@
                         android:id="@+id/imge_banner"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="fitXY"
                         android:src="@drawable/logo" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#66444444" />
+                        android:background="#99444444" />
 
                     <ImageView
                         android:id="@+id/imge_user"
@@ -83,10 +84,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_address"
-                        android:visibility="visible"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/dp5"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="visible">
 
                         <Button
                             android:id="@+id/btn_join_team"
@@ -165,11 +166,6 @@
                             android:textAllCaps="false"
                             android:textColor="@color/textcolordark"
                             android:textSize="@dimen/text_size_13" />
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/view_color" />
 
                     </LinearLayout>
 

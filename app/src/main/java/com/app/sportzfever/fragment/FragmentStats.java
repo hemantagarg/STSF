@@ -34,7 +34,6 @@ import java.util.ArrayList;
  */
 public class FragmentStats extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_batting, list_bowling;
     private Bundle b;
     private Context context;

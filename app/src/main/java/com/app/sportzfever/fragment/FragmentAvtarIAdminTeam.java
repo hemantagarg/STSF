@@ -20,6 +20,7 @@ import com.app.sportzfever.adapter.AdapterAvtarIAdmin;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
@@ -116,7 +117,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         floating_addteam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context,Fragment_CreateTeam.class);
+                Intent intent = new Intent(context, Fragment_CreateTeam.class);
                 startActivity(intent);
             }
         });
@@ -124,8 +125,14 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (flag == 1) {
+            Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", arrayList.get(position).getTeamId());
+            fragmentAvtar_details.setArguments(bundle);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
 
-
+        }
     }
 
 
@@ -158,8 +165,6 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
                     JSONObject data = jObject.getJSONObject("data");
                     JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
                     //  maxlistLength = jObject.getString("total");
-
-
                     arrayList.clear();
                     for (int i = 0; i < jtaemown.length(); i++) {
 

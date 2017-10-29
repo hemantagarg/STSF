@@ -25,10 +25,10 @@ public class AppConstant {
     public static final String FREELANCER = "3";
     public static final String ACCEPTED = "ACCEPTED";
     public static final String REJECTED = "REJECTED";
-    public static final String PUBLIC = "PUBLIC";
+    public static final String PUBLIC = "Public";
     public static final String CRICKET = "Cricket";
-    public static final String FRIENDS = "FRIENDS";
-    public static final String ONLYME = "ONLY ME";
+    public static final String FRIENDS = "Friends";
+    public static final String ONLYME = "Only Me";
     public static final String PUSHTYPE_FRIEND = "FRIEND";
     public static final String PUSHTYPE_TEAM = "TEAM";
     public static final String PUSHTYPE_CHAT = "CHAT";

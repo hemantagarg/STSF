@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <LinearLayout
             android:id="@+id/ll_stats"
             android:layout_width="match_parent"
@@ -19,7 +18,6 @@
             android:layout_marginTop="@dimen/dp10"
             android:orientation="horizontal"
             android:weightSum="3">
-
 
             <Button
                 android:id="@+id/btn_batting"
@@ -51,22 +49,12 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/text_nodata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="No data found"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_16"
-            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/rl_main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/ll_stats">
-
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_batting"
@@ -75,7 +63,6 @@
                 android:layout_margin="@dimen/dp3"
                 android:visibility="visible" />
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_bowling"
                 android:layout_width="match_parent"
@@ -83,6 +70,15 @@
                 android:layout_margin="@dimen/dp3"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/text_nodata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No data found"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_16"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </RelativeLayout>
