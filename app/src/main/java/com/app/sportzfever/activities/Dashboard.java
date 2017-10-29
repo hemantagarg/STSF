@@ -329,14 +329,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     }
                     //  drawer.closeDrawer(GravityCompat.START);
                 } else*/
-                if (groupnamelistId.get(position).equalsIgnoreCase("2")) {
-                    FragmentMenuTeamList fragmentMenuTeamList = new FragmentMenuTeamList();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("array", menucategoriesArrayTeam.toString());
-                    fragmentMenuTeamList.setArguments(bundle);
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentMenuTeamList, true);
-                    drawer.closeDrawer(GravityCompat.START);
-                } else if (groupnamelistId.get(position).equalsIgnoreCase("3")) {
+                if (groupnamelistId.get(position).equalsIgnoreCase("3")) {
                     pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentGallery(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("4")) {
@@ -366,16 +359,26 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 //Nothing here ever fires
                 System.err.println("child clicked");
-                List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
-                Log.e("child clicked", list.get(childPosition).getSubMenu1AvatarId());
-                AppUtils.setSelectedSportId(context, list.get(childPosition).getSubMenu1Id());
-                String avtarid = list.get(childPosition).getSubMenu1AvatarId();
-                FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
-                Bundle bundle = new Bundle();
-                bundle.putString("id", avtarid);
-                fragmentAvtar_details.setArguments(bundle);
-                pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
-                drawer.closeDrawer(GravityCompat.START);
+                if (groupnamelistId.get(groupPosition).equalsIgnoreCase("2")) {
+                    FragmentMenuTeamList fragmentMenuTeamList = new FragmentMenuTeamList();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("array", menucategoriesArrayTeam.toString());
+                    fragmentMenuTeamList.setArguments(bundle);
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentMenuTeamList, true);
+                    drawer.closeDrawer(GravityCompat.START);
+
+                } else {
+                    List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
+                    Log.e("child clicked", list.get(childPosition).getSubMenu1AvatarId());
+                    AppUtils.setSelectedSportId(context, list.get(childPosition).getSubMenu1Id());
+                    String avtarid = list.get(childPosition).getSubMenu1AvatarId();
+                    FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", avtarid);
+                    fragmentAvtar_details.setArguments(bundle);
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
                 return true;
             }
         });
@@ -566,6 +569,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         event_container.setVisibility(View.GONE);
     }
 
+
     private void showLogoutBox() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
@@ -739,7 +743,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
     }
 
-    private void getMenuData() {
+    public void getMenuData() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //  https://sfscoring.betasportzfever.com/getMenu/1/479a44a634f82b0394f78352d302ec36
@@ -831,7 +835,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
-                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification ) {
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
                             manageHeaderVisibitlity(true);
                             manageFooterVisibitlity(true);
                         } else {
@@ -876,9 +880,6 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                         groupnamelist.add(headerobj.getString("MenuTitle"));
                         groupnamelistId.add(headerobj.getString("MenuId"));
 
-                        if (headerobj.getString("MenuId").equalsIgnoreCase("2")) {
-                            menucategoriesArrayTeam = headerobj.getJSONArray("Menucategories");
-                        }
                         ArrayList<DrawerListModel> list = new ArrayList<>();
                         JSONArray menucategoriesArray = headerobj.getJSONArray("Menucategories");
                         Log.e("Menucategories", menucategoriesArray.toString());
@@ -891,23 +892,22 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 model.setSubMenu1Id(obj.getString("SubMenu1Id"));
                                 model.setSubMenu1AvatarId(obj.getString("SubMenu1AvatarId"));
                                 model.setName(obj.getString("SubMenu1Name"));
-                                if (!headerobj.getString("MenuId").equalsIgnoreCase("2")) {
-                                    list.add(model);
+                                list.add(model);
+                                if (headerobj.getString("MenuId").equalsIgnoreCase("2")) {
+                                    menucategoriesArrayTeam = obj.getJSONArray("SubMenu1Teams");
+                                    AppUtils.setTeamList(context, menucategoriesArrayTeam.toString());
+                                    FragmentMenuTeamList.getInstance().setData(menucategoriesArrayTeam);
                                 }
                             }
                             alldata.put(groupnamelist.get(i), list);
                         }
                     }
                     listAdapter.notifyDataSetChanged();
-
-                } else {
-
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

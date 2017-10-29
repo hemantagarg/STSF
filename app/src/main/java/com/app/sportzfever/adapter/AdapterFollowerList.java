@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFollower;
-import com.app.sportzfever.models.ModelUserFriendList;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +47,7 @@ public class AdapterFollowerList extends RecyclerView.Adapter<RecyclerView.ViewH
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_userfriendlist, parent, false);
+                    R.layout.row_user_followerlist, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -80,11 +79,11 @@ public class AdapterFollowerList extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ModelFollower m1 = (ModelFollower) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getFollowerName());
 
-           if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
+            if (!m1.getFollowerPicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getFriendProfilePic())
+                        .load(m1.getFollowerPicture())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
@@ -114,7 +113,8 @@ public class AdapterFollowerList extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
 
-Button btn_confirm,btn_reject;
+        Button btn_confirm, btn_reject;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);

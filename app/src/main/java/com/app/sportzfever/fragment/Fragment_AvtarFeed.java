@@ -259,6 +259,21 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
 
         } else if (flag == 9) {
             showMenuDialog(position);
+        } else if (flag == 11) {
+            if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
+                FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getAvatar());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
+            } else {
+                FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getUser());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            }
         }
     }
 

@@ -63,7 +63,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_avtar_details, container, false);
+        view = inflater.inflate(R.layout.fragment_user_details, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
@@ -155,11 +155,9 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
 
 
     private void getBundle() {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString("id");
-            AppUtils.setAvtarId(mActivity, id);
         }
     }
 
@@ -197,7 +195,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        FragmentAvtarBio tab2 = new FragmentAvtarBio();
+        FragmentUserProfile tab2 = new FragmentUserProfile();
         Bundle b = new Bundle();
         b.putString("avtarid", id);
         tab2.setArguments(b);
@@ -215,13 +213,13 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
-        FragmentStats tab1 = new FragmentStats();
+        FragmentUserFollowerFollowing tab1 = new FragmentUserFollowerFollowing();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-        FragmentGallery tab3 = new FragmentGallery();
+        Fragmentphotos tab3 = new Fragmentphotos();
         Bundle b2 = new Bundle();
         b2.putString("avtarid", id);
         tab3.setArguments(b2);

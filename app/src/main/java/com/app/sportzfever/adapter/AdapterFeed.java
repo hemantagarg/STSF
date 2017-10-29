@@ -85,15 +85,49 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ModelFeed m1 = (ModelFeed) detail.get(i);
 
                 if (m1.getIsShared().equalsIgnoreCase("0")) {
-                    ((CustomViewHolder) holder).text_sharePost.setVisibility(View.GONE);
-                    ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
-                    if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
-                        Picasso.with(mContext)
-                                .load(m1.getUserProfilePicture() + "&w=100&h=100")
-                                .transform(new CircleTransform())
-                                .placeholder(R.drawable.logo_sportz)
-                                .into(((CustomViewHolder) holder).image_viewers);
+
+                    if (m1.getAvatarType().equalsIgnoreCase("TEAM")) {
+                        ((CustomViewHolder) holder).text_name.setText(m1.getAvatarName());
+
+                        if (!m1.getAvatarProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getAvatarProfilePicture() + "&w=100&h=100")
+                                    .transform(new CircleTransform())
+                                    .placeholder(R.drawable.logo_sportz)
+                                    .into(((CustomViewHolder) holder).image_viewers);
+                        }
+                    } else if (m1.getAvatarType().equalsIgnoreCase("PLAYER")) {
+
+                        if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
+                            ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
+                            if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {
+                                Picasso.with(mContext)
+                                        .load(m1.getOriginalAvatarProfilePicture() + "&w=100&h=100")
+                                        .transform(new CircleTransform())
+                                        .placeholder(R.drawable.logo_sportz)
+                                        .into(((CustomViewHolder) holder).image_viewers);
+                            }
+                        } else {
+                            ((CustomViewHolder) holder).text_name.setText(m1.getAvatarName());
+                            if (!m1.getAvatarProfilePicture().equalsIgnoreCase("")) {
+                                Picasso.with(mContext)
+                                        .load(m1.getAvatarProfilePicture() + "&w=100&h=100")
+                                        .transform(new CircleTransform())
+                                        .placeholder(R.drawable.logo_sportz)
+                                        .into(((CustomViewHolder) holder).image_viewers);
+                            }
+                        }
+                    } else {
+                        ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
+                        if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getUserProfilePicture() + "&w=100&h=100")
+                                    .transform(new CircleTransform())
+                                    .placeholder(R.drawable.logo_sportz)
+                                    .into(((CustomViewHolder) holder).image_viewers);
+                        }
                     }
+                    ((CustomViewHolder) holder).text_sharePost.setVisibility(View.GONE);
 
                 } else {
                     ((CustomViewHolder) holder).text_sharePost.setVisibility(View.VISIBLE);
@@ -103,24 +137,38 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } else {
                         ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
                     }
-                    if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
-                        ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
-                        if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {
+
+                    if (m1.getAvatarType().equalsIgnoreCase("TEAM")) {
+                        ((CustomViewHolder) holder).text_name.setText(m1.getAvatarName());
+
+                        if (!m1.getAvatarProfilePicture().equalsIgnoreCase("")) {
                             Picasso.with(mContext)
-                                    .load(m1.getOriginalAvatarProfilePicture() + "&w=100&h=100")
+                                    .load(m1.getAvatarProfilePicture() + "&w=100&h=100")
                                     .transform(new CircleTransform())
                                     .placeholder(R.drawable.logo_sportz)
                                     .into(((CustomViewHolder) holder).image_viewers);
                         }
-
                     } else {
-                        ((CustomViewHolder) holder).text_name.setText(m1.getOriginalUserName());
-                        if (!m1.getOriginalUserProfilePicture().equalsIgnoreCase("")) {
-                            Picasso.with(mContext)
-                                    .load(m1.getOriginalUserProfilePicture() + "&w=100&h=100")
-                                    .transform(new CircleTransform())
-                                    .placeholder(R.drawable.logo_sportz)
-                                    .into(((CustomViewHolder) holder).image_viewers);
+
+                        if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
+                            ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
+                            if (!m1.getOriginalAvatarProfilePicture().equalsIgnoreCase("")) {
+                                Picasso.with(mContext)
+                                        .load(m1.getOriginalAvatarProfilePicture() + "&w=100&h=100")
+                                        .transform(new CircleTransform())
+                                        .placeholder(R.drawable.logo_sportz)
+                                        .into(((CustomViewHolder) holder).image_viewers);
+                            }
+
+                        } else {
+                            ((CustomViewHolder) holder).text_name.setText(m1.getOriginalUserName());
+                            if (!m1.getOriginalUserProfilePicture().equalsIgnoreCase("")) {
+                                Picasso.with(mContext)
+                                        .load(m1.getOriginalUserProfilePicture() + "&w=100&h=100")
+                                        .transform(new CircleTransform())
+                                        .placeholder(R.drawable.logo_sportz)
+                                        .into(((CustomViewHolder) holder).image_viewers);
+                            }
                         }
                     }
                 }
@@ -223,12 +271,19 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClickListener(i, 5);
                     }
                 });
+                ((CustomViewHolder) holder).text_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 11);
+                    }
+                });
                 ((CustomViewHolder) holder).ll_feed_images.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 4);
                     }
                 });
+
                 ((CustomViewHolder) holder).image_menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -288,7 +343,9 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.printStackTrace();
             }
 
-        } else {
+        } else
+
+        {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
@@ -333,6 +390,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.text_comment = (TextView) view.findViewById(R.id.text_comment);
 
         }
+
     }
 
     @Override

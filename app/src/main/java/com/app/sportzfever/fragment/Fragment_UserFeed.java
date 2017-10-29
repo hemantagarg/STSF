@@ -151,7 +151,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if ((AppUtils.isNetworkAvailable(context))) {
-
                     if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
                         if (dy > 0) //check for scroll down
                         {
@@ -245,9 +244,33 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 intent.putExtra("bundle", b);
                 startActivity(intent);
             }
-
         } else if (flag == 9) {
             showMenuDialog(position);
+        } else if (flag == 11) {
+
+            if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
+                Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getTeamId());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
+            } else {
+                if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
+                    FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", arrayList.get(position).getOriginalAvatar());
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
+                } else {
+                    FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", arrayList.get(position).getUser());
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                }
+            }
         }
     }
 
@@ -285,15 +308,11 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
                     } else if (items[item].equals("Delete Post")) {
                         deleteFeed(arrayList.get(position).getFeedId());
-
                     }
                 }
             });
-
             alertDialog.show();
-
         }
-
     }
 
     /**
@@ -492,6 +511,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
                         modelFeed.setId(jo.getString("id"));
                         modelFeed.setFeedId(jo.getString("id"));
+                        modelFeed.setTeamId(jo.getString("teamId"));
                         modelFeed.setUser(jo.getString("user"));
                         modelFeed.setAvatarProfilePicture(jo.getString("avatarProfilePicture"));
                         modelFeed.setAvatarName(jo.getString("avatarName"));

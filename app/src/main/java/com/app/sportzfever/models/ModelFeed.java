@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ModelFeed implements Serializable {
 
     private int rowType;
-    private String message, date, feedId;
+    private String message, date, feedId,teamId;
 
     private String originalUserProfilePicture;
 
@@ -380,5 +380,13 @@ public class ModelFeed implements Serializable {
 
     public void setIsLiked(String isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

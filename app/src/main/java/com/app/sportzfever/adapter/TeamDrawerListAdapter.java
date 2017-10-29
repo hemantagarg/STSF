@@ -1,127 +1,129 @@
 package com.app.sportzfever.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
-import com.app.sportzfever.models.DrawerListModel;
+import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.ModelSportTeamList;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 
-public class TeamDrawerListAdapter extends BaseExpandableListAdapter {
-    private Context _context;
-    private List<String> _listDataHeader; // header titles
+public class TeamDrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private HashMap<String, List<DrawerListModel>> _listDataChild;
+    ArrayList<ModelSportTeamList> detail;
+    Context mContext;
+    OnCustomItemClicListener listener;
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
 
-    public TeamDrawerListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<DrawerListModel>> listChildData) {
-        this._context = context;
-        this._listDataHeader = listDataHeader;
-        this._listDataChild = listChildData;
+
+    public TeamDrawerListAdapter(Context context, OnCustomItemClicListener lis, ArrayList<ModelSportTeamList> list) {
+
+        this.detail = list;
+        this.mContext = context;
+        this.listener = lis;
+
     }
 
-    @Override
-    public Object getChild(int groupPosition, int childPosititon) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .get(childPosititon);
-    }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-    @Override
-    public View getChildView(int groupPosition, final int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-        final DrawerListModel model = (DrawerListModel) getChild(groupPosition, childPosition);
-        if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.teamdrawerlistitem, null);
+        RecyclerView.ViewHolder vh;
+        if (viewType == VIEW_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.teamdrawerlistitem, parent, false);
+
+            vh = new CustomViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            vh = new ProgressViewHolder(v);
         }
-        TextView text = (TextView) convertView.findViewById(R.id.lblListItem);
-        Log.e("childclick adapter", groupPosition + childPosition + "*" + model.getName());
-        text.setText(model.getName());
+        return vh;
 
-      /*  convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
-            }
-        });*/
-
-        return convertView;
     }
 
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        List childList = _listDataChild.get(_listDataHeader.get(groupPosition));
-        if (childList != null && !childList.isEmpty()) {
-            Log.e("childlidtsize : ", "&&" + childList.size());
-            return childList.size();
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar1);
+            this.progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
         }
-        return 0;
     }
 
-    @Override
-    public Object getGroup(int groupPosition) {
-        return this._listDataHeader.get(groupPosition);
-    }
 
     @Override
-    public int getGroupCount() {
-        return this._listDataHeader.size();
-    }
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
 
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
+        if (holder instanceof CustomViewHolder) {
 
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
-                             View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
-        if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.teamdrawerlistgroup, null);
+            ModelSportTeamList m1 = (ModelSportTeamList) detail.get(i);
+
+            ((CustomViewHolder) holder).lblListItem.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).lblListItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i,1);
+                }
+            });
+
+
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
-        TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.lblListHeader);
-        ImageView image = (ImageView) convertView
-                .findViewById(R.id.image_arrow);
+    }
 
-        lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(headerTitle);
-        if (isExpanded)
-            image.setImageResource(R.drawable.arrow_down);
-        else
-            image.setImageResource(R.drawable.arrow_right);
-        return convertView;
+
+    @Override
+    public int getItemCount() {
+        return detail.size();
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView lblListItem;
+
+        RelativeLayout relmatchvs;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            view.setOnClickListener(this);
+
+            this.lblListItem = (TextView) view.findViewById(R.id.lblListItem);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onItemClickListener(getPosition(), 1);
+        }
+
     }
 
     @Override
-    public boolean hasStableIds() {
-        return false;
+    public int getItemViewType(int position) {
+        ModelSportTeamList m1 = (ModelSportTeamList) detail.get(position);
+        if (detail.get(position).getRowType() == 1) {
+            return VIEW_ITEM;
+        } else if (detail.get(position).getRowType() == 2) {
+            return VIEW_PROG;
+        }
+        return -1;
+
     }
 
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
 }
-
-

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
+import com.app.sportzfever.models.ModelFollowing;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -25,14 +25,14 @@ import java.util.ArrayList;
  */
 public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelUserFriendList> detail;
+    ArrayList<ModelFollowing> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterFollowingList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list) {
+    public AdapterFollowingList(Context context, OnCustomItemClicListener lis, ArrayList<ModelFollowing> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -47,7 +47,7 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_userfriendlist, parent, false);
+                    R.layout.row_user_followinglist, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -77,13 +77,13 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelUserFriendList m1 = (ModelUserFriendList) detail.get(i);
+            ModelFollowing m1 = (ModelFollowing) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getName());
 
-           if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
+            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getFriendProfilePic())
+                        .load(m1.getProfilePicture())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
@@ -113,7 +113,8 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
 
-Button btn_confirm,btn_reject;
+        Button btn_confirm, btn_reject;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
@@ -134,7 +135,7 @@ Button btn_confirm,btn_reject;
 
     @Override
     public int getItemViewType(int position) {
-        ModelUserFriendList m1 = (ModelUserFriendList) detail.get(position);
+        ModelFollowing m1 = (ModelFollowing) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

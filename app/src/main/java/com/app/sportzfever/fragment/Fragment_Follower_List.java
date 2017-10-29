@@ -14,15 +14,12 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.AdapterFollowerList;
-import com.app.sportzfever.adapter.AdapterUserFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFollower;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -54,6 +51,7 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
 
     public static Fragment_Follower_List fragment_friend_request;
     private final String TAG = Fragment_Follower_List.class.getSimpleName();
+    private String avtarid = "";
 
     public static Fragment_Follower_List getInstance() {
         if (fragment_friend_request == null)
@@ -70,10 +68,17 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
+        getBundle();
         return view_about;
     }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -84,17 +89,17 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        text_nodata= (TextView) view.findViewById(R.id.text_nodata);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-
+        getServicelistRefresh();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getServicelistRefresh();
+
     }
 
     private void setlistener() {
@@ -107,14 +112,13 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
         });
 
 
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
 
-            acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
+            //     acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
 
         }
 
@@ -144,7 +148,6 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
     }
 
 
-
     private void getServicelistRefresh() {
 
         try {
@@ -152,7 +155,7 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FOLLOWERLIST + 8 + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FOLLOWERLIST + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -169,15 +172,24 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-                    //  maxlistLength = jObject.getString("total");
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONObject follower = data.getJSONObject("follower");
+                    JSONArray teamfollowers = follower.getJSONArray("team");
 
-                        JSONObject jo = data.getJSONObject(i);
+                    arrayList.clear();
+                    for (int i = 0; i < teamfollowers.length(); i++) {
+
+                        JSONObject jo = teamfollowers.getJSONObject(i);
 
                         modelFollower = new ModelFollower();
-                        modelFollower.setFriendId(jo.getString("friendId"));
+                        modelFollower.setTeamAvatarId(jo.getString("teamAvatarId"));
+                        modelFollower.setStatus(jo.getString("status"));
+                        modelFollower.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        modelFollower.setTeamName(jo.getString("teamName"));
+                        modelFollower.setFollowerUserId(jo.getString("followerUserId"));
+                        modelFollower.setFollowerName(jo.getString("followerName"));
+                        modelFollower.setFollowerPicture(jo.getString("followerPicture"));
+                        modelFollower.setAvatarType(jo.getString("avatarType"));
 
                         modelFollower.setRowType(1);
 
@@ -201,43 +213,6 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }
-
-            } else if (position == 4) {
-
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    //   maxlistLength = jObject.getString("total");
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    arrayList.remove(arrayList.size() - 1);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        modelFollower = new ModelFollower();
-                        modelFollower = new ModelFollower();
-
-                        modelFollower.setRowType(1);
-
-                        arrayList.add(modelFollower);
-                    }
-                    adapterFollowerList.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
-                } else {
-                    adapterFollowerList.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
-                }
-            } else if (position == 11) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                    getServicelistRefresh();
-                } else {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {

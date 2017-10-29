@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_AvtarMyTeam extends BaseFragment {
+public class FragmentUserFollowerFollowing extends BaseFragment {
 
 
     private Bundle b;
@@ -32,13 +32,13 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
     private ViewPager viewPager;
     private ConnectionDetector cd;
 
-    public static Fragment_AvtarMyTeam fragment_team;
-    private final String TAG = Fragment_AvtarMyTeam.class.getSimpleName();
+    public static FragmentUserFollowerFollowing fragment_team;
+    private final String TAG = FragmentUserFollowerFollowing.class.getSimpleName();
     private String avtarid = "";
 
-    public static Fragment_AvtarMyTeam getInstance() {
+    public static FragmentUserFollowerFollowing getInstance() {
         if (fragment_team == null)
-            fragment_team = new Fragment_AvtarMyTeam();
+            fragment_team = new FragmentUserFollowerFollowing();
         return fragment_team;
     }
 
@@ -70,7 +70,7 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
         setupTabIcons();
         setListener();
         getBundle();
-        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
+        Fragment_Follower_List fragmentAvtarIAdminTeam = new Fragment_Follower_List();
         Bundle b = new Bundle();
         b.putString("avtarid", avtarid);
         fragmentAvtarIAdminTeam.setArguments(b);
@@ -93,14 +93,14 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
+                        Fragment_Follower_List fragmentAvtarIAdminTeam = new Fragment_Follower_List();
                         Bundle b = new Bundle();
                         b.putString("avtarid", avtarid);
                         fragmentAvtarIAdminTeam.setArguments(b);
                         setFragment(fragmentAvtarIAdminTeam);
                         break;
                     case 1:
-                        FragmentAvtarIPlanOn fragmentAvtarIPlanOn = new FragmentAvtarIPlanOn();
+                        Fragment_Following_List fragmentAvtarIPlanOn = new Fragment_Following_List();
                         Bundle b1 = new Bundle();
                         b1.putString("avtarid", avtarid);
                         fragmentAvtarIPlanOn.setArguments(b1);
@@ -132,13 +132,9 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
 
     private void setupTabIcons() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Teams That I Admin"));
-        tabLayout.addTab(tabLayout.newTab().setText("Teams That I Play On"));
-        //  tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
+        tabLayout.addTab(tabLayout.newTab().setText("Followers"));
+        tabLayout.addTab(tabLayout.newTab().setText("Following"));
 
-      /*  tabLayout.getTabAt(0).setText("Chat");
-        tabLayout.getTabAt(1).setText("Contacts");
-        tabLayout.getTabAt(2).setText("Groups");*/
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
     }

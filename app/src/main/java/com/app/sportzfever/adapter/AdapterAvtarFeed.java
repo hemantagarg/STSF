@@ -97,7 +97,11 @@ public class AdapterAvtarFeed extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 } else {
                     ((CustomViewHolder) holder).text_sharePost.setVisibility(View.VISIBLE);
-                    ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
+                    if (AppUtils.getAvtarId(mContext).equalsIgnoreCase(m1.getOriginalAvatar())) {
+                        ((CustomViewHolder) holder).text_sharePost.setText("You shared this post");
+                    } else {
+                        ((CustomViewHolder) holder).text_sharePost.setText(m1.getUserName() + " shared this post");
+                    }
 
                     if (!m1.getOriginalAvatarName().equalsIgnoreCase("")) {
                         ((CustomViewHolder) holder).text_name.setText(m1.getOriginalAvatarName());
@@ -199,6 +203,12 @@ public class AdapterAvtarFeed extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 3);
+                    }
+                });
+                ((CustomViewHolder) holder).text_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 11);
                     }
                 });
                 ((CustomViewHolder) holder).text_comment.setOnClickListener(new View.OnClickListener() {

@@ -13,14 +13,13 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.adapter.AdapterUserFriendList;
+import com.app.sportzfever.adapter.AdapterFollowingList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppConstant;
+import com.app.sportzfever.models.ModelFollowing;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -38,10 +37,10 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterUserFriendList adapterUserFriendList;
-    private ModelUserFriendList userFriendList;
+    private AdapterFollowingList adapterFollowingList;
+    private ModelFollowing modelFollowing;
     private TextView text_nodata;
-    private ArrayList<ModelUserFriendList> arrayList;
+    private ArrayList<ModelFollowing> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -52,6 +51,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
 
     public static Fragment_Following_List fragment_friend_request;
     private final String TAG = Fragment_Following_List.class.getSimpleName();
+    private String avtarid = "";
 
     public static Fragment_Following_List getInstance() {
         if (fragment_friend_request == null)
@@ -68,10 +68,17 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
+        getBundle();
         return view_about;
     }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            avtarid = bundle.getString("avtarid");
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -82,7 +89,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        text_nodata= (TextView) view.findViewById(R.id.text_nodata);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -105,14 +112,13 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
         });
 
 
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
 
-            acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
+       //     acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
 
         }
 
@@ -142,7 +148,6 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
     }
 
 
-
     private void getServicelistRefresh() {
 
         try {
@@ -150,7 +155,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + 8 + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FOLLOWINGLIST + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -167,26 +172,28 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-                    //  maxlistLength = jObject.getString("total");
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONObject follower = data.getJSONObject("following");
+                    JSONArray teamfollowers = follower.getJSONArray("team");
 
-                        JSONObject jo = data.getJSONObject(i);
+                    arrayList.clear();
+                    for (int i = 0; i < teamfollowers.length(); i++) {
 
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList.setFriendId(jo.getString("friendId"));
-                        userFriendList.setFriendName(jo.getString("friendName"));
-                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
-                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
-                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
+                        JSONObject jo = teamfollowers.getJSONObject(i);
 
-                        userFriendList.setRowType(1);
+                        modelFollowing = new ModelFollowing();
+                        modelFollowing.setAvatar(jo.getString("avatar"));
+                        modelFollowing.setStatus(jo.getString("status"));
+                        modelFollowing.setProfilePicture(jo.getString("profilePicture"));
+                        modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
+                        modelFollowing.setFan_date_time(jo.getString("avatarType"));
 
-                        arrayList.add(userFriendList);
+                        modelFollowing.setRowType(1);
+
+                        arrayList.add(modelFollowing);
                     }
-                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterUserFriendList);
+                    adapterFollowingList = new AdapterFollowingList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterFollowingList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -195,49 +202,14 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Friend found");
+                        text_nodata.setText("No Data found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Friend  found");
+                    text_nodata.setText("No Data  found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }
-
-            } else if (position == 4) {
-
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    //   maxlistLength = jObject.getString("total");
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    arrayList.remove(arrayList.size() - 1);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList.setFriendId(jo.getString("friendId"));
-                        userFriendList.setFriendName(jo.getString("friendName"));
-                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
-                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
-                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
-
-                        userFriendList.setRowType(1);
-
-                        arrayList.add(userFriendList);
-                    }
-                    adapterUserFriendList.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
-                } else {
-                    adapterUserFriendList.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
                 }
             } else if (position == 11) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

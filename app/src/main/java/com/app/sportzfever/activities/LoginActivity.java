@@ -127,10 +127,8 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onPostSuccess(int method, JSONObject response) {
-
         try {
             if (method == 1) {
-
                 if (response.getString("result").equalsIgnoreCase("1")) {
 
                     JSONObject data = response.getJSONObject("data");
@@ -139,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                     AppUtils.setUserName(mActivity, data.getString("Name"));
                     AppUtils.setUseremail(mActivity, data.getString("Email"));
                     AppUtils.setUserImage(mActivity, data.getString("ProfilePicture"));
+                    AppUtils.setLoginUserAvtarId(mActivity, data.getString("SF_USER_ID"));
 
                     AppUtils.setAuthToken(mActivity,data.getString("SF_APP_TOKEN"));
 

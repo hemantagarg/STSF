@@ -40,7 +40,6 @@ import java.util.List;
 
 public class FragmentAvtar_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
 
-
     public static FragmentAvtar_Details vendorProfileFragment;
     private Activity mActivity;
     private View view;
@@ -93,7 +92,6 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     }
 
     private void setListener() {
-
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +153,6 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
 
     private void getBundle() {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString("id");

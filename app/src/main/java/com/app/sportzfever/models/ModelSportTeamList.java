@@ -107,7 +107,7 @@ public class ModelSportTeamList {
         this.avatar = avatar;
     }
 
-    private String teamId;
+    private String teamId="";
 
     private String totalPlayersInTeam;
 

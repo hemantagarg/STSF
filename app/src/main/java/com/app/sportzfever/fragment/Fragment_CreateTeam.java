@@ -211,7 +211,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
     }
 
     private void selectImage1() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
+        final CharSequence[] items = {"Choose from Library",
                 "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -220,11 +220,12 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
+               /* if (items[item].equals("Take Photo")) {
 
                     takePicture();
 
-                } else if (items[item].equals("Choose from Library")) {
+                } else */
+                if (items[item].equals("Choose from Library")) {
 
                     openGallery();
 
@@ -263,7 +264,6 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
             intent.putExtra("return-data", true);
             startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
         } catch (ActivityNotFoundException e) {
-
             Log.d(TAG, "cannot take picture", e);
         }
     }
@@ -421,9 +421,16 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
             if (position == 1) {
                 HeaderViewManager.getInstance().setProgressLoader(false, false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-//                    JSONArray data = jObject.getJSONArray("data");
+
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    JSONObject data = jObject.getJSONObject("data");
+                    Intent intent = new Intent();
+                    intent.putExtra("id", data.getString("id"));
+                    intent.putExtra("name", data.getString("name"));
+                    setResult(22, intent);
                     context.onBackPressed();
+                    Dashboard.getInstance().getMenuData();
+
 
                 } else {
                 }

@@ -71,7 +71,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
 
     public static Fragment_TeamFeed fragment_userFeed;
     private final String TAG = Fragment_TeamFeed.class.getSimpleName();
-    private String avtarid = "",teamAvatarId="";
+    private String avtarid = "", teamAvatarId = "";
 
     public static Fragment_TeamFeed getInstance() {
         if (fragment_userFeed == null)
@@ -258,8 +258,23 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
                 startActivity(intent);
             }
 
-        }  else if (flag == 9) {
+        } else if (flag == 9) {
             showMenuDialog(position);
+        } else if (flag == 11) {
+            if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
+                FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getAvatar());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
+            } else {
+                FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getUser());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            }
         }
     }
 
@@ -305,6 +320,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
 
         }
     }
+
     /**
      * Open dialog for the edit comment
      */
@@ -353,7 +369,6 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e(TAG, " Exception error : " + e);
         }
     }
-
 
 
     private void postFeed() {

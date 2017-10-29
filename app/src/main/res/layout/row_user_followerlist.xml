@@ -58,7 +58,6 @@
                     android:layout_height="@dimen/dp30"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/green_button_selecor"
-
                     android:text="Add Friend"
                     android:textColor="@color/white" />
 
