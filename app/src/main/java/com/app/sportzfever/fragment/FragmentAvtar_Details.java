@@ -28,6 +28,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -77,7 +78,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     public void setUserData(String image, String name, String sportname, String isTeamfollower) {
         if (image != null && !image.equalsIgnoreCase("")) {
-            Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
+            Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
             Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
         }
         text_username.setText(name);

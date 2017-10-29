@@ -28,6 +28,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -96,7 +97,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
 
             String image = bundle.getString("image");
             if (image != null && !image.equalsIgnoreCase("")) {
-                Picasso.with(mActivity).load(image).placeholder(R.drawable.user).into(imge_user);
+                Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
                 Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
             }
             text_date.setText(bundle.getString("date"));

@@ -1,11 +1,13 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.ImagesListActivity;
 import com.app.sportzfever.adapter.AdapterGalleryDetail;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
@@ -22,6 +25,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelGallery;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -50,7 +54,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
     private int skipCount = 0;
     private TextView text_nodata;
     private boolean loading = true;
-    String galleryid = "",title="";
+    String galleryid = "", title = "";
     private String maxlistLength = "";
     View view_about;
     public static FragmentGalleryDetails fragment_teamJoin_request;
@@ -151,15 +155,94 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
                 getServicelistRefresh();
             }
         });
+        list_request.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if ((AppUtils.isNetworkAvailable(context))) {
+
+                    if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
+                        if (dy > 0) //check for scroll down
+                        {
+                            visibleItemCount = layoutManager.getChildCount();
+                            totalItemCount = layoutManager.getItemCount();
+                            pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                            if (loading) {
+                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                                    loading = false;
+                                    modelGallery = new ModelGallery();
+                                    modelGallery.setRowType(2);
+                                    arrayList.add(modelGallery);
+
+                                    recyclerView.post(new Runnable() {
+                                        public void run() {
+                                            adapterGallery.notifyItemInserted(arrayList.size() - 1);
+                                        }
+                                    });
+
+                                    skipCount = skipCount + 10;
+
+                                    try {
+                                        if (AppUtils.isNetworkAvailable(context)) {
+                                            onLoadMore();
+                                        } else {
+                                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+
+                                    }
+                                    //Do pagination.. i.e. fetch new data
+                                }
+                            }
+                        }
+                    } else {
+
+                        Log.e("maxlength", "*" + arrayList.size());
+                    }
+                }
+
+            }
+
+        });
 
 
     }
 
+    private void onLoadMore() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //    https://sfscoring.betasportzfever.com/getAlbumsImages/1/21/0/479a44a634f82b0394f78352d302ec36
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMSDETAILS + AppUtils.getUserId(context) + "/" +
+                        galleryid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onItemClickListener(int position, int flag) {
+        ArrayList<Images> imagesArrayList = new ArrayList<>();
+        if (arrayList.size() > 0) {
+            for (int i = 0; i < arrayList.size(); i++) {
+                Images images = new Images();
+                images.setImage(arrayList.get(i).getImage());
+                imagesArrayList.add(images);
+            }
+            Bundle b = new Bundle();
+            b.putSerializable("images", imagesArrayList);
 
-
-
+            Intent intent = new Intent(context, ImagesListActivity.class);
+            intent.putExtra("bundle", b);
+            startActivity(intent);
+        }
 
     }
 
@@ -171,7 +254,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
             if (AppUtils.isNetworkAvailable(context)) {
                 //    https://sfscoring.betasportzfever.com/getAlbumsImages/1/21/0/479a44a634f82b0394f78352d302ec36
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMSDETAILS + AppUtils.getUserId(context) + "/" +
-                        galleryid + "/0/" + AppUtils.getAuthToken(context);
+                        galleryid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -234,27 +317,22 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
+                    maxlistLength = data.getString("totalImage");
+                    JSONArray images = data.getJSONArray("images");
+                    arrayList.remove(arrayList.size() - 1);
+                    for (int i = 0; i < images.length(); i++) {
 
-                    //  maxlistLength = jObject.getString("total");
-
-
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
+                        JSONObject jo = images.getJSONObject(i);
 
                         modelGallery = new ModelGallery();
 
                         modelGallery.setImage(jo.getString("image"));
-                        modelGallery.setAlbumName(jo.getString("albumName"));
-                        modelGallery.setTotalImage(jo.getString("totalImage"));
-                        modelGallery.setAlbumId(jo.getString("albumId"));
-                        modelGallery.setUser(jo.getString("user"));
+                        modelGallery.setImageDesc(jo.getString("description"));
+                        modelGallery.setAlbumId(jo.getString("id"));
+                        modelGallery.setUploadDate(jo.getString("uploadDate"));
 
                         modelGallery.setRowType(1);
-
                         arrayList.add(modelGallery);
                     }
 

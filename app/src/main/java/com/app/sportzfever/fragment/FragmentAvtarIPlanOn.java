@@ -18,6 +18,7 @@ import com.app.sportzfever.adapter.AdapterAvtarIPlayOn;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
@@ -108,14 +109,17 @@ public class FragmentAvtarIPlanOn extends BaseFragment implements ApiResponse, O
                 getServicelistRefresh();
             }
         });
-
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
-
+        if (flag == 1) {
+            Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", arrayList.get(position).getTeamId());
+            fragmentAvtar_details.setArguments(bundle);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+        }
     }
 
 
