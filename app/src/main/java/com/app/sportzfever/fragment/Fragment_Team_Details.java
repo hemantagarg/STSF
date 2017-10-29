@@ -72,9 +72,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         vendorProfileFragment = this;
         initViews();
         getBundle();
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+        getServicelistRefresh();
         setCollapsingToolbar();
         setListener();
         return view;
@@ -139,11 +137,12 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             mTvTotalPlayers.setText("Players" + "\n" + totalPlayersInTeam);
             mTvTotalFans.setText("Fans" + "\n" + fansCount);
             mTvTotalMatches.setText("Matches Played" + "\n" + matchplayed);
-
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+            setupTabIcons();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void setCollapsingToolbar() {
@@ -239,6 +238,24 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
     }
 
+    private void getServicelistRefresh() {
+        Dashboard.getInstance().setProgressLoader(true);
+        try {
+            if (AppUtils.isNetworkAvailable(mActivity)) {
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + id + "/" + AppUtils.getAuthToken(mActivity);
+                new CommonAsyncTaskHashmap(2, mActivity, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         FragmentSportsTeamDetailList tab2 = new FragmentSportsTeamDetailList();
@@ -293,6 +310,11 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
                     }
                 } else {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (method == 2) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = response.getJSONObject("data");
+                    setUserData(data);
                 }
             }
         } catch (Exception e) {

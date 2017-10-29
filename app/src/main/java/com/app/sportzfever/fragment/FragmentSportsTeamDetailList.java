@@ -161,7 +161,7 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -181,9 +181,6 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
                     JSONObject data = jObject.getJSONObject("data");
-
-
-                    Fragment_Team_Details.getInstance().setUserData(data);
 
                     JSONArray teamProfile = data.getJSONArray("teamProfile");
                     arrayList.clear();

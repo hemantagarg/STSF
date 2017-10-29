@@ -475,7 +475,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + teamAvatarId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 //   String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
 
@@ -491,7 +491,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //  http://sfscoring.betasportzfever.com/getFeedByAvatar/1/69/10/479a44a634f82b0394f78352d302ec36
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + avtarid + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + AppUtils.getUserId(context) + "/" + teamAvatarId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 // String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 

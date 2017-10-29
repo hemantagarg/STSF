@@ -289,7 +289,6 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
-
                 jsonObject.put("userId", AppUtils.getUserId(context));
                 jsonObject.put("statusId", feedId);
                 jsonObject.put("comment", edit_message.getText().toString());
@@ -306,14 +305,14 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
     }
 
     private void getServicelistRefresh() {
-        HeaderViewManager.getInstance().setProgressLoader(true, false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
         mSwipeRefreshLayout.setRefreshing(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_COMMENTS + feedId + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_COMMENTS + feedId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -429,7 +428,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
 
                         comments = new Comments();
                         comments.setComment(jo.getString("comment"));
-                       // comments.setCommentDateTime(jo.getString("commentDateTime"));
+                        // comments.setCommentDateTime(jo.getString("commentDateTime"));
                         comments.setId(jo.getString("id"));
                         comments.setUserName(jo.getString("userName"));
                         comments.setUserProfilePicture(jo.getString("userProfilePicture "));
@@ -475,7 +474,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
 
                         comments = new Comments();
                         comments.setComment(jo.getString("comment"));
-                       // comments.setCommentDateTime(jo.getString("commentDateTime"));
+                        // comments.setCommentDateTime(jo.getString("commentDateTime"));
                         comments.setId(jo.getString("id"));
                         comments.setUserName(jo.getString("userName"));
                         comments.setUserProfilePicture(jo.getString("userProfilePicture "));
