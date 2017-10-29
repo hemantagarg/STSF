@@ -310,7 +310,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
         Charset encoding = Charset.forName("UTF-8");
         MultipartEntity reqEntity = new MultipartEntity();
         try {
-            StringBody userId = new StringBody(AppUtils.getUserId(context), encoding);
+            StringBody userId = new StringBody(userid, encoding);
+            StringBody userIdN = new StringBody(useridn, encoding);
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
@@ -354,7 +355,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e("Content-Type", "undefined");
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
-            reqEntity.addPart("user",userId);
+            reqEntity.addPart("avatar", userId);
+            reqEntity.addPart("user",userIdN);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);
             reqEntity.addPart("description", description);

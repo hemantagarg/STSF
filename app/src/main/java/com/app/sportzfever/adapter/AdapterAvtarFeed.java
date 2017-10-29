@@ -85,10 +85,10 @@ public class AdapterAvtarFeed extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (m1.getIsShared().equalsIgnoreCase("0")) {
                     ((CustomViewHolder) holder).text_sharePost.setVisibility(View.GONE);
-                    ((CustomViewHolder) holder).text_name.setText(m1.getUserName());
-                    if (!m1.getUserProfilePicture().equalsIgnoreCase("")) {
+                    ((CustomViewHolder) holder).text_name.setText(m1.getAvatarName());
+                    if (!m1.getAvatarProfilePicture().equalsIgnoreCase("")) {
                         Picasso.with(mContext)
-                                .load(m1.getUserProfilePicture() + "&w=100&h=100")
+                                .load(m1.getAvatarProfilePicture() + "&w=100&h=100")
                                 .transform(new CircleTransform())
                                 .placeholder(R.drawable.logo_sportz)
                                 .into(((CustomViewHolder) holder).image_viewers);
