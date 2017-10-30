@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.FriendRequest;
+import com.app.sportzfever.models.ModeTeamTournamnetFixture;
 import com.app.sportzfever.models.ModelUserFriendList;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
@@ -25,16 +25,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTeamTournamentFixtureList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelUserFriendList> detail;
+    ArrayList<ModeTeamTournamnetFixture> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterUserFriendList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list) {
+    public AdapterTeamTournamentFixtureList(Context context, OnCustomItemClicListener lis, ArrayList<ModeTeamTournamnetFixture> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -49,7 +49,7 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_userfriendlist, parent, false);
+                    R.layout.row_teamtournamentfixture, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -79,35 +79,20 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelUserFriendList m1 = (ModelUserFriendList) detail.get(i);
+            ModeTeamTournamnetFixture m1 = (ModeTeamTournamnetFixture) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getName());
 
 
-           if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
-                Picasso.with(mContext)
-                        .load(m1.getFriendProfilePic())
-                        .transform(new CircleTransform())
-                        .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_viewers);
-            }
-           if (m1.getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-               ((CustomViewHolder) holder).btn_confirm.setText("UNFRIEND");
-            } if (m1.getRequestStatus().equalsIgnoreCase("PENDING")) {
-               ((CustomViewHolder) holder).btn_confirm.setText("RESEND");
-            }
-if (!m1.getFriendId().equalsIgnoreCase(AppUtils.getUserId(mContext))){
-
-    ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
-}
-
-            ((AdapterUserFriendList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+            ((AdapterTeamTournamentFixtureList.CustomViewHolder) holder).text_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 1);
-
                 }
             });
+
+
+
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -128,11 +113,8 @@ Button btn_confirm,btn_reject;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
+
             this.text_name = (TextView) view.findViewById(R.id.text_name);
-            this.text_message = (TextView) view.findViewById(R.id.text_message);
-            this.text_date = (TextView) view.findViewById(R.id.text_date);
-            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
 
         }
 
@@ -145,7 +127,7 @@ Button btn_confirm,btn_reject;
 
     @Override
     public int getItemViewType(int position) {
-        ModelUserFriendList m1 = (ModelUserFriendList) detail.get(position);
+        ModeTeamTournamnetFixture m1 = (ModeTeamTournamnetFixture) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

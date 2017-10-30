@@ -254,6 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view1"
+                android:weightSum="3"
                 android:orientation="horizontal"
                 android:padding="@dimen/dp5">
 
@@ -267,6 +268,7 @@
                     android:drawablePadding="@dimen/dp10"
                     android:padding="@dimen/dp5"
                     android:text="Like"
+                    android:layout_weight="1"
                     android:textColor="@color/text_hint_color" />
 
                 <TextView
@@ -279,6 +281,7 @@
                     android:drawablePadding="@dimen/dp10"
                     android:gravity="center"
                     android:padding="@dimen/dp5"
+                    android:layout_weight="1"
                     android:text="Comment"
                     android:textColor="@color/text_hint_color" />
 
@@ -291,6 +294,7 @@
                     android:drawableLeft="@drawable/share_grey"
                     android:drawablePadding="@dimen/dp10"
                     android:padding="@dimen/dp5"
+                    android:layout_weight="1"
                     android:text="Share"
                     android:textColor="@color/text_hint_color" />
 

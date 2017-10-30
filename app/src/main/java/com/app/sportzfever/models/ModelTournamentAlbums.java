@@ -11,6 +11,26 @@ public class ModelTournamentAlbums {
 
     private String image;
 
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
+
+    private String albumName;
+
+    public String getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId;
+    }
+
+    private String albumId;
+
     private String uploadDate;
 
     public String getId ()

@@ -233,6 +233,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         tabLayout.getTabAt(2).setText("Roster");
         tabLayout.getTabAt(3).setText("Gallery");
         tabLayout.getTabAt(4).setText("Events");
+        tabLayout.getTabAt(5).setText("Tournament Fixtures");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -271,11 +272,17 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
-        Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
+        FragmentTeamRoster tab4 = new FragmentTeamRoster();
         Bundle b3 = new Bundle();
         b3.putString("avtarid", id);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
+
+        Fragment_TeamTournamentFixture_List tab5 = new Fragment_TeamTournamentFixture_List();
+        Bundle b5 = new Bundle();
+        b5.putString("teamAvatarId", teamAvatarId);
+        tab5.setArguments(b5);
+        adapter.addFrag(tab5, "Tour");
 
         FragmentTeamGallery tab1 = new FragmentTeamGallery();
         Bundle b1 = new Bundle();
@@ -284,9 +291,9 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-        FragmentTeamGallery tab3 = new FragmentTeamGallery();
+        FragmentUpcomingTournamentEvent tab3 = new FragmentUpcomingTournamentEvent();
         Bundle b2 = new Bundle();
-        b2.putString("avtarid", id);
+        b1.putString("teamavtarid", teamAvatarId);
         tab3.setArguments(b2);
         adapter.addFrag(tab3, "Portfolio");
 

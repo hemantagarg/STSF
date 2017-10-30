@@ -11,16 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAlltournament;
+import com.app.sportzfever.adapter.AdapterTeamTournamentFixtureList;
+import com.app.sportzfever.adapter.AdapterUserFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAllTournament;
+import com.app.sportzfever.models.ModeTeamTournamnetFixture;
+import com.app.sportzfever.models.ModelUserFriendList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -32,32 +36,32 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentAllTournament extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_TeamTournamentFixture_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
-    private AdapterAlltournament adapterAlltournament;
-    private ModelAllTournament modelAllTournament;
-    private ArrayList<ModelAllTournament> arrayList;
+    private AdapterTeamTournamentFixtureList adapterTeamTournamentFixtureList;
+    private ModeTeamTournamnetFixture modeTeamTournamnetFixture;
+    private TextView text_nodata;
+    private ArrayList<ModeTeamTournamnetFixture> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
-    private TextView text_nodata;
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+    private String friendid = "";
+    private String avtarid = "";
+    public static Fragment_TeamTournamentFixture_List fragment_friend_request;
+    private final String TAG = Fragment_TeamTournamentFixture_List.class.getSimpleName();
 
-    public static FragmentAllTournament fragment_teamJoin_request;
-    private final String TAG = FragmentAllTournament.class.getSimpleName();
-
-    public static FragmentAllTournament getInstance() {
-        if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentAllTournament();
-        return fragment_teamJoin_request;
+    public static Fragment_TeamTournamentFixture_List getInstance() {
+        if (fragment_friend_request == null)
+            fragment_friend_request = new Fragment_TeamTournamentFixture_List();
+        return fragment_friend_request;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_matches, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_teamjoin, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -81,13 +85,28 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        text_nodata= (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+        getBundle();
+    }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+
+            avtarid = bundle.getString("avtarid");
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getServicelistRefresh();
     }
 
@@ -99,12 +118,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                 getServicelistRefresh();
             }
         });
-        list_request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
 
 
     }
@@ -112,27 +126,26 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
     @Override
     public void onItemClickListener(int position, int flag) {
 
-        FragmentTournament_Details tab2 = new FragmentTournament_Details();
+        Fragment_TeamTournamentFixture_List tab2 = new Fragment_TeamTournamentFixture_List();
         Bundle b = new Bundle();
         b.putString("id", arrayList.get(position).getId());
-        b.putString("name", arrayList.get(position).getName());
-        b.putString("date", arrayList.get(position).getDate());
-        b.putString("image", arrayList.get(position).getProfilePicture());
+
         tab2.setArguments(b);
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
 
     }
 
 
+
+
     private void getServicelistRefresh() {
-        Dashboard.getInstance().setProgressLoader(true);
+
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTOURNAMENT + AppUtils.getAuthToken(context);
-
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTEAMTOURNAMENTFIXTEURES + 23 + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -148,48 +161,37 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
-                Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-
-                    //  data = jObject.getString("total");
-                    arrayList.clear();
+                    //  maxlistLength = jObject.getString("total");
+                    arrayList.removeAll(arrayList);
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelAllTournament = new ModelAllTournament();
-                        modelAllTournament.setId(jo.getString("id"));
-                        modelAllTournament.setName(jo.getString("name"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
-                        modelAllTournament.setProfilePicture(jo.getString("profilePicture"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
+                        modeTeamTournamnetFixture = new ModeTeamTournamnetFixture();
+                        modeTeamTournamnetFixture.setId(jo.getString("id"));
+                        modeTeamTournamnetFixture.setId(jo.getString("name"));
 
-                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " " + jo1.getString("year"));
-                        modelAllTournament.setdate(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " Onwards");
-                        modelAllTournament.setRowType(1);
-                        arrayList.add(modelAllTournament);
+                        modeTeamTournamnetFixture.setRowType(1);
+
+                        arrayList.add(modeTeamTournamnetFixture);
                     }
-
-                    adapterAlltournament = new AdapterAlltournament(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterAlltournament);
+                    adapterTeamTournamentFixtureList = new AdapterTeamTournamentFixtureList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterTeamTournamentFixtureList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Tournament found");
+                        text_nodata.setText("No Data found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Tournament found");
-
+                    text_nodata.setText("No Data  found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -197,58 +199,41 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
 
             } else if (position == 4) {
 
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    //   maxlistLength = jObject.getString("total");
                     JSONArray data = jObject.getJSONArray("data");
-                    JSONObject eventtime = jObject.optJSONObject("startDate");
-                    //  maxlistLength = jObject.getString("total");
 
-
-                    arrayList.removeAll(arrayList);
+                    arrayList.remove(arrayList.size() - 1);
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelAllTournament = new ModelAllTournament();
+                        modeTeamTournamnetFixture = new ModeTeamTournamnetFixture();
 
-                        modelAllTournament.setId(jo.getString("id"));
+                        modeTeamTournamnetFixture.setId(jo.getString("id"));
+                        modeTeamTournamnetFixture.setId(jo.getString("name"));
 
-                        modelAllTournament.setName(jo.getString("name"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
+                        modeTeamTournamnetFixture.setRowType(1);
 
-
-                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("datetime"));
-
-                        modelAllTournament.setRowType(1);
-
-                        arrayList.add(modelAllTournament);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
-                    adapterAlltournament.notifyDataSetChanged();
+                        arrayList.add(modeTeamTournamnetFixture);
+                    }
+                    adapterTeamTournamentFixtureList.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterAlltournament.notifyDataSetChanged();
+                    adapterTeamTournamentFixtureList.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
+                }
+            } else if (position == 11) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {

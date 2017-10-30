@@ -99,26 +99,26 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
             public void onClick(View view) {
 
                 if (isTeamfollower.equalsIgnoreCase("1")) {
-                    followUnfollowTeam("Unfriend");
+                    followUnfollowTeam("UNFRIEND");
                 } else {
-                    followUnfollowTeam("Friend");
+                    followUnfollowTeam("ADDFRIEND");
                 }
             }
         });
     }
 
-    private void followUnfollowTeam(String type) {
+    private void followUnfollowTeam(String ADDFRIEND) {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
-                jsonObject.put("avatarId", AppUtils.getAvtarId(mActivity));
-                jsonObject.put("type", type);
+                jsonObject.put("fromUserId", AppUtils.getUserId(mActivity));
+                jsonObject.put("toUserId", AppUtils.getAvtarId(mActivity));
+                jsonObject.put("type", ADDFRIEND);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -238,10 +238,10 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
                     //  JSONObject data = response.getJSONObject("data");
                     if (isTeamfollower.equalsIgnoreCase("1")) {
                         isTeamfollower = "0";
-                        btn_follow_team.setText("Follow");
+                        btn_follow_team.setText("FRIEND");
                     } else {
                         isTeamfollower = "1";
-                        btn_follow_team.setText("Following");
+                        btn_follow_team.setText("UNFRIEND");
                     }
                 } else {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();

@@ -22,15 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/image_viewers"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_alignParentLeft="true"
-
-                android:layout_marginLeft="@dimen/dp5"
-                android:padding="@dimen/dp5"
-                android:scaleType="fitXY" />
 
             <RelativeLayout
                 android:id="@+id/rl_top"
@@ -52,24 +43,9 @@
                     android:textSize="@dimen/text_size_16" />
 
 
-                <Button
-                    android:id="@+id/btn_confirm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp30"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/green_button_selecor"
-                    android:text="Follow"
-                    android:textColor="@color/white" />
 
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignLeft="@+id/rl_top"
-                android:layout_below="@+id/image_viewers"
-                android:alpha=".3"
-                android:background="@color/view_color" />
 
         </RelativeLayout>
 

@@ -78,7 +78,7 @@ public class AdapterSportAvtarAlbums extends RecyclerView.Adapter<RecyclerView.V
 
             ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setVisibility(View.GONE);
+          ((CustomViewHolder) holder).text_avtarteamname.setText(detail.get(i).getAlbumName());
 
 
             if (!m1.getImage().equalsIgnoreCase("")) {

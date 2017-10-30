@@ -187,6 +187,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         modelFollowing.setProfilePicture(jo.getString("profilePicture"));
                         modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
                         modelFollowing.setFan_date_time(jo.getString("avatarType"));
+                        modelFollowing.setName(jo.getString("name"));
 
                         modelFollowing.setRowType(1);
 

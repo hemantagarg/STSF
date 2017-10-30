@@ -21,7 +21,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 
-public class ActivityAbout extends AppCompatActivity implements OnCustomItemClicListener, ApiResponse {
+public class ActivityAbout extends AppCompatActivity implements OnCustomItemClicListener,
+        ApiResponse {
 
     private Context mActivity;
     ImageView img_profilepic;
@@ -95,7 +96,8 @@ public class ActivityAbout extends AppCompatActivity implements OnCustomItemClic
             if (AppUtils.isNetworkAvailable(mActivity)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + AppUtils.getUserId(mActivity) + "/" + AppUtils.getAuthToken(mActivity);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT +
+                        AppUtils.getUserId(mActivity) + "/" + AppUtils.getAuthToken(mActivity);
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryNoProgress(url);
 
             } else {

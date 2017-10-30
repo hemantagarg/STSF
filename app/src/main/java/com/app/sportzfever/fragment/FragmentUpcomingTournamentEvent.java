@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,14 +14,15 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterAlltournament;
+import com.app.sportzfever.activities.ViewMatchScoreCard;
+import com.app.sportzfever.adapter.AdapterUpcomingEvent;
+import com.app.sportzfever.adapter.AdapterUpcomingTournamentEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAllTournament;
+import com.app.sportzfever.models.UpcomingEvent;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -32,31 +34,31 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentAllTournament extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentUpcomingTournamentEvent extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
 
-    private AdapterAlltournament adapterAlltournament;
-    private ModelAllTournament modelAllTournament;
-    private ArrayList<ModelAllTournament> arrayList;
+    private AdapterUpcomingTournamentEvent adapterUpcomingEvent;
+    private UpcomingEvent upcomingEvent;
+    private ArrayList<UpcomingEvent> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
-    private TextView text_nodata;
     private int skipCount = 0;
     private boolean loading = true;
+    private TextView text_nodata;
     private String maxlistLength = "";
+    private String avtarid = "", teamavtarid = "";
+    public static FragmentUpcomingTournamentEvent fragment_teamJoin_request;
+    private final String TAG = FragmentUpcomingTournamentEvent.class.getSimpleName();
 
-    public static FragmentAllTournament fragment_teamJoin_request;
-    private final String TAG = FragmentAllTournament.class.getSimpleName();
-
-    public static FragmentAllTournament getInstance() {
+    public static FragmentUpcomingTournamentEvent getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentAllTournament();
+            fragment_teamJoin_request = new FragmentUpcomingTournamentEvent();
         return fragment_teamJoin_request;
     }
 
@@ -65,7 +67,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_matches, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_notification, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -81,14 +83,26 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
 
         getServicelistRefresh();
+    }
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            teamavtarid = bundle.getString("teamavtarid");
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
     private void setlistener() {
@@ -99,30 +113,21 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                 getServicelistRefresh();
             }
         });
-        list_request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
 
 
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
-        FragmentTournament_Details tab2 = new FragmentTournament_Details();
-        Bundle b = new Bundle();
-        b.putString("id", arrayList.get(position).getId());
-        b.putString("name", arrayList.get(position).getName());
-        b.putString("date", arrayList.get(position).getDate());
-        b.putString("image", arrayList.get(position).getProfilePicture());
-        tab2.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
-
+        if (flag == 1) {
+            if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
+                Intent inte = new Intent(context, ViewMatchScoreCard.class);
+                inte.putExtra("eventId", arrayList.get(position).getId());
+                startActivity(inte);
+            }
+        }
     }
-
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
@@ -131,8 +136,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTOURNAMENT + AppUtils.getAuthToken(context);
-
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/-1/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -148,7 +152,6 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
@@ -159,37 +162,46 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelAllTournament = new ModelAllTournament();
-                        modelAllTournament.setId(jo.getString("id"));
-                        modelAllTournament.setName(jo.getString("name"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
-                        modelAllTournament.setProfilePicture(jo.getString("profilePicture"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
+                        upcomingEvent = new UpcomingEvent();
 
-                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " " + jo1.getString("year"));
-                        modelAllTournament.setdate(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " Onwards");
-                        modelAllTournament.setRowType(1);
-                        arrayList.add(modelAllTournament);
+                        upcomingEvent.setId(jo.getString("id"));
+                        upcomingEvent.setTitle(jo.getString("title"));
+                        upcomingEvent.setLocation(jo.getString("location"));
+                        upcomingEvent.setEventType(jo.getString("eventType"));
+                        upcomingEvent.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                        upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                        upcomingEvent.setTeam1Name(jo.getString("team1Name"));
+                        upcomingEvent.setTeam2Name(jo.getString("team2Name"));
+                        upcomingEvent.setTitle(jo.getString("title"));
+                        JSONObject j1 = jo.getJSONObject("startDate");
+
+                        upcomingEvent.setDayName(j1.getString("dayName"));
+                        upcomingEvent.setMonthName(j1.getString("monthName"));
+                        upcomingEvent.setDate(j1.getString("date"));
+                        upcomingEvent.setTime(j1.getString("time"));
+
+
+                        upcomingEvent.setRowType(1);
+
+                        arrayList.add(upcomingEvent);
                     }
 
-                    adapterAlltournament = new AdapterAlltournament(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterAlltournament);
+
+                    adapterUpcomingEvent = new AdapterUpcomingTournamentEvent(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterUpcomingEvent);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Tournament found");
+                        text_nodata.setText("No Upcoming Event found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Tournament found");
-
+                    text_nodata.setText("No Upcoming Event found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -197,7 +209,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
 
             } else if (position == 4) {
 
-                if (jObject.getString("result").equalsIgnoreCase("OK")) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     JSONObject eventtime = jObject.optJSONObject("startDate");
                     //  maxlistLength = jObject.getString("total");
@@ -208,20 +220,27 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelAllTournament = new ModelAllTournament();
+                        upcomingEvent = new UpcomingEvent();
 
-                        modelAllTournament.setId(jo.getString("id"));
+                        upcomingEvent.setId(jo.getString("id"));
+                        upcomingEvent.setTitle(jo.getString("title"));
+                        upcomingEvent.setLocation(jo.getString("location"));
+                        upcomingEvent.setEventType(jo.getString("eventType"));
+                        upcomingEvent.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                        upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                        upcomingEvent.setTeam1Name(jo.getString("team1Name"));
+                        upcomingEvent.setTeam2Name(jo.getString("team2Name"));
+                        upcomingEvent.setTitle(jo.getString("title"));
+                        JSONObject j1 = jo.getJSONObject("startDate");
 
-                        modelAllTournament.setName(jo.getString("name"));
-                        modelAllTournament.setSportName(jo.getString("sportName"));
+                        upcomingEvent.setDayName(j1.getString("dayName"));
+                        upcomingEvent.setMonthName(j1.getString("monthName"));
+                        upcomingEvent.setDate(j1.getString("date"));
+                        upcomingEvent.setTime(j1.getString("time"));
 
+                        upcomingEvent.setRowType(1);
 
-                        JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("datetime"));
-
-                        modelAllTournament.setRowType(1);
-
-                        arrayList.add(modelAllTournament);
+                        arrayList.add(upcomingEvent);
                     }/* for (int i = 0; i < eventtime.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
@@ -239,14 +258,14 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                         arrayList.add(upcomingEvent);
                     }*/
 
-                    adapterAlltournament.notifyDataSetChanged();
+                    adapterUpcomingEvent.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterAlltournament.notifyDataSetChanged();
+                    adapterUpcomingEvent.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
                 }

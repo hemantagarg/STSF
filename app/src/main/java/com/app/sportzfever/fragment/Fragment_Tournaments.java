@@ -171,14 +171,7 @@ public class Fragment_Tournaments extends BaseFragment implements ApiResponse {
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
 
-        adapter.addFrag(new Fragment_Chat());
-        adapter.addFrag(new Fragment_FriendList());
-        adapter.addFrag(new Fragment_Chat());
-        viewPager.setAdapter(adapter);
-    }
 
     @Override
     public void onPostSuccess(int method, JSONObject jObject) {

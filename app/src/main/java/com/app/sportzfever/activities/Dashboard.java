@@ -71,7 +71,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private Toolbar toolbar;
     private View main_view;
     private static final String TAG = Dashboard.class.getSimpleName();
-    private FrameLayout feed_container, freinds_container, event_container, notification_container, chat_container;
+    private FrameLayout feed_container,
+            freinds_container, event_container, notification_container, chat_container;
     private TabLayout tabLayout;
     private AppBarLayout appBar;
     private ExpandableListView expendableView;

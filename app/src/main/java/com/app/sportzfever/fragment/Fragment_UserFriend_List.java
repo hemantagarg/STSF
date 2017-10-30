@@ -51,7 +51,8 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
-
+    private String friendid = "";
+    private String avtarid = "";
     public static Fragment_UserFriend_List fragment_friend_request;
     private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
 
@@ -88,7 +89,17 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+        getBundle();
+    }
 
+    private void getBundle() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+
+            avtarid = bundle.getString("avtarid");
+
+        }
     }
 
     @Override
@@ -152,7 +163,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + 8 + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + avtarid + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
