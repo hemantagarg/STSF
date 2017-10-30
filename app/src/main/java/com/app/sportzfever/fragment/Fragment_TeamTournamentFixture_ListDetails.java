@@ -1,6 +1,6 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +11,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.adapter.AdapterTeamTournamentFixtureList;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterTeamTournamentFixtureListDetails;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModeTeamTournamnetFixture;
 import com.app.sportzfever.models.ModeTeamTournamnetFixtureDetails;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -37,20 +40,18 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
 
     private RecyclerView list_request;
     private Bundle b;
-    private Context context;
+    private Activity context;
     private AdapterTeamTournamentFixtureListDetails adapterTeamTournamentFixtureListDetails;
     private ModeTeamTournamnetFixtureDetails modeTeamTournamnetFixtureDetails;
     private TextView text_nodata;
     private ArrayList<ModeTeamTournamnetFixtureDetails> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String maxlistLength = "";
-    private String friendid = "";
-    private String tournamnetid = "";
+    View view_about;
+    private String tournamnetid = "", teamId = "";
     public static Fragment_TeamTournamentFixture_ListDetails fragment_friend_request;
     private final String TAG = Fragment_TeamTournamentFixture_ListDetails.class.getSimpleName();
 
@@ -65,14 +66,51 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_teamjoin, container, false);
+        view_about = inflater.inflate(R.layout.fragment_tournament_fixture_detail, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
+        manageHeaderView();
         return view_about;
     }
 
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Tournament Fixture Detail");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -83,7 +121,7 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        text_nodata= (TextView) view.findViewById(R.id.text_nodata);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -94,9 +132,10 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-
-            tournamnetid = bundle.getString("id");
-
+            tournamnetid = bundle.getString("tournamentid");
+            teamId = bundle.getString("teamId");
+            String name = bundle.getString("name");
+            HeaderViewManager.getInstance().setHeading(true, name);
         }
     }
 
@@ -110,37 +149,64 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        if (flag == 1) {
+        if (flag == 2) {
+            String teamNumber = "";
+            if (teamId.equalsIgnoreCase(arrayList.get(position).getTeam1Id())) {
+                teamNumber = "1";
+            } else if (teamId.equalsIgnoreCase(arrayList.get(position).getTeam2Id())) {
+                teamNumber = "2";
+            }
+            acceptReject(AppConstant.ACCEPTED, teamNumber, arrayList.get(position).getId());
 
+        } else if (flag == 3) {
+            String teamNumber = "";
+            if (teamId.equalsIgnoreCase(arrayList.get(position).getTeam1Id())) {
+                teamNumber = "1";
+            } else if (teamId.equalsIgnoreCase(arrayList.get(position).getTeam2Id())) {
+                teamNumber = "2";
+            }
+            acceptReject(AppConstant.REJECTED, teamNumber, arrayList.get(position).getId());
 
+        }
+    }
 
+    private void acceptReject(String type, String teamNumber, String fixtureId) {
+        if (AppUtils.isNetworkAvailable(context)) {
+            try {
+                JSONObject main = new JSONObject();
+
+                JSONArray array = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", fixtureId);
+                jsonObject.put("teamNumber", teamNumber);
+                array.put(jsonObject);
+
+                main.put("team", array);
+                // http://sfscoring.betasportzfever.com/RespondToTeamTournamentFixture/{REJECTED}{ACCEPTED}/{tournamentId}/{teamId}
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.RespondToTOURNAMENTFIXTURE + type + "/" + tournamnetid + "/" + teamId;
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, main, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-
-
-
-
     private void getServicelistRefresh() {
-
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTEAMTOURNAMENTFIXTEURESDETAILS +tournamnetid+"/"+ 23 + "/" +  AppUtils.getAuthToken(context);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTEAMTOURNAMENTFIXTEURESDETAILS + tournamnetid + "/" + teamId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -164,9 +230,10 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
 
                         JSONObject jo = data.getJSONObject(i);
                         JSONObject jo1 = jo.getJSONObject("matchDate");
-
                         modeTeamTournamnetFixtureDetails = new ModeTeamTournamnetFixtureDetails();
                         modeTeamTournamnetFixtureDetails.setId(jo.getString("id"));
+                        modeTeamTournamnetFixtureDetails.setTeam1Id(jo.getString("team1Id"));
+                        modeTeamTournamnetFixtureDetails.setTeam2Id(jo.getString("team2Id"));
                         modeTeamTournamnetFixtureDetails.setTeam1Name(jo.getString("team1Name"));
                         modeTeamTournamnetFixtureDetails.setTeam2Name(jo.getString("team2Name"));
                         modeTeamTournamnetFixtureDetails.setDate(jo1.getString("date"));
@@ -234,7 +301,7 @@ public class Fragment_TeamTournamentFixture_ListDetails extends BaseFragment imp
                     skipCount = skipCount - 10;
                     loading = true;
                 }
-            } else if (position == 11) {
+            } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     getServicelistRefresh();

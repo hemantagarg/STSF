@@ -13,14 +13,12 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.adapter.AdapterFriendRequest;
 import com.app.sportzfever.adapter.AdapterUserFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.FriendRequest;
 import com.app.sportzfever.models.ModelUserFriendList;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
@@ -46,12 +44,9 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     private ArrayList<ModelUserFriendList> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String maxlistLength = "";
-    private String friendid = "";
     private String avtarid = "";
     public static Fragment_UserFriend_List fragment_friend_request;
     private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
@@ -85,7 +80,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        text_nodata= (TextView) view.findViewById(R.id.text_nodata);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -96,9 +91,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-
             avtarid = bundle.getString("avtarid");
-
         }
     }
 
@@ -112,23 +105,20 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-
-            acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
-
+            if (arrayList.get(position).getRequestStatus().equalsIgnoreCase("FRIENDS")) {
+                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.UNFRIEND);
+            } else {
+                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ADDFRIEND);
+            }
         }
-
     }
 
 
@@ -155,7 +145,6 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     }
 
 
-
     private void getServicelistRefresh() {
 
         try {
@@ -163,7 +152,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + avtarid + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -198,7 +187,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
 
                         arrayList.add(userFriendList);
                     }
-                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList);
+                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList, avtarid);
                     list_request.setAdapter(adapterUserFriendList);
 
                     if (mSwipeRefreshLayout != null) {

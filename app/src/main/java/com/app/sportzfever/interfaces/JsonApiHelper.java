@@ -33,6 +33,7 @@ public interface JsonApiHelper {
     String GET_TOURNAMENT_DETAIL = "getTournamentDetail/";
     String GET_TEAM_PROFILE = "getTeamProfile/";
     String FOLLOW_UNFOLLOW = "followUnfollow";
+    String RespondToTOURNAMENTFIXTURE = "RespondToTeamTournamentFixture/";
     String GET_USERABOUT = "getUserProfile/";
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";

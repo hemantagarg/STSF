@@ -21,6 +21,7 @@
             android:id="@+id/rl_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:id="@+id/rl_header1"
                 android:layout_width="wrap_content"
@@ -68,6 +69,7 @@
                     android:text="12:30 pm" />
 
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_top"
                 android:layout_width="wrap_content"
@@ -88,7 +90,6 @@
                     android:textSize="@dimen/text_size_10" />
 
 
-
             </RelativeLayout>
 
             <Button
@@ -96,22 +97,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp30"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/green_button_selecor"
                 android:layout_below="@+id/rl_top"
-                android:text="Reject"
                 android:layout_marginTop="@dimen/dp15"
+                android:background="@drawable/green_button_selecor"
+                android:text="Reject"
                 android:textColor="@color/white" />
+
             <Button
                 android:id="@+id/btn_reject"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp30"
+                android:layout_below="@+id/rl_top"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginRight="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp15"
                 android:layout_toLeftOf="@+id/btn_confirm"
                 android:background="@drawable/green_button_selecor"
-                android:layout_below="@+id/rl_top"
                 android:text="Accept"
-                android:layout_marginTop="@dimen/dp15"
-                android:layout_marginRight="@dimen/dp10"
-                android:layout_marginLeft="@dimen/dp10"
                 android:textColor="@color/white" />
 
         </RelativeLayout>

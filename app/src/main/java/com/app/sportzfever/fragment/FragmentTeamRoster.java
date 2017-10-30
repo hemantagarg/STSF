@@ -3,7 +3,6 @@ package com.app.sportzfever.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,12 +14,10 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterSportTeamList;
 import com.app.sportzfever.adapter.AdapterTeamRoster;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -45,14 +42,11 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
     private View view_about;
     private TextView text_nodata;
-    private String maxlistLength = "";
 
     public static FragmentTeamRoster fragment_teamJoin_request;
     private final String TAG = FragmentTeamRoster.class.getSimpleName();
@@ -67,7 +61,6 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
         view_about = inflater.inflate(R.layout.fragment_teamdetail, container, false);
         context = getActivity();
@@ -150,10 +143,10 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (flag == 2) {
 
-
+        }
     }
-
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);

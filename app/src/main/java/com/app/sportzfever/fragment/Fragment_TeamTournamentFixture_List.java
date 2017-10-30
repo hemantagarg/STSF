@@ -11,11 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterTeamTournamentFixtureList;
-import com.app.sportzfever.adapter.AdapterUserFriendList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -23,8 +21,6 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModeTeamTournamnetFixture;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -38,7 +34,6 @@ import java.util.ArrayList;
  */
 public class Fragment_TeamTournamentFixture_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
@@ -48,13 +43,10 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
     private ArrayList<ModeTeamTournamnetFixture> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String maxlistLength = "";
-    private String friendid = "";
-    private String avtarid = "";
+    private String teamid = "";
     public static Fragment_TeamTournamentFixture_List fragment_friend_request;
     private final String TAG = Fragment_TeamTournamentFixture_List.class.getSimpleName();
 
@@ -67,7 +59,6 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this com.app.justclap.fragment
 
         View view_about = inflater.inflate(R.layout.fragment_teamjoin, container, false);
         context = getActivity();
@@ -98,9 +89,7 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-
-            avtarid = bundle.getString("avtarid");
-
+            teamid = bundle.getString("teamid");
         }
     }
 
@@ -114,29 +103,25 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
 
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
 
-        Fragment_TeamTournamentFixture_List tab2 = new Fragment_TeamTournamentFixture_List();
+        Fragment_TeamTournamentFixture_ListDetails tab2 = new Fragment_TeamTournamentFixture_ListDetails();
         Bundle b = new Bundle();
-        b.putString("id", arrayList.get(position).getId());
+        b.putString("teamId", teamid);
+        b.putString("tournamentid", arrayList.get(position).getId());
+        b.putString("name", arrayList.get(position).getName());
 
         tab2.setArguments(b);
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
 
     }
-
-
-
 
     private void getServicelistRefresh() {
 
@@ -145,7 +130,7 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTEAMTOURNAMENTFIXTEURES + 23 + "/" +  AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ALLTEAMTOURNAMENTFIXTEURES + teamid + "/" +  AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -171,7 +156,7 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
 
                         modeTeamTournamnetFixture = new ModeTeamTournamnetFixture();
                         modeTeamTournamnetFixture.setId(jo.getString("id"));
-                        modeTeamTournamnetFixture.setId(jo.getString("name"));
+                        modeTeamTournamnetFixture.setName(jo.getString("name"));
 
                         modeTeamTournamnetFixture.setRowType(1);
 

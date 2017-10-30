@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ViewMatchScoreCard;
-import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.adapter.AdapterUpcomingTournamentEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -88,10 +87,11 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        getBundle();
         setlistener();
-
         getServicelistRefresh();
     }
+
     private void getBundle() {
 
         Bundle bundle = getArguments();
@@ -99,10 +99,11 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
             teamavtarid = bundle.getString("teamavtarid");
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
+
     }
 
     private void setlistener() {
@@ -113,7 +114,6 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
                 getServicelistRefresh();
             }
         });
-
 
 
     }
@@ -136,7 +136,7 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/-1/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/" + teamavtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

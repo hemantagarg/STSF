@@ -24,6 +24,8 @@ public class AppConstant {
     public static final String USER = "2";
     public static final String FREELANCER = "3";
     public static final String ACCEPTED = "ACCEPTED";
+    public static final String ADDFRIEND = "ADDFRIEND";
+    public static final String UNFRIEND = "UNFRIEND";
     public static final String REJECTED = "REJECTED";
     public static final String PUBLIC = "Public";
     public static final String CRICKET = "Cricket";

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.FriendRequest;
 import com.app.sportzfever.models.ModelUserFriendList;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
@@ -32,16 +32,16 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    private String currentUserId = "";
 
-
-    public AdapterUserFriendList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list) {
+    public AdapterUserFriendList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list, String currentUserId) {
 
         this.detail = list;
         this.mContext = context;
         this.listener = lis;
+        this.currentUserId = currentUserId;
 
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -83,23 +83,25 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
 
             ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
 
-
-           if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
+            if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getFriendProfilePic())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
-           if (m1.getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-               ((CustomViewHolder) holder).btn_confirm.setText("UNFRIEND");
-            } if (m1.getRequestStatus().equalsIgnoreCase("PENDING")) {
-               ((CustomViewHolder) holder).btn_confirm.setText("RESEND");
+            if (m1.getRequestStatus().equalsIgnoreCase("FRIENDS")) {
+                ((CustomViewHolder) holder).btn_confirm.setText("UNFRIEND");
             }
-if (!m1.getFriendId().equalsIgnoreCase(AppUtils.getUserId(mContext))){
-
-    ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
-}
+            if (m1.getRequestStatus().equalsIgnoreCase("PENDING")) {
+                ((CustomViewHolder) holder).btn_confirm.setText("RESEND");
+            }
+            Log.e("currentUserId", currentUserId + " * " + AppUtils.getUserId(mContext));
+            if (currentUserId.equalsIgnoreCase(AppUtils.getUserId(mContext))) {
+                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.VISIBLE);
+            } else {
+                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
+            }
 
             ((AdapterUserFriendList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,25 +122,20 @@ if (!m1.getFriendId().equalsIgnoreCase(AppUtils.getUserId(mContext))){
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
 
-Button btn_confirm,btn_reject;
+        Button btn_confirm, btn_reject;
+
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
             this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
 
-        }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
         }
 
     }

@@ -83,6 +83,13 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
            /* ((AdapterSportTeamList.CustomViewHolder) holder).text_jerseryno.setText(m1.getJerseyNumber());*/
             ((AdapterTeamRoster.CustomViewHolder) holder).text_speciality.setText(m1.getSpeciality());
 
+            ((AdapterTeamRoster.CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 2);
+                }
+            });
+
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getProfilePicture()).transform(new CircleTransform())
@@ -102,27 +109,19 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname, text_speciality, text_jerseryno;
-        ImageView image_avtar;
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        TextView text_avtarteamname, text_speciality;
+        ImageView image_avtar, image_status;
         RelativeLayout relmatchvs;
 
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
 
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_name);
-         // this.text_jerseryno = (TextView) view.findViewById(R.id.text_jerseryno);
             this.text_speciality = (TextView) view.findViewById(R.id.text_speciality);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_viewers);
-
+            this.image_status = (ImageView) view.findViewById(R.id.image_status);
         }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
-        }
-
     }
 
     @Override

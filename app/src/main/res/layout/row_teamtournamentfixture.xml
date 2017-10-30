@@ -29,19 +29,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp10"
-                android:layout_toRightOf="@+id/image_viewers"
-                android:padding="@dimen/dp5">
+                android:padding="@dimen/dp10">
 
                 <TextView
                     android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/btn_confirm"
                     android:text="Madhav"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16" />
-
 
 
             </RelativeLayout>

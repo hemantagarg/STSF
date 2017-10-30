@@ -172,9 +172,7 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    JSONObject follower = data.getJSONObject("follower");
-                    JSONArray teamfollowers = follower.getJSONArray("team");
+                    JSONArray teamfollowers = jObject.getJSONArray("data");
 
                     arrayList.clear();
                     for (int i = 0; i < teamfollowers.length(); i++) {
@@ -190,7 +188,6 @@ public class Fragment_Follower_List extends BaseFragment implements ApiResponse,
                         modelFollower.setFollowerName(jo.getString("followerName"));
                         modelFollower.setFollowerPicture(jo.getString("followerPicture"));
                         modelFollower.setAvatarType(jo.getString("avatarType"));
-
                         modelFollower.setRowType(1);
 
                         arrayList.add(modelFollower);

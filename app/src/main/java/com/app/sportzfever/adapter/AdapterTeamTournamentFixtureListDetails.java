@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModeTeamTournamnetFixture;
 import com.app.sportzfever.models.ModeTeamTournamnetFixtureDetails;
 
 import java.util.ArrayList;
@@ -78,16 +77,24 @@ public class AdapterTeamTournamentFixtureListDetails extends RecyclerView.Adapte
 
             ModeTeamTournamnetFixtureDetails m1 = (ModeTeamTournamnetFixtureDetails) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name()+" "+"VS"+" "+m1.getTeam2Name());
+            ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name() + " " + "VS" + " " + m1.getTeam2Name());
             ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
             ((CustomViewHolder) holder).text_date.setText(m1.getDate());
             ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
             ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
-
-
-
-
+            ((CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 2);
+                }
+            });
+            ((CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 3);
+                }
+            });
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -101,10 +108,10 @@ public class AdapterTeamTournamentFixtureListDetails extends RecyclerView.Adapte
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_day, text_date,text_month,text_time;
+        TextView text_name, text_day, text_date, text_month, text_time;
         ImageView image_viewers;
+        Button btn_confirm, btn_reject;
 
-Button btn_confirm,btn_reject;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
@@ -114,6 +121,8 @@ Button btn_confirm,btn_reject;
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.text_month = (TextView) view.findViewById(R.id.text_month);
             this.text_time = (TextView) view.findViewById(R.id.text_time);
+            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
+            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
 
         }
 

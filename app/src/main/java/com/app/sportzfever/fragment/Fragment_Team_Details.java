@@ -171,9 +171,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
 
     private void followUnfollowTeam(String type) {
-
         if (AppUtils.isNetworkAvailable(mActivity)) {
-
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
@@ -263,7 +261,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         Bundle b = new Bundle();
         b.putString("avtarid", id);
         tab2.setArguments(b);
-        adapter.addFrag(tab2, "services");
+        adapter.addFrag(tab2, "Detail");
 
         Fragment_TeamFeed feed = new Fragment_TeamFeed();
         Bundle b11 = new Bundle();
@@ -276,26 +274,27 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         Bundle b3 = new Bundle();
         b3.putString("avtarid", id);
         tab4.setArguments(b3);
-        adapter.addFrag(tab4, "Reviews");
+        adapter.addFrag(tab4, "Roaster");
 
-        Fragment_TeamTournamentFixture_List tab5 = new Fragment_TeamTournamentFixture_List();
-        Bundle b5 = new Bundle();
-        b5.putString("teamAvatarId", teamAvatarId);
-        tab5.setArguments(b5);
-        adapter.addFrag(tab5, "Tour");
 
         FragmentTeamGallery tab1 = new FragmentTeamGallery();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
         b1.putString("teamavtarid", teamAvatarId);
         tab1.setArguments(b1);
-        adapter.addFrag(tab1, "About Us");
+        adapter.addFrag(tab1, "Gallery");
 
         FragmentUpcomingTournamentEvent tab3 = new FragmentUpcomingTournamentEvent();
         Bundle b2 = new Bundle();
-        b1.putString("teamavtarid", teamAvatarId);
+        b2.putString("teamavtarid", teamAvatarId);
         tab3.setArguments(b2);
-        adapter.addFrag(tab3, "Portfolio");
+        adapter.addFrag(tab3, "Event");
+
+        Fragment_TeamTournamentFixture_List tab5 = new Fragment_TeamTournamentFixture_List();
+        Bundle b5 = new Bundle();
+        b5.putString("teamid", id);
+        tab5.setArguments(b5);
+        adapter.addFrag(tab5, "Tour");
 
         viewPager.setAdapter(adapter);
     }
