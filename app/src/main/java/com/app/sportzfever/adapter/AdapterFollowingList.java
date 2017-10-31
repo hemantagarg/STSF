@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFollowing;
+import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -30,13 +31,15 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    private String userid;
 
 
-    public AdapterFollowingList(Context context, OnCustomItemClicListener lis, ArrayList<ModelFollowing> list) {
+    public AdapterFollowingList(Context context, OnCustomItemClicListener lis, ArrayList<ModelFollowing> list, String userid) {
 
         this.detail = list;
         this.mContext = context;
         this.listener = lis;
+        this.userid = userid;
 
     }
 
@@ -89,11 +92,16 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
                         .into(((CustomViewHolder) holder).image_viewers);
             }
 
+            if (AppUtils.getUserId(mContext).equalsIgnoreCase(userid)) {
+                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.VISIBLE);
+            } else {
+                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
+            }
 
             ((AdapterFollowingList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClickListener(i, 1);
+                    listener.onItemClickListener(i, 2);
 
                 }
             });
@@ -113,7 +121,7 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
 
-        Button btn_confirm, btn_reject;
+        Button btn_confirm;
 
         public CustomViewHolder(View view) {
             super(view);

@@ -40,7 +40,6 @@ import java.util.List;
 
 public class FragmentUser_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
 
-
     public static FragmentUser_Details vendorProfileFragment;
     private Activity mActivity;
     private View view;
@@ -232,11 +231,11 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
-        FragmentUserFollowerFollowing tab1 = new FragmentUserFollowerFollowing();
+        Fragment_Following_List fragmentFollowingList = new Fragment_Following_List();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
-        tab1.setArguments(b1);
-        adapter.addFrag(tab1, "About Us");
+        fragmentFollowingList.setArguments(b1);
+        adapter.addFrag(fragmentFollowingList, "Reviews");
 
         Fragmentphotos tab3 = new Fragmentphotos();
         Bundle b2 = new Bundle();

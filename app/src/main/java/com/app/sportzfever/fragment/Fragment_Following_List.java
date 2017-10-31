@@ -64,7 +64,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_teamjoin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_followes, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -116,35 +116,30 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        if (flag == 1) {
-
-       //     acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ACCEPTED);
-
+        if (flag == 2) {
+            followUnfollowTeam(arrayList.get(position).getAvatar(), "UNFOLLOw");
         }
-
     }
 
+    private void followUnfollowTeam(String id, String type) {
 
-    private void acceptTeamrequest(String id, String ADDFRIEND) {
-        try {
-            AppUtils.onKeyBoardDown(context);
-            if (AppUtils.isNetworkAvailable(context)) {
-
+        if (AppUtils.isNetworkAvailable(context)) {
+            try {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("fanUserId", AppUtils.getUserId(context));
+                jsonObject.put("avatarId", id);
+                jsonObject.put("type", type);
 
-                jsonObject.put("fromUserId", id);
-                jsonObject.put("toUserId", AppUtils.getUserId(context));
-                jsonObject.put("type", ADDFRIEND);
-
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                //  https://sfscoring.betasportzfever.com/followUnfollow
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -174,9 +169,25 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
                     JSONObject follower = data.getJSONObject("following");
+                    arrayList.clear();
+                    JSONArray player = follower.getJSONArray("player");
+                    for (int i = 0; i < player.length(); i++) {
+
+                        JSONObject jo = player.getJSONObject(i);
+                        modelFollowing = new ModelFollowing();
+                        modelFollowing.setAvatar(jo.getString("avatar"));
+                        modelFollowing.setStatus(jo.getString("status"));
+                        modelFollowing.setProfilePicture(jo.getString("profilePicture"));
+                        modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
+                        modelFollowing.setFan_date_time(jo.getString("avatarType"));
+                        modelFollowing.setName(jo.getString("name"));
+                        modelFollowing.setRowType(1);
+
+                        arrayList.add(modelFollowing);
+                    }
+
                     JSONArray teamfollowers = follower.getJSONArray("team");
 
-                    arrayList.clear();
                     for (int i = 0; i < teamfollowers.length(); i++) {
 
                         JSONObject jo = teamfollowers.getJSONObject(i);
@@ -193,7 +204,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
 
                         arrayList.add(modelFollowing);
                     }
-                    adapterFollowingList = new AdapterFollowingList(getActivity(), this, arrayList);
+                    adapterFollowingList = new AdapterFollowingList(getActivity(), this, arrayList, avtarid);
                     list_request.setAdapter(adapterFollowingList);
 
                     if (mSwipeRefreshLayout != null) {
@@ -212,7 +223,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
-            } else if (position == 11) {
+            } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     getServicelistRefresh();

@@ -113,7 +113,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
-                jsonObject.put("avatarId", AppUtils.getAvtarId(mActivity));
+                jsonObject.put("avatarId", id);
                 jsonObject.put("type", type);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow

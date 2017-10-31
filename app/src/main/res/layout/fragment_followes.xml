@@ -4,15 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg">
 
-    <TextView
-        android:id="@+id/text_nodata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="No data found"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_size_16"
-        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_main_layout"
@@ -35,6 +26,15 @@
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <TextView
+            android:id="@+id/text_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No data found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
