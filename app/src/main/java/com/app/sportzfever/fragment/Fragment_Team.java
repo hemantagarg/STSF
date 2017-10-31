@@ -83,6 +83,7 @@ public class Fragment_Team extends BaseFragment {
 
         adapter.addFrag(new Fragment_Friend_Request());
         adapter.addFrag(new Fragment_TeamJoin_Request());
+        adapter.addFrag(new Fragment_TournamentJoin_Request());
         viewPager.setAdapter(adapter);
     }
 
