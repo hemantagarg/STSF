@@ -37,8 +37,10 @@ import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
 import com.app.sportzfever.fragment.FragmentMenuTeamList;
+import com.app.sportzfever.fragment.FragmentPersonal_User_Details;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
+import com.app.sportzfever.fragment.FragmentUser_Details;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Matches;
@@ -65,8 +67,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
-
-import static android.R.attr.id;
 
 public class Dashboard extends AppCompatActivity implements ApiResponse {
 
@@ -347,8 +347,12 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     startActivity(intent);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("7")) {
-                    Intent intent = new Intent(context, ActivityAbout.class);
-                    startActivity(intent);
+                    FragmentPersonal_User_Details fragmentUser_details = new FragmentPersonal_User_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", AppUtils.getUserId(context));
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("8")) {
                     showLogoutBox();
@@ -638,9 +642,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void getUserDetails() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + id + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }

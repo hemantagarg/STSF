@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,23 +38,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragmentAvtar_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
+public class FragmentPersonal_User_Details extends BaseFragment implements View.OnClickListener, ApiResponse {
 
-    public static FragmentAvtar_Details vendorProfileFragment;
+
+    public static FragmentPersonal_User_Details vendorProfileFragment;
     private Activity mActivity;
     private View view;
-    private final String TAG = FragmentAvtar_Details.class.getSimpleName();
+    private final String TAG = FragmentPersonal_User_Details.class.getSimpleName();
     private TabLayout tabLayout;
     private TextView text_username, text_address;
     private ImageView image_back, imge_user, imge_banner;
     private Button btn_follow_team;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
+    JSONObject userDetailObject, AvtarDetail;
     private String id = "", isTeamfollower = "";
+    private String isFriend = "";
 
-    public static FragmentAvtar_Details getInstance() {
+    public static FragmentPersonal_User_Details getInstance() {
         if (vendorProfileFragment == null)
-            vendorProfileFragment = new FragmentAvtar_Details();
+            vendorProfileFragment = new FragmentPersonal_User_Details();
         return vendorProfileFragment;
     }
 
@@ -63,61 +65,59 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_avtar_details, container, false);
+        view = inflater.inflate(R.layout.fragment_user_details, container, false);
         mActivity = getActivity();
         vendorProfileFragment = this;
         initViews();
         getBundle();
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+        getUserDetails();
         setCollapsingToolbar();
         setListener();
         return view;
     }
 
-    public void setUserData(String image, String name, String sportname, String isTeamfollower) {
-        if (image != null && !image.equalsIgnoreCase("")) {
-            Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
-            Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
-        }
-        text_username.setText(name);
-        text_address.setText(sportname);
-        this.isTeamfollower = isTeamfollower;
-        if (isTeamfollower.equalsIgnoreCase("1")) {
-            btn_follow_team.setText("Following");
-        } else {
-            btn_follow_team.setText("Follow");
-        }
-
-    }
-
     private void setListener() {
+
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (isTeamfollower.equalsIgnoreCase("1")) {
-                    followUnfollowTeam("UNFOLLOw");
+                if (isFriend.equalsIgnoreCase("1")) {
+                    followUnfollowTeam("UNFRIEND");
                 } else {
-                    followUnfollowTeam("FOLLOw");
+                    followUnfollowTeam("ADDFRIEND");
                 }
             }
         });
     }
 
-    private void followUnfollowTeam(String type) {
+    private void getUserDetails() {
+        Dashboard.getInstance().setProgressLoader(true);
+        try {
+            if (AppUtils.isNetworkAvailable(mActivity)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + id + "/" + AppUtils.getAuthToken(mActivity);
+                new CommonAsyncTaskHashmap(2, mActivity, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void followUnfollowTeam(String ADDFRIEND) {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
 
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("fanUserId", AppUtils.getUserId(mActivity));
-                jsonObject.put("avatarId", AppUtils.getAvtarId(mActivity));
-                jsonObject.put("type", type);
+                jsonObject.put("fromUserId", AppUtils.getUserId(mActivity));
+                jsonObject.put("toUserId", id);
+                jsonObject.put("type", ADDFRIEND);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -157,13 +157,6 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString("id");
-            AppUtils.setAvtarId(mActivity, id);
-            Log.e("UseravtarId", AppUtils.getLoginUserAvtarId(mActivity) + " ** " + id);
-            if (AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(id)) {
-                btn_follow_team.setVisibility(View.GONE);
-            } else {
-                btn_follow_team.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -178,7 +171,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         text_username = (TextView) view.findViewById(R.id.text_username);
         text_address = (TextView) view.findViewById(R.id.text_address);
         btn_follow_team = (Button) view.findViewById(R.id.btn_follow_team);
-
+        btn_follow_team.setVisibility(View.GONE);
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,43 +182,45 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("Bio");
-        tabLayout.getTabAt(1).setText("Feed");
-        tabLayout.getTabAt(2).setText("My Teams");
-        tabLayout.getTabAt(3).setText("Stats");
+        tabLayout.getTabAt(0).setText("About");
+        tabLayout.getTabAt(1).setText("Sport Avtar");
+        tabLayout.getTabAt(2).setText("Friends");
+        tabLayout.getTabAt(3).setText("Following");
         tabLayout.getTabAt(4).setText("Photos");
-
+        btn_follow_team.setVisibility(View.GONE);
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        FragmentAvtarBio tab2 = new FragmentAvtarBio();
+        FragmentUserProfile tab2 = new FragmentUserProfile();
         Bundle b = new Bundle();
         b.putString("avtarid", id);
+        b.putString("data", userDetailObject.toString());
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_AvtarFeed feed = new Fragment_AvtarFeed();
-        Bundle b11 = new Bundle();
-        b11.putString("avtarid", id);
-        feed.setArguments(b11);
-        adapter.addFrag(feed, "feed");
+        Fragment_AvtarNames tab12 = new Fragment_AvtarNames();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", id);
+        b111.putString("data", userDetailObject.toString());
+        tab12.setArguments(b111);
+        adapter.addFrag(tab12, "services");
 
-        Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
+        Fragment_UserFriend_List tab4 = new Fragment_UserFriend_List();
         Bundle b3 = new Bundle();
         b3.putString("avtarid", id);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
-        FragmentStats tab1 = new FragmentStats();
+        FragmentUserFollowerFollowing tab1 = new FragmentUserFollowerFollowing();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-        FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
+        Fragmentphotos tab3 = new Fragmentphotos();
         Bundle b2 = new Bundle();
         b2.putString("avtarid", id);
         tab3.setArguments(b2);
@@ -242,17 +237,42 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
                 if (response.getString("result").equalsIgnoreCase("1")) {
 
                     //  JSONObject data = response.getJSONObject("data");
-                    if (isTeamfollower.equalsIgnoreCase("1")) {
-                        isTeamfollower = "0";
-                        btn_follow_team.setText("Follow");
+                    if (isFriend.equalsIgnoreCase("1")) {
+                        isFriend = "0";
+                        btn_follow_team.setText("FRIEND");
                     } else {
-                        isTeamfollower = "1";
-                        btn_follow_team.setText("Following");
+                        isFriend = "1";
+                        btn_follow_team.setText("UNFRIEND");
                     }
                 } else {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
+            } else if (method == 2) {
+                Dashboard.getInstance().setProgressLoader(false);
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = response.getJSONObject("data");
+                    userDetailObject = data;
+
+                    String image = data.getString("profilePicture");
+                    if (image != null && !image.equalsIgnoreCase("")) {
+                        Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
+                        Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
+                    }
+                    text_username.setText(data.getString("userName"));
+                    text_address.setText(data.getString("currentLocation"));
+
+                    isFriend = data.getString("isFriend");
+                    if (isFriend.equalsIgnoreCase("1")) {
+                        btn_follow_team.setText("UnFriend");
+                    } else {
+                        btn_follow_team.setText("Add Friend");
+                    }
+                    setupViewPager(viewPager);
+                    tabLayout.setupWithViewPager(viewPager);
+                    setupTabIcons();
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
