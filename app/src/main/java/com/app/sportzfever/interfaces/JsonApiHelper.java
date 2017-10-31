@@ -8,7 +8,7 @@ public interface JsonApiHelper {
 
     String BASEURL = JsonApiHelper.TESTURL;
     String WEBVIEWBASEURL = "https://www.betasportzfever.com/";
-   // String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
+    // String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
     String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
     String GET_FEEDS = "getFeeds/";
@@ -21,6 +21,7 @@ public interface JsonApiHelper {
     String GET_ALLTEAMTOURNAMENTFIXTEURESDETAILS = "getTeamsTournamentFixturesInvitation/";
     String GET_FOLLOWERLIST = "getAvatarFollowers/";
     String GET_FOLLOWINGLIST = "getFollowingAvatarsByUser/";
+    String ACCEPTREJECTTOURNAMENTINVITATION = "RespondToTournamentTeamsInvitation/";
     String GET_TEAMJOINREQUEST = "getAllTeamInvitation/";
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GETALLSPORT = "getAllSport/";
@@ -38,6 +39,7 @@ public interface JsonApiHelper {
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";
     String GET_PASTMATCHES = "getAllPastMatches/";
+    String SEARCH = "search/";
     String GET_ALLTOURNAMENT = "getAllUpcomingTournaments/";
     String GET_ALLTOURNAMENTMATCHES = "getTournamentMatchDetails/";
     String GET_ALLMYTOURNAMENT = "getAllTournamentsByOrganiser/";

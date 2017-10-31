@@ -110,12 +110,14 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             if (isTeamMember.equalsIgnoreCase("1")) {
                 btn_join_team.setText("Leave Team");
                 btn_follow_team.setText("Leave Team");
+                btn_follow_team.setVisibility(View.GONE);
                 /* final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (235 * scale + 0.5f);
                 rl_banner.getLayoutParams().height = pixels;*/
 
             } else {
                 btn_join_team.setText("Join Team");
+                btn_follow_team.setVisibility(View.VISIBLE);
               /*  final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (260 * scale + 0.5f);
                 rl_banner.getLayoutParams().height = pixels;*/

@@ -4,21 +4,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppUtils;
-import com.app.sportzfever.utils.CircleTransform;
+import com.app.sportzfever.models.TeamJoinRequest;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,23 +22,23 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelUserFriendList> detail;
+    ArrayList<TeamJoinRequest> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
-    private String currentUserId = "";
 
-    public AdapterUserFriendList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list, String currentUserId) {
+
+    public AdapterTournamentJoinRequest(Context context, OnCustomItemClicListener lis, ArrayList<TeamJoinRequest> list) {
 
         this.detail = list;
         this.mContext = context;
         this.listener = lis;
-        this.currentUserId = currentUserId;
 
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,7 +46,7 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_userfriendlist, parent, false);
+                    R.layout.row_tournamnetjoinrequest, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -80,41 +76,31 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelUserFriendList m1 = (ModelUserFriendList) detail.get(i);
+            TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getTournamentName());
 
-            if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
+
+            if (!m1.getTournamentProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getFriendProfilePic())
-                        .transform(new CircleTransform())
+                        .load(m1.getTeamProfilePicture())
+
                         .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_viewers);
-            }
-            if (m1.getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-                ((CustomViewHolder) holder).btn_confirm.setText("UNFRIEND");
-            }
-            if (m1.getRequestStatus().equalsIgnoreCase("PENDING")) {
-                ((CustomViewHolder) holder).btn_confirm.setText("RESEND");
-            }
-            Log.e("currentUserId", currentUserId + " * " + AppUtils.getUserId(mContext));
-            if (currentUserId.equalsIgnoreCase(AppUtils.getUserId(mContext))) {
-                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.VISIBLE);
-            } else {
-                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
+                        .into(((CustomViewHolder) holder).image_team);
             }
 
-            ((AdapterUserFriendList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 1);
-
-                }
-            });
-            ((CustomViewHolder) holder).rl_main.setOnClickListener(new View.OnClickListener() {
+            ((CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 2);
+
+                }
+            });
+
+            ((CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
 
                 }
             });
@@ -130,27 +116,33 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView text_name, text_message, text_date;
-        ImageView image_viewers;
-        RelativeLayout rl_main;
-        Button btn_confirm;
+    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView text_name, text_event_type, text_date, text_teamname, text_location;
+        ImageView image_team;
+        Button btn_confirm, btn_reject;
 
         public CustomViewHolder(View view) {
             super(view);
-            this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
+            view.setOnClickListener(this);
+            this.image_team = (ImageView) view.findViewById(R.id.image_viewers);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
-            this.text_message = (TextView) view.findViewById(R.id.text_message);
-            this.text_date = (TextView) view.findViewById(R.id.text_date);
+
+
+            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
             this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
-            this.rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onItemClickListener(getPosition(), 1);
         }
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        ModelUserFriendList m1 = (ModelUserFriendList) detail.get(position);
+        TeamJoinRequest m1 = (TeamJoinRequest) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

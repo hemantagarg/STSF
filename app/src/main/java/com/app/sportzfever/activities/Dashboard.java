@@ -40,12 +40,12 @@ import com.app.sportzfever.fragment.FragmentMenuTeamList;
 import com.app.sportzfever.fragment.FragmentPersonal_User_Details;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
-import com.app.sportzfever.fragment.FragmentUser_Details;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
+import com.app.sportzfever.fragment.Fragment_Search;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_Tournaments;
 import com.app.sportzfever.fragment.Fragment_UserFeed;
@@ -90,6 +90,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     DrawerLayout drawer;
     private String mCurrentTab;
     private ProgressBar api_loading_request;
+    private ImageView image_search;
     /*
       * Fragment instance
       * */
@@ -210,7 +211,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         expendableView = (ExpandableListView) findViewById(R.id.expendableView);
         listAdapter = new DrawerListAdapter(this, groupnamelist, alldata);
         expendableView.setAdapter(listAdapter);
-
+        image_search = (ImageView) findViewById(R.id.image_search);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -362,6 +363,13 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             }
         });
 
+        image_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Search(), true);
+            }
+        });
         expendableView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {

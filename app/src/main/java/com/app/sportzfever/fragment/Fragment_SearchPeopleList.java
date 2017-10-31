@@ -13,16 +13,13 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterUserFriendList;
+import com.app.sportzfever.adapter.AdapterSearchPeopleList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppConstant;
+import com.app.sportzfever.models.ModelSearchPeoples;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -34,27 +31,28 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_UserFriend_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_SearchPeopleList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterUserFriendList adapterUserFriendList;
-    private ModelUserFriendList userFriendList;
+    private AdapterSearchPeopleList adapterUserFriendList;
+    private ModelSearchPeoples userFriendList;
     private TextView text_nodata;
-    private ArrayList<ModelUserFriendList> arrayList;
+    private ArrayList<ModelSearchPeoples> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String avtarid = "";
-    public static Fragment_UserFriend_List fragment_friend_request;
-    private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
+    public static Fragment_SearchPeopleList fragment_friend_request;
+    private final String TAG = Fragment_SearchPeopleList.class.getSimpleName();
+    private String keyword = "";
+    private String maxlistLength = "";
 
-    public static Fragment_UserFriend_List getInstance() {
+    public static Fragment_SearchPeopleList getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_UserFriend_List();
+            fragment_friend_request = new Fragment_SearchPeopleList();
         return fragment_friend_request;
     }
 
@@ -89,17 +87,51 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     }
 
     private void getBundle() {
+        try {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                String data = bundle.getString("data");
+                keyword = bundle.getString("keyword");
+                JSONObject jsonObject = new JSONObject(data);
+                JSONObject peoples = jsonObject.getJSONObject("peoples");
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            avtarid = bundle.getString("avtarid");
+                JSONArray peoplesArray = peoples.getJSONArray("peoples");
+                maxlistLength = peoples.getString("totalPeoples");
+                arrayList.clear();
+                for (int i = 0; i < peoplesArray.length(); i++) {
+
+                    JSONObject jo = peoplesArray.getJSONObject(i);
+
+                    userFriendList = new ModelSearchPeoples();
+                    userFriendList.setUserId(jo.getString("userId"));
+                    userFriendList.setTotalFriend(jo.getString("totalFriend"));
+                    userFriendList.setTotalPost(jo.getString("totalPost"));
+                    userFriendList.setTotalTeam(jo.getString("totalTeam"));
+                    userFriendList.setName(jo.getString("name"));
+                    userFriendList.setEmail(jo.getString("email"));
+                    userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
+                    userFriendList.setAbout(jo.getString("about"));
+                    userFriendList.setHometown(jo.getString("hometown"));
+                    userFriendList.setCurrentLocation(jo.getString("currentLocation"));
+                    userFriendList.setProfilePicture(jo.getString("profilePicture"));
+
+                    userFriendList.setRowType(1);
+
+                    arrayList.add(userFriendList);
+                }
+                adapterUserFriendList = new AdapterSearchPeopleList(getActivity(), this, arrayList);
+                list_request.setAdapter(adapterUserFriendList);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getServicelistRefresh();
+
     }
 
     private void setlistener() {
@@ -114,18 +146,18 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            if (arrayList.get(position).getRequestStatus().equalsIgnoreCase("FRIENDS")) {
+          /*  if (arrayList.get(position).getRequestStatus().equalsIgnoreCase("FRIENDS")) {
                 acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.UNFRIEND);
             } else {
                 acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ADDFRIEND);
-            }
+            }*/
         } else if (flag == 2) {
 
-            FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+          /*  FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
             Bundle b = new Bundle();
             b.putString("id", arrayList.get(position).getFriendId());
             fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);*/
         }
     }
 
@@ -158,9 +190,8 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCH + AppUtils.getUserId(context)
+                        + "/" + "ALL/" + keyword + "/0/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -177,25 +208,34 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
-                    //  maxlistLength = jObject.getString("total");
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    JSONObject peoples = data.getJSONObject("peoples");
 
-                        JSONObject jo = data.getJSONObject(i);
+                    JSONArray peoplesArray = peoples.getJSONArray("peoples");
+                    maxlistLength = peoples.getString("totalPeoples");
+                    arrayList.clear();
+                    for (int i = 0; i < peoplesArray.length(); i++) {
 
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList.setFriendId(jo.getString("friendId"));
-                        userFriendList.setFriendName(jo.getString("friendName"));
-                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
-                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
-                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
+                        JSONObject jo = peoplesArray.getJSONObject(i);
+
+                        userFriendList = new ModelSearchPeoples();
+                        userFriendList.setUserId(jo.getString("userId"));
+                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
+                        userFriendList.setTotalPost(jo.getString("totalPost"));
+                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
+                        userFriendList.setName(jo.getString("name"));
+                        userFriendList.setEmail(jo.getString("email"));
+                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
+                        userFriendList.setAbout(jo.getString("about"));
+                        userFriendList.setHometown(jo.getString("hometown"));
+                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
+                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
 
                         userFriendList.setRowType(1);
 
                         arrayList.add(userFriendList);
                     }
-                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList, avtarid);
+                    adapterUserFriendList = new AdapterSearchPeopleList(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterUserFriendList);
 
                     if (mSwipeRefreshLayout != null) {
@@ -226,7 +266,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        userFriendList = new ModelUserFriendList();
+                    /*    userFriendList = new ModelUserFriendList();
                         userFriendList = new ModelUserFriendList();
                         userFriendList.setFriendId(jo.getString("friendId"));
                         userFriendList.setFriendName(jo.getString("friendName"));
@@ -236,7 +276,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
 
                         userFriendList.setRowType(1);
 
-                        arrayList.add(userFriendList);
+                        arrayList.add(userFriendList);*/
                     }
                     adapterUserFriendList.notifyDataSetChanged();
                     loading = true;

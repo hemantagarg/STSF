@@ -1,0 +1,110 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardElevation="3sp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_viewers"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentLeft="true"
+
+                android:layout_marginLeft="@dimen/dp5"
+                android:padding="@dimen/dp5"
+                android:scaleType="fitXY"
+                 />
+
+            <RelativeLayout
+                android:id="@+id/rl_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_toRightOf="@+id/image_viewers"
+                android:padding="@dimen/dp5">
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/text_date"
+                    android:text="Madhav"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+
+
+                <TextView
+                    android:id="@+id/text_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="2:17 Pm"
+                    android:visibility="gone"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_12" />
+
+                <LinearLayout
+
+                    android:layout_below="@+id/text_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btn_confirm"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp30"
+                        android:text="Accept"
+                        android:layout_margin="@dimen/dp10"
+                        android:background="@drawable/green_button_selecor"
+                        android:textColor="@color/white"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/btn_reject"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp30"
+                        android:text="Reject"
+                        android:layout_margin="@dimen/dp10"
+                        android:background="@drawable/grey_button_selecor"                        android:textColor="@color/white"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignLeft="@+id/rl_top"
+                android:layout_below="@+id/rl_top"
+                android:alpha=".3"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>

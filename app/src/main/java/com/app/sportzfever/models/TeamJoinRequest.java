@@ -24,6 +24,53 @@ public class TeamJoinRequest {
     private String playerAvatarName;
 
     private String requestSentAt;
+    private String tournamentName;
+    private String tournamentProfilePicture;
+
+    public String getTournamentName() {
+        return tournamentName;
+    }
+
+    public void setTournamentName(String tournamentName) {
+        this.tournamentName = tournamentName;
+    }
+
+    public String getTournamentProfilePicture() {
+        return tournamentProfilePicture;
+    }
+
+    public void setTournamentProfilePicture(String tournamentProfilePicture) {
+        this.tournamentProfilePicture = tournamentProfilePicture;
+    }
+
+    public String getTournamentStartDate() {
+        return tournamentStartDate;
+    }
+
+    public void setTournamentStartDate(String tournamentStartDate) {
+        this.tournamentStartDate = tournamentStartDate;
+    }
+
+    public String getTournamentOrganizerId() {
+        return tournamentOrganizerId;
+    }
+
+    public void setTournamentOrganizerId(String tournamentOrganizerId) {
+        this.tournamentOrganizerId = tournamentOrganizerId;
+    }
+
+    public String getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(String tournamentId) {
+        this.tournamentId = tournamentId;
+    }
+
+    private String tournamentStartDate;
+    private String tournamentOrganizerId;
+    private String tournamentId;
+
 
     public String getTeamName() {
         return teamName;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,7 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
-import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.models.ModelSearchPeoples;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -26,21 +24,19 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelUserFriendList> detail;
+    ArrayList<ModelSearchPeoples> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
-    private String currentUserId = "";
 
-    public AdapterUserFriendList(Context context, OnCustomItemClicListener lis, ArrayList<ModelUserFriendList> list, String currentUserId) {
+    public AdapterSearchPeopleList(Context context, OnCustomItemClicListener lis, ArrayList<ModelSearchPeoples> list) {
 
         this.detail = list;
         this.mContext = context;
         this.listener = lis;
-        this.currentUserId = currentUserId;
 
     }
 
@@ -50,7 +46,7 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_userfriendlist, parent, false);
+                    R.layout.row_search_peoplelist, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -80,31 +76,19 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelUserFriendList m1 = (ModelUserFriendList) detail.get(i);
+            ModelSearchPeoples m1 = (ModelSearchPeoples) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getFriendName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getName());
 
-            if (!m1.getFriendProfilePic().equalsIgnoreCase("")) {
+            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getFriendProfilePic())
+                        .load(m1.getProfilePicture())
                         .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_viewers);
             }
-            if (m1.getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-                ((CustomViewHolder) holder).btn_confirm.setText("UNFRIEND");
-            }
-            if (m1.getRequestStatus().equalsIgnoreCase("PENDING")) {
-                ((CustomViewHolder) holder).btn_confirm.setText("RESEND");
-            }
-            Log.e("currentUserId", currentUserId + " * " + AppUtils.getUserId(mContext));
-            if (currentUserId.equalsIgnoreCase(AppUtils.getUserId(mContext))) {
-                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.VISIBLE);
-            } else {
-                ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
-            }
 
-            ((AdapterUserFriendList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+            ((AdapterSearchPeopleList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 1);
@@ -150,7 +134,7 @@ public class AdapterUserFriendList extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        ModelUserFriendList m1 = (ModelUserFriendList) detail.get(position);
+        ModelSearchPeoples m1 = (ModelSearchPeoples) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

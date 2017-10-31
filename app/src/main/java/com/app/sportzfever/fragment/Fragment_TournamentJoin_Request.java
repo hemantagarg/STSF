@@ -13,15 +13,13 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
-import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterUserFriendList;
+import com.app.sportzfever.adapter.AdapterTournamentJoinRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUserFriendList;
+import com.app.sportzfever.models.TeamJoinRequest;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
@@ -34,28 +32,31 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_UserFriend_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_TournamentJoin_Request extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterUserFriendList adapterUserFriendList;
-    private ModelUserFriendList userFriendList;
-    private TextView text_nodata;
-    private ArrayList<ModelUserFriendList> arrayList;
+    private AdapterTournamentJoinRequest adapterTournamentJoinRequest;
+    private TeamJoinRequest teamJoinRequest;
+    private ArrayList<TeamJoinRequest> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String avtarid = "";
-    public static Fragment_UserFriend_List fragment_friend_request;
-    private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
+    private TextView text_nodata;
+    private String maxlistLength = "";
 
-    public static Fragment_UserFriend_List getInstance() {
-        if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_UserFriend_List();
-        return fragment_friend_request;
+    public static Fragment_TournamentJoin_Request fragment_teamJoin_request;
+    private final String TAG = Fragment_TournamentJoin_Request.class.getSimpleName();
+
+    public static Fragment_TournamentJoin_Request getInstance() {
+        if (fragment_teamJoin_request == null)
+            fragment_teamJoin_request = new Fragment_TournamentJoin_Request();
+        return fragment_teamJoin_request;
     }
 
     @Override
@@ -80,20 +81,12 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        getBundle();
-    }
 
-    private void getBundle() {
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            avtarid = bundle.getString("avtarid");
-        }
     }
 
     @Override
@@ -106,44 +99,40 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 getServicelistRefresh();
             }
         });
+
+
+
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
+
         if (flag == 1) {
-            if (arrayList.get(position).getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.UNFRIEND);
-            } else {
-                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ADDFRIEND);
-            }
+            accepttournamnetrequest(arrayList.get(position).getId(), AppConstant.ACCEPTED);
+
         } else if (flag == 2) {
 
-            FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
-            Bundle b = new Bundle();
-            b.putString("id", arrayList.get(position).getFriendId());
-            fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            accepttournamnetrequest(arrayList.get(position).getId(), AppConstant.REJECTED);
+
         }
     }
 
 
-    private void acceptTeamrequest(String id, String ADDFRIEND) {
+
+
+
+
+    private void accepttournamnetrequest(String id, String accept) {
         try {
-            AppUtils.onKeyBoardDown(context);
             if (AppUtils.isNetworkAvailable(context)) {
+                //    http://sfscoring.betasportzfever.com/RespondToMatchchallengeInvitation/41/REJECTED
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ACCEPTREJECTTOURNAMENTINVITATION + id + "/" + accept;
+                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
-                JSONObject jsonObject = new JSONObject();
-
-                jsonObject.put("toUserId", id);
-                jsonObject.put("fromUserId", AppUtils.getUserId(context));
-                jsonObject.put("type", ADDFRIEND);
-
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -153,6 +142,8 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     }
 
 
+
+
     private void getServicelistRefresh() {
 
         try {
@@ -160,7 +151,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERFRIENDLIST + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TEAMJOINREQUEST + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -177,26 +168,30 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         try {
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
                     //  maxlistLength = jObject.getString("total");
+
+                    JSONArray match = data.getJSONArray("invitationFromOrganizerToTeamsForTournament");
+
                     arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    for (int i = 0; i < match.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = match.getJSONObject(i);
 
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList.setFriendId(jo.getString("friendId"));
-                        userFriendList.setFriendName(jo.getString("friendName"));
-                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
-                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
-                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
+                        teamJoinRequest = new TeamJoinRequest();
 
-                        userFriendList.setRowType(1);
+                        teamJoinRequest.setId(jo.getString("id"));
 
-                        arrayList.add(userFriendList);
+                        teamJoinRequest.setTournamentName(jo.getString("tournamentName"));
+                        teamJoinRequest.setTournamentProfilePicture(jo.getString("tournamentProfilePicture"));
+
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
                     }
-                    adapterUserFriendList = new AdapterUserFriendList(getActivity(), this, arrayList, avtarid);
-                    list_request.setAdapter(adapterUserFriendList);
+
+                    adapterTournamentJoinRequest = new AdapterTournamentJoinRequest(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterTournamentJoinRequest);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -205,56 +200,56 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Friend found");
+                        text_nodata.setText("No Tournament invite found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Friend  found");
+                    text_nodata.setText("No Tournament invite found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
 
+            } else if (position == 11) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    //   maxlistLength = jObject.getString("total");
-                    JSONArray data = jObject.getJSONArray("data");
+                    JSONObject data = jObject.getJSONObject("data");
+                    //  maxlistLength = jObject.getString("total");
+                    JSONArray match = data.getJSONArray("invitationFromOrganizerToTeamsForTournament");
 
-                    arrayList.remove(arrayList.size() - 1);
-                    for (int i = 0; i < data.length(); i++) {
+                    arrayList.removeAll(arrayList);
+                    for (int i = 0; i < match.length(); i++) {
 
-                        JSONObject jo = data.getJSONObject(i);
+                        JSONObject jo = match.getJSONObject(i);
 
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList = new ModelUserFriendList();
-                        userFriendList.setFriendId(jo.getString("friendId"));
-                        userFriendList.setFriendName(jo.getString("friendName"));
-                        userFriendList.setFriendProfilePic(jo.getString("friendProfilePic"));
-                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
-                        userFriendList.setFriendshipDate(jo.getString("friendshipDate"));
+                        teamJoinRequest = new TeamJoinRequest();
 
-                        userFriendList.setRowType(1);
+                        teamJoinRequest.setId(jo.getString("id"));
 
-                        arrayList.add(userFriendList);
+                        teamJoinRequest.setTournamentName(jo.getString("tournamentName"));
+
+                        teamJoinRequest.setRowType(1);
+
+                        arrayList.add(teamJoinRequest);
                     }
-                    adapterUserFriendList.notifyDataSetChanged();
+
+                    adapterTournamentJoinRequest.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterUserFriendList.notifyDataSetChanged();
+                    adapterTournamentJoinRequest.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
-                }
-            } else if (position == 11) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                    getServicelistRefresh();
-                } else {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {
