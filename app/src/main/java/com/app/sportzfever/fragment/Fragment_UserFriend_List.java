@@ -34,7 +34,6 @@ import java.util.ArrayList;
  */
 public class Fragment_UserFriend_List extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
@@ -129,8 +128,8 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
 
                 JSONObject jsonObject = new JSONObject();
 
-                jsonObject.put("fromUserId", id);
-                jsonObject.put("toUserId", AppUtils.getUserId(context));
+                jsonObject.put("toUserId", id);
+                jsonObject.put("fromUserId", AppUtils.getUserId(context));
                 jsonObject.put("type", ADDFRIEND);
 
                 // http://sfscoring.betasportzfever.com/getNotifications/155

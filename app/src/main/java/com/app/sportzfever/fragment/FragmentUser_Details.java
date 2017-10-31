@@ -51,7 +51,9 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
     private Button btn_follow_team;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
+    JSONObject userDetailObject, AvtarDetail;
     private String id = "", isTeamfollower = "";
+    private String isFriend = "";
 
     public static FragmentUser_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -68,28 +70,10 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         vendorProfileFragment = this;
         initViews();
         getBundle();
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+        getUserDetails();
         setCollapsingToolbar();
         setListener();
         return view;
-    }
-
-    public void setUserData(String image, String name, String sportname) {
-        if (image != null && !image.equalsIgnoreCase("")) {
-            Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
-            Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
-        }
-        text_username.setText(name);
-        text_address.setText(sportname);
-        this.isTeamfollower = isTeamfollower;
-    /*    if (isTeamfollower.equalsIgnoreCase("1")) {
-            btn_follow_team.setText("Unfriend");
-        } else {
-            btn_follow_team.setText("Friend");
-        }*/
-
     }
 
     private void setListener() {
@@ -97,8 +81,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (isTeamfollower.equalsIgnoreCase("1")) {
+                if (isFriend.equalsIgnoreCase("1")) {
                     followUnfollowTeam("UNFRIEND");
                 } else {
                     followUnfollowTeam("ADDFRIEND");
@@ -107,6 +90,22 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         });
     }
 
+    private void getUserDetails() {
+        Dashboard.getInstance().setProgressLoader(true);
+        try {
+            if (AppUtils.isNetworkAvailable(mActivity)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + id + "/" + AppUtils.getAuthToken(mActivity);
+                new CommonAsyncTaskHashmap(2, mActivity, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void followUnfollowTeam(String ADDFRIEND) {
 
         if (AppUtils.isNetworkAvailable(mActivity)) {
@@ -114,7 +113,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("fromUserId", AppUtils.getUserId(mActivity));
-                jsonObject.put("toUserId", AppUtils.getAvtarId(mActivity));
+                jsonObject.put("toUserId", id);
                 jsonObject.put("type", ADDFRIEND);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
@@ -183,12 +182,22 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("About");
-        tabLayout.getTabAt(1).setText("SportsLine");
-        tabLayout.getTabAt(2).setText("Friends");
-        tabLayout.getTabAt(3).setText("Following");
-        tabLayout.getTabAt(4).setText("Photos");
-
+        if (AppUtils.getUserId(mActivity).equalsIgnoreCase(id)) {
+            tabLayout.getTabAt(0).setText("About");
+            tabLayout.getTabAt(1).setText("Sport Avtar");
+            tabLayout.getTabAt(2).setText("Friends");
+            tabLayout.getTabAt(3).setText("Following");
+            tabLayout.getTabAt(4).setText("Photos");
+            btn_follow_team.setVisibility(View.GONE);
+        } else {
+            tabLayout.getTabAt(0).setText("About");
+            tabLayout.getTabAt(1).setText("Sport Avtar");
+            tabLayout.getTabAt(2).setText("SportsLine");
+            tabLayout.getTabAt(3).setText("Friends");
+            tabLayout.getTabAt(4).setText("Following");
+            tabLayout.getTabAt(5).setText("Photos");
+            btn_follow_team.setVisibility(View.VISIBLE);
+        }
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
     }
@@ -198,14 +207,24 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         FragmentUserProfile tab2 = new FragmentUserProfile();
         Bundle b = new Bundle();
         b.putString("avtarid", id);
+        b.putString("data", userDetailObject.toString());
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_ParticularUserFeed feed = new Fragment_ParticularUserFeed();
-        Bundle b11 = new Bundle();
-        b11.putString("avtarid", id);
-        feed.setArguments(b11);
-        adapter.addFrag(feed, "feed");
+        Fragment_AvtarNames tab12 = new Fragment_AvtarNames();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", id);
+        b111.putString("data", userDetailObject.toString());
+        tab12.setArguments(b111);
+        adapter.addFrag(tab12, "services");
+
+        if (!AppUtils.getUserId(mActivity).equalsIgnoreCase(id)) {
+            Fragment_ParticularUserFeed feed = new Fragment_ParticularUserFeed();
+            Bundle b11 = new Bundle();
+            b11.putString("avtarid", id);
+            feed.setArguments(b11);
+            adapter.addFrag(feed, "feed");
+        }
 
         Fragment_UserFriend_List tab4 = new Fragment_UserFriend_List();
         Bundle b3 = new Bundle();
@@ -236,17 +255,42 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
                 if (response.getString("result").equalsIgnoreCase("1")) {
 
                     //  JSONObject data = response.getJSONObject("data");
-                    if (isTeamfollower.equalsIgnoreCase("1")) {
-                        isTeamfollower = "0";
+                    if (isFriend.equalsIgnoreCase("1")) {
+                        isFriend = "0";
                         btn_follow_team.setText("FRIEND");
                     } else {
-                        isTeamfollower = "1";
+                        isFriend = "1";
                         btn_follow_team.setText("UNFRIEND");
                     }
                 } else {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
+            } else if (method == 2) {
+                Dashboard.getInstance().setProgressLoader(false);
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = response.getJSONObject("data");
+                    userDetailObject = data;
+
+                    String image = data.getString("profilePicture");
+                    if (image != null && !image.equalsIgnoreCase("")) {
+                        Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
+                        Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
+                    }
+                    text_username.setText(data.getString("userName"));
+                    text_address.setText(data.getString("currentLocation"));
+
+                    isFriend = data.getString("isFriend");
+                    if (isFriend.equalsIgnoreCase("1")) {
+                        btn_follow_team.setText("UnFriend");
+                    } else {
+                        btn_follow_team.setText("Add Friend");
+                    }
+                    setupViewPager(viewPager);
+                    tabLayout.setupWithViewPager(viewPager);
+                    setupTabIcons();
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

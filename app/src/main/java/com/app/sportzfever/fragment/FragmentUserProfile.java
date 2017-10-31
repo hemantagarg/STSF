@@ -77,16 +77,53 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
 
         getBundle();
         setlistener();
-        getServicelistRefresh();
     }
 
     private void getBundle() {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-
             avtarid = bundle.getString("avtarid");
 
+            String data = bundle.getString("data");
+            setData(data);
+        }
+    }
+
+    private void setData(String maindata) {
+        try {
+            JSONObject data = new JSONObject(maindata);
+            JSONObject jdob = data.getJSONObject("dateOfBirth");
+
+            modelAboutMe = new ModelAboutMe();
+
+            modelAboutMe.setUserId(data.getString("userId"));
+
+            modelAboutMe.setUserName(data.getString("userName"));
+            modelAboutMe.setGender(data.getString("gender"));
+            modelAboutMe.setHometown(data.getString("hometown"));
+            modelAboutMe.setCurrentLocation(data.getString("currentLocation"));
+            modelAboutMe.setProfilePicture(data.getString("profilePicture"));
+            modelAboutMe.setHeight(data.getString("height"));
+            modelAboutMe.setAbout(data.getString("about"));
+            modelAboutMe.setWeight(data.getString("weight"));
+
+            avtar_namelive.setText(modelAboutMe.getUserName());
+            avtar_jercynumberlive.setText(modelAboutMe.getGender());
+            avtar_battingstylelive.setText(AppUtils.getUseremail(context));
+            avtar_bowlingstylelive.setText(modelAboutMe.getHometown());
+            avtar_bowlinghandlive.setText(modelAboutMe.getCurrentLocation());
+            avtar_specialitylive.setText(modelAboutMe.getAbout());
+            avtar_heigtlive.setText(modelAboutMe.getHeight() + " " + modelAboutMe.getHeightUnit());
+            avtar_weightlive.setText(modelAboutMe.getWeight());
+            avtar_battingheldlive.setText(jdob.getString("date") + " " + jdob.getString("monthName") + " " + jdob.getString("year"));
+            if (!modelAboutMe.getProfilePicture().equalsIgnoreCase("")) {
+                Picasso.with(context).load(modelAboutMe.getProfilePicture()).placeholder(R.drawable.ic_launcher).into(img_profilepic);
+            }
+            modelAboutMe.setRowType(1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -153,7 +190,6 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                         Picasso.with(context).load(modelAboutMe.getProfilePicture()).placeholder(R.drawable.ic_launcher).into(img_profilepic);
                     }
                     modelAboutMe.setRowType(1);
-                    FragmentUser_Details.getInstance().setUserData(modelAboutMe.getProfilePicture(), modelAboutMe.getUserName(), modelAboutMe.getCurrentLocation());
                 }
 
             }

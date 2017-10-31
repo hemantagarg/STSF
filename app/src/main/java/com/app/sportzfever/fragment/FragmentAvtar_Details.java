@@ -157,6 +157,11 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         if (bundle != null) {
             id = bundle.getString("id");
             AppUtils.setAvtarId(mActivity, id);
+            if (AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(id)) {
+                btn_follow_team.setVisibility(View.GONE);
+            } else {
+                btn_follow_team.setVisibility(View.VISIBLE);
+            }
         }
     }
 

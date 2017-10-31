@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.adapter.DrawerListAdapter;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -64,6 +65,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
+
+import static android.R.attr.id;
 
 public class Dashboard extends AppCompatActivity implements ApiResponse {
 
@@ -171,7 +174,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 }
             }
         }
-
+        getUserDetails();
         getMenuData();
         setListener();
     }
@@ -632,6 +635,21 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     }
 
+    private void getUserDetails() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_USERABOUT + id + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /*********************************************************************************
      * Function Name - activeNotificationFragment
      * <p/>
@@ -864,7 +882,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void refreshFragments() {
         if (currentFragment instanceof Fragment_PostFeed) {
             ((Fragment_PostFeed) currentFragment).onResume();
-        } if (currentFragment instanceof FragmentMenuTeamList) {
+        }
+        if (currentFragment instanceof FragmentMenuTeamList) {
             ((FragmentMenuTeamList) currentFragment).onResume();
         }
     }
@@ -908,6 +927,13 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     if (currentFragment instanceof FragmentMenuTeamList) {
                         ((FragmentMenuTeamList) currentFragment).onResume();
                     }
+                }
+            } else if (method == 2) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = jObject.getJSONObject("data");
+
+                    JSONObject avatar = data.getJSONObject("avatar");
+                    AppUtils.setLoginUserAvtarId(context, avatar.getString("avatarId"));
                 }
             }
         } catch (JSONException e) {

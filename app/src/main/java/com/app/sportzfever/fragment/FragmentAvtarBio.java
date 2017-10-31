@@ -163,9 +163,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     avtar_namelive.setText(modelAvtarProfile.getName());
                     avtar_battingheldlive.setText(modelAvtarProfile.getBattingHand());
                     avtar_jercynumberlive.setText(modelAvtarProfile.getJersyNumber());
-
                     avtar_battingstylelive.setText(modelAvtarProfile.getBattingStyle());
-
                     avtar_bowlingstylelive.setText(modelAvtarProfile.getBowlingStyle());
                     avtar_bowlinghandlive.setText(modelAvtarProfile.getBowlingHand());
                     avtar_specialitylive.setText(modelAvtarProfile.getSpeciality());
@@ -175,7 +173,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     modelAvtarProfile.setRowType(1);
 
                     FragmentAvtar_Details.getInstance().setUserData(modelAvtarProfile.getAvatarProfilePicture(),
-                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName(),jo.getString("isTeamfollower"));
+                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName(),jo.getString("isFollower"));
 
                 }
 
