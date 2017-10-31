@@ -51,7 +51,7 @@
                     android:text="Madhav"
                     android:layout_marginLeft="@dimen/dp10"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_16" />
+                    android:textSize="@dimen/text_size_12" />
 
 
 

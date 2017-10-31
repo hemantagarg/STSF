@@ -78,7 +78,7 @@ public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerV
 
             TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getTournamentName());
+            ((CustomViewHolder) holder).text_name.setText(m1.getNotificationText());
 
 
             if (!m1.getTournamentProfilePicture().equalsIgnoreCase("")) {

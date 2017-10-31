@@ -183,7 +183,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
 
         if (AppUtils.getUserId(mActivity).equalsIgnoreCase(id)) {
             tabLayout.getTabAt(0).setText("About");
-            tabLayout.getTabAt(1).setText("Sport Avtar");
+            tabLayout.getTabAt(1).setText("Sport Avatar");
             tabLayout.getTabAt(2).setText("Friends");
             tabLayout.getTabAt(3).setText("Following");
             tabLayout.getTabAt(4).setText("Photos");
