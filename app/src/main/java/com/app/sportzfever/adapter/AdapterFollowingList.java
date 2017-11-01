@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,10 +99,18 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
                 ((CustomViewHolder) holder).btn_confirm.setVisibility(View.GONE);
             }
 
+
             ((AdapterFollowingList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 2);
+
+                }
+            });
+            ((AdapterFollowingList.CustomViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
 
                 }
             });
@@ -120,6 +129,7 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView text_name, text_message, text_date;
         ImageView image_viewers;
+        CardView card_view;
 
         Button btn_confirm;
 
@@ -131,7 +141,7 @@ public class AdapterFollowingList extends RecyclerView.Adapter<RecyclerView.View
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
-
+            this.card_view = (CardView) view.findViewById(R.id.card_view);
         }
 
         @Override

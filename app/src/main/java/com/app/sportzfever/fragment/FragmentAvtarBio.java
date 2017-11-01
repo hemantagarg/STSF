@@ -2,12 +2,12 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +16,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
@@ -25,30 +25,22 @@ import com.app.sportzfever.utils.AppUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 /**
  * Created by admin on 06-01-2016.
  */
 public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
     private ModelAvtarProfile modelAvtarProfile;
-    private ArrayList<ModelAvtarProfile> arrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
-    private int skipCount = 0;
-    private boolean loading = true;
-    private String maxlistLength = "";
-    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive,avtar_bowlinghandlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
+    private ImageView image_edit;
+    private TextView avtar_namelive, avtar_battingheldlive, avtar_jercynumberlive, avtar_bowlinghandlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_specialitylive, avtar_favouritefieldpositionlive, avtar_aboutmelive;
     public static FragmentAvtarBio fragment_teamJoin_request;
     private final String TAG = FragmentAvtarBio.class.getSimpleName();
     private String avtarid = "";
+    private JSONObject jo;
 
     public static FragmentAvtarBio getInstance() {
         if (fragment_teamJoin_request == null)
@@ -63,7 +55,6 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
 
         View view_about = inflater.inflate(R.layout.fragement_avtarbio_new, container, false);
         context = getActivity();
-        arrayList = new ArrayList<>();
         b = getArguments();
 
         return view_about;
@@ -74,7 +65,6 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         avtar_namelive = (TextView) view.findViewById(R.id.avtar_namelive);
         avtar_battingheldlive = (TextView) view.findViewById(R.id.avtar_battingheldlive);
         avtar_jercynumberlive = (TextView) view.findViewById(R.id.avtar_jercynumberlive);
@@ -84,27 +74,40 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
         avtar_specialitylive = (TextView) view.findViewById(R.id.avtar_specialitylive);
         avtar_favouritefieldpositionlive = (TextView) view.findViewById(R.id.avtar_favouritefieldpositionlive);
         avtar_aboutmelive = (TextView) view.findViewById(R.id.avtar_aboutmelive);
-
+        image_edit = (ImageView) view.findViewById(R.id.image_edit);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         getBundle();
         setlistener();
-        getServicelistRefresh();
+        //   getServicelistRefresh();
     }
 
     private void getBundle() {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
-
             avtarid = bundle.getString("avtarid");
-
+            if (AppUtils.getLoginUserAvtarId(context).equalsIgnoreCase(avtarid)) {
+                image_edit.setVisibility(View.VISIBLE);
+            } else {
+                image_edit.setVisibility(View.GONE);
+            }
         }
     }
 
     private void setlistener() {
 
+        image_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                FragmentAvtarBioEdit tab2 = new FragmentAvtarBioEdit();
+                Bundle b = new Bundle();
+                b.putString("data", jo.toString());
+                tab2.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+
+            }
+        });
     }
 
     @Override
@@ -114,14 +117,20 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
         }
     }
 
-    private void getServicelistRefresh() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        getServicelistRefresh();
+    }
+
+    public void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_AVTARPROFILEBIO + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url,null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -142,7 +151,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     //JSONArray jarray = data.getJSONArray("AvatarDetails");
                     //  data = jObject.getString("total");
 
-                    JSONObject jo = data.getJSONObject("AvatarDetails");
+                    jo = data.getJSONObject("AvatarDetails");
 
                     modelAvtarProfile = new ModelAvtarProfile();
 
@@ -173,7 +182,7 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
                     modelAvtarProfile.setRowType(1);
 
                     FragmentAvtar_Details.getInstance().setUserData(modelAvtarProfile.getAvatarProfilePicture(),
-                            modelAvtarProfile.getName(),modelAvtarProfile.getSportName(),jo.getString("isFollower"));
+                            modelAvtarProfile.getName(), modelAvtarProfile.getSportName(), jo.getString("isFollower"));
 
                 }
 

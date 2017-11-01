@@ -261,7 +261,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         } else if (flag == 9) {
             showMenuDialog(position);
         } else if (flag == 11) {
-            if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
+           /* if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
                 FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getAvatar());
@@ -274,7 +274,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
                 b.putString("id", arrayList.get(position).getUser());
                 fragmentUser_details.setArguments(b);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
-            }
+            }*/
         }
     }
 

@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +90,13 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
                     listener.onItemClickListener(i, 2);
                 }
             });
+            ((CustomViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 1);
+                }
+            });
+
 
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -113,6 +121,7 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView text_avtarteamname, text_speciality;
         ImageView image_avtar, image_status;
         RelativeLayout relmatchvs;
+        CardView card_view;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -121,6 +130,7 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.text_speciality = (TextView) view.findViewById(R.id.text_speciality);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_viewers);
             this.image_status = (ImageView) view.findViewById(R.id.image_status);
+            this.card_view = (CardView) view.findViewById(R.id.card_view);
         }
     }
 

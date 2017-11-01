@@ -13,10 +13,12 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterFollowingList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFollowing;
@@ -118,6 +120,20 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
     public void onItemClickListener(int position, int flag) {
         if (flag == 2) {
             followUnfollowTeam(arrayList.get(position).getAvatar(), "UNFOLLOw");
+        } else if (flag == 1) {
+            if (arrayList.get(position).getAvatarType().equalsIgnoreCase("PLAYER")) {
+                FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", arrayList.get(position).getAvatar());
+                fragmentAvtar_details.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
+                Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", arrayList.get(position).getAvatar());
+                fragmentAvtar_details.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            }
         }
     }
 
@@ -179,7 +195,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         modelFollowing.setStatus(jo.getString("status"));
                         modelFollowing.setProfilePicture(jo.getString("profilePicture"));
                         modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
-                        modelFollowing.setFan_date_time(jo.getString("avatarType"));
+                        modelFollowing.setAvatarType(jo.getString("avatarType"));
                         modelFollowing.setName(jo.getString("name"));
                         modelFollowing.setRowType(1);
 
@@ -197,7 +213,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         modelFollowing.setStatus(jo.getString("status"));
                         modelFollowing.setProfilePicture(jo.getString("profilePicture"));
                         modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
-                        modelFollowing.setFan_date_time(jo.getString("avatarType"));
+                        modelFollowing.setAvatarType(jo.getString("avatarType"));
                         modelFollowing.setName(jo.getString("name"));
 
                         modelFollowing.setRowType(1);

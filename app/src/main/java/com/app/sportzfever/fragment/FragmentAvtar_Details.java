@@ -68,9 +68,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         vendorProfileFragment = this;
         initViews();
         getBundle();
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+
         setCollapsingToolbar();
         setListener();
         return view;
@@ -89,8 +87,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         } else {
             btn_follow_team.setText("Follow");
         }
-
     }
+
 
     private void setListener() {
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
@@ -296,9 +294,11 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         Dashboard.getInstance().manageFooterVisibitlity(false);
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
     }
 
 

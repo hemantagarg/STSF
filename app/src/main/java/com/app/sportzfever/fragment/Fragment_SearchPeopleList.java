@@ -146,6 +146,7 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
         });
     }
 
+
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
@@ -190,7 +191,7 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
 
 
     private void getServicelistRefresh() {
-
+        AppUtils.onKeyBoardDown(context);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
@@ -211,6 +212,7 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                AppUtils.onKeyBoardDown(context);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
                     JSONObject peoples = data.getJSONObject("peoples");

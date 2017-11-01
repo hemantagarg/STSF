@@ -30,6 +30,7 @@ public interface JsonApiHelper {
     String GET_TOURNAMENTFIXTURE = "getTournamentFixtures/";
     String GET_COMMENTS = "getComments/";
     String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
+    String UPDATE_AVTARDETAILS = "updateAvatarDetails";
     String GET_LIKES = "getLikes/";
     String CREATE_TEAM_AVTAR = "createTeamAvatar";
     String CREATE_TEAM = "createTeam";

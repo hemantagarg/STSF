@@ -897,6 +897,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         if (currentFragment instanceof FragmentMenuTeamList) {
             ((FragmentMenuTeamList) currentFragment).onResume();
         }
+        if (currentFragment instanceof FragmentAvtar_Details) {
+            ((FragmentAvtar_Details) currentFragment).onResume();
+        }
     }
 
     @Override

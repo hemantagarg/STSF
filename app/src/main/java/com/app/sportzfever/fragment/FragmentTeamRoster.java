@@ -18,6 +18,7 @@ import com.app.sportzfever.adapter.AdapterTeamRoster;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -143,8 +144,12 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        if (flag == 2) {
-
+        if (flag == 1) {
+            FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", arrayList.get(position).getAvatar());
+            fragmentAvtar_details.setArguments(bundle);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
         }
     }
 
@@ -186,6 +191,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                         modelSportTeamList = new ModelSportTeamList();
 
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                        modelSportTeamList.setAvatar(jo.getString("avatar"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));

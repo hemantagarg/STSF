@@ -116,10 +116,10 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             String image = data.getString("ownerPic");
             isTeamfollower = data.getString("isTeamfollower");
 
-            if (AppUtils.getUserId(mActivity).equalsIgnoreCase(data.getString("ownerId")) ||
-                    AppUtils.getUserId(mActivity).equalsIgnoreCase(data.getString("captainId"))) {
+            if (AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("ownerId")) ||
+                    AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("captainId"))) {
                 btn_join_team.setVisibility(View.GONE);
-            }else {
+            } else {
                 btn_join_team.setVisibility(View.VISIBLE);
             }
 
@@ -142,6 +142,12 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             } else {
                 btn_follow_team.setText("Follow");
             }
+            if (btn_follow_team.getVisibility() == View.GONE && btn_join_team.getVisibility() == View.GONE) {
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                int pixels = (int) (235 * scale + 0.5f);
+                rl_banner.getLayoutParams().height = pixels;
+            }
+
 
             if (image != null && !image.equalsIgnoreCase("")) {
                 Picasso.with(mActivity).load(bannerimage).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);

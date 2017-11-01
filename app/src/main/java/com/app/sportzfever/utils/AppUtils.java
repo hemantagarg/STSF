@@ -104,6 +104,7 @@ public class AppUtils {
 
     }
 
+
     public static void onKeyBoardDown(Context con) {
         try {
             InputMethodManager inputManager = (InputMethodManager) con

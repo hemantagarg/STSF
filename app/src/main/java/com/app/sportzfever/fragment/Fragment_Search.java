@@ -123,6 +123,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
 
     private void searchText() {
         try {
+            AppUtils.onKeyBoardDown(context);
             if (AppUtils.isNetworkAvailable(context)) {
              /*   1=userId
                 ALL=type (ALL,PEOPLE,TEAM,TOURNAMENT,POSTS,EVENTS)
@@ -185,10 +186,10 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     private void setupTabIcons() {
 
         tabLayout.addTab(tabLayout.newTab().setText("Peoples"));
-        tabLayout.addTab(tabLayout.newTab().setText("Team"));
+     /*   tabLayout.addTab(tabLayout.newTab().setText("Team"));
         tabLayout.addTab(tabLayout.newTab().setText("Tournament"));
         tabLayout.addTab(tabLayout.newTab().setText("Post"));
-        tabLayout.addTab(tabLayout.newTab().setText("Events"));
+        tabLayout.addTab(tabLayout.newTab().setText("Events"));*/
 
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
