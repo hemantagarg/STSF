@@ -116,9 +116,15 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             String image = data.getString("ownerPic");
             isTeamfollower = data.getString("isTeamfollower");
 
+            if (AppUtils.getUserId(mActivity).equalsIgnoreCase(data.getString("ownerId")) ||
+                    AppUtils.getUserId(mActivity).equalsIgnoreCase(data.getString("captainId"))) {
+                btn_join_team.setVisibility(View.GONE);
+            }else {
+                btn_join_team.setVisibility(View.VISIBLE);
+            }
+
             if (isTeamMember.equalsIgnoreCase("1")) {
                 btn_join_team.setText("Leave Team");
-                btn_follow_team.setText("Leave Team");
                 btn_follow_team.setVisibility(View.GONE);
                 /* final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (235 * scale + 0.5f);
@@ -200,6 +206,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         }
 
     }
+
     private void JoinTeam(String type) {
         if (AppUtils.isNetworkAvailable(mActivity)) {
             try {
@@ -218,7 +225,9 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
 
-    }    private void LeaveTeam(String type) {
+    }
+
+    private void LeaveTeam(String type) {
         if (AppUtils.isNetworkAvailable(mActivity)) {
             try {
                 JSONObject jsonObject = new JSONObject();

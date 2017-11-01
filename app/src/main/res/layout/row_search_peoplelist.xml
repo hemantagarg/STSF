@@ -24,19 +24,16 @@
 
             <ImageView
                 android:id="@+id/image_viewers"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
-
-                android:layout_marginLeft="@dimen/dp5"
-                android:padding="@dimen/dp5"
+                android:layout_margin="@dimen/dp5"
                 android:scaleType="fitXY" />
 
             <RelativeLayout
                 android:id="@+id/rl_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp10"
                 android:layout_toRightOf="@+id/image_viewers"
                 android:padding="@dimen/dp5">
@@ -46,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_marginTop="@dimen/dp10"
                     android:layout_toLeftOf="@+id/btn_confirm"
                     android:text="Madhav"
                     android:textColor="@color/black"
@@ -58,9 +56,53 @@
                     android:layout_alignParentRight="true"
                     android:background="@drawable/green_button_selecor"
                     android:text="Add Friend"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_viewers"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp5">
+
+                <TextView
+                    android:id="@+id/text_friends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text=""
+                    android:textColor="@color/text_hint_color" />
+
+                <TextView
+                    android:id="@+id/text_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:drawablePadding="@dimen/dp10"
+                    android:gravity="center"
+                    android:padding="@dimen/dp5"
+                    android:text=""
+                    android:textColor="@color/text_hint_color" />
+
+                <TextView
+                    android:id="@+id/text_team"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text=""
+                    android:textColor="@color/text_hint_color" />
+
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

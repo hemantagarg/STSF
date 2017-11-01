@@ -29,6 +29,7 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.iclasses.InternalStorageContentProvider;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -424,14 +425,20 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
 
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     JSONObject data = jObject.getJSONObject("data");
-                    Intent intent = new Intent();
+                   /* Intent intent = new Intent();
                     intent.putExtra("id", data.getString("id"));
                     intent.putExtra("name", data.getString("name"));
                     setResult(22, intent);
-                    context.onBackPressed();
+                   */
                     Dashboard.getInstance().getMenuData();
-
+                    context.onBackPressed();
+                    Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", data.getString("teamId"));
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
                 } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {

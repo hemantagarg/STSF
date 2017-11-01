@@ -147,8 +147,12 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-
+            if (arrayList.get(position).getUserId().equalsIgnoreCase("FRIENDS")) {
+                acceptTeamrequest(arrayList.get(position).getUserId(), AppConstant.UNFRIEND);
+            } else {
                 acceptTeamrequest(arrayList.get(position).getUserId(), AppConstant.ADDFRIEND);
+            }
+
 
         } else if (flag == 2) {
 

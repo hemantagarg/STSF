@@ -112,7 +112,6 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
             @Override
             public void onClickOfHeaderRightView() {
                 if (!edt_search.getText().toString().equalsIgnoreCase("")) {
-
                     searchText();
                 } else {
                     Toast.makeText(context, "Please enter something to search", Toast.LENGTH_SHORT).show();

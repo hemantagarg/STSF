@@ -84,8 +84,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
     private ArrayList<ModelGallery> arrayListPhotosAlbum = new ArrayList<>();
     private AdapterPhotoList adapterPhotoList;
     private AdapterAlbumPhotoList adapterAlbumPhotoList;
-    private String userid ="" ;
-    private String useridn ="203" ;
+    private String userid = "";
+    private String useridn = "203";
 
     public static Fragment_PostFeed getInstance() {
         if (fragment_friend_request == null)
@@ -347,7 +347,6 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
                 }
             }
 
-
             Log.e("user", userid);
             Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
             Log.e("statusType", "TEXT");
@@ -355,8 +354,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e("Content-Type", "undefined");
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
-          //  reqEntity.addPart("avatar", userId);
-            reqEntity.addPart("user",userIdN);
+            //  reqEntity.addPart("avatar", userId);
+            reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);
             reqEntity.addPart("description", description);

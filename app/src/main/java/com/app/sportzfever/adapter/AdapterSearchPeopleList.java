@@ -75,10 +75,12 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
 
         if (holder instanceof CustomViewHolder) {
-
             ModelSearchPeoples m1 = (ModelSearchPeoples) detail.get(i);
 
             ((CustomViewHolder) holder).text_name.setText(m1.getName());
+            ((CustomViewHolder) holder).text_post.setText(m1.getTotalPost() + " Posts");
+            ((CustomViewHolder) holder).text_team.setText(m1.getTotalTeam() + " Teams");
+            ((CustomViewHolder) holder).text_friends.setText(m1.getTotalFriend() + " Friends");
 
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -115,7 +117,7 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView text_name, text_message, text_date;
+        TextView text_name, text_message, text_date, text_team, text_post, text_friends;
         ImageView image_viewers;
         RelativeLayout rl_main;
         Button btn_confirm;
@@ -125,6 +127,9 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
             this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
+            this.text_friends = (TextView) view.findViewById(R.id.text_friends);
+            this.text_post = (TextView) view.findViewById(R.id.text_post);
+            this.text_team = (TextView) view.findViewById(R.id.text_team);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
             this.rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
