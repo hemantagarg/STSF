@@ -13,10 +13,12 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSearchPeopleList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSearchPeoples;
@@ -155,12 +157,11 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
 
 
         } else if (flag == 2) {
-
-          /*  FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+            FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
             Bundle b = new Bundle();
-            b.putString("id", arrayList.get(position).getFriendId());
+            b.putString("id", arrayList.get(position).getUserId());
             fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);*/
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
         }
     }
 
