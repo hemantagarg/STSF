@@ -8,15 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
+import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterFriendRequest;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.FriendRequest;
@@ -41,6 +44,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     private AdapterFriendRequest adapterFriendRequest;
     private FriendRequest friendrequest;
     private TextView text_nodata;
+    private Button text_addfriend;
     private ArrayList<FriendRequest> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
@@ -64,7 +68,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_teamjoin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_friendrequest, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -83,6 +87,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         text_nodata= (TextView) view.findViewById(R.id.text_nodata);
+        text_addfriend= (Button) view.findViewById(R.id.text_addfriend);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -96,6 +101,17 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     }
 
     private void setlistener() {
+
+
+        text_addfriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_Search tab2 = new Fragment_Search();
+
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+
+            }
+        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -104,56 +120,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             }
         });
 
-/*
-        list_request.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if ((AppUtils.isNetworkAvailable(context))) {
 
-                    if (!maxlistLength.equalsIgnoreCase(arrayList.size() + "")) {
-                        if (dy > 0) //check for scroll down
-                        {
-                            visibleItemCount = layoutManager.getChildCount();
-                            totalItemCount = layoutManager.getItemCount();
-                            pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-                            if (loading) {
-                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                    loading = false;
-                                    modelNotification = new ModelNotification();
-                                    modelNotification.setRowType(2);
-                                    arrayList.add(modelNotification);
-                                    adapterNotification.notifyDataSetChanged();
-
-                                    skipCount = skipCount + 10;
-
-                                    try {
-
-                                        if (AppUtils.isNetworkAvailable(context)) {
-
-                                            String url = JsonApiHelper.BASEURL + JsonApiHelper.BASEURL;
-                                            //  new CommonAsyncTaskHashmap(1, context, Fragment_Chat.this).getqueryNoProgress(url);
-
-                                        } else {
-                                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-
-                                    }
-                                    //Do pagination.. i.e. fetch new data
-                                }
-                            }
-                        }
-                    } else {
-
-                        Log.e("maxlength", "*" + arrayList.size());
-                    }
-                }
-            }
-        });
-*/
 
     }
 
@@ -261,12 +228,15 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
                     }
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
+                        text_addfriend.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
+                        text_addfriend.setVisibility(View.VISIBLE);
                         text_nodata.setText("No Friend Request found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
+                    text_addfriend.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Friend Request found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

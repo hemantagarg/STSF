@@ -245,11 +245,11 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Live Matches found");
+                        text_nodata.setText("Teams currently warming up. Live match stats will be available once it starts.");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Live Matches found");
+                    text_nodata.setText("Teams currently warming up. Live match stats will be available once it starts.");
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

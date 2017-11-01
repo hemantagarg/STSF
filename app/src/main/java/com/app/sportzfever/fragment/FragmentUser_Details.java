@@ -186,15 +186,15 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
             tabLayout.getTabAt(1).setText("Sport Avatar");
             tabLayout.getTabAt(2).setText("Friends");
             tabLayout.getTabAt(3).setText("Following");
-            tabLayout.getTabAt(4).setText("Photos");
+            tabLayout.getTabAt(4).setText("Gallery");
             btn_follow_team.setVisibility(View.GONE);
         } else {
             tabLayout.getTabAt(0).setText("About");
-            tabLayout.getTabAt(1).setText("Sport Avtar");
+            tabLayout.getTabAt(1).setText("Sport Avatar");
             tabLayout.getTabAt(2).setText("SportsLine");
             tabLayout.getTabAt(3).setText("Friends");
             tabLayout.getTabAt(4).setText("Following");
-            tabLayout.getTabAt(5).setText("Photos");
+            tabLayout.getTabAt(5).setText("Gallery");
             btn_follow_team.setVisibility(View.VISIBLE);
         }
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));

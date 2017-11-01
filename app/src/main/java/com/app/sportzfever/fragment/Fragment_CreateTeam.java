@@ -431,7 +431,6 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
                     context.onBackPressed();
                     Dashboard.getInstance().getMenuData();
 
-
                 } else {
                 }
             }

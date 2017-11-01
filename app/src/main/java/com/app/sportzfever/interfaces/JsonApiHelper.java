@@ -27,6 +27,7 @@ public interface JsonApiHelper {
     String GETALLSPORT = "getAllSport/";
     String GETMENU = "getMenu/";
     String GET_UPCOMINGEVENTS = "getUpcomingEvent/";
+    String GET_TOURNAMENTFIXTURE = "getTournamentFixtures/";
     String GET_COMMENTS = "getComments/";
     String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
     String GET_LIKES = "getLikes/";
@@ -34,6 +35,8 @@ public interface JsonApiHelper {
     String GET_TOURNAMENT_DETAIL = "getTournamentDetail/";
     String GET_TEAM_PROFILE = "getTeamProfile/";
     String FOLLOW_UNFOLLOW = "followUnfollow";
+    String JOINTEAM = "joinTeamRequest/";
+    String LEAVETEAM = "leaveTeam/";
     String RespondToTOURNAMENTFIXTURE = "RespondToTeamTournamentFixture/";
     String GET_USERABOUT = "getUserProfile/";
     String GET_SHARE = "getShares/";

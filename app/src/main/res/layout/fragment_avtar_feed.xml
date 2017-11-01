@@ -113,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No Feed found"
+        android:text="No activity data to display."
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_16"
         android:visibility="gone" />

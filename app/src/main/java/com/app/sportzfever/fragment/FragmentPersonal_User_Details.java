@@ -183,10 +183,10 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("About");
-        tabLayout.getTabAt(1).setText("Sport Avtar");
+        tabLayout.getTabAt(1).setText("Sport Avatar");
         tabLayout.getTabAt(2).setText("Friends");
         tabLayout.getTabAt(3).setText("Following");
-        tabLayout.getTabAt(4).setText("Photos");
+        tabLayout.getTabAt(4).setText("Gallery");
         btn_follow_team.setVisibility(View.GONE);
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 

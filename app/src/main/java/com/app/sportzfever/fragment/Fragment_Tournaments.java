@@ -160,8 +160,8 @@ public class Fragment_Tournaments extends BaseFragment implements ApiResponse {
 
     private void setupTabIcons() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("All Tournament"));
-        tabLayout.addTab(tabLayout.newTab().setText("My Tournament"));
+        tabLayout.addTab(tabLayout.newTab().setText("All Tournaments"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Tournaments"));
 
 
       /*  tabLayout.getTabAt(0).setText("Chat");

@@ -20,6 +20,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSearchPeoples;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -146,11 +147,9 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-          /*  if (arrayList.get(position).getRequestStatus().equalsIgnoreCase("FRIENDS")) {
-                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.UNFRIEND);
-            } else {
-                acceptTeamrequest(arrayList.get(position).getFriendId(), AppConstant.ADDFRIEND);
-            }*/
+
+                acceptTeamrequest(arrayList.get(position).getUserId(), AppConstant.ADDFRIEND);
+
         } else if (flag == 2) {
 
           /*  FragmentUser_Details fragmentUser_details = new FragmentUser_Details();

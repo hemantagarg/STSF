@@ -1,9 +1,9 @@
 package com.app.sportzfever.fragment;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,16 +14,16 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterGallery;
+import com.app.sportzfever.activities.ViewMatchScoreCard;
+import com.app.sportzfever.adapter.AdapterTournamentFixture;
+import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
-import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
-import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelGallery;
+import com.app.sportzfever.models.ModelTournamentFixture;
+import com.app.sportzfever.models.UpcomingEvent;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -35,30 +35,31 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentGallery extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentTournamentFixture extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
-    private Activity context;
-    private AdapterGallery adapterGallery;
-    private ModelGallery modelGallery;
-    private ArrayList<ModelGallery> arrayList;
+    private Context context;
+
+    private AdapterTournamentFixture adapterTournamentFixture;
+    private ModelTournamentFixture modelTournamentFixture;
+    private ArrayList<ModelTournamentFixture> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
-    private TextView text_nodata;
     private boolean loading = true;
+    private TextView text_nodata;
     private String maxlistLength = "";
-    View view_about;
-    public static FragmentGallery fragment_teamJoin_request;
-    private final String TAG = FragmentGallery.class.getSimpleName();
+    private String id="";
+    public static FragmentTournamentFixture fragment_teamJoin_request;
+    private final String TAG = FragmentTournamentFixture.class.getSimpleName();
 
-    public static FragmentGallery getInstance() {
+    public static FragmentTournamentFixture getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentGallery();
+            fragment_teamJoin_request = new FragmentTournamentFixture();
         return fragment_teamJoin_request;
     }
 
@@ -67,57 +68,14 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        view_about = inflater.inflate(R.layout.fragment_gallery, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_notification, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-        manageHeaderView();
+
         return view_about;
     }
 
-    /*******************************************************************
-     * Function name - manageHeaderView
-     * Description - manage the initialization, visibility and click
-     * listener of view fields on Header view
-     *******************************************************************/
-    private void manageHeaderView() {
-
-        Dashboard.getInstance().manageHeaderVisibitlity(false);
-        Dashboard.getInstance().manageFooterVisibitlity(false);
-
-        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Gallery");
-        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
-        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
-        HeaderViewManager.getInstance().setLogoView(false);
-        HeaderViewManager.getInstance().setProgressLoader(false, false);
-
-    }
-
-    /*****************************************************************************
-     * Function name - manageHeaderClick
-     * Description - manage the click on the left and right image view of header
-     *****************************************************************************/
-    private HeaderViewClickListener manageHeaderClick() {
-        return new HeaderViewClickListener() {
-            @Override
-            public void onClickOfHeaderLeftView() {
-                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
-                context.onBackPressed();
-            }
-
-            @Override
-            public void onClickOfHeaderRightView() {
-                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(false);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -126,14 +84,20 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        layoutManager = new GridLayoutManager(context, 2);
+        layoutManager = new LinearLayoutManager(context);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-
+        getBundle();
         getServicelistRefresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
     }
 
     private void setlistener() {
@@ -146,19 +110,24 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         });
 
 
-    }
 
+    }
+    private void getBundle() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id = bundle.getString("id");
+        }
+    }
     @Override
     public void onItemClickListener(int position, int flag) {
-        FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
-        Bundle b = new Bundle();
-        b.putString("galleryid", arrayList.get(position).getAlbumId());
-        b.putString("title", arrayList.get(position).getAlbumName());
-        fragmentGalleryDetails.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
-
+       /* if (flag == 1) {
+            if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
+                Intent inte = new Intent(context, ViewMatchScoreCard.class);
+                inte.putExtra("eventId", arrayList.get(position).getId());
+                startActivity(inte);
+            }
+        }*/
     }
-
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
@@ -167,7 +136,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GALLERY + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_TOURNAMENTFIXTURE + id + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -184,43 +153,53 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
 
+                    //  data = jObject.getString("total");
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
 
-                        modelGallery = new ModelGallery();
+                        modelTournamentFixture = new ModelTournamentFixture();
 
-                        modelGallery.setImage(jo.getString("image"));
-                        modelGallery.setAlbumName(jo.getString("albumName"));
-                        modelGallery.setTotalImage(jo.getString("totalImage"));
-                        modelGallery.setAlbumId(jo.getString("albumId"));
-                        modelGallery.setUser(jo.getString("user"));
-                        modelGallery.setRowType(1);
-                        arrayList.add(modelGallery);
+                        modelTournamentFixture.setId(jo.getString("id"));
+
+                        modelTournamentFixture.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                        modelTournamentFixture.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                        modelTournamentFixture.setTeam1Name(jo.getString("team1Name"));
+                        modelTournamentFixture.setTeam2Name(jo.getString("team2Name"));
+
+                        JSONObject j1 = jo.getJSONObject("matchDate");
+
+                        modelTournamentFixture.setDayName(j1.getString("dayName"));
+                        modelTournamentFixture.setMonthName(j1.getString("monthName"));
+                        modelTournamentFixture.setDate(j1.getString("date"));
+                        modelTournamentFixture.setTime(j1.getString("time"));
+
+
+                        modelTournamentFixture.setRowType(1);
+
+                        arrayList.add(modelTournamentFixture);
                     }
 
-                    adapterGallery = new AdapterGallery(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterGallery);
+
+                    adapterTournamentFixture = new AdapterTournamentFixture(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterTournamentFixture);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Data found");
+                        text_nodata.setText("No Tournament Fixture found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No data found");
-
+                    text_nodata.setText("No Tournament Fixture found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -230,7 +209,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-
+                    JSONObject eventtime = jObject.optJSONObject("startDate");
                     //  maxlistLength = jObject.getString("total");
 
 
@@ -239,28 +218,50 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
 
                         JSONObject jo = data.getJSONObject(i);
 
+                        modelTournamentFixture = new ModelTournamentFixture();
 
-                        modelGallery = new ModelGallery();
+                        modelTournamentFixture.setId(jo.getString("id"));
 
-                        modelGallery.setImage(jo.getString("image"));
-                        modelGallery.setAlbumName(jo.getString("albumName"));
-                        modelGallery.setTotalImage(jo.getString("totalImage"));
-                        modelGallery.setAlbumId(jo.getString("albumId"));
-                        modelGallery.setUser(jo.getString("user"));
+                        modelTournamentFixture.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                        modelTournamentFixture.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                        modelTournamentFixture.setTeam1Name(jo.getString("team1Name"));
+                        modelTournamentFixture.setTeam2Name(jo.getString("team2Name"));
 
-                        modelGallery.setRowType(1);
+                        JSONObject j1 = jo.getJSONObject("matchDate");
 
-                        arrayList.add(modelGallery);
-                    }
+                        modelTournamentFixture.setDayName(j1.getString("dayName"));
+                        modelTournamentFixture.setMonthName(j1.getString("monthName"));
+                        modelTournamentFixture.setDate(j1.getString("date"));
+                        modelTournamentFixture.setTime(j1.getString("time"));
 
-                    adapterGallery.notifyDataSetChanged();
+                        modelTournamentFixture.setRowType(1);
+
+                        arrayList.add(modelTournamentFixture);
+                    }/* for (int i = 0; i < eventtime.length(); i++) {
+
+                        JSONObject jo = data.getJSONObject(i);
+
+                        upcomingEvent = new UpcomingEvent();
+
+                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
+
+
+
+
+
+                        upcomingEvent.setRowType(1);
+
+                        arrayList.add(upcomingEvent);
+                    }*/
+
+                    adapterTournamentFixture.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterGallery.notifyDataSetChanged();
+                    adapterTournamentFixture.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
                 }

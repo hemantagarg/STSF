@@ -20,6 +20,16 @@ public class TeamJoinRequest {
 
     private String playerAvatarId;
 
+    public String getTeamProfilePic() {
+        return teamProfilePic;
+    }
+
+    public void setTeamProfilePic(String teamProfilePic) {
+        this.teamProfilePic = teamProfilePic;
+    }
+
+    private String teamProfilePic;
+
 
     private String playerAvatarName;
 

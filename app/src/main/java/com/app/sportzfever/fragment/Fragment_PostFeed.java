@@ -355,7 +355,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
             Log.e("Content-Type", "undefined");
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
-            reqEntity.addPart("avatar", userId);
+          //  reqEntity.addPart("avatar", userId);
             reqEntity.addPart("user",userIdN);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);

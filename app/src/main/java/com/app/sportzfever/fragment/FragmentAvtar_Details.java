@@ -193,7 +193,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tabLayout.getTabAt(1).setText("Feed");
         tabLayout.getTabAt(2).setText("My Teams");
         tabLayout.getTabAt(3).setText("Stats");
-        tabLayout.getTabAt(4).setText("Photos");
+        tabLayout.getTabAt(4).setText("Gallery");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 

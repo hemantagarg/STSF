@@ -154,7 +154,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
         tabLayout.getTabAt(1).setText("Fixtures");
         tabLayout.getTabAt(2).setText("Points Table");
         tabLayout.getTabAt(3).setText("Teams");
-        tabLayout.getTabAt(4).setText("Albums");
+        tabLayout.getTabAt(4).setText("Gallery");
 //        tabLayout.getTabAt(5).setText("Tournament Talk");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
@@ -170,7 +170,7 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
         adapter.addFrag(tab2, "services");
 
 
-        FragmentTournamentAlbums tab4 = new FragmentTournamentAlbums();
+        FragmentTournamentFixture tab4 = new FragmentTournamentFixture();
         Bundle b3 = new Bundle();
         b3.putString("id", id);
         tab4.setArguments(b3);

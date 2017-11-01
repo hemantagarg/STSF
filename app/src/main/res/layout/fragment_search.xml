@@ -45,6 +45,8 @@
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@+id/headerRightImage"
                         android:hint="Search..."
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"
                         android:textColor="@color/white" />
 
                     <ImageView

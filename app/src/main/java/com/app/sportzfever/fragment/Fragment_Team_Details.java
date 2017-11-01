@@ -79,7 +79,16 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     }
 
     private void setListener() {
-
+        btn_join_team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              /*  if (isTeamfollower.equalsIgnoreCase("1")) {
+                   LeaveTeam();
+                } else {
+                    JoinTeam();
+                }*/
+            }
+        });
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,6 +191,43 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.FOLLOW_UNFOLLOW;
+                new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    private void JoinTeam(String type) {
+        if (AppUtils.isNetworkAvailable(mActivity)) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", AppUtils.getUserId(mActivity));
+                jsonObject.put("teamId", teamAvatarId);
+                jsonObject.put("sportId", 1);
+
+                //  https://sfscoring.betasportzfever.com/followUnfollow
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.JOINTEAM;
+                new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+        }
+
+    }    private void LeaveTeam(String type) {
+        if (AppUtils.isNetworkAvailable(mActivity)) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", AppUtils.getUserId(mActivity));
+                jsonObject.put("teamId", teamAvatarId);
+                jsonObject.put("sportId", 1);
+
+                //  https://sfscoring.betasportzfever.com/followUnfollow
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.LEAVETEAM;
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } catch (JSONException e) {
                 e.printStackTrace();

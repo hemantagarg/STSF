@@ -7,14 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.TeamJoinRequest;
+import com.app.sportzfever.models.ModelTournamentFixture;
+import com.app.sportzfever.models.UpcomingEvent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,16 +23,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTournamentFixture extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<TeamJoinRequest> detail;
+    ArrayList<ModelTournamentFixture> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterTournamentJoinRequest(Context context, OnCustomItemClicListener lis, ArrayList<TeamJoinRequest> list) {
+    public AdapterTournamentFixture(Context context, OnCustomItemClicListener lis, ArrayList<ModelTournamentFixture> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -46,7 +47,7 @@ public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerV
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_tournamnetjoinrequest, parent, false);
+                    R.layout.row_tournamnetfixture, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -76,34 +77,32 @@ public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerV
 
         if (holder instanceof CustomViewHolder) {
 
-            TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
+            ModelTournamentFixture m1 = (ModelTournamentFixture) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getNotificationText());
+            ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
+            ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
 
+            ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
+            ((CustomViewHolder) holder).text_date.setText(m1.getDate());
+            ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
+            ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
-            if (!m1.getTeamProfilePic().equalsIgnoreCase("")) {
+            if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getTeamProfilePicture())
+                        .load(m1.getTeam1ProfilePicture())
 
                         .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_team);
+                        .into(((CustomViewHolder) holder).teama);
+            }
+            if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
+                Picasso.with(mContext)
+                        .load(m1.getTeam2ProfilePicture())
+
+                        .placeholder(R.drawable.newsfeed)
+                        .into(((CustomViewHolder) holder).teamb);
             }
 
-            ((CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 2);
 
-                }
-            });
-
-            ((CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 1);
-
-                }
-            });
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -117,19 +116,28 @@ public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerV
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_event_type, text_date, text_teamname, text_location;
-        ImageView image_team;
-        Button btn_confirm, btn_reject;
+        TextView text_name, text_event_type, text_date, text_teamname, text_location, text_day, text_month, text_time, text_title;
+        ImageView teama, teamb;
+
+        RelativeLayout relmatchvs;
 
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            this.image_team = (ImageView) view.findViewById(R.id.image_viewers);
+
             this.text_name = (TextView) view.findViewById(R.id.text_name);
+            this.relmatchvs = (RelativeLayout) view.findViewById(R.id.relmatchvs);
+            this.text_event_type = (TextView) view.findViewById(R.id.text_event_type);
+            this.text_date = (TextView) view.findViewById(R.id.text_date);
+            this.text_teamname = (TextView) view.findViewById(R.id.text_teamname);
+            this.text_location = (TextView) view.findViewById(R.id.text_location);
+            this.text_title = (TextView) view.findViewById(R.id.text_title);
+            this.text_day = (TextView) view.findViewById(R.id.text_day);
+            this.text_month = (TextView) view.findViewById(R.id.text_month);
+            this.text_time = (TextView) view.findViewById(R.id.text_time);
+            this.teama = (ImageView) view.findViewById(R.id.teama);
+            this.teamb = (ImageView) view.findViewById(R.id.teamb);
 
-
-            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
-            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
 
         }
 
@@ -142,7 +150,7 @@ public class AdapterTournamentJoinRequest extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public int getItemViewType(int position) {
-        TeamJoinRequest m1 = (TeamJoinRequest) detail.get(position);
+        ModelTournamentFixture m1 = (ModelTournamentFixture) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

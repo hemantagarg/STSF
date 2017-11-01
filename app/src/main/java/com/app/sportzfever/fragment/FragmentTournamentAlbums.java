@@ -190,11 +190,11 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Team found");
+                        text_nodata.setText("There are no photos or videos as of now for the tournament.");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Team found");
+                    text_nodata.setText("There are no photos or videos as of now for the tournament.");
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

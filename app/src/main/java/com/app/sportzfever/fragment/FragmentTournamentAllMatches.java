@@ -287,11 +287,11 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Past Matches found");
+                        text_nodata.setText("Tournament matches are not published yet");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Past Matches found");
+                    text_nodata.setText("Tournament matches are not published yet");
 
                     /*if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

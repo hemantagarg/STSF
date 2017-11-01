@@ -184,7 +184,7 @@ public class Fragment_TournamentJoin_Request extends BaseFragment implements Api
 
                         teamJoinRequest.setTournamentName(jo.getString("tournamentName"));
                         teamJoinRequest.setNotificationText(jo.getString("notificationText"));
-                        teamJoinRequest.setTournamentProfilePicture(jo.getString("tournamentProfilePicture"));
+                        teamJoinRequest.setTeamProfilePic(jo.getString("teamProfilePic"));
 
                         teamJoinRequest.setRowType(1);
 
