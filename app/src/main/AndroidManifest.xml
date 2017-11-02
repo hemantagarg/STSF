@@ -51,8 +51,9 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBeiOo2v8acuEwNVBeJ9Na2NUWk1owSpzc" />
-
+            android:value="AIzaSyCVC4kApjp3AvfPZHUQqBI1mbzKefRmhTs" />
+<!--signed key  AIzaSyCVC4kApjp3AvfPZHUQqBI1mbzKefRmhTs-->
+<!--debug key  AIzaSyBeiOo2v8acuEwNVBeJ9Na2NUWk1owSpzc-->
         <activity
             android:name=".activities.PickLocation"
             android:screenOrientation="portrait"

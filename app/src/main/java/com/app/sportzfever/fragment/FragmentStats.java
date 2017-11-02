@@ -48,7 +48,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
     private AdapterBowlingStats adapterBowlingStats;
     private ModelStats modelStats;
     private ArrayList<ModelStats> arrayListBatting, arrayListBowling;
-    ArrayList<ModelPerformance> arrayListPerformance=new ArrayList<>();
+    ArrayList<ModelPerformance> arrayListPerformance = new ArrayList<>();
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
@@ -286,6 +286,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                         text_nodata.setVisibility(View.VISIBLE);
                         text_nodata.setText("No Data found");
                     }
+                    arrayListPerformance.clear();
 
                     JSONArray lastFivePerformance = data.getJSONArray("lastFivePerformance");
                     for (int i = 0; i < lastFivePerformance.length(); i++) {
