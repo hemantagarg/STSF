@@ -200,7 +200,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
@@ -263,14 +263,13 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
-
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     JSONObject eventtime = jObject.optJSONObject("startDate");
                     //  maxlistLength = jObject.getString("total");
-
 
                     arrayList.removeAll(arrayList);
                     for (int i = 0; i < data.length(); i++) {
