@@ -48,7 +48,7 @@ public class AdapterLiveMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_upcomingmatches, parent, false);
+                    R.layout.row_livematches, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -80,15 +80,15 @@ public class AdapterLiveMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             ModelLiveMatches m1 = (ModelLiveMatches) detail.get(i);
 
-        /*  ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
-         ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
+          ((CustomViewHolder) holder).text_name.setText(m1.getFirstBattingTeamName());
+         ((CustomViewHolder) holder).text_teamname.setText(m1.getSecondBattingTeamName());
             ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
            ((CustomViewHolder) holder).text_event_type.setText(m1.getTournamentName());
            ((CustomViewHolder) holder).textdateofmatch.setText(" Match Scheduled To Start At "+ m1.getTime()+" On " +m1.getDate()+"  " +m1.getShortMonthName() +"  " +m1.getYear());
-          *//* ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
+           ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
            ((CustomViewHolder) holder).text_date.setText(m1.getDate());
            ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
-           ((CustomViewHolder) holder).text_time.setText(m1.getTime());*//*
+           ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
           if (!m1.getTeam1profilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -104,7 +104,7 @@ public class AdapterLiveMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .into(((CustomViewHolder) holder).teamb);
             }
 
-           *//* if (m1.getEventType().equalsIgnoreCase("MATCH")){
+          /* if (m1.getEventType().equalsIgnoreCase("MATCH")){
                 ((CustomViewHolder) holder).relmatchvs.setVisibility(View.VISIBLE);
                 ((CustomViewHolder) holder).text_title.setVisibility(View.GONE);
 
