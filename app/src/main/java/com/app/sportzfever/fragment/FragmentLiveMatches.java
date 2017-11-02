@@ -211,23 +211,21 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                         JSONObject jo = data.getJSONObject(i);
 
                         modelLiveMatches = new ModelLiveMatches();
-/*
-                        upcomingEvent.setId(jo.getString("id"));
-                        upcomingEvent.setTitle(jo.getString("title"));
-                        upcomingEvent.setLocation(jo.getString("location"));
-                        upcomingEvent.setEventType(jo.getString("eventType"));
-                        upcomingEvent.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
-                        upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
-                        upcomingEvent.setTeam1Name(jo.getString("team1Name"));
-                        upcomingEvent.setTeam2Name(jo.getString("team2Name"));
-                        upcomingEvent.setTitle(jo.getString("title"));*/
-                     /*   JSONObject j1 = jo.getJSONObject("startDate");
+                        modelLiveMatches.setId(jo.getString("id"));
+                       // modelLiveMatches.setTitle(jo.getString("title"));
+                        modelLiveMatches.setLocation(jo.getString("location"));
+                        //modelLiveMatches.setEventType(jo.getString("eventType"));
+                        modelLiveMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
+                        modelLiveMatches.setTeam2profilePicture(jo.getString("team2ProfilePicture"));
+                        modelLiveMatches.setFirstBattingTeamName(jo.getString("firstBattingTeamName"));
+                        modelLiveMatches.setSecondBattingTeamName(jo.getString("secondBattingTeamName"));
+                       // modelLiveMatches.setTitle(jo.getString("title"));
+                        JSONObject j1 = jo.getJSONObject("matchDate");
 
-                        upcomingEvent.setDayName(j1.getString("dayName"));
-                        upcomingEvent.setMonthName(j1.getString("monthName"));
-                        upcomingEvent.setDate(j1.getString("date"));
-                        upcomingEvent.setTime(j1.getString("time"));
-*/
+                        modelLiveMatches.setDayName(j1.getString("dayName"));
+                        modelLiveMatches.setMonthName(j1.getString("monthName"));
+                        modelLiveMatches.setDate(j1.getString("date"));
+                        modelLiveMatches.setTime(j1.getString("time"));
 
                         modelLiveMatches.setRowType(1);
 

@@ -17,53 +17,33 @@ public class ModelLiveMatches {
 
     private int rowType;
 
-    private String tossWinnerTeamName;
-
-
-    private String firstBattingWickets;
-
-    private String tie;
-
-    private String location;
-
-    private String totalRunsScoredTeam2;
-
-    private String totalRunsScoredTeam1;
-
-    private String team1profilePicture;
-
-    private String id;
-
-    private String matchResultId;
-
-    private String eventId;
-
-    private String MatchWinnerTeamName;
-
-    private String tournamentName;
-
-    private String numberOfPlayers;
-
-    private String numberOfOvers;
-
-    private String tossSelection;
-
-    private String tossResultId;
-
     private String tournamentId;
+
+    private String tossWinnerTeamName;
 
     private String playedOversTeam2;
 
+    private String firstBattingWickets;
+
+    private String location;
+
     private String playedOversTeam1;
 
-    private String winString;
+    private String totalRunsScoredTeam2;
 
     private String matchType;
 
+    private String totalRunsScoredTeam1;
+
     private String secondBattingTeamName;
 
-    private String team2profilePicture;
+    private String team1profilePicture;
 
+    private String secondInningsString;
+
+    private String id;
+
+    private String team2profilePicture;
 
     private String shortDayName;
 
@@ -173,9 +153,31 @@ public class ModelLiveMatches {
         this.datetime = datetime;
     }
 
+    private String eventId;
+
     private String firstBattingTeamName;
 
+    private String numberOfPlayers;
+
     private String secondBattingWickets;
+
+    private String tournamentName;
+
+    private String numberOfOvers;
+
+    private String tossSelection;
+
+    private String currentInnings;
+
+    public String getTournamentId ()
+    {
+        return tournamentId;
+    }
+
+    public void setTournamentId (String tournamentId)
+    {
+        this.tournamentId = tournamentId;
+    }
 
     public String getTossWinnerTeamName ()
     {
@@ -185,6 +187,16 @@ public class ModelLiveMatches {
     public void setTossWinnerTeamName (String tossWinnerTeamName)
     {
         this.tossWinnerTeamName = tossWinnerTeamName;
+    }
+
+    public String getPlayedOversTeam2 ()
+    {
+        return playedOversTeam2;
+    }
+
+    public void setPlayedOversTeam2 (String playedOversTeam2)
+    {
+        this.playedOversTeam2 = playedOversTeam2;
     }
 
     public String getFirstBattingWickets ()
@@ -197,16 +209,6 @@ public class ModelLiveMatches {
         this.firstBattingWickets = firstBattingWickets;
     }
 
-    public String getTie ()
-    {
-        return tie;
-    }
-
-    public void setTie (String tie)
-    {
-        this.tie = tie;
-    }
-
     public String getLocation ()
     {
         return location;
@@ -215,6 +217,16 @@ public class ModelLiveMatches {
     public void setLocation (String location)
     {
         this.location = location;
+    }
+
+    public String getPlayedOversTeam1 ()
+    {
+        return playedOversTeam1;
+    }
+
+    public void setPlayedOversTeam1 (String playedOversTeam1)
+    {
+        this.playedOversTeam1 = playedOversTeam1;
     }
 
     public String getTotalRunsScoredTeam2 ()
@@ -227,6 +239,16 @@ public class ModelLiveMatches {
         this.totalRunsScoredTeam2 = totalRunsScoredTeam2;
     }
 
+    public String getMatchType ()
+    {
+        return matchType;
+    }
+
+    public void setMatchType (String matchType)
+    {
+        this.matchType = matchType;
+    }
+
     public String getTotalRunsScoredTeam1 ()
     {
         return totalRunsScoredTeam1;
@@ -235,6 +257,16 @@ public class ModelLiveMatches {
     public void setTotalRunsScoredTeam1 (String totalRunsScoredTeam1)
     {
         this.totalRunsScoredTeam1 = totalRunsScoredTeam1;
+    }
+
+    public String getSecondBattingTeamName ()
+    {
+        return secondBattingTeamName;
+    }
+
+    public void setSecondBattingTeamName (String secondBattingTeamName)
+    {
+        this.secondBattingTeamName = secondBattingTeamName;
     }
 
     public String getTeam1profilePicture ()
@@ -247,6 +279,16 @@ public class ModelLiveMatches {
         this.team1profilePicture = team1profilePicture;
     }
 
+    public String getSecondInningsString ()
+    {
+        return secondInningsString;
+    }
+
+    public void setSecondInningsString (String secondInningsString)
+    {
+        this.secondInningsString = secondInningsString;
+    }
+
     public String getId ()
     {
         return id;
@@ -257,15 +299,17 @@ public class ModelLiveMatches {
         this.id = id;
     }
 
-    public String getMatchResultId ()
+    public String getTeam2profilePicture ()
     {
-        return matchResultId;
+        return team2profilePicture;
     }
 
-    public void setMatchResultId (String matchResultId)
+    public void setTeam2profilePicture (String team2profilePicture)
     {
-        this.matchResultId = matchResultId;
+        this.team2profilePicture = team2profilePicture;
     }
+
+
 
     public String getEventId ()
     {
@@ -277,24 +321,14 @@ public class ModelLiveMatches {
         this.eventId = eventId;
     }
 
-    public String getMatchWinnerTeamName ()
+    public String getFirstBattingTeamName ()
     {
-        return MatchWinnerTeamName;
+        return firstBattingTeamName;
     }
 
-    public void setMatchWinnerTeamName (String MatchWinnerTeamName)
+    public void setFirstBattingTeamName (String firstBattingTeamName)
     {
-        this.MatchWinnerTeamName = MatchWinnerTeamName;
-    }
-
-    public String getTournamentName ()
-    {
-        return tournamentName;
-    }
-
-    public void setTournamentName (String tournamentName)
-    {
-        this.tournamentName = tournamentName;
+        this.firstBattingTeamName = firstBattingTeamName;
     }
 
     public String getNumberOfPlayers ()
@@ -305,6 +339,26 @@ public class ModelLiveMatches {
     public void setNumberOfPlayers (String numberOfPlayers)
     {
         this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public String getSecondBattingWickets ()
+    {
+        return secondBattingWickets;
+    }
+
+    public void setSecondBattingWickets (String secondBattingWickets)
+    {
+        this.secondBattingWickets = secondBattingWickets;
+    }
+
+    public String getTournamentName ()
+    {
+        return tournamentName;
+    }
+
+    public void setTournamentName (String tournamentName)
+    {
+        this.tournamentName = tournamentName;
     }
 
     public String getNumberOfOvers ()
@@ -327,107 +381,16 @@ public class ModelLiveMatches {
         this.tossSelection = tossSelection;
     }
 
-    public String getTossResultId ()
+    public String getCurrentInnings ()
     {
-        return tossResultId;
+        return currentInnings;
     }
 
-    public void setTossResultId (String tossResultId)
+    public void setCurrentInnings (String currentInnings)
     {
-        this.tossResultId = tossResultId;
+        this.currentInnings = currentInnings;
     }
 
-    public String getTournamentId ()
-    {
-        return tournamentId;
-    }
-
-    public void setTournamentId (String tournamentId)
-    {
-        this.tournamentId = tournamentId;
-    }
-
-    public String getPlayedOversTeam2 ()
-    {
-        return playedOversTeam2;
-    }
-
-    public void setPlayedOversTeam2 (String playedOversTeam2)
-    {
-        this.playedOversTeam2 = playedOversTeam2;
-    }
-
-    public String getPlayedOversTeam1 ()
-    {
-        return playedOversTeam1;
-    }
-
-    public void setPlayedOversTeam1 (String playedOversTeam1)
-    {
-        this.playedOversTeam1 = playedOversTeam1;
-    }
-
-    public String getWinString ()
-    {
-        return winString;
-    }
-
-    public void setWinString (String winString)
-    {
-        this.winString = winString;
-    }
-
-    public String getMatchType ()
-    {
-        return matchType;
-    }
-
-    public void setMatchType (String matchType)
-    {
-        this.matchType = matchType;
-    }
-
-    public String getSecondBattingTeamName ()
-    {
-        return secondBattingTeamName;
-    }
-
-    public void setSecondBattingTeamName (String secondBattingTeamName)
-    {
-        this.secondBattingTeamName = secondBattingTeamName;
-    }
-
-    public String getTeam2profilePicture ()
-    {
-        return team2profilePicture;
-    }
-
-    public void setTeam2profilePicture (String team2profilePicture)
-    {
-        this.team2profilePicture = team2profilePicture;
-    }
-
-
-
-    public String getFirstBattingTeamName ()
-    {
-        return firstBattingTeamName;
-    }
-
-    public void setFirstBattingTeamName (String firstBattingTeamName)
-    {
-        this.firstBattingTeamName = firstBattingTeamName;
-    }
-
-    public String getSecondBattingWickets ()
-    {
-        return secondBattingWickets;
-    }
-
-    public void setSecondBattingWickets (String secondBattingWickets)
-    {
-        this.secondBattingWickets = secondBattingWickets;
-    }
 
 
 }

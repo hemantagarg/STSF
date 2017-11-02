@@ -157,6 +157,7 @@
             android:layout_below="@+id/avtar_jercynumber"
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
+            android:visibility="gone"
             android:text="@string/email"
             android:textColor="@color/text_hint_color"
             android:textStyle="bold" />
@@ -169,6 +170,7 @@
             android:layout_below="@+id/avtar_jercynumber"
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
+            android:visibility="gone"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
@@ -179,6 +181,7 @@
             android:layout_height="1dp"
             android:layout_below="@+id/avtar_battingstylelive"
             android:alpha=".3"
+            android:visibility="gone"
             android:background="@color/view_color" />
 
         <TextView
