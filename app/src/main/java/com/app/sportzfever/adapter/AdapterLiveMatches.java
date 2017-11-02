@@ -48,7 +48,7 @@ public class AdapterLiveMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_upcomingmatches, parent, false);
+                    R.layout.row_livematches, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
