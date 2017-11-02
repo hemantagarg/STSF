@@ -3,7 +3,6 @@ package com.app.sportzfever.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +37,6 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterTournamentPointTable adapterTournamentPointTable;
     private ModelAllTournamentPointTables modelAllTournamentPointTables;
     private ArrayList<ModelAllTournamentPointTables> arrayList;

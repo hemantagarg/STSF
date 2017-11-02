@@ -61,6 +61,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
+    private TextView text_nodata;
     private boolean loading = true;
     private String maxlistLength = "";
     private EditText edt_text_post;
@@ -109,6 +110,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request.setLayoutManager(layoutManager);
         list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
@@ -577,11 +579,20 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("Welcome to Sportzfever, We are super excited to have you here.");
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("Welcome to Sportzfever, We are super excited to have you here.");
+
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                  //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

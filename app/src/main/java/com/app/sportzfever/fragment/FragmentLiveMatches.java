@@ -215,7 +215,7 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                         modelLiveMatches.setLocation(jo.getString("location"));
                         //modelLiveMatches.setEventType(jo.getString("eventType"));
                         modelLiveMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
-                        modelLiveMatches.setTeam2profilePicture(jo.getString("team2ProfilePicture"));
+                        modelLiveMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
                         modelLiveMatches.setFirstBattingTeamName(jo.getString("firstBattingTeamName"));
                         modelLiveMatches.setSecondBattingTeamName(jo.getString("secondBattingTeamName"));
                        // modelLiveMatches.setTitle(jo.getString("title"));

@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,21 +10,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterBattingStats;
 import com.app.sportzfever.adapter.AdapterBowlingStats;
+import com.app.sportzfever.adapter.AdapterPerformance;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.ModelPerformance;
 import com.app.sportzfever.models.ModelStats;
 import com.app.sportzfever.utils.AppUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,13 +40,15 @@ import java.util.ArrayList;
  */
 public class FragmentStats extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-    private RecyclerView list_batting, list_bowling;
+    private RecyclerView list_batting, list_bowling, list_performance;
     private Bundle b;
     private Context context;
     private AdapterBattingStats adapterBattingStats;
+    private AdapterPerformance adapterPerformance;
     private AdapterBowlingStats adapterBowlingStats;
     private ModelStats modelStats;
     private ArrayList<ModelStats> arrayListBatting, arrayListBowling;
+    ArrayList<ModelPerformance> arrayListPerformance=new ArrayList<>();
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
@@ -49,6 +57,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
     private Button btn_batting, btn_bowling, btn_fielding;
     private TextView text_nodata;
     private String maxlistLength = "";
+    private LinearLayout ll_performance;
 
     public static FragmentStats fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
@@ -94,6 +103,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
 
         list_batting = (RecyclerView) view.findViewById(R.id.list_batting);
         list_bowling = (RecyclerView) view.findViewById(R.id.list_bowling);
+        list_performance = (RecyclerView) view.findViewById(R.id.list_performance);
+        list_performance.setLayoutManager(new LinearLayoutManager(context));
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -102,6 +113,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
         btn_fielding = (Button) view.findViewById(R.id.btn_fielding);
         btn_bowling = (Button) view.findViewById(R.id.btn_bowling);
         btn_batting = (Button) view.findViewById(R.id.btn_batting);
+        ll_performance = (LinearLayout) view.findViewById(R.id.ll_performance);
         arrayListBatting = new ArrayList<>();
         getBundle();
         setlistener();
@@ -122,6 +134,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
+                ll_performance.setVisibility(View.GONE);
                 if (arrayListBatting.size() > 0) {
                     text_nodata.setVisibility(View.GONE);
                 } else {
@@ -144,6 +157,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.VISIBLE);
                 list_batting.setVisibility(View.GONE);
+                ll_performance.setVisibility(View.GONE);
                 if (arrayListBowling.size() > 0) {
                     text_nodata.setVisibility(View.GONE);
                 } else {
@@ -165,9 +179,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
                 list_batting.setVisibility(View.GONE);
-                text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText("Yet to play any match on Sportzfever");
-
+                ll_performance.setVisibility(View.VISIBLE);
             }
         });
 
@@ -176,7 +188,11 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
     @Override
     public void onItemClickListener(int position, int flag) {
 
-
+        if (flag == 22) {
+            Intent inte = new Intent(context, ViewMatchScoreCard.class);
+            inte.putExtra("eventId", arrayListPerformance.get(position).getMatchId());
+            startActivity(inte);
+        }
     }
 
 
@@ -270,6 +286,31 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                         text_nodata.setVisibility(View.VISIBLE);
                         text_nodata.setText("No Data found");
                     }
+
+                    JSONArray lastFivePerformance = data.getJSONArray("lastFivePerformance");
+                    for (int i = 0; i < lastFivePerformance.length(); i++) {
+                        JSONObject jsonObject = lastFivePerformance.getJSONObject(i);
+                        ModelPerformance modelPerformance = new ModelPerformance();
+                        modelPerformance.setMatchId(jsonObject.getString("matchId"));
+                        modelPerformance.setRunScored(jsonObject.getString("runScored"));
+                        modelPerformance.setWicketTaken(jsonObject.getString("wicketTaken"));
+                        modelPerformance.setRunConceded(jsonObject.getString("runConceded"));
+                        modelPerformance.setOppositionTeamName(jsonObject.getString("oppositionTeamName"));
+                        modelPerformance.setMatchDate(jsonObject.getString("matchDate"));
+                        modelPerformance.setBallPlayed(jsonObject.getString("ballPlayed"));
+                        modelPerformance.setRowType(1);
+                        arrayListPerformance.add(modelPerformance);
+                    }
+                    adapterPerformance = new AdapterPerformance(context, this, arrayListPerformance);
+                    list_performance.setAdapter(adapterPerformance);
+
+                    if (arrayListPerformance.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("Yet to play any match on Sportzfever");
+                    }
+
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Data found");

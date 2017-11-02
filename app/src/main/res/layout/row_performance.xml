@@ -20,54 +20,62 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dp10"
             android:orientation="horizontal"
-            android:weightSum="5">
+            android:weightSum="4">
 
             <TextView
                 android:id="@+id/pointtable_match"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Matches" />
+                android:gravity="center"
+                android:text="Batting" />
 
             <TextView
                 android:id="@+id/pointtable_won"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Won" />
+                android:gravity="center"
+                android:text="Bowling" />
 
             <TextView
                 android:id="@+id/pointtable_lost"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Lost" />
+                android:gravity="center"
+                android:text="Match Date" />
 
             <TextView
                 android:id="@+id/pointtable_nrr"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp5"
                 android:layout_weight="1"
-                android:text="NRR" />
+                android:background="@drawable/blue_button_selecor"
+                android:gravity="center"
+                android:padding="@dimen/dp5"
+                android:text="Scorecard"
+                android:textColor="@color/white"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/pointtable_points"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Points" />
+                android:gravity="center"
+                android:text="Wkts"
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/pointtable_teamname"
-
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp10"
             android:layout_weight="1"
+            android:padding="@dimen/dp5"
             android:text="Team Name" />
 
     </LinearLayout>

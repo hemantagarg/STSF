@@ -87,7 +87,9 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         getBundle();
-        getServicelistRefresh();
+        text_nodata.setVisibility(View.VISIBLE);
+        text_nodata.setText("There are no photos or videos as of now for the tournament.");
+        //  getServicelistRefresh();
         setlistener();
     }
 
@@ -103,12 +105,9 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
     }
 
     @Override

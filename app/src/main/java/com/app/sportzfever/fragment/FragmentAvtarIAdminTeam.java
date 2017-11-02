@@ -103,6 +103,7 @@ public class FragmentAvtarIAdminTeam extends BaseFragment implements ApiResponse
         layoutManager = new GridLayoutManager(context, 2);
         floating_addteam = (FloatingActionButton) view.findViewById(R.id.floating_addteam);
         list_request.setLayoutManager(layoutManager);
+        floating_addteam.setVisibility(View.GONE);
         arrayList = new ArrayList<>();
         getBundle();
         setlistener();
