@@ -18,6 +18,7 @@ import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentTeam;
@@ -38,7 +39,6 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterTournamentTeam adapterTournamentTeam;
     private ModelTournamentTeam modelTournamentTeam;
     private ArrayList<ModelTournamentTeam> arrayList;
@@ -65,8 +65,7 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_tornament_team, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -109,13 +108,17 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
                 getServicelistRefresh();
             }
         });
-
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
+        if (flag == 1) {
+            Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", arrayList.get(position).getTeamId());
+            fragmentAvtar_details.setArguments(bundle);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+        }
 
     }
 
@@ -143,6 +146,7 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
@@ -165,15 +169,6 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
                         modelTournamentTeam.setRowType(1);
 
 
-                       /* JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);
-*/
                         arrayList.add(modelTournamentTeam);
                     }
 

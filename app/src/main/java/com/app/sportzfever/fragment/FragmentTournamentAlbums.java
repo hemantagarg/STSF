@@ -53,7 +53,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
     public static FragmentTournamentAlbums fragment_teamJoin_request;
     private final String TAG = FragmentTournamentAlbums.class.getSimpleName();
-    private String id="";
+    private String id = "";
 
     public static FragmentTournamentAlbums getInstance() {
         if (fragment_teamJoin_request == null)
@@ -65,8 +65,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        View view_about = inflater.inflate(R.layout.fragment_iadmin, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_tornament_team, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -126,7 +125,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTALBUMS + AppUtils.getUserId(context) + "/" +  id + "/" + 0 + "/" +AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTALBUMS + AppUtils.getUserId(context) + "/" + id + "/" + 0 + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -142,16 +141,15 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
-                    JSONObject jobj=jObject.getJSONObject("data");
+                    JSONObject jobj = jObject.getJSONObject("data");
                     JSONArray data = jobj.getJSONArray("images");
 
                     //  maxlistLength = jObject.getString("total");
-
-
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
@@ -160,21 +158,10 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
                         modelTournamentAlbums = new ModelTournamentAlbums();
 
                         modelTournamentAlbums.setId(jo.getString("id"));
-
-                       // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
+                        // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
                         modelTournamentAlbums.setImage(jo.getString("image"));
                         modelTournamentAlbums.setRowType(1);
 
-
-                       /* JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);
-*/
                         arrayList.add(modelTournamentAlbums);
                     }
 
@@ -208,46 +195,19 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
                     JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
                     //  maxlistLength = jObject.getString("total");
 
-
                     arrayList.removeAll(arrayList);
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = jtaemown.getJSONObject(i);
 
                         modelTournamentAlbums = new ModelTournamentAlbums();
-
-
                         modelTournamentAlbums.setId(jo.getString("id"));
                         modelTournamentAlbums.setRowType(1);
                         // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
                         modelTournamentAlbums.setImage(jo.getString("image"));
 
-                 /*       JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);*/
-
                         arrayList.add(modelTournamentAlbums);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
+                    }
 
                     adapterTournamentAlbums.notifyDataSetChanged();
                     loading = true;

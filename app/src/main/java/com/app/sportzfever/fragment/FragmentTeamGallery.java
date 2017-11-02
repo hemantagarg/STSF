@@ -226,11 +226,11 @@ public class FragmentTeamGallery extends BaseFragment implements ApiResponse, On
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Album found");
+                        text_nodata.setText(context.getResources().getString(R.string.no_photos_found));
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Album found");
+                    text_nodata.setText(context.getResources().getString(R.string.no_photos_found));
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

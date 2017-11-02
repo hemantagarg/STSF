@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.models.ModelTournamentTeam;
 import com.squareup.picasso.Picasso;
 
@@ -79,8 +79,13 @@ public class AdapterTournamentTeam extends RecyclerView.Adapter<RecyclerView.Vie
 
             ModelTournamentTeam m1 = (ModelTournamentTeam) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
-
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i,1);
+                }
+            });
 
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -105,20 +110,16 @@ public class AdapterTournamentTeam extends RecyclerView.Adapter<RecyclerView.Vie
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView text_avtarteamname;
         ImageView image_avtar;
+        RelativeLayout relmatchvs;
+        CardView card_view;
 
-RelativeLayout relmatchvs;
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
-
-
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
-
+            this.card_view = (CardView) view.findViewById(R.id.card_view);
 
         }
 

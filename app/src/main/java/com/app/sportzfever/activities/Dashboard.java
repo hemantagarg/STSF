@@ -900,6 +900,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         if (currentFragment instanceof FragmentAvtar_Details) {
             ((FragmentAvtar_Details) currentFragment).onResume();
         }
+        if (currentFragment instanceof Fragment_UserFeed) {
+            ((Fragment_UserFeed) currentFragment).onResume();
+        }
     }
 
     @Override

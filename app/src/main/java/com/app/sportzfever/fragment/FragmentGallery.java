@@ -215,11 +215,11 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Data found");
+                        text_nodata.setText(context.getResources().getString(R.string.no_photos_found));
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No data found");
+                    text_nodata.setText(context.getResources().getString(R.string.no_photos_found));
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

@@ -94,6 +94,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageFooterVisibitlity(true);
+        getServicelistRefresh();
     }
 
     @Override
@@ -112,8 +113,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
         setlistener();
-
-        getServicelistRefresh();
     }
 
     private void setlistener() {
@@ -582,7 +581,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

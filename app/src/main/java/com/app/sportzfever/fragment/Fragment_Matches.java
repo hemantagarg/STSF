@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,6 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -146,16 +144,14 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        setFragment(new FragmentPastMatches());
+                        setFragment(new FragmentUpcomingMatches());
                         break;
                     case 1:
                         setFragment(new FragmentLiveMatches());
                         break;
                     case 2:
-                        setFragment(new FragmentUpcomingMatches());
+                        setFragment(new FragmentPastMatches());
                         break;
-
-
                 }
             }
 
@@ -182,25 +178,14 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
 
     private void setupTabIcons() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Past"));
-        tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
+        tabLayout.addTab(tabLayout.newTab().setText("Live"));
+        tabLayout.addTab(tabLayout.newTab().setText("Past"));
 
-      /*  tabLayout.getTabAt(0).setText("Chat");
-        tabLayout.getTabAt(1).setText("Contacts");
-        tabLayout.getTabAt(2).setText("Groups");*/
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
-
-        adapter.addFrag(new Fragment_Chat());
-        adapter.addFrag(new Fragment_FriendList());
-        adapter.addFrag(new Fragment_Chat());
-        viewPager.setAdapter(adapter);
-    }
 
     @Override
     public void onPostSuccess(int method, JSONObject jObject) {

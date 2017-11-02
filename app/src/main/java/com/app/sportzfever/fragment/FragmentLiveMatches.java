@@ -35,11 +35,9 @@ import java.util.ArrayList;
  */
 public class FragmentLiveMatches extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterLiveMatches adapterLiveMatches;
     private ModelLiveMatches modelLiveMatches;
     private ArrayList<ModelLiveMatches> arrayList;
@@ -200,6 +198,7 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");

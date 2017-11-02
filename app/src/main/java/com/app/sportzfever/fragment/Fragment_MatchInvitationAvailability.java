@@ -18,7 +18,6 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelMatchInvitation;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -200,6 +199,7 @@ public class Fragment_MatchInvitationAvailability extends BaseFragment implement
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
                 if (position == 1) {
+                    getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                     if (jObject.getString("result").equalsIgnoreCase("1")) {
                         JSONArray data = jObject.getJSONArray("data");
                       //  maxlistLength = jObject.getString("total");

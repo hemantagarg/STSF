@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentAlbums;
-import com.app.sportzfever.models.ModelTournamentTeam;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
 
             ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setVisibility(View.GONE);
+            ((CustomViewHolder) holder).text_avtarteamname.setVisibility(View.GONE);
 
 
             if (!m1.getImage().equalsIgnoreCase("")) {
@@ -106,18 +105,16 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
         TextView text_avtarteamname;
         ImageView image_avtar;
 
-RelativeLayout relmatchvs;
+        RelativeLayout relmatchvs;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
 
-
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
 
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
 
 
         }

@@ -341,23 +341,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                         modelAllTournamentMatches.setRowType(1);
 
                         arrayList.add(modelAllTournamentMatches);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
+                    }
                     adapterAllTournamentMatches.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {

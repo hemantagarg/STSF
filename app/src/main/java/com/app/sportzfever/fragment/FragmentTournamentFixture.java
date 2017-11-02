@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,16 +13,13 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterTournamentFixture;
-import com.app.sportzfever.adapter.AdapterUpcomingEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentFixture;
-import com.app.sportzfever.models.UpcomingEvent;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -41,7 +37,6 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterTournamentFixture adapterTournamentFixture;
     private ModelTournamentFixture modelTournamentFixture;
     private ArrayList<ModelTournamentFixture> arrayList;
@@ -53,7 +48,7 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
     private boolean loading = true;
     private TextView text_nodata;
     private String maxlistLength = "";
-    private String id="";
+    private String id = "";
     public static FragmentTournamentFixture fragment_teamJoin_request;
     private final String TAG = FragmentTournamentFixture.class.getSimpleName();
 
@@ -97,27 +92,25 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
     }
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
-
     }
+
     private void getBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString("id");
         }
     }
+
     @Override
     public void onItemClickListener(int position, int flag) {
        /* if (flag == 1) {
@@ -152,6 +145,7 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
+                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
@@ -170,7 +164,8 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
                         modelTournamentFixture.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
                         modelTournamentFixture.setTeam1Name(jo.getString("team1Name"));
                         modelTournamentFixture.setTeam2Name(jo.getString("team2Name"));
-
+                        modelTournamentFixture.setTeam1DummyName(jo.getString("team1DummyName"));
+                        modelTournamentFixture.setTeam2DummyName(jo.getString("team2DummyName"));
                         JSONObject j1 = jo.getJSONObject("matchDate");
 
                         modelTournamentFixture.setDayName(j1.getString("dayName"));
@@ -209,20 +204,16 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    JSONObject eventtime = jObject.optJSONObject("startDate");
-                    //  maxlistLength = jObject.getString("total");
-
-
-                    arrayList.removeAll(arrayList);
+                    arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
 
                         modelTournamentFixture = new ModelTournamentFixture();
-
                         modelTournamentFixture.setId(jo.getString("id"));
-
                         modelTournamentFixture.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                        modelTournamentFixture.setTeam1DummyName(jo.getString("team1DummyName"));
+                        modelTournamentFixture.setTeam2DummyName(jo.getString("team2DummyName"));
                         modelTournamentFixture.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
                         modelTournamentFixture.setTeam1Name(jo.getString("team1Name"));
                         modelTournamentFixture.setTeam2Name(jo.getString("team2Name"));
@@ -237,23 +228,7 @@ public class FragmentTournamentFixture extends BaseFragment implements ApiRespon
                         modelTournamentFixture.setRowType(1);
 
                         arrayList.add(modelTournamentFixture);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
+                    }
                     adapterTournamentFixture.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {

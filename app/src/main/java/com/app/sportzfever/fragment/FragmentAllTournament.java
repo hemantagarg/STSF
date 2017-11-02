@@ -222,23 +222,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
                         modelAllTournament.setRowType(1);
 
                         arrayList.add(modelAllTournament);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
+                    }
                     adapterAlltournament.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {

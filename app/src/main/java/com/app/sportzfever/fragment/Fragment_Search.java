@@ -45,6 +45,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     private FrameLayout frameLayout;
     private ViewPager viewPager;
     private ConnectionDetector cd;
+    boolean ifIsFirstSerach = true;
     JSONObject allDataJson;
     private EditText edt_search;
     View view_about;
@@ -261,13 +262,17 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
                     allDataJson = data;
-                    setupTabIcons();
+                    if (ifIsFirstSerach) {
+                        ifIsFirstSerach = false;
+                        setupTabIcons();
+                    }
                     Fragment_SearchPeopleList fragmentSearchPeopleList = new Fragment_SearchPeopleList();
                     Bundle b11 = new Bundle();
                     b11.putString("data", allDataJson.toString());
                     b11.putString("keyword", edt_search.getText().toString());
                     fragmentSearchPeopleList.setArguments(b11);
                     setFragment(fragmentSearchPeopleList);
+
 
                 } else {
 

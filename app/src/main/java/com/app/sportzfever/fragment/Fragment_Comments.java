@@ -431,7 +431,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
                         // comments.setCommentDateTime(jo.getString("commentDateTime"));
                         comments.setId(jo.getString("id"));
                         comments.setUserName(jo.getString("userName"));
-                        comments.setUserProfilePicture(jo.getString("userProfilePicture "));
+                        comments.setUserProfilePicture(jo.getString("userProfilePicture"));
                         comments.setRowType(1);
 
                         arrayList.add(comments);
@@ -466,21 +466,17 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
             } else if (position == 4) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     //   maxlistLength = jObject.getString("total");
-                    JSONArray data = jObject.getJSONArray("data");
-
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
+                    JSONObject data = jObject.getJSONObject("data");
 
                         comments = new Comments();
-                        comments.setComment(jo.getString("comment"));
+                        comments.setComment(data.getString("comment"));
                         // comments.setCommentDateTime(jo.getString("commentDateTime"));
-                        comments.setId(jo.getString("id"));
-                        comments.setUserName(jo.getString("userName"));
-                        comments.setUserProfilePicture(jo.getString("userProfilePicture "));
+                        comments.setId(data.getString("id"));
+                        comments.setUserName(data.getString("userName"));
+                        comments.setUserProfilePicture(data.getString("userProfilePicture"));
                         comments.setRowType(1);
                         arrayList.add(comments);
-                    }
+
                     adapterComments.notifyDataSetChanged();
                     edit_message.setText("");
 

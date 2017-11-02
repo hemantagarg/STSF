@@ -21,6 +21,7 @@
     <string name="or">OR</string>
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="sign_up">Sign Up</string>
+    <string name="no_photos_found">There are no photos or videos as of now.</string>
 
     <string name="enter_name">Please enter Name</string>
     <string name="enter_mb">Please enter Mobile Number</string>

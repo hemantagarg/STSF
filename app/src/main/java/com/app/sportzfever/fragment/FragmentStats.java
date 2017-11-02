@@ -122,6 +122,13 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_fielding.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
+                if (arrayListBatting.size() > 0) {
+                    text_nodata.setVisibility(View.GONE);
+                } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Data found");
+                }
+
                 list_batting.setVisibility(View.VISIBLE);
             }
         });
@@ -137,6 +144,13 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_batting.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.VISIBLE);
                 list_batting.setVisibility(View.GONE);
+                if (arrayListBowling.size() > 0) {
+                    text_nodata.setVisibility(View.GONE);
+                } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("No Data found");
+                }
+
             }
         });
         btn_fielding.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +165,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
                 list_batting.setVisibility(View.GONE);
+                text_nodata.setVisibility(View.VISIBLE);
+                text_nodata.setText("Yet to play any match on Sportzfever");
 
             }
         });
@@ -220,7 +236,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Team found");
+                        text_nodata.setText("No Data found");
                     }
 
                     JSONObject jBowling = data.getJSONObject("bowler");
@@ -248,17 +264,15 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                     adapterBowlingStats = new AdapterBowlingStats(getActivity(), this, arrayListBowling);
                     list_bowling.setAdapter(adapterBowlingStats);
 
-                    if (arrayListBatting.size() > 0) {
+                    if (arrayListBowling.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Team found");
+                        text_nodata.setText("No Data found");
                     }
-
-
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Team found");
+                    text_nodata.setText("No Data found");
 
                 }
 

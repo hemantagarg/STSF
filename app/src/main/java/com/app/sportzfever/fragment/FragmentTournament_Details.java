@@ -169,7 +169,6 @@ public class FragmentTournament_Details extends BaseFragment implements View.OnC
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-
         FragmentTournamentFixture tab4 = new FragmentTournamentFixture();
         Bundle b3 = new Bundle();
         b3.putString("id", id);

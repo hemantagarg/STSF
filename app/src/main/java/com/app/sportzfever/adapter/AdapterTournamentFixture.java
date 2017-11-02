@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentFixture;
-import com.app.sportzfever.models.UpcomingEvent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,8 +78,16 @@ public class AdapterTournamentFixture extends RecyclerView.Adapter<RecyclerView.
 
             ModelTournamentFixture m1 = (ModelTournamentFixture) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
-            ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
+            if (m1.getTeam1Name().equalsIgnoreCase("")) {
+                ((CustomViewHolder) holder).text_name.setText(m1.getTeam1DummyName());
+            } else {
+                ((CustomViewHolder) holder).text_name.setText(m1.getTeam1Name());
+            }
+            if (m1.getTeam2Name().equalsIgnoreCase("")) {
+                ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2DummyName());
+            } else {
+                ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
+            }
 
             ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
             ((CustomViewHolder) holder).text_date.setText(m1.getDate());
