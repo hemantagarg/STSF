@@ -31,6 +31,7 @@
                 android:textColor="@color/logocolor"
                 android:textSize="@dimen/text_size_12"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/text_event_match"
                 android:layout_width="wrap_content"
@@ -52,18 +53,20 @@
             android:layout_below="@+id/event_type"
             android:alpha=".3"
             android:background="@color/textcolordark" />
+
         <TextView
             android:id="@+id/textdateofmatch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_marginLeft="@dimen/dp10"
             android:layout_marginTop="@dimen/dp10"
-android:layout_below="@+id/view1"
-            android:textStyle="bold"
-android:layout_marginLeft="@dimen/dp10"
             android:text="VS"
-
             android:textColor="@color/black"
-            android:textSize="@dimen/dp12" />
+
+            android:textSize="@dimen/dp12"
+            android:textStyle="bold" />
+
         <RelativeLayout
             android:id="@+id/rl_main"
             android:layout_width="match_parent"
@@ -81,8 +84,8 @@ android:layout_marginLeft="@dimen/dp10"
                     android:id="@+id/rl_header1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_marginLeft="@dimen/dp10">
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/text_day"
@@ -92,6 +95,7 @@ android:layout_marginLeft="@dimen/dp10"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="@dimen/dp10"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/dp5"
                         android:padding="@dimen/dp5"
                         android:scaleType="fitXY"
@@ -104,6 +108,7 @@ android:layout_marginLeft="@dimen/dp10"
                         android:layout_below="@+id/text_day"
                         android:layout_centerInParent="true"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:text="28"
                         android:textSize="@dimen/dp40"
                         android:textStyle="bold" />
@@ -115,6 +120,7 @@ android:layout_marginLeft="@dimen/dp10"
                         android:layout_below="@+id/text_date"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="@dimen/dp10"
+                        android:visibility="gone"
                         android:padding="@dimen/dp2"
                         android:text="nov"
                         android:textStyle="bold" />
@@ -149,8 +155,8 @@ android:layout_marginLeft="@dimen/dp10"
                             android:id="@+id/teama"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:padding="@dimen/dp5"
                             android:layout_alignParentLeft="true"
+                            android:padding="@dimen/dp5"
                             android:src="@drawable/logo_sportz" />
 
                         <TextView
@@ -167,8 +173,8 @@ android:layout_marginLeft="@dimen/dp10"
                             android:id="@+id/teamb"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:padding="@dimen/dp5"
                             android:layout_alignParentRight="true"
+                            android:padding="@dimen/dp5"
                             android:src="@drawable/logo_sportz" />
 
                         <TextView
@@ -176,28 +182,28 @@ android:layout_marginLeft="@dimen/dp10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-android:textStyle="bold"
                             android:layout_below="@+id/teamb"
-                            android:ellipsize="end"
                             android:layout_marginTop="@dimen/dp10"
+                            android:ellipsize="end"
                             android:maxLines="2"
                             android:text="Madhavdsadsa"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_11" />
+                            android:textSize="@dimen/text_size_11"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/text_teamname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/teamb"
                             android:layout_marginTop="@dimen/dp10"
-                            android:maxLines="2"
                             android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="vsdsdsadsdsadss"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_11" />
+                            android:textSize="@dimen/text_size_11"
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
 

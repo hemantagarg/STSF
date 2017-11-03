@@ -153,8 +153,6 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
-
         Intent inte = new Intent(context, ViewMatchScoreCard.class);
         inte.putExtra("eventId", arrayList.get(position).getEventId());
         startActivity(inte);
@@ -213,6 +211,7 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                         modelLiveMatches.setId(jo.getString("id"));
                        // modelLiveMatches.setTitle(jo.getString("title"));
                         modelLiveMatches.setLocation(jo.getString("location"));
+                        modelLiveMatches.setEventId(jo.getString("eventId"));
                         //modelLiveMatches.setEventType(jo.getString("eventType"));
                         modelLiveMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
                         modelLiveMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
@@ -221,10 +220,11 @@ public class FragmentLiveMatches extends BaseFragment implements ApiResponse, On
                         modelLiveMatches.setTournamentName(jo.getString("tournamentName"));
                         JSONObject j1 = jo.getJSONObject("matchDate");
 
-                        modelLiveMatches.setDayName(j1.getString("dayName"));
-                        modelLiveMatches.setMonthName(j1.getString("monthName"));
+                        modelLiveMatches.setDayName(j1.getString("shortDayName"));
+                        modelLiveMatches.setMonthName(j1.getString("ShortMonthName"));
                         modelLiveMatches.setDate(j1.getString("date"));
                         modelLiveMatches.setTime(j1.getString("time"));
+                        modelLiveMatches.setYear(j1.getString("year"));
 
                         modelLiveMatches.setRowType(1);
 

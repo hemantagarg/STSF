@@ -187,10 +187,10 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     private void setupTabIcons() {
 
         tabLayout.addTab(tabLayout.newTab().setText("Peoples"));
-     /*   tabLayout.addTab(tabLayout.newTab().setText("Team"));
+        tabLayout.addTab(tabLayout.newTab().setText("Team"));
         tabLayout.addTab(tabLayout.newTab().setText("Tournament"));
         tabLayout.addTab(tabLayout.newTab().setText("Post"));
-        tabLayout.addTab(tabLayout.newTab().setText("Events"));*/
+        tabLayout.addTab(tabLayout.newTab().setText("Events"));
 
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -207,7 +207,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
 
                         break;
                     case 1:
-                        Fragment_SearchPeopleList fragmentSearchPeopleList1 = new Fragment_SearchPeopleList();
+                        Fragment_SearchTeamList fragmentSearchPeopleList1 = new Fragment_SearchTeamList();
                         Bundle b1 = new Bundle();
                         b1.putString("data", allDataJson.toString());
                         b1.putString("keyword", edt_search.getText().toString());
@@ -215,7 +215,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                         setFragment(fragmentSearchPeopleList1);
                         break;
                     case 2:
-                        Fragment_SearchPeopleList fragmentSearchPeopleList2 = new Fragment_SearchPeopleList();
+                        Fragment_SearchTournamentList fragmentSearchPeopleList2 = new Fragment_SearchTournamentList();
                         Bundle b12 = new Bundle();
                         b12.putString("data", allDataJson.toString());
                         b12.putString("keyword", edt_search.getText().toString());
@@ -223,7 +223,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                         setFragment(fragmentSearchPeopleList2);
                         break;
                     case 3:
-                        Fragment_SearchPeopleList fragmentSearchPeopleList3 = new Fragment_SearchPeopleList();
+                        Fragment_SearchPostList fragmentSearchPeopleList3 = new Fragment_SearchPostList();
                         Bundle b13 = new Bundle();
                         b13.putString("data", allDataJson.toString());
                         b13.putString("keyword", edt_search.getText().toString());
@@ -231,7 +231,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                         setFragment(fragmentSearchPeopleList3);
                         break;
                     case 4:
-                        Fragment_SearchPeopleList fragmentSearchPeopleList4 = new Fragment_SearchPeopleList();
+                        Fragment_SearchEventList fragmentSearchPeopleList4 = new Fragment_SearchEventList();
                         Bundle b14 = new Bundle();
                         b14.putString("data", allDataJson.toString());
                         b14.putString("keyword", edt_search.getText().toString());

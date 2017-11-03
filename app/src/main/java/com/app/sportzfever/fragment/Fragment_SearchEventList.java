@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterSearchPeopleList;
+import com.app.sportzfever.adapter.AdapterSearchEventList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -35,12 +35,12 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_SearchPeopleList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_SearchEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterSearchPeopleList adapterUserFriendList;
+    private AdapterSearchEventList adapterUserFriendList;
     private ModelSearchPeoples userFriendList;
     private TextView text_nodata;
     private ArrayList<ModelSearchPeoples> arrayList;
@@ -49,15 +49,15 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    public static Fragment_SearchPeopleList fragment_friend_request;
-    private final String TAG = Fragment_SearchPeopleList.class.getSimpleName();
+    public static Fragment_SearchEventList fragment_friend_request;
+    private final String TAG = Fragment_SearchEventList.class.getSimpleName();
     private String keyword = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private String maxlistLength = "";
 
-    public static Fragment_SearchPeopleList getInstance() {
+    public static Fragment_SearchEventList getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_SearchPeopleList();
+            fragment_friend_request = new Fragment_SearchEventList();
         return fragment_friend_request;
     }
 
@@ -98,10 +98,10 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
                 String data = bundle.getString("data");
                 keyword = bundle.getString("keyword");
                 JSONObject jsonObject = new JSONObject(data);
-                JSONObject peoples = jsonObject.getJSONObject("peoples");
+                JSONObject peoples = jsonObject.getJSONObject("events");
 
-                JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                maxlistLength = peoples.getString("totalPeoples");
+                JSONArray peoplesArray = peoples.getJSONArray("events");
+                maxlistLength = peoples.getString("totalEvent");
                 arrayList.clear();
                 for (int i = 0; i < peoplesArray.length(); i++) {
 
@@ -109,22 +109,35 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
 
                     userFriendList = new ModelSearchPeoples();
                     userFriendList.setUserId(jo.getString("userId"));
-                    userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                    userFriendList.setTotalPost(jo.getString("totalPost"));
-                    userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                    userFriendList.setName(jo.getString("name"));
-                    userFriendList.setEmail(jo.getString("email"));
-                    userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                    userFriendList.setAbout(jo.getString("about"));
-                    userFriendList.setHometown(jo.getString("hometown"));
-                    userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                    userFriendList.setProfilePicture(jo.getString("profilePicture"));
+                    userFriendList.setId(jo.getString("id"));
+                    userFriendList.setGoing(jo.getString("going"));
+                    userFriendList.setNotGoing(jo.getString("notGoing"));
+                    userFriendList.setInterested(jo.getString("interested"));
+                    userFriendList.setInvite(jo.getString("invite"));
+                    userFriendList.setStatus(jo.getString("status"));
+                    userFriendList.setTitle(jo.getString("title"));
+                    userFriendList.setDescription(jo.getString("description"));
+                    userFriendList.setLocation(jo.getString("location"));
+                    userFriendList.setEventImage(jo.getString("eventImage"));
+                    userFriendList.setEventType(jo.getString("eventType"));
+                    userFriendList.setLocationUrl(jo.getString("locationUrl"));
+                    userFriendList.setIsActive(jo.getString("isActive"));
+                    userFriendList.setIsDeleted(jo.getString("isDeleted"));
+
+
+                    JSONObject dateTime = jo.getJSONObject("startDate");
+                    userFriendList.setStartDate(dateTime.getString("date") + " " + dateTime.getString("ShortMonthName")
+                            + " " + dateTime.getString("year") + " " + dateTime.getString("time"));
+
+                    JSONObject endDate = jo.getJSONObject("endDate");
+                    userFriendList.setEndDate(endDate.getString("date") + " " + endDate.getString("ShortMonthName")
+                            + " " + endDate.getString("year") + " " + endDate.getString("time"));
 
                     userFriendList.setRowType(1);
 
                     arrayList.add(userFriendList);
                 }
-                adapterUserFriendList = new AdapterSearchPeopleList(getActivity(), this, arrayList);
+                adapterUserFriendList = new AdapterSearchEventList(getActivity(), this, arrayList);
                 list_request.setAdapter(adapterUserFriendList);
 
             }
@@ -287,10 +300,10 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
                 AppUtils.onKeyBoardDown(context);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    JSONObject peoples = data.getJSONObject("peoples");
+                    JSONObject peoples = data.getJSONObject("events");
 
-                    JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                    maxlistLength = peoples.getString("totalPeoples");
+                    JSONArray peoplesArray = peoples.getJSONArray("events");
+                    maxlistLength = peoples.getString("totalEvent");
                     arrayList.clear();
                     for (int i = 0; i < peoplesArray.length(); i++) {
 
@@ -298,22 +311,34 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
 
                         userFriendList = new ModelSearchPeoples();
                         userFriendList.setUserId(jo.getString("userId"));
-                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                        userFriendList.setTotalPost(jo.getString("totalPost"));
-                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                        userFriendList.setName(jo.getString("name"));
-                        userFriendList.setEmail(jo.getString("email"));
-                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                        userFriendList.setAbout(jo.getString("about"));
-                        userFriendList.setHometown(jo.getString("hometown"));
-                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
+                        userFriendList.setId(jo.getString("id"));
+                        userFriendList.setGoing(jo.getString("going"));
+                        userFriendList.setNotGoing(jo.getString("notGoing"));
+                        userFriendList.setInterested(jo.getString("interested"));
+                        userFriendList.setInvite(jo.getString("invite"));
+                        userFriendList.setStatus(jo.getString("status"));
+                        userFriendList.setTitle(jo.getString("title"));
+                        userFriendList.setDescription(jo.getString("description"));
+                        userFriendList.setLocation(jo.getString("location"));
+                        userFriendList.setEventImage(jo.getString("eventImage"));
+                        userFriendList.setEventType(jo.getString("eventType"));
+                        userFriendList.setLocationUrl(jo.getString("locationUrl"));
+                        userFriendList.setIsActive(jo.getString("isActive"));
+                        userFriendList.setIsDeleted(jo.getString("isDeleted"));
+
+                        JSONObject dateTime = jo.getJSONObject("startDate");
+                        userFriendList.setStartDate(dateTime.getString("date") + " " + dateTime.getString("ShortMonthName")
+                                + " " + dateTime.getString("year") + " " + dateTime.getString("time"));
+
+                        JSONObject endDate = jo.getJSONObject("endDate");
+                        userFriendList.setEndDate(endDate.getString("date") + " " + endDate.getString("ShortMonthName")
+                                + " " + endDate.getString("year") + " " + endDate.getString("time"));
 
                         userFriendList.setRowType(1);
 
                         arrayList.add(userFriendList);
                     }
-                    adapterUserFriendList = new AdapterSearchPeopleList(getActivity(), this, arrayList);
+                    adapterUserFriendList = new AdapterSearchEventList(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterUserFriendList);
 
                     if (mSwipeRefreshLayout != null) {
@@ -337,27 +362,38 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    JSONObject peoples = data.getJSONObject("peoples");
+                    JSONObject peoples = data.getJSONObject("events");
                     arrayList.remove(arrayList.size() - 1);
-                    JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                    maxlistLength = peoples.getString("totalPeoples");
-
+                    JSONArray peoplesArray = peoples.getJSONArray("events");
+                    maxlistLength = peoples.getString("totalEvent");
                     for (int i = 0; i < peoplesArray.length(); i++) {
 
                         JSONObject jo = peoplesArray.getJSONObject(i);
 
                         userFriendList = new ModelSearchPeoples();
                         userFriendList.setUserId(jo.getString("userId"));
-                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                        userFriendList.setTotalPost(jo.getString("totalPost"));
-                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                        userFriendList.setName(jo.getString("name"));
-                        userFriendList.setEmail(jo.getString("email"));
-                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                        userFriendList.setAbout(jo.getString("about"));
-                        userFriendList.setHometown(jo.getString("hometown"));
-                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
+                        userFriendList.setId(jo.getString("id"));
+                        userFriendList.setGoing(jo.getString("going"));
+                        userFriendList.setNotGoing(jo.getString("notGoing"));
+                        userFriendList.setInterested(jo.getString("interested"));
+                        userFriendList.setInvite(jo.getString("invite"));
+                        userFriendList.setStatus(jo.getString("status"));
+                        userFriendList.setTitle(jo.getString("title"));
+                        userFriendList.setDescription(jo.getString("description"));
+                        userFriendList.setLocation(jo.getString("location"));
+                        userFriendList.setEventImage(jo.getString("eventImage"));
+                        userFriendList.setEventType(jo.getString("eventType"));
+                        userFriendList.setLocationUrl(jo.getString("locationUrl"));
+                        userFriendList.setIsActive(jo.getString("isActive"));
+                        userFriendList.setIsDeleted(jo.getString("isDeleted"));
+
+                        JSONObject dateTime = jo.getJSONObject("startDate");
+                        userFriendList.setStartDate(dateTime.getString("date") + " " + dateTime.getString("ShortMonthName")
+                                + " " + dateTime.getString("year") + " " + dateTime.getString("time"));
+
+                        JSONObject endDate = jo.getJSONObject("endDate");
+                        userFriendList.setEndDate(endDate.getString("date") + " " + endDate.getString("ShortMonthName")
+                                + " " + endDate.getString("year") + " " + endDate.getString("time"));
 
                         userFriendList.setRowType(1);
 

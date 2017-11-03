@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterSearchTeamList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ArrayList<ModelSearchPeoples> detail;
     Context mContext;
@@ -32,7 +32,7 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
-    public AdapterSearchPeopleList(Context context, OnCustomItemClicListener lis, ArrayList<ModelSearchPeoples> list) {
+    public AdapterSearchTeamList(Context context, OnCustomItemClicListener lis, ArrayList<ModelSearchPeoples> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -46,7 +46,7 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_search_peoplelist, parent, false);
+                    R.layout.row_search_teamlist, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -78,10 +78,9 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
             ModelSearchPeoples m1 = (ModelSearchPeoples) detail.get(i);
 
             ((CustomViewHolder) holder).text_name.setText(m1.getName());
-            ((CustomViewHolder) holder).text_post.setText(m1.getTotalPost() + " Posts");
-            ((CustomViewHolder) holder).text_team.setText(m1.getTotalTeam() + " Teams");
-            ((CustomViewHolder) holder).text_friends.setText(m1.getTotalFriend() + " Friends");
-            ((CustomViewHolder) holder).text_about.setText(m1.getAbout());
+            ((CustomViewHolder) holder).text_post.setText(m1.getTotalTournament() + " Tournaments");
+            ((CustomViewHolder) holder).text_friends.setText(m1.getTotalPlayers() + " Players");
+            ((CustomViewHolder) holder).text_about.setText(m1.getDescription());
 
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
@@ -91,7 +90,7 @@ public class AdapterSearchPeopleList extends RecyclerView.Adapter<RecyclerView.V
                         .into(((CustomViewHolder) holder).image_viewers);
             }
 
-            ((AdapterSearchPeopleList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
+            ((AdapterSearchTeamList.CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 1);

@@ -190,7 +190,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
 
         if (flag == 22) {
             Intent inte = new Intent(context, ViewMatchScoreCard.class);
-            inte.putExtra("eventId", arrayListPerformance.get(position).getMatchId());
+            inte.putExtra("eventId", arrayListPerformance.get(position).getEventID());
             startActivity(inte);
         }
     }
@@ -293,6 +293,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                         JSONObject jsonObject = lastFivePerformance.getJSONObject(i);
                         ModelPerformance modelPerformance = new ModelPerformance();
                         modelPerformance.setMatchId(jsonObject.getString("matchId"));
+                        modelPerformance.setEventID(jsonObject.getString("eventID"));
                         modelPerformance.setRunScored(jsonObject.getString("runScored"));
                         modelPerformance.setWicketTaken(jsonObject.getString("wicketTaken"));
                         modelPerformance.setRunConceded(jsonObject.getString("runConceded"));
