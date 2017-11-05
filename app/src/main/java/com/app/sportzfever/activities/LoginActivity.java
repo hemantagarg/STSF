@@ -45,11 +45,8 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (!edtEmail.getText().toString().equalsIgnoreCase("") && !edtPassword.getText().toString().equalsIgnoreCase("")) {
-
                     if (AppUtils.isEmailValid(edtEmail.getText().toString())) {
-
                         loginUser();
                     } else {
                         edtEmail.setError(getString(R.string.enter_valid_emailid));
@@ -98,14 +95,11 @@ public class LoginActivity extends AppCompatActivity implements ApiResponse {
                 jsonObject.put("devicetoken", AppUtils.getGcmRegistrationKey(mActivity));
                 jsonObject.put("devicetype", AppConstant.DEVICE_TYPE);
 
-
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.LOGIN;
                 new CommonAsyncTaskHashmap(1, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } catch (JSONException e) {
                 e.printStackTrace();
-
             }
-
         } else {
             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }

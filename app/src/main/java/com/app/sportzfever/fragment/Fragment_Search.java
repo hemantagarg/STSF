@@ -8,12 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -48,8 +53,12 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     boolean ifIsFirstSerach = true;
     JSONObject allDataJson;
     private EditText edt_search;
+    private Spinner spinner_search;
+    private ArrayAdapter<String> adapterSearch;
+    ArrayList<String> listSearchText = new ArrayList<>();
     View view_about;
     private ImageView headerRightImage, headerLeftImage;
+    private int currentTabPosition = 0;
 
     public static Fragment_Search fragment_team;
     private final String TAG = Fragment_Search.class.getSimpleName();
@@ -153,6 +162,9 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
         edt_search = (EditText) view.findViewById(R.id.edt_search);
         headerRightImage = (ImageView) view.findViewById(R.id.headerRightImage);
         headerLeftImage = (ImageView) view.findViewById(R.id.headerLeftImage);
+        spinner_search = (Spinner) view.findViewById(R.id.spinner_search);
+        adapterSearch = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listSearchText);
+        spinner_search.setAdapter(adapterSearch);
         setListener();
     }
 
@@ -161,6 +173,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 if (!edt_search.getText().toString().equalsIgnoreCase("")) {
+                    spinner_search.setVisibility(View.GONE);
                     searchText();
                 } else {
                     Toast.makeText(context, "Please enter something to search", Toast.LENGTH_SHORT).show();
@@ -174,6 +187,50 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
             }
         });
 
+        spinner_search.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                currentTabPosition = position;
+                searchText();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setSpinnerData(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+    }
+
+    private void setSpinnerData(String text) {
+        listSearchText.clear();
+        listSearchText.add("Search for " + text + " in all peoples");
+        listSearchText.add("Search for " + text + " in all teams");
+        listSearchText.add("Search for " + text + " in all tournaments");
+        listSearchText.add("Search for " + text + " in all posts");
+        listSearchText.add("Search for " + text + " in all events");
+        listSearchText.add("Search all results for " + text);
+        adapterSearch.notifyDataSetChanged();
+        spinner_search.setVisibility(View.VISIBLE);
+        spinner_search.performClick();
     }
 
 
@@ -266,14 +323,55 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                         ifIsFirstSerach = false;
                         setupTabIcons();
                     }
-                    Fragment_SearchPeopleList fragmentSearchPeopleList = new Fragment_SearchPeopleList();
-                    Bundle b11 = new Bundle();
-                    b11.putString("data", allDataJson.toString());
-                    b11.putString("keyword", edt_search.getText().toString());
-                    fragmentSearchPeopleList.setArguments(b11);
-                    setFragment(fragmentSearchPeopleList);
+                    if (currentTabPosition == 5) {
+                        currentTabPosition = 0;
+                    }
+                    TabLayout.Tab tab = tabLayout.getTabAt(currentTabPosition);
+                    tab.select();
+                    switch (currentTabPosition) {
+                        case 0:
+                            Fragment_SearchPeopleList fragmentSearchPeopleList = new Fragment_SearchPeopleList();
+                            Bundle b11 = new Bundle();
+                            b11.putString("data", allDataJson.toString());
+                            b11.putString("keyword", edt_search.getText().toString());
+                            fragmentSearchPeopleList.setArguments(b11);
+                            setFragment(fragmentSearchPeopleList);
 
+                            break;
+                        case 1:
+                            Fragment_SearchTeamList fragmentSearchPeopleList1 = new Fragment_SearchTeamList();
+                            Bundle b1 = new Bundle();
+                            b1.putString("data", allDataJson.toString());
+                            b1.putString("keyword", edt_search.getText().toString());
+                            fragmentSearchPeopleList1.setArguments(b1);
+                            setFragment(fragmentSearchPeopleList1);
+                            break;
+                        case 2:
+                            Fragment_SearchTournamentList fragmentSearchPeopleList2 = new Fragment_SearchTournamentList();
+                            Bundle b12 = new Bundle();
+                            b12.putString("data", allDataJson.toString());
+                            b12.putString("keyword", edt_search.getText().toString());
+                            fragmentSearchPeopleList2.setArguments(b12);
+                            setFragment(fragmentSearchPeopleList2);
+                            break;
+                        case 3:
+                            Fragment_SearchPostList fragmentSearchPeopleList3 = new Fragment_SearchPostList();
+                            Bundle b13 = new Bundle();
+                            b13.putString("data", allDataJson.toString());
+                            b13.putString("keyword", edt_search.getText().toString());
+                            fragmentSearchPeopleList3.setArguments(b13);
+                            setFragment(fragmentSearchPeopleList3);
+                            break;
+                        case 4:
+                            Fragment_SearchEventList fragmentSearchPeopleList4 = new Fragment_SearchEventList();
+                            Bundle b14 = new Bundle();
+                            b14.putString("data", allDataJson.toString());
+                            b14.putString("keyword", edt_search.getText().toString());
+                            fragmentSearchPeopleList4.setArguments(b14);
+                            setFragment(fragmentSearchPeopleList4);
+                            break;
 
+                    }
                 } else {
 
                 }

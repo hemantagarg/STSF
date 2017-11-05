@@ -45,8 +45,8 @@
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@+id/headerRightImage"
                         android:hint="Search..."
-                        android:singleLine="true"
                         android:imeOptions="actionSearch"
+                        android:singleLine="true"
                         android:textColor="@color/white" />
 
                     <ImageView
@@ -64,6 +64,13 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <Spinner
+            android:id="@+id/spinner_search"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/dp20"
+            android:layout_marginRight="@dimen/dp20"
+            android:visibility="gone" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"
