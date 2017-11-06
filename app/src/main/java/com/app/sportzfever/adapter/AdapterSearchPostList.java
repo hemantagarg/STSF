@@ -37,7 +37,6 @@ public class AdapterSearchPostList extends RecyclerView.Adapter<RecyclerView.Vie
         this.detail = list;
         this.mContext = context;
         this.listener = lis;
-
     }
 
     @Override

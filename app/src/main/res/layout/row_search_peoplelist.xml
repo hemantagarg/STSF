@@ -71,59 +71,59 @@
                     android:visibility="gone" />
 
             </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/ll2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/image_viewers"
-                android:orientation="horizontal"
-                android:padding="@dimen/dp5">
-
-                <TextView
-                    android:id="@+id/text_friends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp10"
-                    android:padding="@dimen/dp5"
-                    android:text=""
-                    android:textColor="@color/text_hint_color" />
-
-                <TextView
-                    android:id="@+id/text_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp10"
-                    android:drawablePadding="@dimen/dp10"
-                    android:gravity="center"
-                    android:padding="@dimen/dp5"
-                    android:text=""
-                    android:textColor="@color/text_hint_color" />
-
-                <TextView
-                    android:id="@+id/text_team"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp10"
-                    android:padding="@dimen/dp5"
-                    android:text=""
-                    android:textColor="@color/text_hint_color" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignLeft="@+id/rl_top"
-                android:layout_below="@+id/image_viewers"
-                android:alpha=".3"
-                android:background="@color/view_color" />
-
         </RelativeLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/rl_header"
+            android:alpha=".3"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp5">
+
+            <TextView
+                android:id="@+id/text_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text=""
+                android:textColor="@color/text_hint_color" />
+
+            <TextView
+                android:id="@+id/text_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp10"
+                android:drawablePadding="@dimen/dp10"
+                android:gravity="center"
+                android:padding="@dimen/dp5"
+                android:text=""
+                android:textColor="@color/text_hint_color" />
+
+            <TextView
+                android:id="@+id/text_team"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text=""
+                android:textColor="@color/text_hint_color" />
+
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 

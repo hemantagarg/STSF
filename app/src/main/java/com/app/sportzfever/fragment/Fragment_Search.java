@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     ArrayList<String> listSearchText = new ArrayList<>();
     View view_about;
     private ImageView headerRightImage, headerLeftImage;
+    private boolean isFirstTime = true;
     private int currentTabPosition = 0;
 
     public static Fragment_Search fragment_team;
@@ -190,9 +192,12 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
         spinner_search.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-
+                Log.e("isFirstTime", ":: " + isFirstTime);
                 currentTabPosition = position;
-                searchText();
+                if (!isFirstTime) {
+                    searchText();
+                }
+                isFirstTime = false;
             }
 
             @Override

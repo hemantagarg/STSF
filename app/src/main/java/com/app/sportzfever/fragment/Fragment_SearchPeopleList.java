@@ -212,7 +212,6 @@ public class Fragment_SearchPeopleList extends BaseFragment implements ApiRespon
                 acceptTeamrequest(arrayList.get(position).getUserId(), AppConstant.ADDFRIEND);
             }
 
-
         } else if (flag == 2) {
             FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
             Bundle b = new Bundle();

@@ -218,11 +218,11 @@ public class Fragment_SearchTeamList extends BaseFragment implements ApiResponse
 
 
         } else if (flag == 2) {
-            FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
-            Bundle b = new Bundle();
-            b.putString("id", arrayList.get(position).getUserId());
-            fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", arrayList.get(position).getId());
+            fragmentAvtar_details.setArguments(bundle);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
         }
     }
 

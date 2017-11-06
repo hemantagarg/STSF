@@ -206,14 +206,15 @@ public class Fragment_SearchTournamentList extends BaseFragment implements ApiRe
             } else {
                 acceptTeamrequest(arrayList.get(position).getUserId(), AppConstant.ADDFRIEND);
             }
-
-
         } else if (flag == 2) {
-            FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+            FragmentTournament_Details tab2 = new FragmentTournament_Details();
             Bundle b = new Bundle();
-            b.putString("id", arrayList.get(position).getUserId());
-            fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            b.putString("id", arrayList.get(position).getId());
+            b.putString("name", arrayList.get(position).getName());
+            b.putString("date","");
+            b.putString("image", arrayList.get(position).getProfilePicture());
+            tab2.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
         }
     }
 
