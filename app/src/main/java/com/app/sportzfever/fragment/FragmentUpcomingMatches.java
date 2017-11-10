@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingMatches;
@@ -105,26 +105,17 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (flag == 1) {
+        Fragment_UpcomingMatch_Details fragmentupcomingdetals = new Fragment_UpcomingMatch_Details();
+        Bundle b = new Bundle();
+        b.putString("eventId", arrayList.get(position).getEventId());
 
-        Intent inte = new Intent(context, ViewMatchScoreCard.class);
-        inte.putExtra("eventId", arrayList.get(position).getEventId());
-        startActivity(inte);
-    }
+        fragmentupcomingdetals.setArguments(b);
+        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
 
-    private void getServicelist() {
-        try {
-            skipCount = 0;
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    }}
+
+
 
     private void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);

@@ -6,12 +6,13 @@ package com.app.sportzfever.interfaces;
 
 public interface JsonApiHelper {
 
-    String BASEURL = JsonApiHelper.BASEURL_LIVE;
+    String BASEURL = JsonApiHelper.TESTURL;
     String WEBVIEWBASEURL = "https://www.sportzfever.com/";
     String WEBVIEWBASEURLBETA = "https://www.betasportzfever.com/";
      String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";
-    //String TESTURL = "http://sfscoring.betasportzfever.com/";
+    String TESTURL = "http://sfscoring.betasportzfever.com/";
     String LOGIN = "sflogin";
+    String FORGOT = "forgetPassword";
     String GET_FEEDS = "getFeeds/";
     String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
     String GET_AVTARFEEDS = "getFeedByAvatar/";
@@ -65,6 +66,7 @@ public interface JsonApiHelper {
     String ALLTOURNAMNENTPOINTTABLES = "getGroupAndTeams/";
     String GALLERY = "getAlbums/";
     String STATS = "getPlayerStats/";
+    String UPCOMINGMATCHDETAILS = "getMatchStatisticsDetails/EVENT/";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";
     String CREATESTATUS = "createStatus";
     String GETUSERALBUMS = "getUserAlbums/";
