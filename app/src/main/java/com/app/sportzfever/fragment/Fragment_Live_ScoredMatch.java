@@ -23,7 +23,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
-import com.app.sportzfever.models.ModelInnings;
+import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -34,7 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class Fragment_FullScorecard_match extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling;
     private Bundle b;
@@ -67,7 +67,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_full_scorecard_match, container, false);
+        view = inflater.inflate(R.layout.fragment_live_scorecard_match, container, false);
         context = getActivity();
 
         b = getArguments();
@@ -113,7 +113,6 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
         text_team2batting = (TextView) view.findViewById(R.id.text_team2batting);
         btn_teamb = (Button) view.findViewById(R.id.btn_teamb);
         btn_teama = (Button) view.findViewById(R.id.btn_teama);
-
     }
 
 
@@ -130,15 +129,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
             if (bundle != null) {
                 avtarid = bundle.getString("eventId");
                 String maindata = bundle.getString("data");
-
-                data = new JSONObject(maindata);
-                JSONObject team1 = data.getJSONObject("team1");
-                JSONObject team2 = data.getJSONObject("team2");
-
-                btn_teamb.setText(team2.getString("name"));
-                btn_teama.setText(team1.getString("name"));
-
-                setTeam1Data(data);
+                getLiveScores();
 
             }
         } catch (Exception e) {
@@ -154,9 +145,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 Gson gson = new Gson();
                 arrayteam1Batting.clear();
                 arrayteam1Bowling.clear();
-                ModelInnings modelInnings = null;
+                ModelLiveInnings modelInnings = null;
                 try {
-                    modelInnings = gson.fromJson(innings.getJSONObject(0).toString(), ModelInnings.class);
+                    modelInnings = gson.fromJson(innings.getJSONObject(0).toString(), ModelLiveInnings.class);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -203,9 +194,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 Gson gson = new Gson();
                 arrayteam2Batting.clear();
                 arrayteam2Bowling.clear();
-                ModelInnings modelInnings = null;
+                ModelLiveInnings modelInnings = null;
                 try {
-                    modelInnings = gson.fromJson(innings.getJSONObject(1).toString(), ModelInnings.class);
+                    modelInnings = gson.fromJson(innings.getJSONObject(1).toString(), ModelLiveInnings.class);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -351,13 +342,13 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     }
 
 
-    private void getServicelistRefresh() {
+    private void getLiveScores() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                //https://sfscoring.betasportzfever.com/getLiveScore/EVENT/101/479a44a634f82b0394f78352d302ec36
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIVE_SCORE + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -372,6 +363,14 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
+            if (position == 1) {
+
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+
+                    data = jObject.getJSONObject("data");
+                    setTeam1Data(data);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

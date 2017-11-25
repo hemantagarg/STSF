@@ -23,7 +23,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
-import com.app.sportzfever.models.ModelInnings;
+import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -34,7 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class Fragment_FullScorecard_match extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_FullScorecardLive_match extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling;
     private Bundle b;
@@ -154,9 +154,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 Gson gson = new Gson();
                 arrayteam1Batting.clear();
                 arrayteam1Bowling.clear();
-                ModelInnings modelInnings = null;
+                ModelLiveInnings modelInnings = null;
                 try {
-                    modelInnings = gson.fromJson(innings.getJSONObject(0).toString(), ModelInnings.class);
+                    modelInnings = gson.fromJson(innings.getJSONObject(0).toString(), ModelLiveInnings.class);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -203,9 +203,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 Gson gson = new Gson();
                 arrayteam2Batting.clear();
                 arrayteam2Bowling.clear();
-                ModelInnings modelInnings = null;
+                ModelLiveInnings modelInnings = null;
                 try {
-                    modelInnings = gson.fromJson(innings.getJSONObject(1).toString(), ModelInnings.class);
+                    modelInnings = gson.fromJson(innings.getJSONObject(1).toString(), ModelLiveInnings.class);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -202,6 +202,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
+            getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
             if (position == 1) {
 
                 Dashboard.getInstance().setProgressLoader(false);
@@ -266,7 +267,7 @@ public class FragmentPastMatches extends BaseFragment implements ApiResponse, On
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
-                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
