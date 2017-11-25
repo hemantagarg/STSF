@@ -14,24 +14,23 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelUpcomingTeamName;
-import com.squareup.picasso.Picasso;
+import com.app.sportzfever.models.BowlingStats;
 
 import java.util.ArrayList;
 
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterUpcomingTeamtwoMatch extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTeamBowlingMatch extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelUpcomingTeamName> detail;
+    ArrayList<BowlingStats> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterUpcomingTeamtwoMatch(Context context, OnCustomItemClicListener lis, ArrayList<ModelUpcomingTeamName> list) {
+    public AdapterTeamBowlingMatch(Context context, OnCustomItemClicListener lis, ArrayList<BowlingStats> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -46,7 +45,7 @@ public class AdapterUpcomingTeamtwoMatch extends RecyclerView.Adapter<RecyclerVi
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_teamone, parent, false);
+                    R.layout.row_team_bowling_match, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -76,18 +75,42 @@ public class AdapterUpcomingTeamtwoMatch extends RecyclerView.Adapter<RecyclerVi
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelUpcomingTeamName m1 = (ModelUpcomingTeamName) detail.get(i);
+            BowlingStats m1 = (BowlingStats) detail.get(i);
 
-            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getName());
-            ((CustomViewHolder) holder).text_total.setText(m1.getPlayerRole());
-            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
-                Picasso.with(mContext)
-                        .load(m1.getProfilePicture())
+         /*   if (m1.getBatsmanAvatarName() != null) {
+                ((CustomViewHolder) holder).text_name.setText(m1.getBatsmanAvatarName());
+            } else {
+                ((CustomViewHolder) holder).text_name.setText("");
+            }*/
 
-                        .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_avtar);
+            if (m1.getRuns() != null) {
+                ((CustomViewHolder) holder).text_r.setText(m1.getRuns());
+            } else {
+                ((CustomViewHolder) holder).text_r.setText("");
             }
 
+            if (m1.getNumberOfOvers() != null) {
+                ((CustomViewHolder) holder).text_o.setText(m1.getNumberOfOvers());
+            } else {
+                ((CustomViewHolder) holder).text_o.setText("");
+            }
+            if (m1.getWickets() != null) {
+                ((CustomViewHolder) holder).text_w.setText(m1.getWickets());
+            } else {
+                ((CustomViewHolder) holder).text_w.setText("");
+            }
+
+            if (m1.getEconomy() != null) {
+                ((CustomViewHolder) holder).text_econ.setText(m1.getEconomy());
+            } else {
+                ((CustomViewHolder) holder).text_econ.setText("");
+            }
+          /*  if (m1.getStatus() != null) {
+                ((CustomViewHolder) holder).text_status.setText(m1.getStatus());
+            } else {
+                ((CustomViewHolder) holder).text_status.setText("");
+            }*/
+            ((CustomViewHolder) holder).text_runs.setText("M: " + m1.getMaiden() + " | NB: " + m1.getTotalNoBall() + " | WD: " + m1.getTotalWideBall() + " | Dots: " + m1.getTotalDotBall());
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
@@ -102,7 +125,7 @@ public class AdapterUpcomingTeamtwoMatch extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname, text_total;
+        TextView text_name, text_status, text_r, text_o, text_w, text_runs, text_econ;
         ImageView image_avtar;
 
         RelativeLayout relmatchvs;
@@ -112,24 +135,26 @@ public class AdapterUpcomingTeamtwoMatch extends RecyclerView.Adapter<RecyclerVi
             view.setOnClickListener(this);
 
 
-            this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-            this.text_total = (TextView) view.findViewById(R.id.text_total);
-
-            this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
+            this.text_name = (TextView) view.findViewById(R.id.text_name);
+            this.text_status = (TextView) view.findViewById(R.id.text_status);
+            this.text_r = (TextView) view.findViewById(R.id.text_r);
+            this.text_o = (TextView) view.findViewById(R.id.text_o);
+            this.text_econ = (TextView) view.findViewById(R.id.text_econ);
+            this.text_w = (TextView) view.findViewById(R.id.text_w);
+            this.text_runs = (TextView) view.findViewById(R.id.text_runs);
 
         }
 
         @Override
         public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 2);
+            listener.onItemClickListener(getPosition(), 1);
         }
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        ModelUpcomingTeamName m1 = (ModelUpcomingTeamName) detail.get(position);
+        BowlingStats m1 = (BowlingStats) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

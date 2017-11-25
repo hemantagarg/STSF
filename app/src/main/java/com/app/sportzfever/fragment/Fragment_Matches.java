@@ -134,7 +134,7 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
 
         setupTabIcons();
         setListener();
-        setFragment(new FragmentPastMatches());
+        setFragment(new FragmentUpcomingMatches());
 
     }
 

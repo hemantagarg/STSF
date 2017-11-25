@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/image_avtar"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:padding="@dimen/dp10"
             android:src="@drawable/logo" />
@@ -28,7 +28,10 @@
             android:layout_below="@+id/image_avtar"
             android:layout_centerHorizontal="true"
             android:singleLine="true"
+            android:paddingLeft="@dimen/dp5"
+            android:paddingRight="@dimen/dp5"
             android:text="TEXT"
+            android:textSize="@dimen/text_size_13"
             android:textColor="@color/black" />
 
         <TextView

@@ -2,26 +2,25 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterUpcomingTeamoneMatch;
-import com.app.sportzfever.adapter.AdapterUpcomingTeamtwoMatch;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
@@ -29,20 +28,17 @@ import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_PastMatch_Details extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-    private RecyclerView list_teama, list_teamb;
     private Bundle b;
     private Activity context;
-    private AdapterUpcomingTeamoneMatch adapterUpcomingTeamoneMatch;
-    private AdapterUpcomingTeamtwoMatch adapterUpcomingTeamtwoMatch;
 
     private ModelUpcomingTeamName modelUpcomingTeamName;
     private ArrayList<ModelUpcomingTeamName> arrayteama, arrayListBowling;
@@ -51,13 +47,11 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private Button btn_teama, btn_teamb;
-    private TextView text_nodata;
-    private String maxlistLength = "";
-    // private LinearLayout ll_performance;
     private ImageView teamb, teama, image_back;
     private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
-
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private JSONObject data;
     public static FragmentStats fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
@@ -72,7 +66,7 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view_about = inflater.inflate(R.layout.fragment_upcomingmatchdetail, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_pastmatchdetail, container, false);
         context = getActivity();
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
@@ -86,6 +80,7 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         Dashboard.getInstance().manageFooterVisibitlity(false);
+
     }
 
     private void getBundle() {
@@ -101,23 +96,14 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        list_teama = (RecyclerView) view.findViewById(R.id.list_teama);
-        list_teamb = (RecyclerView) view.findViewById(R.id.list_teamb);
-
-        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        layoutManager = new GridLayoutManager(context, 2);
-
-        list_teama.setLayoutManager(layoutManager);
-        list_teamb.setLayoutManager(new GridLayoutManager(context, 2));
-        btn_teamb = (Button) view.findViewById(R.id.btn_teamb);
-        btn_teama = (Button) view.findViewById(R.id.btn_teama);
         teama = (ImageView) view.findViewById(R.id.teama);
         teamb = (ImageView) view.findViewById(R.id.teamb);
         text_username = (TextView) view.findViewById(R.id.text_name);
         text_teamname = (TextView) view.findViewById(R.id.text_teamname);
         text_startdate = (TextView) view.findViewById(R.id.text_startdate);
         image_back = (ImageView) view.findViewById(R.id.image_back);
-
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         textmatchtype = (TextView) view.findViewById(R.id.textmatchtype);
         text_maxover = (TextView) view.findViewById(R.id.text_maxover);
         text_scorerfora = (TextView) view.findViewById(R.id.text_scorerfora);
@@ -138,62 +124,78 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
                 context.onBackPressed();
             }
         });
-        btn_teama.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                btn_teama.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
-                btn_teamb.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
-                btn_teama.setTextColor(ContextCompat.getColor(context, R.color.white));
-                btn_teamb.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                list_teamb.setVisibility(View.GONE);
-                if (arrayteama.size() > 0) {
-                    text_nodata.setVisibility(View.GONE);
-                } else {
-                    text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString()+" lineup is not yet published.");
-                }
+    }
 
-                list_teama.setVisibility(View.VISIBLE);
-            }
-        });
-        btn_teamb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                btn_teamb.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
-                btn_teama.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
-                btn_teamb.setTextColor(ContextCompat.getColor(context, R.color.white));
-                btn_teama.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                list_teamb.setVisibility(View.VISIBLE);
-                list_teama.setVisibility(View.GONE);
-                if (arrayListBowling.size() > 0) {
-                    text_nodata.setVisibility(View.GONE);
-                } else {
-                    text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teamb.getText().toString()+" lineup is not yet published.");
-                }
-            }
-        });
+    private void setupTabIcons() {
+
+        tabLayout.getTabAt(0).setText("Full Scorecard");
+        tabLayout.getTabAt(1).setText("Match Info");
+        tabLayout.getTabAt(2).setText("Commentary");
+
+        tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        Fragment_FullScorecard_match tab2 = new Fragment_FullScorecard_match();
+        Bundle b = new Bundle();
+        b.putString("avtarid", avtarid);
+        b.putString("data", data.toString());
+        tab2.setArguments(b);
+        adapter.addFrag(tab2, "services");
+
+        Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
+        Bundle b11 = new Bundle();
+        b11.putString("avtarid", avtarid);
+        b11.putString("data", data.toString());
+        feed.setArguments(b11);
+        adapter.addFrag(feed, "feed");
+
+        Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
+        Bundle b3 = new Bundle();
+        b3.putString("avtarid", avtarid);
+        b3.putString("data", data.toString());
+        tab4.setArguments(b3);
+        adapter.addFrag(tab4, "Reviews");
+
+        viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
 
-        if (flag == 1) {
-            FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
-            Bundle bundle = new Bundle();
-            bundle.putString("id", arrayteama.get(position).getPlayerAvatarId());
-            fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
 
-        } else if (flag == 2) {
-            FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
-            Bundle bundle = new Bundle();
-            bundle.putString("id", arrayListBowling.get(position).getPlayerAvatarId());
-            fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+    }
 
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
 
@@ -206,7 +208,7 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url,new JSONObject(), Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -224,7 +226,7 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
+                    data = jObject.getJSONObject("data");
 
                     //  maxlistLength = jObject.getString("total");
                     JSONObject jbatsman = data.getJSONObject("match");
@@ -240,8 +242,7 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
                     modelUpcomingTeamName.setNumberOfOvers(jbatsman.getString("numberOfOvers"));
 
                     text_username.setText(team1.getString("name"));
-                    btn_teamb.setText(team2.getString("name"));
-                    btn_teama.setText(team1.getString("name"));
+
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
@@ -264,55 +265,9 @@ public class Fragment_UpcomingMatch_Details extends BaseFragment implements ApiR
                     modelUpcomingTeamName.setName(team2.getString("name"));
                     modelUpcomingTeamName.setProfilePicture(team2.getString("profilePicture"));
 
-                    modelUpcomingTeamName.setRowType(1);
-
-                    arrayteama.clear();
-                    JSONArray team1squasd = data.getJSONArray("team1Squad");
-                    for (int i = 0; i < team1squasd.length(); i++) {
-                        JSONObject jsonObject = team1squasd.getJSONObject(i);
-                        ModelUpcomingTeamName modelteama = new ModelUpcomingTeamName();
-                        modelteama.setPlayerRole(jsonObject.getString("playerRole"));
-                        modelteama.setName(jsonObject.getString("name"));
-                        modelteama.setProfilePicture(jsonObject.getString("profilePicture"));
-                        modelteama.setPlayerAvatarId(jsonObject.getString("playerAvatarId"));
-                        modelteama.setPlayerTeamId(jsonObject.getString("playerTeamId"));
-                        modelteama.setPlaySquadId(jsonObject.getString("playSquadId"));
-
-                        modelteama.setRowType(1);
-                        arrayteama.add(modelteama);
-
-                    }
-                    adapterUpcomingTeamoneMatch = new AdapterUpcomingTeamoneMatch(getActivity(), this, arrayteama);
-                    list_teama.setAdapter(adapterUpcomingTeamoneMatch);
-
-
-                    if (arrayteama.size() > 0) {
-                        text_nodata.setVisibility(View.GONE);
-                    } else {
-                        text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText(btn_teama.getText().toString()+" lineup is not yet published.");
-                    }
-
-                    JSONArray team2squasd = data.getJSONArray("team2Squad");
-
-                    arrayListBowling.clear();
-
-                    for (int i = 0; i < team2squasd.length(); i++) {
-                        JSONObject jsonObject1 = team2squasd.getJSONObject(i);
-                        ModelUpcomingTeamName modelteamb = new ModelUpcomingTeamName();
-                        modelteamb.setPlayerRole(jsonObject1.getString("playerRole"));
-                        modelteamb.setName(jsonObject1.getString("name"));
-                        modelteamb.setProfilePicture(jsonObject1.getString("profilePicture"));
-                        modelteamb.setPlayerAvatarId(jsonObject1.getString("playerAvatarId"));
-                        modelteamb.setPlayerTeamId(jsonObject1.getString("playerTeamId"));
-                        modelteamb.setPlaySquadId(jsonObject1.getString("playSquadId"));
-
-                        modelteamb.setRowType(1);
-                        arrayListBowling.add(modelteamb);
-                    }
-
-                    adapterUpcomingTeamtwoMatch = new AdapterUpcomingTeamtwoMatch(getActivity(), this, arrayListBowling);
-                    list_teamb.setAdapter(adapterUpcomingTeamtwoMatch);
+                    setupViewPager(viewPager);
+                    tabLayout.setupWithViewPager(viewPager);
+                    setupTabIcons();
                 }
             }
         } catch (JSONException e) {

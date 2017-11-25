@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -226,22 +225,7 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
                         modelUpcomingMatches.setRowType(1);
 
                         arrayList.add(modelUpcomingMatches);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
+                    }
 
                     adapterUpcomingMatches.notifyDataSetChanged();
                     loading = true;
