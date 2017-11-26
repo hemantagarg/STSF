@@ -77,11 +77,11 @@ public class AdapterTeamBowlingMatch extends RecyclerView.Adapter<RecyclerView.V
 
             BowlingStats m1 = (BowlingStats) detail.get(i);
 
-         /*   if (m1.getBatsmanAvatarName() != null) {
-                ((CustomViewHolder) holder).text_name.setText(m1.getBatsmanAvatarName());
+            if (m1.getName() != null) {
+                ((CustomViewHolder) holder).text_name.setText(m1.getName());
             } else {
                 ((CustomViewHolder) holder).text_name.setText("");
-            }*/
+            }
 
             if (m1.getRuns() != null) {
                 ((CustomViewHolder) holder).text_r.setText(m1.getRuns());

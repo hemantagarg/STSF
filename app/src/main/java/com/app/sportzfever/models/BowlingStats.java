@@ -22,6 +22,7 @@ public class BowlingStats {
 
     private String maiden;
 
+    private String name;
     private String wickets;
 
     private String extras;
@@ -109,5 +110,14 @@ public class BowlingStats {
 
     public int getRowType() {
         return rowType;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

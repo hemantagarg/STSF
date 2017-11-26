@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.adapter.AdapterRecentBalls;
 import com.app.sportzfever.adapter.AdapterTeamBattingMatch;
 import com.app.sportzfever.adapter.AdapterTeamBowlingMatch;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
@@ -24,6 +25,7 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
+import com.app.sportzfever.models.ModelRecentBall;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 
 public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-    private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling;
+    private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling, recycler_recent_balls;
     private Bundle b;
     private Activity context;
     private AdapterTeamBattingMatch adapterTeam1BattingMatch, adapterTeam2BattingMatch;
@@ -55,6 +57,8 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private boolean isTeam2BattingVisible = true;
     private boolean isTeam2BowlingVisible = false;
     View view;
+    private AdapterRecentBalls adapterRecentBalls;
+    private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
 
     public static FragmentStats getInstance() {
@@ -93,11 +97,13 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
         list_team1bowling = (RecyclerView) view.findViewById(R.id.list_team1bowling);
         list_team2batting = (RecyclerView) view.findViewById(R.id.list_team2batting);
         list_team2bowling = (RecyclerView) view.findViewById(R.id.list_team2bowling);
+        recycler_recent_balls = (RecyclerView) view.findViewById(R.id.recycler_recent_balls);
 
         list_team1batting.setLayoutManager(new LinearLayoutManager(context));
         list_team1bowling.setLayoutManager(new LinearLayoutManager(context));
         list_team2batting.setLayoutManager(new LinearLayoutManager(context));
         list_team2bowling.setLayoutManager(new LinearLayoutManager(context));
+        recycler_recent_balls.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
         layout_team1 = (LinearLayout) view.findViewById(R.id.layout_team1);
         layout_team2 = (LinearLayout) view.findViewById(R.id.layout_team2);
@@ -141,7 +147,36 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private void setTeam1Data(JSONObject data) {
         try {
             JSONArray innings = data.getJSONArray("innings");
+
             if (innings.length() > 0) {
+
+                JSONObject jo = innings.getJSONObject(0);
+                JSONArray recentBall = jo.getJSONArray("recentBall");
+                for (int i = 0; i < recentBall.length(); i++) {
+
+                    JSONObject jsonObject = recentBall.getJSONObject(i);
+                    JSONArray overBall = jsonObject.getJSONArray("overBall");
+
+                    for (int j = 0; j < overBall.length(); j++) {
+                        JSONObject ob = overBall.getJSONObject(j);
+
+                        ModelRecentBall modelRecentBall = new ModelRecentBall();
+                        modelRecentBall.setId(ob.getString("id"));
+                        modelRecentBall.setInningOverCount(ob.getString("inningOverCount"));
+                        modelRecentBall.setIsWicket(ob.getString("isWicket"));
+                        modelRecentBall.setBatsmanId(ob.getString("batsmanId"));
+                        modelRecentBall.setBowlerId(ob.getString("bowlerId"));
+                        modelRecentBall.setBowlingString(ob.getString("bowlingString"));
+                        modelRecentBall.setRunScored(ob.getString("runScored"));
+                        modelRecentBall.setOverString(ob.getString("overString"));
+
+                        recentBallArrayList.add(modelRecentBall);
+                    }
+                    adapterRecentBalls = new AdapterRecentBalls(context, this, recentBallArrayList);
+                    recycler_recent_balls.setAdapter(adapterRecentBalls);
+
+                }
+
                 Gson gson = new Gson();
                 arrayteam1Batting.clear();
                 arrayteam1Bowling.clear();

@@ -16,8 +16,8 @@
             android:layout_marginLeft="@dimen/dp20"
             android:layout_marginRight="@dimen/dp20"
             android:layout_marginTop="@dimen/dp10"
-            android:visibility="gone"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="2">
 
             <Button
@@ -50,11 +50,12 @@
         </LinearLayout>
 
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rl_main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/ll_stats">
+            android:layout_below="@+id/ll_stats"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/layout_team1"
@@ -479,22 +480,45 @@
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/dp3"
                         android:visibility="visible" />
+
+
                 </LinearLayout>
+
+
             </LinearLayout>
 
             <TextView
-                android:id="@+id/text_nodata"
+                android:id="@+id/text_recentball"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
+                android:layout_marginTop="@dimen/dp5"
                 android:padding="@dimen/dp10"
-                android:text="No data found"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_16"
-                android:visibility="gone" />
+                android:text="Recent balls"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/text_size_14" />
 
-        </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_recent_balls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp3"
+                android:visibility="visible" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/dp10"
+            android:text="No data found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

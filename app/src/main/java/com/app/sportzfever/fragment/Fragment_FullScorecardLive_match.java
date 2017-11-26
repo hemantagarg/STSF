@@ -56,6 +56,7 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
     private boolean isTeam2BowlingVisible = false;
     View view;
     JSONObject data;
+    private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate,text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
 
     public static FragmentStats getInstance() {
         if (fragment_teamJoin_request == null)
@@ -111,6 +112,15 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
         text_team1bowling = (TextView) view.findViewById(R.id.text_team1bowling);
         text_team2bowling = (TextView) view.findViewById(R.id.text_team2bowling);
         text_team2batting = (TextView) view.findViewById(R.id.text_team2batting);
+        text_extrarun = (TextView) view.findViewById(R.id.text_extrarun);
+        text_total = (TextView) view.findViewById(R.id.text_total);
+        text_totalrun = (TextView) view.findViewById(R.id.text_totalrun);
+        text_extrarunrate = (TextView) view.findViewById(R.id.text_extrarunrate);
+        text_extrarun1 = (TextView) view.findViewById(R.id.text_extrarun1);
+        text_total1 = (TextView) view.findViewById(R.id.text_total1);
+        text_totalrun1 = (TextView) view.findViewById(R.id.text_totalrun1);
+        text_extrarunrate1 = (TextView) view.findViewById(R.id.text_extrarunrate1);
+
         btn_teamb = (Button) view.findViewById(R.id.btn_teamb);
         btn_teama = (Button) view.findViewById(R.id.btn_teama);
 
@@ -161,6 +171,11 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                     e.printStackTrace();
                 }
 
+                text_extrarun.setText(modelInnings.getExtras());
+                text_total.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getTotalOvers() + " overs)");
+                text_totalrun.setText(modelInnings.getTotalRunsScored());
+                text_extrarunrate.setText("Run Rate: "+modelInnings.getOverRate());
+
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {
                         arrayteam1Batting.add(modelInnings.getBattingStats()[i]);
@@ -209,6 +224,10 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                text_extrarun1.setText(modelInnings.getExtras());
+                text_total1.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getTotalOvers() + " overs)");
+                text_totalrun1.setText(modelInnings.getTotalRunsScored());
+                text_extrarunrate1.setText("Run Rate: "+modelInnings.getOverRate());
 
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {

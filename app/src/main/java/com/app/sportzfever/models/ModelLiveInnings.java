@@ -8,6 +8,7 @@ public class ModelLiveInnings {
     private String totalRunsScored;
 
     private String isScoredOnSF;
+    private String overRate;
 
     private String[] fow;
 
@@ -305,5 +306,13 @@ public class ModelLiveInnings {
 
     public void setFow(String[] fow) {
         this.fow = fow;
+    }
+
+    public String getOverRate() {
+        return overRate;
+    }
+
+    public void setOverRate(String overRate) {
+        this.overRate = overRate;
     }
 }
