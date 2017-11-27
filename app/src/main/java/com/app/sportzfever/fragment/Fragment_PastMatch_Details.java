@@ -132,7 +132,8 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
 
         tabLayout.getTabAt(0).setText("Full Scorecard");
         tabLayout.getTabAt(1).setText("Match Info");
-        tabLayout.getTabAt(2).setText("Commentary");
+        tabLayout.getTabAt(2).setText("Team");
+        tabLayout.getTabAt(3).setText("Commentary");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -153,6 +154,13 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         b11.putString("data", data.toString());
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
+
+        Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
+        Bundle b112 = new Bundle();
+        b112.putString("avtarid", avtarid);
+        b112.putString("data", data.toString());
+        fragmentMatchTeamDetail.setArguments(b112);
+        adapter.addFrag(fragmentMatchTeamDetail, "Team");
 
         Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
         Bundle b3 = new Bundle();
