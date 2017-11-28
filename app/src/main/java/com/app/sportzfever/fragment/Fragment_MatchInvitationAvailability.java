@@ -199,7 +199,9 @@ public class Fragment_MatchInvitationAvailability extends BaseFragment implement
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
                 if (position == 1) {
-                    getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+                    if (context!=null && isAdded()) {
+                        getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+                    }
                     if (jObject.getString("result").equalsIgnoreCase("1")) {
                         JSONArray data = jObject.getJSONArray("data");
                       //  maxlistLength = jObject.getString("total");

@@ -52,13 +52,13 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private JSONObject data;
-    public static FragmentStats fragment_teamJoin_request;
+    public static Fragment_LiveMatch_Details fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
 
-    public static FragmentStats getInstance() {
+    public static Fragment_LiveMatch_Details getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_LiveMatch_Details();
         return fragment_teamJoin_request;
     }
 
@@ -66,8 +66,9 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view_about = inflater.inflate(R.layout.fragment_pastmatchdetail, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_livematchdetail, container, false);
         context = getActivity();
+        fragment_teamJoin_request = Fragment_LiveMatch_Details.this;
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
         b = getArguments();
@@ -235,6 +236,19 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         }
     }
 
+    public void updateHeaderData(JSONObject data) {
+        try {
+            JSONObject jbatsman = data.getJSONObject("match");
+            textmatchtype.setText(jbatsman.getString("inningsPlayStatusString"));
+            text_maxover.setText(jbatsman.getString("runInBall"));
+            text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+            text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+            text_location.setText(jbatsman.getString("runInOver"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
@@ -263,12 +277,8 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
-                    textmatchtype.setText("Match Type" + " : " + jbatsman.getString("matchType"));
-                    text_maxover.setText("Max Overs" + " : " + jbatsman.getString("numberOfOvers"));
-                   /* text_scorerfora.setText(team2.getString("name"));
-                    text_scorerforb.setText(team2.getString("name"));*/
-                    text_startdate.setText("Match scheduled to begin at" + " : " + jbatsman.getString("matchDate"));
-                    text_location.setText("Venue" + " : " + jbatsman.getString("location"));
+
+                    //     text_startdate.setText("Match scheduled to begin at" + " : " + jbatsman.getString("matchDate"));
 
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
 

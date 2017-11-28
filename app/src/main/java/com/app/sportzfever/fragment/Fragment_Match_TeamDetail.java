@@ -99,8 +99,8 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
                     modelteama.setName(jsonObject.getString("name"));
                     modelteama.setProfilePicture(jsonObject.getString("profilePicture"));
                     modelteama.setPlayerAvatarId(jsonObject.getString("playerAvatarId"));
-                    modelteama.setPlayerTeamId(jsonObject.getString("playerTeamId"));
-                    modelteama.setPlaySquadId(jsonObject.getString("playSquadId"));
+                  /*  modelteama.setPlayerTeamId(jsonObject.getString("playerTeamId"));
+                    modelteama.setPlaySquadId(jsonObject.getString("playSquadId"));*/
 
                     modelteama.setRowType(1);
                     arrayteama.add(modelteama);
@@ -128,8 +128,8 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
                     modelteamb.setName(jsonObject1.getString("name"));
                     modelteamb.setProfilePicture(jsonObject1.getString("profilePicture"));
                     modelteamb.setPlayerAvatarId(jsonObject1.getString("playerAvatarId"));
-                    modelteamb.setPlayerTeamId(jsonObject1.getString("playerTeamId"));
-                    modelteamb.setPlaySquadId(jsonObject1.getString("playSquadId"));
+                  /*  modelteamb.setPlayerTeamId(jsonObject1.getString("playerTeamId"));
+                    modelteamb.setPlaySquadId(jsonObject1.getString("playSquadId"));*/
 
                     modelteamb.setRowType(1);
                     arrayListBowling.add(modelteamb);

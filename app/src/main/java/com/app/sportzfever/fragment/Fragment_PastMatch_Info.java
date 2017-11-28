@@ -60,10 +60,14 @@ public class Fragment_PastMatch_Info extends BaseFragment implements OnCustomIte
                 text_match_type.setText("Match Type : " + match.getString("matchType"));
                 text_match_overs.setText("Max Overs : " + match.getString("numberOfOvers"));
                 text_venue.setText("Venue : " + match.getString("location"));
-                text_match_status.setText("Match Status : " + match.getString("matchStatus"));
-                textscoreteam1.setText("Score for : " + match.getString("location"));
-                text_toss.setText("Toss : " + match.getString("location"));
-                textscoreteam2.setText("Score for : " + match.getString("location"));
+                if (match.getString("wonString").equalsIgnoreCase("")) {
+                    text_match_status.setText("Match Status : " + match.getString("matchScheduleString"));
+                } else {
+                    text_match_status.setText("Match Status : " + match.getString("wonString"));
+                }
+                text_toss.setText("Toss : " + match.getString("tossString"));
+                textscoreteam1.setText("Scorer for " + match.getString("team1Name") + " : " + match.getString("team1Scorer"));
+                textscoreteam2.setText("Scorer for " + match.getString("team2Name") + " : " + match.getString("team2Scorer"));
 
             }
         } catch (Exception e) {

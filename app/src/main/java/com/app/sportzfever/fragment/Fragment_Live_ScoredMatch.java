@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterRecentBalls;
@@ -384,7 +385,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                 //https://sfscoring.betasportzfever.com/getLiveScore/EVENT/101/479a44a634f82b0394f78352d302ec36
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIVE_SCORE + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -403,6 +404,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
                     data = jObject.getJSONObject("data");
+                    Fragment_LiveMatch_Details.getInstance().updateHeaderData(data);
                     setTeam1Data(data);
                 }
             }

@@ -97,14 +97,12 @@ public class AdapterTournamentFixture extends RecyclerView.Adapter<RecyclerView.
             if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeam1ProfilePicture())
-
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).teama);
             }
             if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeam2ProfilePicture())
-
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).teamb);
             }

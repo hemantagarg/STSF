@@ -39,7 +39,6 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
 
     private Bundle b;
     private Activity context;
-
     private ModelUpcomingTeamName modelUpcomingTeamName;
     private ArrayList<ModelUpcomingTeamName> arrayteama, arrayListBowling;
     private ConnectionDetector cd;
@@ -52,13 +51,13 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private JSONObject data;
-    public static FragmentStats fragment_teamJoin_request;
+    public static Fragment_PastMatch_Details fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
 
-    public static FragmentStats getInstance() {
+    public static Fragment_PastMatch_Details getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_PastMatch_Details();
         return fragment_teamJoin_request;
     }
 
@@ -216,7 +215,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url,new JSONObject(), Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -254,12 +253,12 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
-                    textmatchtype.setText("Match Type" + " : " + jbatsman.getString("matchType"));
-                    text_maxover.setText("Max Overs" + " : " + jbatsman.getString("numberOfOvers"));
-                   /* text_scorerfora.setText(team2.getString("name"));
-                    text_scorerforb.setText(team2.getString("name"));*/
-                    text_startdate.setText("Match scheduled to begin at" + " : " + jbatsman.getString("matchDate"));
-                    text_location.setText("Venue" + " : " + jbatsman.getString("location"));
+                    textmatchtype.setText(jbatsman.getString("wonString"));
+                    text_maxover.setText(jbatsman.getString("matchScheduleString"));
+                    text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+                    text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+                    //  text_startdate.setText("Match scheduled to begin at" + " : " + jbatsman.getString("matchDate"));
+                    text_location.setText(jbatsman.getString("location"));
 
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
 

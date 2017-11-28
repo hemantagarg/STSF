@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:maxLength="4"
+                android:maxLength="6"
                 android:padding="@dimen/dp5"
                 android:text="33.33"
                 android:textColor="@color/textcolordark"

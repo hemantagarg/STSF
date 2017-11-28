@@ -5,27 +5,18 @@ package com.app.sportzfever.models;
  */
 
 public class BattingStats {
-    private String batsmanId;
 
-    private String caughtByAvatarName;
+    private String batsmanId;
 
     private String runoutByUserFullName;
 
-    private String outBatsmanAvatarPic;
-
     private String batsmanAvatarName;
-
-    private String runoutByAvatarName;
 
     private String inningId;
 
     private String balls;
 
-    private String bowlerAvatarPic;
-
     private String playOrder;
-
-    private String caughtByAvatarPic;
 
     private String batsmanAvatarUrl;
 
@@ -33,29 +24,13 @@ public class BattingStats {
 
     private String fours;
 
-    private String outBatsmanAvatarName;
-
-    private String stumpedByUserFullName;
-
-    private String bowlerUserFullName;
-
-    private String caughtByUserFullName;
-
     private String onStrike;
-
-    private String stumpedByAvatarName;
 
     private String status;
 
     private String dotball;
 
     private String sixes;
-
-    private String outBatsmanUserFullName;
-
-    private String bowlerAvatarName;
-
-    private String stumpedByAvatarPic;
 
     private String outString;
 
@@ -64,7 +39,7 @@ public class BattingStats {
     private String runs;
 
     private String runoutByAvatarPic;
-    private int rowType=1;
+    private int rowType = 1;
 
     public String getBatsmanId() {
         return batsmanId;
@@ -74,13 +49,6 @@ public class BattingStats {
         this.batsmanId = batsmanId;
     }
 
-    public String getCaughtByAvatarName() {
-        return caughtByAvatarName;
-    }
-
-    public void setCaughtByAvatarName(String caughtByAvatarName) {
-        this.caughtByAvatarName = caughtByAvatarName;
-    }
 
     public String getRunoutByUserFullName() {
         return runoutByUserFullName;
@@ -88,14 +56,6 @@ public class BattingStats {
 
     public void setRunoutByUserFullName(String runoutByUserFullName) {
         this.runoutByUserFullName = runoutByUserFullName;
-    }
-
-    public String getOutBatsmanAvatarPic() {
-        return outBatsmanAvatarPic;
-    }
-
-    public void setOutBatsmanAvatarPic(String outBatsmanAvatarPic) {
-        this.outBatsmanAvatarPic = outBatsmanAvatarPic;
     }
 
     public String getBatsmanAvatarName() {
@@ -106,13 +66,6 @@ public class BattingStats {
         this.batsmanAvatarName = batsmanAvatarName;
     }
 
-    public String getRunoutByAvatarName() {
-        return runoutByAvatarName;
-    }
-
-    public void setRunoutByAvatarName(String runoutByAvatarName) {
-        this.runoutByAvatarName = runoutByAvatarName;
-    }
 
     public String getInningId() {
         return inningId;
@@ -130,28 +83,12 @@ public class BattingStats {
         this.balls = balls;
     }
 
-    public String getBowlerAvatarPic() {
-        return bowlerAvatarPic;
-    }
-
-    public void setBowlerAvatarPic(String bowlerAvatarPic) {
-        this.bowlerAvatarPic = bowlerAvatarPic;
-    }
-
     public String getPlayOrder() {
         return playOrder;
     }
 
     public void setPlayOrder(String playOrder) {
         this.playOrder = playOrder;
-    }
-
-    public String getCaughtByAvatarPic() {
-        return caughtByAvatarPic;
-    }
-
-    public void setCaughtByAvatarPic(String caughtByAvatarPic) {
-        this.caughtByAvatarPic = caughtByAvatarPic;
     }
 
     public String getBatsmanAvatarUrl() {
@@ -178,52 +115,12 @@ public class BattingStats {
         this.fours = fours;
     }
 
-    public String getOutBatsmanAvatarName() {
-        return outBatsmanAvatarName;
-    }
-
-    public void setOutBatsmanAvatarName(String outBatsmanAvatarName) {
-        this.outBatsmanAvatarName = outBatsmanAvatarName;
-    }
-
-    public String getStumpedByUserFullName() {
-        return stumpedByUserFullName;
-    }
-
-    public void setStumpedByUserFullName(String stumpedByUserFullName) {
-        this.stumpedByUserFullName = stumpedByUserFullName;
-    }
-
-    public String getBowlerUserFullName() {
-        return bowlerUserFullName;
-    }
-
-    public void setBowlerUserFullName(String bowlerUserFullName) {
-        this.bowlerUserFullName = bowlerUserFullName;
-    }
-
-    public String getCaughtByUserFullName() {
-        return caughtByUserFullName;
-    }
-
-    public void setCaughtByUserFullName(String caughtByUserFullName) {
-        this.caughtByUserFullName = caughtByUserFullName;
-    }
-
     public String getOnStrike() {
         return onStrike;
     }
 
     public void setOnStrike(String onStrike) {
         this.onStrike = onStrike;
-    }
-
-    public String getStumpedByAvatarName() {
-        return stumpedByAvatarName;
-    }
-
-    public void setStumpedByAvatarName(String stumpedByAvatarName) {
-        this.stumpedByAvatarName = stumpedByAvatarName;
     }
 
     public String getStatus() {
@@ -248,30 +145,6 @@ public class BattingStats {
 
     public void setSixes(String sixes) {
         this.sixes = sixes;
-    }
-
-    public String getOutBatsmanUserFullName() {
-        return outBatsmanUserFullName;
-    }
-
-    public void setOutBatsmanUserFullName(String outBatsmanUserFullName) {
-        this.outBatsmanUserFullName = outBatsmanUserFullName;
-    }
-
-    public String getBowlerAvatarName() {
-        return bowlerAvatarName;
-    }
-
-    public void setBowlerAvatarName(String bowlerAvatarName) {
-        this.bowlerAvatarName = bowlerAvatarName;
-    }
-
-    public String getStumpedByAvatarPic() {
-        return stumpedByAvatarPic;
-    }
-
-    public void setStumpedByAvatarPic(String stumpedByAvatarPic) {
-        this.stumpedByAvatarPic = stumpedByAvatarPic;
     }
 
     public String getOutString() {

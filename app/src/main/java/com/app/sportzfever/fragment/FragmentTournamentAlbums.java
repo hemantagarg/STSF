@@ -90,6 +90,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
         text_nodata.setVisibility(View.VISIBLE);
         text_nodata.setText("There are no photos or videos as of now for the tournament.");
         //  getServicelistRefresh();
+        getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
         setlistener();
     }
 
@@ -140,7 +141,9 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+                if (context!=null && isAdded()) {
+                    getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+                }
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

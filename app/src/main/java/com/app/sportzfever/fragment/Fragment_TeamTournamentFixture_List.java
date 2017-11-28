@@ -149,7 +149,7 @@ public class Fragment_TeamTournamentFixture_List extends BaseFragment implements
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
                     //  maxlistLength = jObject.getString("total");
-                    arrayList.removeAll(arrayList);
+                    arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject jo = data.getJSONObject(i);
