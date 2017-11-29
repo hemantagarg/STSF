@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by admin on 06-01-2016.
@@ -181,6 +182,7 @@ public class FragmentTournamentPoints extends BaseFragment implements ApiRespons
 
                     adapterTournamentPointTable = new AdapterTournamentPointTable(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterTournamentPointTable);
+                    Collections.sort(arrayList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

@@ -37,11 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fragment_LiveMatch_Details extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private Bundle b;
     private Activity context;
-
     private ModelUpcomingTeamName modelUpcomingTeamName;
     private ArrayList<ModelUpcomingTeamName> arrayteama, arrayListBowling;
     private ConnectionDetector cd;
@@ -54,15 +53,15 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private JSONObject data;
-    public static Fragment_LiveMatch_Details fragment_teamJoin_request;
+    public static FragmentUpcomingMatchDetails fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
-    private String matchTitle = "";
     View view_about;
+    private String matchTitle = "";
 
-    public static Fragment_LiveMatch_Details getInstance() {
+    public static FragmentUpcomingMatchDetails getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new Fragment_LiveMatch_Details();
+            fragment_teamJoin_request = new FragmentUpcomingMatchDetails();
         return fragment_teamJoin_request;
     }
 
@@ -70,9 +69,8 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view_about = inflater.inflate(R.layout.fragment_livematchdetail, container, false);
+        view_about = inflater.inflate(R.layout.fragment_upcomingmatchdetail, container, false);
         context = getActivity();
-        fragment_teamJoin_request = Fragment_LiveMatch_Details.this;
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
         b = getArguments();
@@ -118,8 +116,8 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         arrayteama = new ArrayList<>();
         getBundle();
         setlistener();
-setCollapsingToolbar();
         getServicelistRefresh();
+        setCollapsingToolbar();
     }
 
     private void setlistener() {
@@ -135,11 +133,8 @@ setCollapsingToolbar();
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setText("Live");
-        tabLayout.getTabAt(1).setText("Full Scorecard");
-        tabLayout.getTabAt(2).setText("Match Info");
-        tabLayout.getTabAt(3).setText("Team");
-        tabLayout.getTabAt(4).setText("Commentary");
+        tabLayout.getTabAt(0).setText("Match Info");
+        tabLayout.getTabAt(1).setText("Team");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -148,23 +143,9 @@ setCollapsingToolbar();
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        Fragment_Live_ScoredMatch tab21 = new Fragment_Live_ScoredMatch();
-        Bundle b21 = new Bundle();
-        b21.putString("eventId", avtarid);
-        b21.putString("data", data.toString());
-        tab21.setArguments(b21);
-        adapter.addFrag(tab21, "services");
-
-        Fragment_FullScorecardLive_match tab2 = new Fragment_FullScorecardLive_match();
-        Bundle b = new Bundle();
-        b.putString("eventId", avtarid);
-        b.putString("data", data.toString());
-        tab2.setArguments(b);
-        adapter.addFrag(tab2, "services");
-
         Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
         Bundle b11 = new Bundle();
-        b11.putString("eventId", avtarid);
+        b11.putString("avtarid", avtarid);
         b11.putString("data", data.toString());
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
@@ -175,13 +156,6 @@ setCollapsingToolbar();
         b112.putString("data", data.toString());
         fragmentMatchTeamDetail.setArguments(b112);
         adapter.addFrag(fragmentMatchTeamDetail, "Team");
-
-        Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
-        Bundle b3 = new Bundle();
-        b3.putString("eventId", avtarid);
-        b3.putString("data", data.toString());
-        tab4.setArguments(b3);
-        adapter.addFrag(tab4, "Reviews");
 
         viewPager.setAdapter(adapter);
     }
@@ -240,20 +214,6 @@ setCollapsingToolbar();
         }
     }
 
-    public void updateHeaderData(JSONObject data) {
-        try {
-            JSONObject jbatsman = data.getJSONObject("match");
-            textmatchtype.setText(jbatsman.getString("inningsPlayStatusString"));
-            text_maxover.setText(jbatsman.getString("runInBall"));
-            text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
-            text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
-            text_location.setText(jbatsman.getString("runInOver"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view_about.findViewById(R.id.collapsingToolbar);
         AppBarLayout appBarLayout = (AppBarLayout) view_about.findViewById(R.id.appBar);
@@ -278,6 +238,7 @@ setCollapsingToolbar();
         });
     }
 
+
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
@@ -301,12 +262,17 @@ setCollapsingToolbar();
                     modelUpcomingTeamName.setNumberOfOvers(jbatsman.getString("numberOfOvers"));
 
                     text_username.setText(team1.getString("name"));
-
+                    matchTitle = jbatsman.getString("matchTile");
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
-                    text_startdate.setText("Match Center");
-                    matchTitle = jbatsman.getString("matchTile");
+                    textmatchtype.setText(jbatsman.getString("wonString"));
+                    text_maxover.setText(jbatsman.getString("matchScheduleString"));
+                    text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+                    text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+                    text_startdate.setText(jbatsman.getString("matchScheduleString"));
+                    text_location.setText(jbatsman.getString("location"));
+
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
 
                     modelUpcomingTeamName.setTeam1AvatarId(team1.getString("teamAvatarId"));

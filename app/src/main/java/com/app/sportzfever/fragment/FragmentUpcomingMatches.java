@@ -105,7 +105,7 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-        Fragment_UpcomingMatch_Details fragmentupcomingdetals = new Fragment_UpcomingMatch_Details();
+        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
         Bundle b = new Bundle();
         b.putString("eventId", arrayList.get(position).getEventId());
 

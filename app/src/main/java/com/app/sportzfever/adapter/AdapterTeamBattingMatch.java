@@ -105,7 +105,7 @@ public class AdapterTeamBattingMatch extends RecyclerView.Adapter<RecyclerView.V
                 ((CustomViewHolder) holder).text_status.setText("");
             }
             if (m1.getFours() != null) {
-                ((CustomViewHolder) holder).text_runs.setText("4*" + m1.getFours() + " | 6*" + m1.getSixes() + " | Dots*" + m1.getDotball());
+                ((CustomViewHolder) holder).text_runs.setText("4 x " + m1.getFours() + " | 6 x " + m1.getSixes() + " | Dots x " + m1.getDotball());
             } else {
                 ((CustomViewHolder) holder).text_runs.setText("");
             }

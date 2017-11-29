@@ -2,6 +2,7 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,13 @@ public class Fragment_PastMatch_Info extends BaseFragment implements OnCustomIte
     private Activity context;
     private TextView text_toss, text_match_status, text_match_type, text_match_overs, text_venue, textscoreteam1, textscoreteam2;
 
-    public static FragmentStats fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    public static Fragment_PastMatch_Info fragment_teamJoin_request;
+    private final String TAG = Fragment_PastMatch_Info.class.getSimpleName();
     private String avtarid = "";
 
-    public static FragmentStats getInstance() {
+    public static Fragment_PastMatch_Info getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_PastMatch_Info();
         return fragment_teamJoin_request;
     }
 
@@ -57,17 +58,17 @@ public class Fragment_PastMatch_Info extends BaseFragment implements OnCustomIte
 
                 JSONObject data = new JSONObject(maindata);
                 JSONObject match = data.getJSONObject("match");
-                text_match_type.setText("Match Type : " + match.getString("matchType"));
-                text_match_overs.setText("Max Overs : " + match.getString("numberOfOvers"));
-                text_venue.setText("Venue : " + match.getString("location"));
+                text_match_type.setText(Html.fromHtml("<b>" + "Match Type : " + "</b>" + match.getString("matchType")));
+                text_match_overs.setText(Html.fromHtml("<b>" + "Max Overs : " + "</b>" + match.getString("numberOfOvers")));
+                text_venue.setText(Html.fromHtml("<b>" + "Venue : " + "</b>" + match.getString("location")));
                 if (match.getString("wonString").equalsIgnoreCase("")) {
-                    text_match_status.setText("Match Status : " + match.getString("matchScheduleString"));
+                    text_match_status.setText(Html.fromHtml("<b>" + "Match Status : " + "</b>" + match.getString("matchScheduleString")));
                 } else {
-                    text_match_status.setText("Match Status : " + match.getString("wonString"));
+                    text_match_status.setText(Html.fromHtml("<b>" + "Match Status : " + "</b>" + match.getString("wonString")));
                 }
-                text_toss.setText("Toss : " + match.getString("tossString"));
-                textscoreteam1.setText("Scorer for " + match.getString("team1Name") + " : " + match.getString("team1Scorer"));
-                textscoreteam2.setText("Scorer for " + match.getString("team2Name") + " : " + match.getString("team2Scorer"));
+                text_toss.setText(Html.fromHtml("<b>" + "Toss : " + "</b>" + match.getString("tossString")));
+                textscoreteam1.setText(Html.fromHtml("<b>" + "Scorer for " + match.getString("team1Name") + " : " + "</b>" + match.getString("team1Scorer")));
+                textscoreteam2.setText(Html.fromHtml("<b>" + "Scorer for " + match.getString("team2Name") + " : " + "</b>" + match.getString("team2Scorer")));
 
             }
         } catch (Exception e) {

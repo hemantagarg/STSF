@@ -1,12 +1,14 @@
 package com.app.sportzfever.models;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
  * Created by hemanta on 01-09-2017.
  */
 
-public class ModelAllTournamentPointTables implements Serializable{
+public class ModelAllTournamentPointTables implements Serializable, Comparable<ModelAllTournamentPointTables> {
 
     private String teamName;
 
@@ -22,7 +24,7 @@ public class ModelAllTournamentPointTables implements Serializable{
 
     private String groupId;
 
-    private String teamProfilePicture="";
+    private String teamProfilePicture = "";
 
     private String matches;
 
@@ -34,133 +36,107 @@ public class ModelAllTournamentPointTables implements Serializable{
 
     private String netRunRate;
 
-    public String getTeamName ()
-    {
+    public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName (String teamName)
-    {
+    public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
 
-    public String getTeamAvatarId ()
-    {
+    public String getTeamAvatarId() {
         return teamAvatarId;
     }
 
-    public void setTeamAvatarId (String teamAvatarId)
-    {
+    public void setTeamAvatarId(String teamAvatarId) {
         this.teamAvatarId = teamAvatarId;
     }
 
-    public String getGroupName ()
-    {
+    public String getGroupName() {
         return groupName;
     }
 
-    public void setGroupName (String groupName)
-    {
+    public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
 
-    public String getLost ()
-    {
+    public String getLost() {
         return lost;
     }
 
-    public void setLost (String lost)
-    {
+    public void setLost(String lost) {
         this.lost = lost;
     }
 
-    public String getTeamId ()
-    {
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId (String teamId)
-    {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
-    public String getId ()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getGroupId ()
-    {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId (String groupId)
-    {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
-    public String getTeamProfilePicture ()
-    {
+    public String getTeamProfilePicture() {
         return teamProfilePicture;
     }
 
-    public void setTeamProfilePicture (String teamProfilePicture)
-    {
+    public void setTeamProfilePicture(String teamProfilePicture) {
         this.teamProfilePicture = teamProfilePicture;
     }
 
-    public String getMatches ()
-    {
+    public String getMatches() {
         return matches;
     }
 
-    public void setMatches (String matches)
-    {
+    public void setMatches(String matches) {
         this.matches = matches;
     }
 
-    public String getDummyTeamName ()
-    {
+    public String getDummyTeamName() {
         return dummyTeamName;
     }
 
-    public void setDummyTeamName (String dummyTeamName)
-    {
+    public void setDummyTeamName(String dummyTeamName) {
         this.dummyTeamName = dummyTeamName;
     }
 
-    public String getWon ()
-    {
+    public String getWon() {
         return won;
     }
 
-    public void setWon (String won)
-    {
+    public void setWon(String won) {
         this.won = won;
     }
 
-    public String getPoints ()
-    {
+    public String getPoints() {
         return points;
     }
 
-    public void setPoints (String points)
-    {
+    public void setPoints(String points) {
         this.points = points;
     }
 
-    public String getNetRunRate ()
-    {
+    public String getNetRunRate() {
         return netRunRate;
     }
 
-    public void setNetRunRate (String netRunRate)
-    {
+    public void setNetRunRate(String netRunRate) {
         this.netRunRate = netRunRate;
     }
 
@@ -174,4 +150,14 @@ public class ModelAllTournamentPointTables implements Serializable{
 
     private int rowType;
 
+    @Override
+    public int compareTo(@NonNull ModelAllTournamentPointTables modelAllTournamentPointTables) {
+        int point = 0;
+        if (Double.parseDouble(modelAllTournamentPointTables.points) == Double.parseDouble(this.points)) {
+            point = Double.compare(Double.parseDouble(modelAllTournamentPointTables.netRunRate), Double.parseDouble(this.netRunRate));
+        } else {
+            point = Double.compare(Double.parseDouble(modelAllTournamentPointTables.points), Double.parseDouble(this.points));
+        }
+        return point;
+    }
 }

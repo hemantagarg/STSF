@@ -51,9 +51,9 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
-    private boolean isTeam1BowlingVisible = false;
+    private boolean isTeam1BowlingVisible = true;
     private boolean isTeam2BattingVisible = true;
-    private boolean isTeam2BowlingVisible = false;
+    private boolean isTeam2BowlingVisible = true;
     View view;
     JSONObject data;
     private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate,text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;

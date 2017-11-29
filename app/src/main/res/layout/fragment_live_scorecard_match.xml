@@ -98,7 +98,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:gravity="left"
                             android:text="Batsmen"
                             android:textColor="@color/text_color_black"
@@ -112,7 +112,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight=".5"
                             android:gravity="center"
                             android:text="R"
                             android:textColor="@color/text_color_black"
@@ -126,7 +126,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight=".5"
                             android:gravity="center"
                             android:text="B"
                             android:textColor="@color/text_color_black"
@@ -171,7 +171,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dp10"
-                        android:drawableRight="@drawable/arrow_down_white"
+                        android:drawableRight="@drawable/up_arrow_white"
                         android:text="team Batting"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14" />
@@ -183,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -196,7 +196,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:gravity="left"
                             android:text="Bowlers"
                             android:textColor="@color/text_color_black"
@@ -210,7 +210,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight=".6"
                             android:gravity="center"
                             android:text="o"
                             android:textColor="@color/text_color_black"
@@ -224,7 +224,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight=".6"
                             android:gravity="center"
                             android:text="R"
                             android:textColor="@color/text_color_black"
@@ -238,7 +238,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight=".7"
                             android:gravity="center"
                             android:text="W"
                             android:textColor="@color/text_color_black"

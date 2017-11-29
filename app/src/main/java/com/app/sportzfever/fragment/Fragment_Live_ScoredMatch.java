@@ -54,9 +54,9 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
-    private boolean isTeam1BowlingVisible = false;
+    private boolean isTeam1BowlingVisible = true;
     private boolean isTeam2BattingVisible = true;
-    private boolean isTeam2BowlingVisible = false;
+    private boolean isTeam2BowlingVisible = true;
     View view;
     private AdapterRecentBalls adapterRecentBalls;
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();

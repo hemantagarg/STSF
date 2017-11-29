@@ -2,6 +2,8 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,6 +56,8 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
     public static Fragment_PastMatch_Details fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
+    View view_about;
+    private String matchTitle = "";
 
     public static Fragment_PastMatch_Details getInstance() {
         if (fragment_teamJoin_request == null)
@@ -65,7 +69,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view_about = inflater.inflate(R.layout.fragment_pastmatchdetail, container, false);
+        view_about = inflater.inflate(R.layout.fragment_pastmatchdetail, container, false);
         context = getActivity();
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
@@ -112,8 +116,8 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         arrayteama = new ArrayList<>();
         getBundle();
         setlistener();
-
         getServicelistRefresh();
+        setCollapsingToolbar();
     }
 
     private void setlistener() {
@@ -225,6 +229,30 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         }
     }
 
+    private void setCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view_about.findViewById(R.id.collapsingToolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) view_about.findViewById(R.id.appBar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset < 100) {
+                    collapsingToolbarLayout.setTitle(matchTitle);
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
@@ -249,7 +277,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                     modelUpcomingTeamName.setNumberOfOvers(jbatsman.getString("numberOfOvers"));
 
                     text_username.setText(team1.getString("name"));
-
+                    matchTitle = jbatsman.getString("matchTile");
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
@@ -257,7 +285,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                     text_maxover.setText(jbatsman.getString("matchScheduleString"));
                     text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
                     text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
-                    //  text_startdate.setText("Match scheduled to begin at" + " : " + jbatsman.getString("matchDate"));
+                    text_startdate.setText("Match Center");
                     text_location.setText(jbatsman.getString("location"));
 
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
