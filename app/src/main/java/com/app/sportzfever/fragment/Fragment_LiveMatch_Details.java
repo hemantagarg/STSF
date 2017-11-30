@@ -140,8 +140,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         tabLayout.getTabAt(2).setText("Commentary");
         tabLayout.getTabAt(3).setText("Teams");
         tabLayout.getTabAt(4).setText("Match Info");
-
-
+        tabLayout.getTabAt(5).setText("Comments");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -185,6 +184,11 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         b3.putString("data", data.toString());
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
+        Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", avtarid);
+        matchFeed.setArguments(b111);
+        adapter.addFrag(matchFeed, "feed");
 
         viewPager.setAdapter(adapter);
     }

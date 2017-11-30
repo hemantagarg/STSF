@@ -137,6 +137,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         tabLayout.getTabAt(1).setText("Commentary");
         tabLayout.getTabAt(2).setText("Teams");
         tabLayout.getTabAt(3).setText("Match Info");
+        tabLayout.getTabAt(4).setText("Comments");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -165,7 +166,6 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         fragmentMatchTeamDetail.setArguments(b112);
         adapter.addFrag(fragmentMatchTeamDetail, "Team");
 
-
         Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
         Bundle b11 = new Bundle();
         b11.putString("avtarid", avtarid);
@@ -173,6 +173,11 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
+        Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", avtarid);
+        matchFeed.setArguments(b111);
+        adapter.addFrag(matchFeed, "feed");
 
         viewPager.setAdapter(adapter);
     }

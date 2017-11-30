@@ -135,7 +135,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
 
         tabLayout.getTabAt(0).setText("Match Info");
         tabLayout.getTabAt(1).setText("Teams");
-
+        tabLayout.getTabAt(2).setText("Comments");
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
     }
@@ -156,6 +156,12 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
         b112.putString("data", data.toString());
         fragmentMatchTeamDetail.setArguments(b112);
         adapter.addFrag(fragmentMatchTeamDetail, "Team");
+
+        Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", avtarid);
+        matchFeed.setArguments(b111);
+        adapter.addFrag(matchFeed, "feed");
 
         viewPager.setAdapter(adapter);
     }

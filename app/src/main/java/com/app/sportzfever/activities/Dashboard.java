@@ -42,6 +42,7 @@ import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
+import com.app.sportzfever.fragment.Fragment_MatchFeed;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
@@ -896,6 +897,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
         if (currentFragment instanceof FragmentMenuTeamList) {
             ((FragmentMenuTeamList) currentFragment).onResume();
+        }    if (currentFragment instanceof Fragment_MatchFeed) {
+            ((Fragment_MatchFeed) currentFragment).onResume();
         }
         if (currentFragment instanceof FragmentAvtar_Details) {
             ((FragmentAvtar_Details) currentFragment).onResume();

@@ -15,6 +15,7 @@ public interface JsonApiHelper {
     String FORGOT = "forgetPassword";
     String GET_FEEDS = "getFeeds/";
     String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
+    String GET_FEEDS_MATCH = "getFeedOfMatchTournament/match/";
     String GET_AVTARFEEDS = "getFeedByAvatar/";
     String GET_NOTIFICATION = "getNotifications/";
     String GET_FRIENDREQUEST = "getFriendRequests/";
