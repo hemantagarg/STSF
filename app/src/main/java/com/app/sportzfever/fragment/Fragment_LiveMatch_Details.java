@@ -118,7 +118,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         arrayteama = new ArrayList<>();
         getBundle();
         setlistener();
-setCollapsingToolbar();
+        setCollapsingToolbar();
         getServicelistRefresh();
     }
 
@@ -137,9 +137,11 @@ setCollapsingToolbar();
 
         tabLayout.getTabAt(0).setText("Live");
         tabLayout.getTabAt(1).setText("Full Scorecard");
-        tabLayout.getTabAt(2).setText("Match Info");
-        tabLayout.getTabAt(3).setText("Team");
-        tabLayout.getTabAt(4).setText("Commentary");
+        tabLayout.getTabAt(2).setText("Commentary");
+        tabLayout.getTabAt(3).setText("Teams");
+        tabLayout.getTabAt(4).setText("Match Info");
+
+
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -154,6 +156,7 @@ setCollapsingToolbar();
         b21.putString("data", data.toString());
         tab21.setArguments(b21);
         adapter.addFrag(tab21, "services");
+
 
         Fragment_FullScorecardLive_match tab2 = new Fragment_FullScorecardLive_match();
         Bundle b = new Bundle();

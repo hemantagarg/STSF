@@ -134,9 +134,9 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("Full Scorecard");
-        tabLayout.getTabAt(1).setText("Match Info");
-        tabLayout.getTabAt(2).setText("Team");
-        tabLayout.getTabAt(3).setText("Commentary");
+        tabLayout.getTabAt(1).setText("Commentary");
+        tabLayout.getTabAt(2).setText("Teams");
+        tabLayout.getTabAt(3).setText("Match Info");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -151,12 +151,12 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
-        Bundle b11 = new Bundle();
-        b11.putString("avtarid", avtarid);
-        b11.putString("data", data.toString());
-        feed.setArguments(b11);
-        adapter.addFrag(feed, "feed");
+        Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
+        Bundle b3 = new Bundle();
+        b3.putString("avtarid", avtarid);
+        b3.putString("data", data.toString());
+        tab4.setArguments(b3);
+        adapter.addFrag(tab4, "Reviews");
 
         Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
         Bundle b112 = new Bundle();
@@ -165,12 +165,14 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         fragmentMatchTeamDetail.setArguments(b112);
         adapter.addFrag(fragmentMatchTeamDetail, "Team");
 
-        Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
-        Bundle b3 = new Bundle();
-        b3.putString("avtarid", avtarid);
-        b3.putString("data", data.toString());
-        tab4.setArguments(b3);
-        adapter.addFrag(tab4, "Reviews");
+
+        Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
+        Bundle b11 = new Bundle();
+        b11.putString("avtarid", avtarid);
+        b11.putString("data", data.toString());
+        feed.setArguments(b11);
+        adapter.addFrag(feed, "feed");
+
 
         viewPager.setAdapter(adapter);
     }

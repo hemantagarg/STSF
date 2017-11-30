@@ -170,7 +170,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                     e.printStackTrace();
                 }
                 text_extrarun.setText(modelInnings.getExtras());
-                text_total.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getTotalOvers() + " overs)");
+                text_total.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun.setText(modelInnings.getTotalRunsScored());
                 text_extrarunrate.setText("Run Rate: " + modelInnings.getOverRate());
 
@@ -223,7 +223,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                     e.printStackTrace();
                 }
                 text_extrarun1.setText(modelInnings.getExtras());
-                text_total1.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getTotalOvers() + " overs)");
+                text_total1.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun1.setText(modelInnings.getTotalRunsScored());
                 text_extrarunrate1.setText("Run Rate: " + modelInnings.getOverRate());
 

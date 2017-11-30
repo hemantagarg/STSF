@@ -66,7 +66,9 @@ public class Fragment_PastMatch_Info extends BaseFragment implements OnCustomIte
                 } else {
                     text_match_status.setText(Html.fromHtml("<b>" + "Match Status : " + "</b>" + match.getString("wonString")));
                 }
-                text_toss.setText(Html.fromHtml("<b>" + "Toss : " + "</b>" + match.getString("tossString")));
+                if (!match.getString("tossString").equalsIgnoreCase("")) {
+                    text_toss.setText(Html.fromHtml("<b>" + "Toss : " + "</b>" + match.getString("tossString")));
+                }
                 textscoreteam1.setText(Html.fromHtml("<b>" + "Scorer for " + match.getString("team1Name") + " : " + "</b>" + match.getString("team1Scorer")));
                 textscoreteam2.setText(Html.fromHtml("<b>" + "Scorer for " + match.getString("team2Name") + " : " + "</b>" + match.getString("team2Scorer")));
 

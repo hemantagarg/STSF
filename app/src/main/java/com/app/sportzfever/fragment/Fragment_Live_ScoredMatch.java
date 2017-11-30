@@ -206,13 +206,15 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                     list_team1bowling.setAdapter(adapterTeam1BowlingMatch);
                     text_nodata.setVisibility(View.GONE);
                     layout_team1.setVisibility(View.VISIBLE);
-
+                    recycler_recent_balls.setVisibility(View.VISIBLE);
                 } else {
                     layout_team1.setVisibility(View.GONE);
+                    recycler_recent_balls.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
+                recycler_recent_balls.setVisibility(View.GONE);
                 layout_team1.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
                 text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");

@@ -134,7 +134,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("Match Info");
-        tabLayout.getTabAt(1).setText("Team");
+        tabLayout.getTabAt(1).setText("Teams");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -266,11 +266,11 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                     text_teamname.setText(team2.getString("name"));
                     Picasso.with(context).load(team1.getString("profilePicture")).transform(new CircleTransform()).placeholder(R.drawable.user).into(teama);
                     Picasso.with(context).load(team2.getString("profilePicture")).placeholder(R.drawable.logo).into(teamb);
-                    textmatchtype.setText(jbatsman.getString("wonString"));
+                    textmatchtype.setText(jbatsman.getString("matchStatus"));
                     text_maxover.setText(jbatsman.getString("matchScheduleString"));
                     text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
                     text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
-                    text_startdate.setText(jbatsman.getString("matchScheduleString"));
+                    text_startdate.setText("Match Center");
                     text_location.setText(jbatsman.getString("location"));
 
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
