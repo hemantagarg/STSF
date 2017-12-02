@@ -455,7 +455,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
             if (AppUtils.isNetworkAvailable(context)) {
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
-                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
+                new CommonAsyncTaskHashmap(13, context, this).getqueryJsonbject(url, null, Request.Method.DELETE);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -642,7 +642,14 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            } else if (position == 10) {
+            }  else if (position == 13) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }else if (position == 10) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

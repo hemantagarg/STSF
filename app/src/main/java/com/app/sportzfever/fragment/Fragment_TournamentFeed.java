@@ -48,7 +48,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_TournamentFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_request;
     private Bundle b;
@@ -69,13 +69,13 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
 
-    public static Fragment_MatchFeed fragment_userFeed;
-    private final String TAG = Fragment_MatchFeed.class.getSimpleName();
-    private String eventId = "";
+    public static Fragment_TournamentFeed fragment_userFeed;
+    private final String TAG = Fragment_TournamentFeed.class.getSimpleName();
+    private String tournamentId = "";
 
-    public static Fragment_MatchFeed getInstance() {
+    public static Fragment_TournamentFeed getInstance() {
         if (fragment_userFeed == null)
-            fragment_userFeed = new Fragment_MatchFeed();
+            fragment_userFeed = new Fragment_TournamentFeed();
         return fragment_userFeed;
     }
 
@@ -101,7 +101,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     private void getBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            eventId = bundle.getString("avtarid");
+            tournamentId = bundle.getString("id");
         }
     }
 
@@ -124,7 +124,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
         arrayList = new ArrayList<>();
         getBundle();
         setlistener();
-       // getServicelistRefresh();
+        // getServicelistRefresh();
     }
 
     private void setlistener() {
@@ -137,9 +137,9 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
         floating_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment_PostMatchFeed fragment_postFeed = new Fragment_PostMatchFeed();
+                Fragment_PostTournamentFeed fragment_postFeed = new Fragment_PostTournamentFeed();
                 Bundle bundle = new Bundle();
-                bundle.putString("id", eventId);
+                bundle.putString("id", tournamentId);
                 fragment_postFeed.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
@@ -451,6 +451,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
 
     private void deleteFeed(String id) {
         try {
+
             if (AppUtils.isNetworkAvailable(context)) {
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.DELETESTATUS + id;
@@ -488,7 +489,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // https://sfscoring.betasportzfever.com/getFeedOfMatchTournament/match/65/0/a019834e-8f16-11e7-9931-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_MATCH + eventId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_TOURNAMENT + tournamentId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 //   String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
 
@@ -503,8 +504,8 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     private void onLoadMore() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //  http://sfscoring.betasportzfever.com/getFeedByAvatar/1/69/10/479a44a634f82b0394f78352d302ec36
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_MATCH + eventId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                //  https://sfscoring.betasportzfever.com/getFeedOfMatchTournament/TOURNAMENT/6/0/a019834e-8f16-11e7-9931-008cfa5afa52
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_TOURNAMENT + tournamentId + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 // String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_FEEDS_BY_AVTAR + "1/69/10/479a44a634f82b0394f78352d302ec36";
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
@@ -627,13 +628,6 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            } else if (position == 10) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    getServicelistRefresh();
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                }
             } else if (position == 13) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -642,7 +636,14 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }else if (position == 12) {
+            } else if (position == 10) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 12) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
 

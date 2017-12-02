@@ -205,6 +205,8 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
                                 edt_albumname.setError("Please enter album name");
                                 edt_albumname.requestFocus();
                             }
+                        } else {
+                            submitPost();
                         }
                     } else {
                         submitPost();

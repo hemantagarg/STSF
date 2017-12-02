@@ -204,6 +204,8 @@ public class Fragment_PostAvtarFeed extends BaseFragment implements ApiResponse,
                                 edt_albumname.setError("Please enter album name");
                                 edt_albumname.requestFocus();
                             }
+                        }else {
+                            submitPost();
                         }
                     } else {
                         submitPost();

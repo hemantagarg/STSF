@@ -56,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_PostTournamentFeed extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private Bundle b;
     private Activity context;
@@ -69,8 +69,8 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
     private String selectedimagespath = "";
     private TextView text_post;
     private RelativeLayout rl_photo, rl_album;
-    public static Fragment_PostMatchFeed fragment_friend_request;
-    private final String TAG = Fragment_PostMatchFeed.class.getSimpleName();
+    public static Fragment_PostTournamentFeed fragment_friend_request;
+    private final String TAG = Fragment_PostTournamentFeed.class.getSimpleName();
     private String feedId = "";
     private boolean isAlbum = false;
     private ArrayAdapter<String> adapterShare, adapterAlbum;
@@ -86,9 +86,9 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
     private AdapterAlbumPhotoList adapterAlbumPhotoList;
     private String avtarid = "";
 
-    public static Fragment_PostMatchFeed getInstance() {
+    public static Fragment_PostTournamentFeed getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_PostMatchFeed();
+            fragment_friend_request = new Fragment_PostTournamentFeed();
         return fragment_friend_request;
     }
 
@@ -356,7 +356,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
             Log.e("Content-Type", "undefined");
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
-            reqEntity.addPart("matchId", avtarId);
+            reqEntity.addPart("tournamentId", avtarId);
             reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);
@@ -364,7 +364,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
 
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATESTATUS;
-                new AsyncPostDataFileResponse(context, Fragment_PostMatchFeed.this, 1, reqEntity, url);
+                new AsyncPostDataFileResponse(context, Fragment_PostTournamentFeed.this, 1, reqEntity, url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }

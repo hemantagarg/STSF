@@ -105,15 +105,15 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
-        Bundle b = new Bundle();
-        b.putString("eventId", arrayList.get(position).getEventId());
+            FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayList.get(position).getEventId());
 
-        fragmentupcomingdetals.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            fragmentupcomingdetals.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
 
-    }}
-
+        }
+    }
 
 
     private void getServicelistRefresh() {
@@ -139,7 +139,7 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
@@ -184,12 +184,16 @@ public class FragmentUpcomingMatches extends BaseFragment implements ApiResponse
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText("Teams currently warming up. New matches will be scheduled soon.");
+                    }
 
-                    text_nodata.setVisibility(View.GONE);
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Upcoming Matches found");
-
+                    text_nodata.setText("Teams currently warming up. New matches will be scheduled soon.");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

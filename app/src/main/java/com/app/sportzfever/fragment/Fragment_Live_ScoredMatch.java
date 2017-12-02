@@ -3,6 +3,7 @@ package com.app.sportzfever.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private boolean isTeam2BattingVisible = true;
     private boolean isTeam2BowlingVisible = true;
     View view;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private AdapterRecentBalls adapterRecentBalls;
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
@@ -99,7 +101,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
         list_team2batting = (RecyclerView) view.findViewById(R.id.list_team2batting);
         list_team2bowling = (RecyclerView) view.findViewById(R.id.list_team2bowling);
         recycler_recent_balls = (RecyclerView) view.findViewById(R.id.recycler_recent_balls);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         list_team1batting.setLayoutManager(new LinearLayoutManager(context));
         list_team1bowling.setLayoutManager(new LinearLayoutManager(context));
         list_team2batting.setLayoutManager(new LinearLayoutManager(context));
@@ -274,6 +276,14 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
 
 
     private void setlistener() {
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLiveScoresRefresh();
+            }
+        });
+
         btn_teama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -397,6 +407,22 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
         }
     }
 
+    private void getLiveScoresRefresh() {
+        Dashboard.getInstance().setProgressLoader(true);
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //https://sfscoring.betasportzfever.com/getLiveScore/EVENT/101/479a44a634f82b0394f78352d302ec36
+             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIVE_SCORE + avtarid + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, new JSONObject(), Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
@@ -408,6 +434,13 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                     data = jObject.getJSONObject("data");
                     Fragment_LiveMatch_Details.getInstance().updateHeaderData(data);
                     setTeam1Data(data);
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                } else {
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             }
         } catch (Exception e) {
