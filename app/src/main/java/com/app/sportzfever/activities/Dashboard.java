@@ -40,11 +40,14 @@ import com.app.sportzfever.fragment.FragmentMenuTeamList;
 import com.app.sportzfever.fragment.FragmentPersonal_User_Details;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
+import com.app.sportzfever.fragment.FragmentUpcomingMatchDetails;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
+import com.app.sportzfever.fragment.Fragment_LiveMatch_Details;
 import com.app.sportzfever.fragment.Fragment_MatchFeed;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
+import com.app.sportzfever.fragment.Fragment_PastMatch_Details;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
 import com.app.sportzfever.fragment.Fragment_Search;
 import com.app.sportzfever.fragment.Fragment_Team;
@@ -897,7 +900,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
         if (currentFragment instanceof FragmentMenuTeamList) {
             ((FragmentMenuTeamList) currentFragment).onResume();
-        }    if (currentFragment instanceof Fragment_MatchFeed) {
+        }
+        if (currentFragment instanceof Fragment_MatchFeed) {
             ((Fragment_MatchFeed) currentFragment).onResume();
         }
         if (currentFragment instanceof FragmentAvtar_Details) {
@@ -905,6 +909,15 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
         if (currentFragment instanceof Fragment_UserFeed) {
             ((Fragment_UserFeed) currentFragment).onResume();
+        }
+        if (currentFragment instanceof Fragment_PastMatch_Details) {
+            ((Fragment_PastMatch_Details) currentFragment).onResume();
+        }
+        if (currentFragment instanceof Fragment_LiveMatch_Details) {
+            ((Fragment_LiveMatch_Details) currentFragment).onResume();
+        }
+        if (currentFragment instanceof FragmentUpcomingMatchDetails) {
+            ((FragmentUpcomingMatchDetails) currentFragment).onResume();
         }
     }
 

@@ -72,6 +72,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     public static Fragment_MatchFeed fragment_userFeed;
     private final String TAG = Fragment_MatchFeed.class.getSimpleName();
     private String eventId = "";
+    private String tournamentId = "";
 
     public static Fragment_MatchFeed getInstance() {
         if (fragment_userFeed == null)
@@ -102,6 +103,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
         Bundle bundle = getArguments();
         if (bundle != null) {
             eventId = bundle.getString("avtarid");
+            tournamentId = bundle.getString("tournamentId");
         }
     }
 
@@ -124,7 +126,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
         arrayList = new ArrayList<>();
         getBundle();
         setlistener();
-       // getServicelistRefresh();
+        // getServicelistRefresh();
     }
 
     private void setlistener() {
@@ -140,6 +142,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 Fragment_PostMatchFeed fragment_postFeed = new Fragment_PostMatchFeed();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", eventId);
+                bundle.putString("tournamentId", tournamentId);
                 fragment_postFeed.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
@@ -642,7 +645,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }else if (position == 12) {
+            } else if (position == 12) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
 

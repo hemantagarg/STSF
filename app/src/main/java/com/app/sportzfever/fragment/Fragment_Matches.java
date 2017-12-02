@@ -67,7 +67,8 @@ public class Fragment_Matches extends BaseFragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
-
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
     }
 
     /*******************************************************************

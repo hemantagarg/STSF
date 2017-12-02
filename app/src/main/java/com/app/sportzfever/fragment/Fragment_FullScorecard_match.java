@@ -47,7 +47,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     private Button btn_teama, btn_teamb;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
     LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
-    public static FragmentStats fragment_teamJoin_request;
+    public static Fragment_FullScorecard_match fragment_teamJoin_request;
     private final String TAG = FragmentStats.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
@@ -58,9 +58,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     JSONObject data;
     private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate, text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
 
-    public static FragmentStats getInstance() {
+    public static Fragment_FullScorecard_match getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_FullScorecard_match();
         return fragment_teamJoin_request;
     }
 

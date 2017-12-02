@@ -84,7 +84,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
     private ArrayList<ModelGallery> arrayListPhotosAlbum = new ArrayList<>();
     private AdapterPhotoList adapterPhotoList;
     private AdapterAlbumPhotoList adapterAlbumPhotoList;
-    private String avtarid = "";
+    private String avtarid = "", tournamentId = "";
 
     public static Fragment_PostMatchFeed getInstance() {
         if (fragment_friend_request == null)
@@ -120,6 +120,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
         Bundle b = getArguments();
         if (b != null) {
             avtarid = b.getString("id");
+            tournamentId = b.getString("tournamentId");
         }
         getAlbums();
     }
@@ -204,7 +205,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
                                 edt_albumname.setError("Please enter album name");
                                 edt_albumname.requestFocus();
                             }
-                        }else {
+                        } else {
                             submitPost();
                         }
                     } else {
@@ -314,6 +315,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
         try {
             StringBody userId = new StringBody(AppUtils.getUserId(context), encoding);
             StringBody avtarId = new StringBody(avtarid, encoding);
+            StringBody tournament = new StringBody(tournamentId, encoding);
             StringBody statusVisiblity = new StringBody(spinnerShareWith.getSelectedItem().toString(), encoding);
             StringBody statusType = new StringBody("TEXT", encoding);
             StringBody description = new StringBody(edt_text_post.getText().toString(), encoding);
@@ -349,7 +351,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
                 }
             }
 
-            Log.e("user", avtarid);
+            Log.e("tournamentId", tournamentId);
             Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
             Log.e("statusType", "TEXT");
             Log.e("description", edt_text_post.getText().toString());
@@ -357,6 +359,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
             Log.e("Authorization", AppUtils.getAuthToken(context));
 
             reqEntity.addPart("matchId", avtarId);
+            reqEntity.addPart("tournamentId", tournament);
             reqEntity.addPart("user", userId);
             reqEntity.addPart("statusVisibility", statusVisiblity);
             reqEntity.addPart("statusType", statusType);
@@ -425,6 +428,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
                     context.onBackPressed();
 
                 } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

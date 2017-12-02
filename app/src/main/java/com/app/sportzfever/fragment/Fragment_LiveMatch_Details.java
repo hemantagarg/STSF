@@ -59,6 +59,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private String avtarid = "";
     private String matchTitle = "";
     View view_about;
+    private String tournamentId = "";
 
     public static Fragment_LiveMatch_Details getInstance() {
         if (fragment_teamJoin_request == null)
@@ -85,7 +86,9 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         Dashboard.getInstance().manageFooterVisibitlity(false);
-
+      /*  if (Fragment_MatchFeed.getInstance().isAdded() && Fragment_MatchFeed.getInstance().getUserVisibleHint()) {
+            Fragment_MatchFeed.getInstance().onResume();
+        }*/
     }
 
     private void getBundle() {
@@ -164,7 +167,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
+        Fragment_MatchCommentry feed = new Fragment_MatchCommentry();
         Bundle b11 = new Bundle();
         b11.putString("eventId", avtarid);
         b11.putString("data", data.toString());
@@ -184,9 +187,11 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         b3.putString("data", data.toString());
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
+
         Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
         Bundle b111 = new Bundle();
         b111.putString("avtarid", avtarid);
+        b111.putString("tournamentId", tournamentId);
         matchFeed.setArguments(b111);
         adapter.addFrag(matchFeed, "feed");
 
@@ -298,7 +303,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
                     JSONObject jbatsman = data.getJSONObject("match");
                     JSONObject team1 = data.getJSONObject("team1");
                     JSONObject team2 = data.getJSONObject("team2");
-
+                    tournamentId = jbatsman.getString("tournamentId");
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
 
                     modelUpcomingTeamName.setId(jbatsman.getString("id"));

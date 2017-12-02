@@ -68,6 +68,7 @@ public interface JsonApiHelper {
     String ALLTOURNAMNENTPOINTTABLES = "getGroupAndTeams/";
     String GALLERY = "getAlbums/";
     String STATS = "getPlayerStats/";
+    String COMMENTARY = "commentary/";
     String GET_LIVE_SCORE = "getLiveScore/EVENT/";
     String UPCOMINGMATCHDETAILS = "getMatchStatisticsDetails/EVENT/";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";

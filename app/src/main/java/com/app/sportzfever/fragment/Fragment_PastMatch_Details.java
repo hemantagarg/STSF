@@ -58,6 +58,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
     private String avtarid = "";
     View view_about;
     private String matchTitle = "";
+    private String tournamentId = "";
 
     public static Fragment_PastMatch_Details getInstance() {
         if (fragment_teamJoin_request == null)
@@ -83,7 +84,6 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         Dashboard.getInstance().manageFooterVisibitlity(false);
-
     }
 
     private void getBundle() {
@@ -152,7 +152,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_PastMatch_Info tab4 = new Fragment_PastMatch_Info();
+        Fragment_MatchCommentry tab4 = new Fragment_MatchCommentry();
         Bundle b3 = new Bundle();
         b3.putString("avtarid", avtarid);
         b3.putString("data", data.toString());
@@ -176,6 +176,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
         Bundle b111 = new Bundle();
         b111.putString("avtarid", avtarid);
+        b111.putString("tournamentId", tournamentId);
         matchFeed.setArguments(b111);
         adapter.addFrag(matchFeed, "feed");
 
@@ -274,7 +275,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                     JSONObject jbatsman = data.getJSONObject("match");
                     JSONObject team1 = data.getJSONObject("team1");
                     JSONObject team2 = data.getJSONObject("team2");
-
+                    tournamentId = jbatsman.getString("tournamentId");
                     modelUpcomingTeamName = new ModelUpcomingTeamName();
 
                     modelUpcomingTeamName.setId(jbatsman.getString("id"));
