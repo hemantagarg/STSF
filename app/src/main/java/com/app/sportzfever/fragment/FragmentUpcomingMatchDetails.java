@@ -54,11 +54,11 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
     private ViewPager viewPager;
     private JSONObject data;
     public static FragmentUpcomingMatchDetails fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    private final String TAG = FragmentUpcomingMatchDetails.class.getSimpleName();
     private String avtarid = "";
     View view_about;
     private String matchTitle = "";
-    private String tournamentId="";
+    private String tournamentId = "";
 
     public static FragmentUpcomingMatchDetails getInstance() {
         if (fragment_teamJoin_request == null)
@@ -130,7 +130,6 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                 context.onBackPressed();
             }
         });
-
     }
 
 
@@ -238,9 +237,11 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset < 100) {
-                    collapsingToolbarLayout.setTitle(matchTitle);
+                    text_startdate.setText(matchTitle);
+                    //    collapsingToolbarLayout.setTitle(matchTitle);
                     isShow = true;
                 } else if (isShow) {
+                    text_startdate.setText("Match Center");
                     collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
                     isShow = false;
                 }

@@ -77,14 +77,12 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
         if (holder instanceof CustomViewHolder) {
 
             ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(i);
-
-            ((CustomViewHolder) holder).text_avtarteamname.setVisibility(View.GONE);
-
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getAlbumName());
+            ((CustomViewHolder) holder).text_total.setText(m1.getTotalImage() + " " + "Images");
 
             if (!m1.getImage().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getImage())
-
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).image_avtar);
             }
@@ -102,7 +100,7 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname;
+        TextView text_avtarteamname, text_total;
         ImageView image_avtar;
 
         RelativeLayout relmatchvs;
@@ -111,11 +109,9 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
             super(view);
             view.setOnClickListener(this);
 
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-
+            this.text_total = (TextView) view.findViewById(R.id.text_total);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
 
         }
 

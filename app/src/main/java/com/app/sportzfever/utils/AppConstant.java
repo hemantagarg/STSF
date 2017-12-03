@@ -34,6 +34,9 @@ public class AppConstant {
     public static final String PUSHTYPE_FRIEND = "FRIEND";
     public static final String PUSHTYPE_TEAM = "TEAM";
     public static final String PUSHTYPE_CHAT = "CHAT";
+    public static final String MATCHSTATUS_ENDED = "ENDED";
+    public static final String MATCHSTATUS_NOTSTARTED = "NOT STARTED";
+    public static final String MATCHSTATUS_STARTED = "STARTED";
 
     /*
        * Change this to your publishable key.

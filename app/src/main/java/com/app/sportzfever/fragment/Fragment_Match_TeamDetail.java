@@ -47,13 +47,13 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
     private Button btn_teama, btn_teamb;
     private TextView text_nodata;
 
-    public static FragmentStats fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    public static Fragment_Match_TeamDetail fragment_teamJoin_request;
+    private final String TAG = Fragment_Match_TeamDetail.class.getSimpleName();
     private String avtarid = "";
 
-    public static FragmentStats getInstance() {
+    public static Fragment_Match_TeamDetail getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_Match_TeamDetail();
         return fragment_teamJoin_request;
     }
 

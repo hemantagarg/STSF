@@ -55,7 +55,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private ViewPager viewPager;
     private JSONObject data;
     public static Fragment_LiveMatch_Details fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    private final String TAG = Fragment_LiveMatch_Details.class.getSimpleName();
     private String avtarid = "";
     private String matchTitle = "";
     View view_about;
@@ -139,14 +139,13 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("Live");
-        tabLayout.getTabAt(1).setText("Full Scorecard");
+        tabLayout.getTabAt(1).setText("Scorecard");
         tabLayout.getTabAt(2).setText("Commentary");
-        tabLayout.getTabAt(3).setText("Teams");
-        tabLayout.getTabAt(4).setText("Match Info");
-        tabLayout.getTabAt(5).setText("Comments");
+        tabLayout.getTabAt(3).setText("Comments");
+        tabLayout.getTabAt(4).setText("Teams");
+        tabLayout.getTabAt(5).setText("Match Info");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -174,6 +173,13 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
+        Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
+        Bundle b111 = new Bundle();
+        b111.putString("avtarid", avtarid);
+        b111.putString("tournamentId", tournamentId);
+        matchFeed.setArguments(b111);
+        adapter.addFrag(matchFeed, "feed");
+
         Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
         Bundle b112 = new Bundle();
         b112.putString("avtarid", avtarid);
@@ -188,12 +194,6 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
-        Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
-        Bundle b111 = new Bundle();
-        b111.putString("avtarid", avtarid);
-        b111.putString("tournamentId", tournamentId);
-        matchFeed.setArguments(b111);
-        adapter.addFrag(matchFeed, "feed");
 
         viewPager.setAdapter(adapter);
     }
@@ -280,9 +280,11 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset < 100) {
-                    collapsingToolbarLayout.setTitle(matchTitle);
+                    text_startdate.setText(matchTitle);
+                    //   collapsingToolbarLayout.setTitle(matchTitle);
                     isShow = true;
                 } else if (isShow) {
+                    text_startdate.setText("Match Center");
                     collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
                     isShow = false;
                 }

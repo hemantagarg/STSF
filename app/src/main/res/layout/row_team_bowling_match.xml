@@ -38,6 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:padding="@dimen/dp5"
                 android:text="Name"
                 android:textColor="@color/button_bg"
                 android:textSize="@dimen/text_size_13" />

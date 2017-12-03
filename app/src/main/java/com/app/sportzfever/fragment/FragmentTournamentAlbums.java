@@ -18,6 +18,7 @@ import com.app.sportzfever.adapter.AdapterTournamentAlbums;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentAlbums;
@@ -34,11 +35,9 @@ import java.util.ArrayList;
  */
 public class FragmentTournamentAlbums extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
-
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterTournamentAlbums adapterTournamentAlbums;
     private ModelTournamentAlbums modelTournamentAlbums;
     private ArrayList<ModelTournamentAlbums> arrayList;
@@ -89,8 +88,8 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
         getBundle();
         text_nodata.setVisibility(View.VISIBLE);
         text_nodata.setText("There are no photos or videos as of now for the tournament.");
-        //  getServicelistRefresh();
-        getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
+        getServicelistRefresh();
+        /*getView().findViewById(R.id.progressbar).setVisibility(View.GONE);*/
         setlistener();
     }
 
@@ -113,8 +112,12 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
-
+        FragmentGalleryDetails fragmentGalleryDetails = new FragmentGalleryDetails();
+        Bundle b = new Bundle();
+        b.putString("galleryid", arrayList.get(position).getAlbumId());
+        b.putString("title", arrayList.get(position).getAlbumName());
+        fragmentGalleryDetails.setArguments(b);
+        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
     }
 
 
@@ -123,9 +126,9 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+                //   https://sfscoring.betasportzfever.com/getAlbumMatchTournament/tournament/6/a019834e-8f16-11e7-9931-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTALBUMS + AppUtils.getUserId(context) + "/" + id + "/" + 0 + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLTOURNAMNENTIMAGES + id + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -141,17 +144,14 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = jObject.getJSONArray("data");
 
-                    JSONObject jobj = jObject.getJSONObject("data");
-                    JSONArray data = jobj.getJSONArray("images");
-
-                    //  maxlistLength = jObject.getString("total");
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 
@@ -159,14 +159,14 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
                         modelTournamentAlbums = new ModelTournamentAlbums();
 
-                        modelTournamentAlbums.setId(jo.getString("id"));
-                        // modelTournamentAlbums.setTeamName(jo.getString("teamName"));
-                        modelTournamentAlbums.setImage(jo.getString("image"));
+                        modelTournamentAlbums.setAlbumId(jo.getString("albumId"));
+                        modelTournamentAlbums.setAlbumName(jo.getString("albumName"));
+                        modelTournamentAlbums.setTotalImage(jo.getString("totalImage"));
+                        modelTournamentAlbums.setImage(jo.getString("images"));
                         modelTournamentAlbums.setRowType(1);
 
                         arrayList.add(modelTournamentAlbums);
                     }
-
 
                     adapterTournamentAlbums = new AdapterTournamentAlbums(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterTournamentAlbums);

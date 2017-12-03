@@ -47,8 +47,8 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
     private Button btn_teama, btn_teamb;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
     LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
-    public static FragmentStats fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    public static Fragment_FullScorecardLive_match fragment_teamJoin_request;
+    private final String TAG = Fragment_FullScorecardLive_match.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
@@ -58,9 +58,9 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
     JSONObject data;
     private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate,text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
 
-    public static FragmentStats getInstance() {
+    public static Fragment_FullScorecardLive_match getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_FullScorecardLive_match();
         return fragment_teamJoin_request;
     }
 
@@ -174,7 +174,7 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 text_extrarun.setText(modelInnings.getExtras());
                 text_total.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun.setText(modelInnings.getTotalRunsScored());
-                text_extrarunrate.setText("Run Rate: "+modelInnings.getOverRate());
+                text_extrarunrate.setText("Run Rt: "+modelInnings.getOverRate());
 
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {
@@ -250,12 +250,12 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 } else {
                     layout_team2.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team2.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();

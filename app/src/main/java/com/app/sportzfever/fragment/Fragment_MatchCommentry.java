@@ -39,7 +39,7 @@ public class Fragment_MatchCommentry extends BaseFragment implements ApiResponse
     private Button btn_teama, btn_teamb;
     private TextView text_nodata;
     public static Fragment_MatchCommentry fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    private final String TAG = Fragment_MatchCommentry.class.getSimpleName();
     private String avtarid = "";
     View view;
     JSONObject data;
@@ -110,8 +110,15 @@ public class Fragment_MatchCommentry extends BaseFragment implements ApiResponse
                 btn_teama.setText(match.getString("team1Name"));
                 team1InningId = match.getString("team1InningId");
                 team2InningId = match.getString("team2InningId");
-                getTeam1Data();
-                getTeam2Data();
+                if (!team1InningId.equalsIgnoreCase("")) {
+                    getTeam1Data();
+                } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText(btn_teama.getText().toString() + " commentry not available");
+                }
+                if (!team2InningId.equalsIgnoreCase("")) {
+                    getTeam2Data();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

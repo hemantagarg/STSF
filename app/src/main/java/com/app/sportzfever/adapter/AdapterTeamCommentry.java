@@ -76,8 +76,8 @@ public class AdapterTeamCommentry extends RecyclerView.Adapter<RecyclerView.View
             ((CustomViewHolder) holder).text_wicket.setText(m1.getTeam1Name() + ": " + m1.getTotalRun() + "/" + m1.getTotalWicket());
             ((CustomViewHolder) holder).text_run_scored.setText("Runs scored: " + m1.getRunInOver());
             ((CustomViewHolder) holder).text_overstring.setText(m1.getOverString());
-            ((CustomViewHolder) holder).text_batsman1.setText(m1.getBatsman1Name() + ": " + m1.getBatsman1Runs() + "(" + m1.getBatsman1balls() + ")");
-            ((CustomViewHolder) holder).text_batsman2.setText(m1.getBatsman2Name() + ": " + m1.getBatsman2Runs() + "(" + m1.getBatsman2Balls() + ")");
+            ((CustomViewHolder) holder).text_batsman1.setText(m1.getBatsman1Name() + ": " + m1.getBatsman1Runs() + " (" + m1.getBatsman1balls() + ")");
+            ((CustomViewHolder) holder).text_batsman2.setText(m1.getBatsman2Name() + ": " + m1.getBatsman2Runs() + " (" + m1.getBatsman2Balls() + ")");
             ((CustomViewHolder) holder).text_bowler.setText(m1.getBowlerName() + ": " + m1.getBowlerOvers() + "-" + m1.getBowlerMaiden() + "-"
                     + m1.getBowlerRuns() + "-" + m1.getBowlerWicket());
 

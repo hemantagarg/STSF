@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,14 +13,15 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterUpcomingTournamentEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.UpcomingEvent;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -122,9 +122,25 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
             if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
-                Intent inte = new Intent(context, ViewMatchScoreCard.class);
-                inte.putExtra("eventId", arrayList.get(position).getId());
-                startActivity(inte);
+                if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
+                    Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                    FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+                    Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                }
             }
         }
     }
@@ -152,7 +168,7 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
@@ -176,13 +192,15 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
                         upcomingEvent.setTitle(jo.getString("title"));
+                        if (jo.has("matchStatus")) {
+                            upcomingEvent.setMatchStatus(jo.getString("matchStatus"));
+                        }
                         JSONObject j1 = jo.getJSONObject("startDate");
 
                         upcomingEvent.setDayName(j1.getString("dayName"));
                         upcomingEvent.setMonthName(j1.getString("monthName"));
                         upcomingEvent.setDate(j1.getString("date"));
                         upcomingEvent.setTime(j1.getString("time"));
-
 
                         upcomingEvent.setRowType(1);
 
@@ -234,6 +252,9 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
                         upcomingEvent.setTitle(jo.getString("title"));
+                        if (jo.has("matchStatus")) {
+                            upcomingEvent.setMatchStatus(jo.getString("matchStatus"));
+                        }
                         JSONObject j1 = jo.getJSONObject("startDate");
 
                         upcomingEvent.setDayName(j1.getString("dayName"));

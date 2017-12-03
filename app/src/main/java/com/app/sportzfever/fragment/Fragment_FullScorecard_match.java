@@ -48,7 +48,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
     LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
     public static Fragment_FullScorecard_match fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    private final String TAG = Fragment_FullScorecard_match.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
@@ -225,7 +225,7 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 text_extrarun1.setText(modelInnings.getExtras());
                 text_total1.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun1.setText(modelInnings.getTotalRunsScored());
-                text_extrarunrate1.setText("Run Rate: " + modelInnings.getOverRate());
+                text_extrarunrate1.setText("Run Rt: " + modelInnings.getOverRate());
 
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {
@@ -248,12 +248,12 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 } else {
                     layout_team2.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team2.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -50,13 +50,12 @@
                 android:id="@+id/pointtable_nrr"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5"
                 android:layout_weight="1"
-                android:background="@drawable/blue_button_selecor"
                 android:gravity="center"
                 android:padding="@dimen/dp5"
                 android:text="Scorecard"
-                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textColor="@color/button_bg"
                 android:visibility="visible" />
 
             <TextView

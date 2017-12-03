@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,13 +15,13 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterBattingStats;
 import com.app.sportzfever.adapter.AdapterBowlingStats;
 import com.app.sportzfever.adapter.AdapterPerformance;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelPerformance;
@@ -179,7 +178,17 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                 btn_bowling.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 list_bowling.setVisibility(View.GONE);
                 list_batting.setVisibility(View.GONE);
-                ll_performance.setVisibility(View.VISIBLE);
+                if (arrayListPerformance.size() > 0) {
+                    text_nodata.setVisibility(View.GONE);
+                    ll_performance.setVisibility(View.VISIBLE);
+                    list_performance.setVisibility(View.VISIBLE);
+                } else {
+                    ll_performance.setVisibility(View.GONE);
+                    list_performance.setVisibility(View.GONE);
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText("Yet to play any match on Sportzfever");
+                }
+
             }
         });
 
@@ -187,11 +196,12 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
 
     @Override
     public void onItemClickListener(int position, int flag) {
-
         if (flag == 22) {
-            Intent inte = new Intent(context, ViewMatchScoreCard.class);
-            inte.putExtra("eventId", arrayListPerformance.get(position).getEventID());
-            startActivity(inte);
+            Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayListPerformance.get(position).getEventID());
+            fragmentupcomingdetals.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
         }
     }
 
@@ -306,14 +316,8 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
                     adapterPerformance = new AdapterPerformance(context, this, arrayListPerformance);
                     list_performance.setAdapter(adapterPerformance);
 
-                    if (arrayListPerformance.size() > 0) {
-                        text_nodata.setVisibility(View.GONE);
-                    } else {
-                        text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("Yet to play any match on Sportzfever");
-                    }
-
                 } else {
+
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Data found");
 

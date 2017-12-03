@@ -27,7 +27,7 @@ import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ImagesListActivity;
-import com.app.sportzfever.adapter.AdapterAvtarFeed;
+import com.app.sportzfever.adapter.AdapterTournamentFeed;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -53,7 +53,7 @@ public class Fragment_TournamentFeed extends BaseFragment implements ApiResponse
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterAvtarFeed adapterFeed;
+    private AdapterTournamentFeed adapterFeed;
     private ModelFeed modelFeed;
     private ArrayList<ModelFeed> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -593,7 +593,7 @@ public class Fragment_TournamentFeed extends BaseFragment implements ApiResponse
                         }
 
                         Log.e("size", "**" + arrayList.size());
-                        adapterFeed = new AdapterAvtarFeed(getActivity(), this, arrayList);
+                        adapterFeed = new AdapterTournamentFeed(getActivity(), this, arrayList);
                         list_request.setAdapter(adapterFeed);
                     }
                     if (mSwipeRefreshLayout != null) {

@@ -27,7 +27,7 @@ import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ImagesListActivity;
-import com.app.sportzfever.adapter.AdapterAvtarFeed;
+import com.app.sportzfever.adapter.AdapterMatchFeed;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -53,7 +53,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterAvtarFeed adapterFeed;
+    private AdapterMatchFeed adapterFeed;
     private ModelFeed modelFeed;
     private ArrayList<ModelFeed> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -595,7 +595,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                         }
 
                         Log.e("size", "**" + arrayList.size());
-                        adapterFeed = new AdapterAvtarFeed(getActivity(), this, arrayList);
+                        adapterFeed = new AdapterMatchFeed(getActivity(), this, arrayList);
                         list_request.setAdapter(adapterFeed);
                     }
                     if (mSwipeRefreshLayout != null) {
@@ -613,7 +613,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

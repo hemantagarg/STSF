@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.models.ModelGallery;
 import com.squareup.picasso.Picasso;
 
@@ -79,8 +78,8 @@ public class AdapterGallery extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             ModelGallery m1 = (ModelGallery) detail.get(i);
 
-          ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getAlbumName());
-          ((CustomViewHolder) holder).text_total.setText(m1.getTotalImage()+" "+"Images");
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getAlbumName());
+            ((CustomViewHolder) holder).text_total.setText(m1.getTotalImage() + " " + "Images");
             if (!m1.getImage().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getImage())
@@ -103,22 +102,18 @@ public class AdapterGallery extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname,text_total;
+        TextView text_avtarteamname, text_total;
         ImageView image_avtar;
 
-RelativeLayout relmatchvs;
+        RelativeLayout relmatchvs;
+
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
-
-
-
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
             this.text_total = (TextView) view.findViewById(R.id.text_total);
-
             this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
 
 
         }

@@ -41,7 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="OUT"
+                    android:padding="@dimen/dp2"
+                    android:text=""
                     android:textColor="@color/textcolordark"
                     android:textSize="@dimen/text_size_12" />
 

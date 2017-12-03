@@ -1,7 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,14 +14,15 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.activities.ViewMatchScoreCard;
 import com.app.sportzfever.adapter.AdapterAllTournamentMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournamentMatches;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -205,10 +205,27 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
+            Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayList.get(position).getEventId());
+            fragmentupcomingdetals.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+        } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+            FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayList.get(position).getEventId());
+            fragmentupcomingdetals.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+        } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+            Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayList.get(position).getEventId());
+            fragmentupcomingdetals.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+        }
 
-        Intent inte = new Intent(context, ViewMatchScoreCard.class);
-        inte.putExtra("eventId", arrayList.get(position).getEventId());
-        startActivity(inte);
+
     }
 
 
@@ -264,6 +281,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                         modelAllTournamentMatches.setFirstBattingWickets(jo.getString("firstBattingWickets"));
                         modelAllTournamentMatches.setSecondBattingWickets(jo.getString("secondBattingWickets"));
                         modelAllTournamentMatches.setStageName(jo.getString("stageName"));
+                        modelAllTournamentMatches.setMatchStatus(jo.getString("matchStatus"));
 
                         JSONObject j1 = jo.getJSONObject("matchDate");
 
@@ -330,7 +348,7 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
                         modelAllTournamentMatches.setFirstBattingWickets(jo.getString("firstBattingWickets"));
                         modelAllTournamentMatches.setSecondBattingWickets(jo.getString("secondBattingWickets"));
                         modelAllTournamentMatches.setStageName(jo.getString("stageName"));
-
+                        modelAllTournamentMatches.setMatchStatus(jo.getString("matchStatus"));
                         JSONObject j1 = jo.getJSONObject("matchDate");
 
                         modelAllTournamentMatches.setTime(j1.getString("time"));

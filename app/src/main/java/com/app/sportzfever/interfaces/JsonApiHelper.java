@@ -63,6 +63,7 @@ public interface JsonApiHelper {
     String ALLTOURNAMNENTTEAM = "getTeamsInTournament/";
     String ALLSPORTTEAMDETIAL = "getTeamProfile/";
     String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
+    String ALLTOURNAMNENTIMAGES = "getAlbumMatchTournament/tournament/";
     String ALLSPORTAVTARALBUMS = "getAlbumsAvatar/";
     String ALLSPORTAVTARALBUMSDETAILS = "getAlbumsImages/";
     String ALLTOURNAMNENTPOINTTABLES = "getGroupAndTeams/";

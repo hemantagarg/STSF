@@ -51,8 +51,8 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private Button btn_teama, btn_teamb;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
     LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
-    public static FragmentStats fragment_teamJoin_request;
-    private final String TAG = FragmentStats.class.getSimpleName();
+    public static Fragment_Live_ScoredMatch fragment_teamJoin_request;
+    private final String TAG = Fragment_Live_ScoredMatch.class.getSimpleName();
     private String avtarid = "";
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
@@ -64,9 +64,9 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
 
-    public static FragmentStats getInstance() {
+    public static Fragment_Live_ScoredMatch getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentStats();
+            fragment_teamJoin_request = new Fragment_Live_ScoredMatch();
         return fragment_teamJoin_request;
     }
 
