@@ -44,13 +44,12 @@
                         android:layout_marginTop="@dimen/dp30">
 
                         <com.app.sportzfever.utils.CustomTextView
-                            android:id="@+id/text_startdate1"
+                            android:id="@+id/text_startdate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="@dimen/dp5"
                             android:layout_marginLeft="@dimen/dp10"
-                            android:layout_marginTop="@dimen/dp10"
                             android:ellipsize="end"
                             android:maxLines="2"
                             android:text=""
@@ -59,11 +58,21 @@
                             android:textStyle="bold" />
 
                         <ImageView
+                            android:id="@+id/image_reddot"
+                            android:layout_width="@dimen/dp15"
+                            android:layout_height="@dimen/dp15"
+                            android:layout_alignBottom="@+id/text_startdate"
+                            android:layout_alignTop="@+id/text_startdate"
+                            android:layout_marginRight="@dimen/dp5"
+                            android:layout_toLeftOf="@+id/text_startdate"
+                            android:padding="@dimen/dp3" />
+
+                        <ImageView
                             android:id="@+id/teama"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_alignParentLeft="true"
-                            android:layout_below="@+id/text_startdate1"
+                            android:layout_below="@+id/text_startdate"
                             android:padding="@dimen/dp5"
                             android:src="@drawable/logo_sportz" />
 
@@ -82,7 +91,7 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_alignParentRight="true"
-                            android:layout_below="@+id/text_startdate1"
+                            android:layout_below="@+id/text_startdate"
                             android:padding="@dimen/dp5"
                             android:src="@drawable/logo_sportz" />
 
@@ -95,8 +104,8 @@
                             android:layout_below="@+id/teamb"
                             android:layout_marginTop="@dimen/dp10"
                             android:ellipsize="end"
-                            android:maxLines="2"
                             android:gravity="center"
+                            android:maxLines="2"
                             android:text=""
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_11"
@@ -228,8 +237,9 @@
                         android:layout_margin="@dimen/dp10"
                         android:src="@drawable/left_arrow"
                         android:visibility="visible" />
+
                     <com.app.sportzfever.utils.CustomTextView
-                        android:id="@+id/text_startdate"
+                        android:id="@+id/text_startdate1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -241,7 +251,8 @@
                         android:text="Match Center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                 </android.support.v7.widget.Toolbar>
 

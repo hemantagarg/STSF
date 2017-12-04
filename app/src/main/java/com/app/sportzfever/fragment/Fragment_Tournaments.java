@@ -62,6 +62,8 @@ public class Fragment_Tournaments extends BaseFragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
 
     }
 

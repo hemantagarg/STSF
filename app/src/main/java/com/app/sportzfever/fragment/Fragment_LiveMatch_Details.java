@@ -28,6 +28,7 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
 
     private Bundle b;
     private Activity context;
-
+    private ImageView image_reddot;
     private ModelUpcomingTeamName modelUpcomingTeamName;
     private ArrayList<ModelUpcomingTeamName> arrayteama, arrayListBowling;
     private ConnectionDetector cd;
@@ -117,8 +118,10 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         text_scorerfora = (TextView) view.findViewById(R.id.text_scorerfora);
         text_scorerforb = (TextView) view.findViewById(R.id.text_scorerforb);
         text_location = (TextView) view.findViewById(R.id.text_location);
+        image_reddot = (ImageView) view.findViewById(R.id.image_reddot);
         // ll_performance = (LinearLayout) view.findViewById(R.id.ll_performance);
         arrayteama = new ArrayList<>();
+        Glide.with(context).load("https://www.betasportzfever.com/assets/public/images/live_dot.gif").asGif().placeholder(R.drawable.circle_red).into(image_reddot);
         getBundle();
         setlistener();
         setCollapsingToolbar();
@@ -280,11 +283,9 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset < 100) {
-                    text_startdate.setText(matchTitle);
-                    //   collapsingToolbarLayout.setTitle(matchTitle);
+                    collapsingToolbarLayout.setTitle(matchTitle);
                     isShow = true;
                 } else if (isShow) {
-                    text_startdate.setText("Match Center");
                     collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
                     isShow = false;
                 }
