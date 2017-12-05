@@ -48,7 +48,7 @@
                 android:layout_marginTop="@dimen/dp5">
 
                 <EditText
-                    android:id="@+id/avtar_battinghand"
+                    android:id="@+id/avtar_dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Date Of Birth"
@@ -66,7 +66,7 @@
                 android:layout_marginTop="@dimen/dp5">
 
                 <EditText
-                    android:id="@+id/avtar_jersery_number"
+                    android:id="@+id/avtar_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Gender"
@@ -84,7 +84,7 @@
                 android:layout_marginTop="@dimen/dp5">
 
                 <EditText
-                    android:id="@+id/avtar_battingstyle"
+                    android:id="@+id/avtar_hometown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Hometown"
@@ -102,7 +102,7 @@
                 android:layout_marginTop="@dimen/dp5">
 
                 <EditText
-                    android:id="@+id/avtar_bowlingstyle"
+                    android:id="@+id/avtar_currentlocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Current Location"
@@ -120,7 +120,7 @@
                 android:layout_marginTop="@dimen/dp5">
 
                 <EditText
-                    android:id="@+id/avtar_bowlinghand"
+                    android:id="@+id/avtar_aboutme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="About Me"

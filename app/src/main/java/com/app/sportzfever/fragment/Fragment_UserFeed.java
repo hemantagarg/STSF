@@ -95,6 +95,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageFooterVisibitlity(true);
+        Dashboard.getInstance().manageHeaderVisibitlity(true);
         getServicelistRefresh();
     }
 

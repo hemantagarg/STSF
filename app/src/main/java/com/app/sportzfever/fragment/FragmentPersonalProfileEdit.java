@@ -20,6 +20,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.GPSTracker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,12 +34,13 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     private Bundle b;
     private Activity context;
     private ModelAvtarProfile modelAvtarProfile;
-    private EditText avtar_name, avtar_battinghand, avtar_jersery_number, avtar_battingstyle,
-            avtar_bowlingstyle, avtar_bowlinghand, avtar_speciality, avtar_favouritefieldposition, avtar_aboutme;
+    private EditText avtar_name, avtar_dob, avtar_gender, avtar_hometown,
+            avtar_currentlocation, avtar_aboutme;
     public static FragmentPersonalProfileEdit fragment_teamJoin_request;
     private final String TAG = FragmentPersonalProfileEdit.class.getSimpleName();
     private String avtarId = "";
     View view_about;
+    String latitude = "0.0", longitude = "0.0";
 
     public static FragmentPersonalProfileEdit getInstance() {
         if (fragment_teamJoin_request == null)
@@ -101,16 +103,20 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
         super.onViewCreated(view, savedInstanceState);
 
         avtar_name = (EditText) view.findViewById(R.id.avtar_name);
-        avtar_battinghand = (EditText) view.findViewById(R.id.avtar_battinghand);
-        avtar_jersery_number = (EditText) view.findViewById(R.id.avtar_jersery_number);
-        avtar_battingstyle = (EditText) view.findViewById(R.id.avtar_battingstyle);
-        avtar_bowlingstyle = (EditText) view.findViewById(R.id.avtar_bowlingstyle);
-        avtar_bowlinghand = (EditText) view.findViewById(R.id.avtar_bowlinghand);
-        avtar_speciality = (EditText) view.findViewById(R.id.avtar_speciality);
-        avtar_favouritefieldposition = (EditText) view.findViewById(R.id.avtar_favouritefieldposition);
+        avtar_dob = (EditText) view.findViewById(R.id.avtar_dob);
+        avtar_gender = (EditText) view.findViewById(R.id.avtar_gender);
+        avtar_hometown = (EditText) view.findViewById(R.id.avtar_hometown);
+        avtar_currentlocation = (EditText) view.findViewById(R.id.avtar_currentlocation);
         avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
+        //  avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
         btn_submit = (Button) view.findViewById(R.id.btn_submit);
         getBundle();
+        GPSTracker gps = new GPSTracker(context);
+        if (gps.isGPSEnabled) {
+            latitude = gps.getLatitude() + "";
+            longitude = gps.getLongitude() + "";
+        } else {
+        }
         setlistener();
     }
 
@@ -123,16 +129,16 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 String data = bundle.getString("data");
                 JSONObject jo = new JSONObject(data);
 
-                avtarId = jo.getString("avatarId");
-                avtar_name.setText(jo.getString("name"));
-                avtar_aboutme.setText(jo.getString("description"));
-                avtar_battinghand.setText(jo.getString("battingHand"));
-                avtar_battingstyle.setText(jo.getString("battingStyle"));
-                avtar_bowlingstyle.setText(jo.getString("bowlingStyle"));
-                avtar_bowlinghand.setText(jo.getString("bowlingHand"));
-                avtar_speciality.setText(jo.getString("speciality"));
-                avtar_favouritefieldposition.setText(jo.getString("favouriteFieldPosition"));
-                avtar_jersery_number.setText(jo.getString("jersyNumber"));
+                JSONObject dateOfBirth = jo.getJSONObject("dateOfBirth");
+
+                avtarId = jo.getString("userId");
+                avtar_name.setText(jo.getString("userName"));
+//                avtar_aboutme.setText(jo.getString("description"));
+                avtar_dob.setText(dateOfBirth.getString("datetime"));
+                avtar_hometown.setText(jo.getString("hometown"));
+                avtar_currentlocation.setText(jo.getString("currentLocation"));
+                avtar_aboutme.setText(jo.getString("about"));
+                avtar_gender.setText(jo.getString("gender"));
 
             }
         } catch (Exception e) {
@@ -162,19 +168,17 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
             if (AppUtils.isNetworkAvailable(context)) {
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId", AppUtils.getUserId(context));
-                jsonObject.put("gender", avtar_name.getText().toString());
-                jsonObject.put("homeTown", avtar_battinghand.getText().toString());
-                jsonObject.put("currentLocation", avtar_battingstyle.getText().toString());
-                jsonObject.put("lat", avtar_bowlinghand.getText().toString());
-                jsonObject.put("lng", avtar_bowlingstyle.getText().toString());
-                jsonObject.put("phoneNo", avtar_speciality.getText().toString());
-                jsonObject.put("about", avtar_favouritefieldposition.getText().toString());
-                jsonObject.put("height", avtar_jersery_number.getText().toString());
-                jsonObject.put("weight", avtar_aboutme.getText().toString());
-
-
-
+                jsonObject.put("userId", avtarId);
+                jsonObject.put("gender", avtar_gender.getText().toString());
+                jsonObject.put("homeTown", avtar_hometown.getText().toString());
+                jsonObject.put("currentLocation", avtar_currentlocation.getText().toString());
+                jsonObject.put("lat", latitude);
+                jsonObject.put("lng", longitude);
+                jsonObject.put("height", "");
+                jsonObject.put("phoneNo", "");
+                jsonObject.put("weight", "");
+                jsonObject.put("dob", avtar_dob.getText().toString());
+                jsonObject.put("about", avtar_aboutme.getText().toString());
                 //   http://sfscoring.betasportzfever.com/updateAvatarDetails
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATE_PROFILEDETAILS;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
@@ -192,12 +196,11 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                Dashboard.getInstance().setProgressLoader(false);
+              //  Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     //JSONObject data = jObject.getJSONObject("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     context.onBackPressed();
-
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
