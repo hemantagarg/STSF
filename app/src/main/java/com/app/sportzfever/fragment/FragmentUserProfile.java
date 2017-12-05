@@ -14,6 +14,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAboutMe;
@@ -39,8 +40,8 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     private String avtarid = "";
     private TextView avtar_namelive, avtar_battingheldlive, avtar_weightlive, avtar_heigtlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_bowlinghandlive, avtar_specialitylive;
     private ModelAboutMe modelAboutMe;
-    ImageView img_profilepic;
-
+    ImageView img_profilepic,image_edit;
+JSONObject jo;
     public static FragmentUserProfile getInstance() {
         if (fragment_teamJoin_request == null)
             fragment_teamJoin_request = new FragmentUserProfile();
@@ -74,6 +75,7 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
         avtar_heigtlive = (TextView) view.findViewById(R.id.avtar_heigtlive);
         avtar_weightlive = (TextView) view.findViewById(R.id.avtar_weightlive);
         img_profilepic = (ImageView) view.findViewById(R.id.img_profilepic);
+        image_edit = (ImageView) view.findViewById(R.id.image_edit);
 
         getBundle();
         setlistener();
@@ -128,7 +130,16 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     }
 
     private void setlistener() {
-
+        image_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentPersonalProfileEdit tab2 = new FragmentPersonalProfileEdit();
+                Bundle b = new Bundle();
+              //  b.putString("data", jo.toString());
+                tab2.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+            }
+        });
 
     }
 

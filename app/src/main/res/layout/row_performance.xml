@@ -27,7 +27,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+
                 android:gravity="center"
+android:textColor="@color/black"
+android:textSize="12sp"
                 android:text="Batting" />
 
             <TextView
@@ -35,6 +38,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:text="Bowling" />
 
@@ -44,7 +49,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Match Date" />
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:text="Matchssadsasdadsasa Date" />
 
             <TextView
                 android:id="@+id/pointtable_nrr"
@@ -54,8 +63,12 @@
                 android:gravity="center"
                 android:padding="@dimen/dp5"
                 android:text="Scorecard"
-                android:textStyle="bold"
-                android:textColor="@color/button_bg"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:drawableRight="@drawable/rightarrow"
+                android:textColor="@color/black"
+                android:textSize="12sp"
                 android:visibility="visible" />
 
             <TextView
@@ -74,6 +87,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dp10"
             android:layout_weight="1"
+            android:visibility="gone"
             android:padding="@dimen/dp5"
             android:text="Team Name" />
 

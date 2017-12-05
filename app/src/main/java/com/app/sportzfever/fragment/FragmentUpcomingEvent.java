@@ -242,11 +242,11 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Upcoming Event found");
+                        text_nodata.setText("No upcoming events");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Upcoming Event found");
+                    text_nodata.setText("No upcoming events");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

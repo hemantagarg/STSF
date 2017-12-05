@@ -230,11 +230,11 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("You are currently not following any player or team found");
+                        text_nodata.setText("You are not following any player or team");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("You are currently not following any player or team  found");
+                    text_nodata.setText("You are not following any player or team");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

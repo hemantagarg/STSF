@@ -176,7 +176,7 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTAVTARALBUMS + teamavtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GALLERY + teamavtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -226,11 +226,11 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Team found");
+                        text_nodata.setText("There are no album's uploaded by team as of now.");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Team found");
+                    text_nodata.setText("There are no album's uploaded by team as of now.");
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

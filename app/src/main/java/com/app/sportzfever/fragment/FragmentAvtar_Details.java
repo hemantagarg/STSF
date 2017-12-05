@@ -188,10 +188,10 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setText("Bio");
-        tabLayout.getTabAt(1).setText("Feed");
-        tabLayout.getTabAt(2).setText("My Teams");
-        tabLayout.getTabAt(3).setText("Stats");
-        tabLayout.getTabAt(4).setText("Gallery");
+       // tabLayout.getTabAt(1).setText("Feed");
+        tabLayout.getTabAt(1).setText("My Teams");
+        tabLayout.getTabAt(2).setText("Stats");
+       // tabLayout.getTabAt(4).setText("Gallery");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -205,11 +205,11 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
-        Fragment_AvtarFeed feed = new Fragment_AvtarFeed();
+      /*  Fragment_AvtarFeed feed = new Fragment_AvtarFeed();
         Bundle b11 = new Bundle();
         b11.putString("avtarid", id);
         feed.setArguments(b11);
-        adapter.addFrag(feed, "feed");
+        adapter.addFrag(feed, "feed");*/
 
         Fragment_AvtarMyTeam tab4 = new Fragment_AvtarMyTeam();
         Bundle b3 = new Bundle();
@@ -223,11 +223,11 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "About Us");
 
-        FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
+        /*FragmentSportAvtarAlbums tab3 = new FragmentSportAvtarAlbums();
         Bundle b2 = new Bundle();
         b2.putString("avtarid", id);
         tab3.setArguments(b2);
-        adapter.addFrag(tab3, "Portfolio");
+        adapter.addFrag(tab3, "Portfolio");*/
 
         viewPager.setAdapter(adapter);
     }

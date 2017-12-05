@@ -41,6 +41,7 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="@dimen/dp5"
             android:text="TEXT"
+            android:visibility="gone"
             android:textColor="@color/textcolordark" />
 
     </RelativeLayout>

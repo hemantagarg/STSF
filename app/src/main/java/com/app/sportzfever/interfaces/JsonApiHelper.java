@@ -18,7 +18,8 @@ public interface JsonApiHelper {
     String GET_FEEDS_MATCH = "getFeedOfMatchTournament/match/";
     String GET_FEEDS_TOURNAMENT = "getFeedOfMatchTournament/TOURNAMENT/";
     String GET_AVTARFEEDS = "getFeedByAvatar/";
-    String GET_NOTIFICATION = "getNotifications/";
+    String GET_NOTIFICATION = "getUserNotifications/";
+    String GET_NOTIFICATIONTEAM = "getTeamNotifications/";
     String GET_FRIENDREQUEST = "getFriendRequests/";
     String GET_USERFRIENDLIST = "getFriendsOfUser/";
     String GET_ALLTEAMTOURNAMENTFIXTEURES = "getAllUpComingTournamentOfTeamForFixtureAcceptance/";
@@ -35,6 +36,7 @@ public interface JsonApiHelper {
     String GET_COMMENTS = "getComments/";
     String GET_AVTARPROFILEBIO = "getAvatarDetailsBio/";
     String UPDATE_AVTARDETAILS = "updateAvatarDetails";
+    String UPDATE_PROFILEDETAILS = "generalProfileUpdate";
     String GET_LIKES = "getLikes/";
     String CREATE_TEAM_AVTAR = "createTeamAvatar";
     String CREATE_TEAM = "createTeam";
@@ -93,4 +95,6 @@ public interface JsonApiHelper {
     String POST_GROUP_CHAT = "postGroupChat";
     String GET_CHATBOX_DATA = "getChatboxData/";
     String GET_GROUP_CHATBOX_DATA = "getGroupChatboxData/";
+    String GET_ORGNIZERDATA = "tournamentMobilePageAction/";
+
 }

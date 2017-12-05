@@ -1,13 +1,18 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     private Bundle b;
     private Context context;
     private TextView text_nodata;
+    private WebView weborganizer;
     private AdapterMyTournament adapterMyTournament;
     private ModelAllTournament modelAllTournament;
     private ArrayList<ModelAllTournament> arrayList;
@@ -63,7 +69,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_matches, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_mytournament, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -76,6 +82,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        weborganizer = (WebView) view.findViewById(R.id.weborganizer);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -84,7 +91,29 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+        WebSettings webSettings = weborganizer.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        String url = JsonApiHelper.WEBVIEWBASEURLBETA + JsonApiHelper.GET_ORGNIZERDATA+ AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
+        weborganizer.loadUrl(url);
+        Log.e("urltest", url);
 
+        weborganizer.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                // progressbar.setVisibility(View.GONE);
+            }
+
+            public void onPageFinished(WebView view, String url) {
+
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode,
+                                        String description, String failingUrl) {
+
+            }
+        });
         getServicelistRefresh();
     }
 
@@ -183,6 +212,23 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }  private void getServicelistRefreshwebview() {
+        Dashboard.getInstance().setProgressLoader(true);
+        try {
+            skipCount = 0;
+            if (AppUtils.isNetworkAvailable(context)) {
+                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
+             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_ORGNIZERDATA + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
+
+                new CommonAsyncTaskHashmap(2, context, this).getqueryNoProgress(url);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -223,14 +269,21 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                     if (arrayList.size() > 0) {
+
                         text_nodata.setVisibility(View.GONE);
+                        weborganizer.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Tournament found");
+                        weborganizer.setVisibility(View.VISIBLE);
+                      //  getServicelistRefreshwebview();
+                        text_nodata.setText("Please wait...!");
+
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Tournament found");
+                    weborganizer.setVisibility(View.VISIBLE);
+                    text_nodata.setText("Please wait...!");
+
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

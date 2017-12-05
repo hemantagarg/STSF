@@ -100,10 +100,10 @@ public class AdapterPerformance extends RecyclerView.Adapter<RecyclerView.ViewHo
                 ((CustomViewHolder) holder).pointtable_won.setText("DNB");
             }
 
-            ((CustomViewHolder) holder).pointtable_lost.setText(m1.getMatchDate());
+            ((CustomViewHolder) holder).pointtable_nrr.setText(m1.getMatchDate());
 
 
-            ((CustomViewHolder) holder).pointtable_teamname.setText(m1.getOppositionTeamName());
+            ((CustomViewHolder) holder).pointtable_lost.setText("vs"+" "+m1.getOppositionTeamName());
 
             ((CustomViewHolder) holder).pointtable_nrr.setOnClickListener(new View.OnClickListener() {
                 @Override

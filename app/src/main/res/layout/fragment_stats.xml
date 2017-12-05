@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Match Date" />
+                        android:text="Opposition" />
 
                     <View
                         android:layout_width="@dimen/dp1"
@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Scorecard"
+                        android:text="Match Date"
                         android:visibility="visible" />
 
                 </LinearLayout>

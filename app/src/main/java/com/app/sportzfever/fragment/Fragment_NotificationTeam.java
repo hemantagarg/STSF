@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterNotification;
+import com.app.sportzfever.adapter.AdapterNotificationTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -31,13 +32,13 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_Notification extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_NotificationTeam extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-    private AdapterNotification adapterNotification;
+    private AdapterNotificationTeam adapterNotificationTeam;
     private ModelNotification modelNotification;
 
     private TextView text_nodata;
@@ -50,12 +51,12 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     private boolean loading = true;
     private String maxlistLength = "";
 
-    public static Fragment_Notification fragment_notification;
-    private final String TAG = Fragment_Notification.class.getSimpleName();
+    public static Fragment_NotificationTeam fragment_notification;
+    private final String TAG = Fragment_NotificationTeam.class.getSimpleName();
 
-    public static Fragment_Notification getInstance() {
+    public static Fragment_NotificationTeam getInstance() {
         if (fragment_notification == null)
-            fragment_notification = new Fragment_Notification();
+            fragment_notification = new Fragment_NotificationTeam();
         return fragment_notification;
     }
 
@@ -129,7 +130,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION +skipCount+ AppUtils.getUserId(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATIONTEAM +skipCount+ AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -146,7 +147,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context)+ "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATIONTEAM + AppUtils.getUserId(context)+ "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -187,8 +188,8 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
 
                         arrayList.add(modelNotification);
                     }
-                    adapterNotification = new AdapterNotification(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterNotification);
+                    adapterNotificationTeam = new AdapterNotificationTeam(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterNotificationTeam);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -232,14 +233,14 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
 
                         arrayList.add(modelNotification);
                     }
-                    adapterNotification.notifyDataSetChanged();
+                    adapterNotificationTeam.notifyDataSetChanged();
                     loading = true;
                     if (data.length() == 0) {
                         skipCount = skipCount - 10;
                         //  return;
                     }
                 } else {
-                    adapterNotification.notifyDataSetChanged();
+                    adapterNotificationTeam.notifyDataSetChanged();
                     skipCount = skipCount - 10;
                     loading = true;
                 }

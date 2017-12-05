@@ -47,6 +47,7 @@ import com.app.sportzfever.fragment.Fragment_LiveMatch_Details;
 import com.app.sportzfever.fragment.Fragment_MatchFeed;
 import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_Notification;
+import com.app.sportzfever.fragment.Fragment_NotificationDetails;
 import com.app.sportzfever.fragment.Fragment_PastMatch_Details;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
 import com.app.sportzfever.fragment.Fragment_Search;
@@ -288,7 +289,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
-                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
             manageHeaderVisibitlity(true);
             manageFooterVisibitlity(true);
         } else {
@@ -521,11 +522,11 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     case 3:
                         tab.setIcon(R.drawable.bell_sel);
                         if (mStacks.get(GlobalConstants.TAB_NOTIFCATION_BAR).size() > 0) {
-                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification))
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails))
                                 AppUtils.showErrorLog(TAG, "Friens clicked");
                             activeNotificationFragment();
                         } else
-                            pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
+                            pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_NotificationDetails(), true);
 
                         break;
                     case 4:
@@ -860,7 +861,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                             AppUtils.showLog(TAG, " Current Fragment is Feed Fragment");
                             //  refreshHomeFragment();
                         }
-                        if (mStacks.get(mCurrentTab).size() > 0 && mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+                        if (mStacks.get(mCurrentTab).size() > 0 && mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
                             AppUtils.showLog(TAG, " Current Fragment is Notification Fragment");
                             //  refreshProfileFragment();
                         }
@@ -869,7 +870,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
-                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Notification) {
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
                             manageHeaderVisibitlity(true);
                             manageFooterVisibitlity(true);
                         } else {

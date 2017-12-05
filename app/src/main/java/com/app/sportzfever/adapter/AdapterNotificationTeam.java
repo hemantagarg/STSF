@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterNotificationTeam extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ArrayList<ModelNotification> detail;
     Context mContext;
@@ -29,8 +29,7 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int VIEW_PROG = 0;
 
 
-
-    public AdapterNotification(Context context, OnCustomItemClicListener lis, ArrayList<ModelNotification> list) {
+    public AdapterNotificationTeam(Context context, OnCustomItemClicListener lis, ArrayList<ModelNotification> list) {
 
         this.detail = list;
         this.mContext = context;
