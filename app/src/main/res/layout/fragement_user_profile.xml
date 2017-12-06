@@ -16,31 +16,35 @@
         android:layout_alignParentStart="true"
         android:layout_margin="@dimen/dp10"
         android:background="@color/white">
+
         <ImageView
             android:id="@+id/image_edit"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/dp5"
+            android:padding="@dimen/dp5"
             android:src="@drawable/edit_icon"
             android:visibility="visible" />
+
         <ImageView
             android:id="@+id/img_profilepic"
             android:layout_width="80dp"
-            android:visibility="gone"
             android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/personalinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:padding="@dimen/dp10"
             android:text="PERSONAL INFO"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <ImageView
             android:layout_width="20dp"
@@ -164,10 +168,10 @@
             android:layout_below="@+id/avtar_jercynumber"
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
-            android:visibility="gone"
             android:text="@string/email"
             android:textColor="@color/text_hint_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/avtar_battingstylelive"
@@ -177,19 +181,19 @@
             android:layout_below="@+id/avtar_jercynumber"
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
-            android:visibility="gone"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/avtar_battingstylelive"
             android:alpha=".3"
-            android:visibility="gone"
-            android:background="@color/view_color" />
+            android:background="@color/view_color"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/avtar_bowlingstyle"

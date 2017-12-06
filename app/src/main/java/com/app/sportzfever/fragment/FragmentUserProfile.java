@@ -40,8 +40,9 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     private String avtarid = "";
     private TextView avtar_namelive, avtar_battingheldlive, avtar_weightlive, avtar_heigtlive, avtar_jercynumberlive, avtar_battingstylelive, avtar_bowlingstylelive, avtar_bowlinghandlive, avtar_specialitylive;
     private ModelAboutMe modelAboutMe;
-    ImageView img_profilepic,image_edit;
-JSONObject jo;
+    ImageView img_profilepic, image_edit;
+    JSONObject data;
+
     public static FragmentUserProfile getInstance() {
         if (fragment_teamJoin_request == null)
             fragment_teamJoin_request = new FragmentUserProfile();
@@ -86,7 +87,11 @@ JSONObject jo;
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
-
+            if (avtarid.equalsIgnoreCase(AppUtils.getUserId(context))) {
+                image_edit.setVisibility(View.VISIBLE);
+            } else {
+                image_edit.setVisibility(View.GONE);
+            }
             String data = bundle.getString("data");
             setData(data);
         }
@@ -94,9 +99,8 @@ JSONObject jo;
 
     private void setData(String maindata) {
         try {
-            JSONObject data = new JSONObject(maindata);
+            data = new JSONObject(maindata);
             JSONObject jdob = data.getJSONObject("dateOfBirth");
-
             modelAboutMe = new ModelAboutMe();
 
             modelAboutMe.setUserId(data.getString("userId"));
@@ -135,7 +139,7 @@ JSONObject jo;
             public void onClick(View view) {
                 FragmentPersonalProfileEdit tab2 = new FragmentPersonalProfileEdit();
                 Bundle b = new Bundle();
-              //  b.putString("data", jo.toString());
+                b.putString("data", data.toString());
                 tab2.setArguments(b);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
             }
@@ -172,7 +176,7 @@ JSONObject jo;
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
+                    data = jObject.getJSONObject("data");
                     JSONObject jdob = data.getJSONObject("dateOfBirth");
 
                     modelAboutMe = new ModelAboutMe();

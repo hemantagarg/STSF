@@ -79,7 +79,6 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
-            teamavtarid = bundle.getString("teamavtarid");
         }
     }
 
@@ -176,7 +175,7 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GALLERY + teamavtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GALLERY + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
