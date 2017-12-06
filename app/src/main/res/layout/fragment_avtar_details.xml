@@ -55,6 +55,14 @@
                         android:layout_marginTop="@dimen/dp30"
                         android:src="@drawable/user" />
 
+                    <ImageView
+                        android:id="@+id/image_edit"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBottom="@+id/imge_user"
+                        android:layout_alignRight="@+id/imge_user"
+                        android:src="@drawable/edit_yellow"
+                        android:visibility="gone" />
 
                     <com.app.sportzfever.utils.CustomTextView
                         android:id="@+id/text_username"

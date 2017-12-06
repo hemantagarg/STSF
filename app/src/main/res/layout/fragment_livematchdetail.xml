@@ -254,6 +254,15 @@
                         android:textStyle="bold"
                         android:visibility="gone" />
 
+                    <ImageView
+                        android:id="@+id/image_refresh"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="right"
+                        android:layout_margin="@dimen/dp10"
+                        android:src="@drawable/refresh"
+                        android:visibility="visible" />
+
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>

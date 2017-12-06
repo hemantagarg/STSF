@@ -280,6 +280,8 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/avtar_bowlinghand"
             android:layout_margin="@dimen/dp5"
+            android:layout_toRightOf="@+id/avtar_speciality"
+            android:gravity="right"
             android:padding="@dimen/dp10"
             android:singleLine="true"
             android:text=""

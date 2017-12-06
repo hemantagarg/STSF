@@ -54,7 +54,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private ImageView teamb, teama, image_back;
+    private ImageView teamb, teama, image_back,image_refresh;
     private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -111,6 +111,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
 
         teama = (ImageView) view.findViewById(R.id.teama);
         teamb = (ImageView) view.findViewById(R.id.teamb);
+        image_refresh = (ImageView) view.findViewById(R.id.image_refresh);
         text_username = (TextView) view.findViewById(R.id.text_name);
         text_teamname = (TextView) view.findViewById(R.id.text_teamname);
         text_startdate = (TextView) view.findViewById(R.id.text_startdate);
@@ -157,7 +158,12 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
                 context.onBackPressed();
             }
         });
-
+        image_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getServicelistRefresh();
+            }
+        });
     }
 
 

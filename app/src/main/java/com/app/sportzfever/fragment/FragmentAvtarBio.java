@@ -87,7 +87,9 @@ public class FragmentAvtarBio extends BaseFragment implements ApiResponse, OnCus
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
             if (AppUtils.getLoginUserAvtarId(context).equalsIgnoreCase(avtarid)) {
-                image_edit.setVisibility(View.VISIBLE);
+                // currently we are hiding edit button later we have to change it
+                //  image_edit.setVisibility(View.VISIBLE);
+                image_edit.setVisibility(View.GONE);
             } else {
                 image_edit.setVisibility(View.GONE);
             }
