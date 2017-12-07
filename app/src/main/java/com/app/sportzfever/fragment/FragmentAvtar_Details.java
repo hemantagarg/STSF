@@ -395,7 +395,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
                 }
                 selectedFilePath = new File(path);
                 Log.e("filepath", "**" + selectedFilePath);
-                Picasso.with(mActivity).load(selectedFilePath).transform(new CircleTransform()).into(imge_user);
+                Picasso.with(mActivity).load(selectedFilePath).skipMemoryCache().transform(new CircleTransform()).into(imge_user);
                 uploadPhoto();
                 //     profile_image.setImageBitmap(bitmap);
                 break;

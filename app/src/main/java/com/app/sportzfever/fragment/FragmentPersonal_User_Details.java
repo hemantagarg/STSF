@@ -390,7 +390,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
                 }
                 selectedFilePath = new File(path);
                 Log.e("filepath", "**" + selectedFilePath);
-                Picasso.with(mActivity).load(selectedFilePath).transform(new CircleTransform()).into(imge_user);
+                Picasso.with(mActivity).load(selectedFilePath).skipMemoryCache().transform(new CircleTransform()).into(imge_user);
                 uploadPhoto();
                 //     profile_image.setImageBitmap(bitmap);
                 break;
@@ -403,7 +403,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
         try {
             StringBody userId = new StringBody(AppUtils.getUserId(mActivity), encoding);
             StringBody avatarId = new StringBody("", encoding);
-            StringBody type = new StringBody("avatar", encoding);
+            StringBody type = new StringBody("user", encoding);
 
             if (!path.equalsIgnoreCase("")) {
                 FileBody filebodyimage = new FileBody(selectedFilePath);
@@ -416,7 +416,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
             if (AppUtils.isNetworkAvailable(mActivity)) {
                 //    https://sfscoring.betasportzfever.com/updateProfilePicture
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATE_PROFILE_PICTURE;
-                new AsyncPostDataFileResponse(mActivity, this, 2, reqEntity, url);
+                new AsyncPostDataFileResponse(mActivity, this, 3, reqEntity, url);
             } else {
                 Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -466,6 +466,12 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
                     setupViewPager(viewPager);
                     tabLayout.setupWithViewPager(viewPager);
                     setupTabIcons();
+                }
+            } else if (method == 3) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
 
