@@ -78,7 +78,7 @@ public class AdapterTournamentAlbums extends RecyclerView.Adapter<RecyclerView.V
 
             ModelTournamentAlbums m1 = (ModelTournamentAlbums) detail.get(i);
             ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getAlbumName());
-            ((CustomViewHolder) holder).text_total.setText(m1.getTotalImage() + " " + "Images");
+            ((CustomViewHolder) holder).text_total.setText(m1.getDescription());
 
             if (!m1.getImage().equalsIgnoreCase("")) {
                 Picasso.with(mContext)

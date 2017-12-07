@@ -145,7 +145,7 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
         adapterPhotoList = new AdapterPhotoList(context, this, arrayListPhotos);
         recyclerPhotos.setAdapter(adapterPhotoList);
 
-
+        rl_album.setVisibility(View.GONE);
         listShare.add(AppConstant.PUBLIC);
         listShare.add(AppConstant.FRIENDS);
         listShare.add(AppConstant.ONLYME);
@@ -351,7 +351,8 @@ public class Fragment_PostMatchFeed extends BaseFragment implements ApiResponse,
                 }
             }
 
-            Log.e("tournamentId", tournamentId);
+            Log.e("matchId", avtarid);
+            Log.e("tournamentId", "*" + tournamentId);
             Log.e("statusVisibility", spinnerShareWith.getSelectedItem().toString());
             Log.e("statusType", "TEXT");
             Log.e("description", edt_text_post.getText().toString());

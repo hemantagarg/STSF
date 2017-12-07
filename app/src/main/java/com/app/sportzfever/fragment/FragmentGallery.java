@@ -117,6 +117,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
     }
 
     @Override

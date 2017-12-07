@@ -143,7 +143,7 @@ public class Fragment_PostTournamentFeed extends BaseFragment implements ApiResp
         recyclerAlbumPhotos.setAdapter(adapterAlbumPhotoList);
         adapterPhotoList = new AdapterPhotoList(context, this, arrayListPhotos);
         recyclerPhotos.setAdapter(adapterPhotoList);
-
+        rl_album.setVisibility(View.GONE);
 
         listShare.add(AppConstant.PUBLIC);
         listShare.add(AppConstant.FRIENDS);
@@ -204,7 +204,7 @@ public class Fragment_PostTournamentFeed extends BaseFragment implements ApiResp
                                 edt_albumname.setError("Please enter album name");
                                 edt_albumname.requestFocus();
                             }
-                        }else {
+                        } else {
                             submitPost();
                         }
                     } else {

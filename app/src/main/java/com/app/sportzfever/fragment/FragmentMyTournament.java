@@ -1,7 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.WebView;
 import com.app.sportzfever.adapter.AdapterMyTournament;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -43,7 +42,6 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     private Bundle b;
     private Context context;
     private TextView text_nodata;
-    private WebView weborganizer;
     private AdapterMyTournament adapterMyTournament;
     private ModelAllTournament modelAllTournament;
     private ArrayList<ModelAllTournament> arrayList;
@@ -52,6 +50,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
+    private Button btn_switch_organisermode;
     private boolean loading = true;
     private String maxlistLength = "";
 
@@ -82,38 +81,15 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        weborganizer = (WebView) view.findViewById(R.id.weborganizer);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
+        btn_switch_organisermode = (Button) view.findViewById(R.id.btn_switch_organisermode);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        WebSettings webSettings = weborganizer.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        String url = JsonApiHelper.WEBVIEWBASEURLBETA + JsonApiHelper.GET_ORGNIZERDATA+ AppUtils.getUserId(context) + "/" +  AppUtils.getAuthToken(context);
-        weborganizer.loadUrl(url);
-        Log.e("urltest", url);
-
-        weborganizer.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                // progressbar.setVisibility(View.GONE);
-            }
-
-            public void onPageFinished(WebView view, String url) {
-
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
-
-            }
-        });
         getServicelistRefresh();
     }
 
@@ -123,6 +99,16 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
             public void onRefresh() {
 
                 getServicelistRefresh();
+            }
+        });
+        btn_switch_organisermode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = JsonApiHelper.WEBVIEWBASEURL + JsonApiHelper.GET_ORGNIZERDATA + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
+                Log.e("organiser url", "*" + url);
+                Intent intent = new Intent(context, WebView.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
             }
         });
 
@@ -212,7 +198,9 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }  private void getServicelistRefreshwebview() {
+    }
+
+    private void getServicelistRefreshwebview() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
@@ -236,7 +224,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
@@ -256,7 +244,7 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                         modelAllTournament.setTournamentState(jo.getString("tournamentState"));
 
                         JSONObject jo1 = jo.getJSONObject("tournamentStartDate");
-                        modelAllTournament.setDatetime(jo1.getString("date")+" "+jo1.getString("ShortMonthName")+" "+jo1.getString("year"));
+                        modelAllTournament.setDatetime(jo1.getString("date") + " " + jo1.getString("ShortMonthName") + " " + jo1.getString("year"));
 
                         modelAllTournament.setRowType(1);
                         arrayList.add(modelAllTournament);
@@ -271,20 +259,15 @@ public class FragmentMyTournament extends BaseFragment implements ApiResponse, O
                     if (arrayList.size() > 0) {
 
                         text_nodata.setVisibility(View.GONE);
-                        weborganizer.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        weborganizer.setVisibility(View.VISIBLE);
-                      //  getServicelistRefreshwebview();
-                        text_nodata.setText("Please wait...!");
+                        //  getServicelistRefreshwebview();
+                        text_nodata.setText(context.getResources().getString(R.string.tournament_text));
 
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    weborganizer.setVisibility(View.VISIBLE);
-                    text_nodata.setText("Please wait...!");
-
-
+                    text_nodata.setText(context.getResources().getString(R.string.tournament_text));
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

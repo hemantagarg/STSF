@@ -2,6 +2,7 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,15 +12,18 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -189,6 +193,17 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
             }
         });
 
+        edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchText();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         spinner_search.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -213,16 +228,20 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                setSpinnerData(charSequence.toString());
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void afterTextChanged(final Editable editable) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSpinnerData(edt_search.getText().toString());
+                    }
+                }, 2000);
             }
         });
-
     }
 
     private void setSpinnerData(String text) {

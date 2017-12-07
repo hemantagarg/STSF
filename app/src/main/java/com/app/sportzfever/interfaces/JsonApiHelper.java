@@ -6,7 +6,7 @@ package com.app.sportzfever.interfaces;
 
 public interface JsonApiHelper {
 
-    String BASEURL = JsonApiHelper.TESTURL;
+    String BASEURL = JsonApiHelper.BASEURL_LIVE;
     String WEBVIEWBASEURL = "https://www.sportzfever.com/";
     String WEBVIEWBASEURLBETA = "https://www.betasportzfever.com/";
      String BASEURL_LIVE = "https://sfscoring.sportzfever.com/";

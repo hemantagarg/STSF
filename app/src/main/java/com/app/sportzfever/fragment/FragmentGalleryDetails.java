@@ -120,6 +120,8 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
     @Override
     public void onResume() {
         super.onResume();
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
     }
 
     @Override

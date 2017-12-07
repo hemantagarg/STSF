@@ -28,11 +28,6 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -54,7 +49,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private ImageView teamb, teama, image_back,image_refresh;
+    private ImageView teamb, teama, image_back, image_refresh;
     private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -124,24 +119,9 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
         text_scorerforb = (TextView) view.findViewById(R.id.text_scorerforb);
         text_location = (TextView) view.findViewById(R.id.text_location);
         image_reddot = (ImageView) view.findViewById(R.id.image_reddot);
+        image_reddot.setVisibility(View.GONE);
         // ll_performance = (LinearLayout) view.findViewById(R.id.ll_performance);
         arrayteama = new ArrayList<>();
-        //  GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(image_reddot);
-        GlideDrawableImageViewTarget imagePreview = new GlideDrawableImageViewTarget(image_reddot);
-        Glide.with(this)
-                .load("https://www.betasportzfever.com/assets/public/images/live_dot.gif")
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(imagePreview);
 
         //Glide.with(this).load("https://www.betasportzfever.com/assets/public/images/live_dot.gif").into(imageViewTarget);
         //  Glide.with(context).load("https://www.betasportzfever.com/assets/public/images/live_dot.gif").asGif().placeholder(R.drawable.circle_red).into(image_reddot);

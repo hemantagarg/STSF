@@ -53,5 +53,6 @@
     <string name="avtarspeciality">Speciality : </string>
     <string name="avtarfavouritefieldposition">Favourite Field Position : </string>
     <string name="avtaraboutme">About me : </string>
+    <string name="tournament_text">Welcome to SF Tournament Page. We are super excited to have you here.\nYou can click on "Find Tournaments" button below to view events happening near you area.\nYou can "Create Tournaments" by clicking on Switch To Tournament Organizer Mode button.</string>
 
 </resources>

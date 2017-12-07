@@ -77,6 +77,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.WebView"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.ViewMatchScoreCard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

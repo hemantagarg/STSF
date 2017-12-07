@@ -161,6 +161,7 @@ public class FragmentTournamentAlbums extends BaseFragment implements ApiRespons
 
                         modelTournamentAlbums.setAlbumId(jo.getString("albumId"));
                         modelTournamentAlbums.setAlbumName(jo.getString("albumName"));
+                        modelTournamentAlbums.setDescription(jo.getString("albumDescription"));
                         modelTournamentAlbums.setTotalImage(jo.getString("totalImage"));
                         modelTournamentAlbums.setImage(jo.getString("images"));
                         modelTournamentAlbums.setRowType(1);
