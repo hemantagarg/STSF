@@ -8,176 +8,193 @@
         android:id="@+id/rl_header"
         layout="@layout/header_layout" />
 
-    <LinearLayout
-        android:id="@+id/rl_main_layout"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linear21"
-        android:layout_below="@+id/rl_header"
-        android:orientation="vertical"
-        android:padding="@dimen/dp10">
+        android:layout_below="@+id/rl_header">
 
         <LinearLayout
-            android:id="@+id/linear1"
+            android:id="@+id/rl_main_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="match_parent"
 
-            <ImageView
-                android:layout_width="@dimen/dp15"
-                android:layout_height="@dimen/dp15"
-                android:background="@drawable/red_circle" />
+            android:orientation="vertical"
+            android:padding="@dimen/dp10">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp2"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/red" />
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-            <ImageView
-                android:layout_width="@dimen/dp15"
-                android:layout_height="@dimen/dp15"
-                android:background="@drawable/red_outline_circle" />
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_circle" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp2"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/view_color" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/red" />
 
-            <ImageView
-                android:layout_width="@dimen/dp15"
-                android:layout_height="@dimen/dp15"
-                android:background="@drawable/red_outline_circle" />
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_outline_circle" />
 
-        </LinearLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/view_color" />
 
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linear1"
-            android:layout_marginTop="@dimen/dp5"
-            android:orientation="horizontal"
-            android:weightSum="3">
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_outline_circle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear1"
+                android:layout_marginTop="@dimen/dp5"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Select Match"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Prepare Lineup"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="Let's Play"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/text_create_lineup"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Select Match"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp10"
+                android:text="@string/team_roster"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/text_size_20" />
+
+            <TextView
+                android:id="@+id/text_create_lineup_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="@dimen/dp10"
+                android:paddingRight="@dimen/dp10"
+                android:text="@string/team_roster_desc"
                 android:textColor="@color/text_color_black"
                 android:textSize="@dimen/text_size_12" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="Prepare Lineup"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_12" />
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/textSelectAll"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="Let's Play"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_12" />
+                android:layout_gravity="right"
+                android:padding="@dimen/dp5"
+                android:text="Select All"
+                android:textColor="@color/button_bg"
+                android:textSize="@dimen/text_size_15" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/linear_playertstatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp5"
+                android:background="@color/layout_bg"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp5"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Player Name"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_14" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Invite Status"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_14" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="Remove"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_14" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_added_players"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/text_create_lineup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp10"
-            android:padding="@dimen/dp10"
-            android:text="Team Roster"
-            android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_20" />
-
-        <TextView
-            android:id="@+id/textSelectAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:padding="@dimen/dp5"
-            android:text="Select All"
-            android:textColor="@color/button_bg"
-            android:textSize="@dimen/text_size_15" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_request"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:id="@+id/linear_playertstatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp5"
-            android:background="@color/layout_bg"
-            android:orientation="horizontal"
-            android:padding="@dimen/dp5"
-            android:weightSum="3">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Player Name"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_14" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="Invite Status"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_14" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="Remove"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_14" />
-
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_added_players"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible" />
-
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/linear21"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_send_invite"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginRight="@dimen/dp2"
+            android:layout_marginRight="@dimen/dp1"
             android:layout_weight="1"
             android:background="@drawable/blue_button_selecor"
             android:text="Send Invite"
@@ -192,7 +209,8 @@
             android:background="@drawable/blue_button_selecor"
             android:text="Next"
             android:textAllCaps="false"
-            android:textSize="@dimen/text_size_15" />
+            android:textSize="@dimen/text_size_15"
+            android:visibility="gone" />
 
     </LinearLayout>
 

@@ -23,7 +23,7 @@ public class ModelSportTeamList {
 
     private String teamAvatarId;
 
-    private String location;
+    private String location, matchId, order, isInPlayingSquad = "0", isInPlayingBench = "0";
 
     private String ownerId;
     private int isAdded = 0;
@@ -38,11 +38,11 @@ public class ModelSportTeamList {
 
     private String playerName;
 
-    private String speciality;
+    private String speciality = "";
 
     private String profilePicture;
 
-    private String avatar;
+    private String avatar, avtarId, isReservedPlayer;
 
     public String getRequestStatus() {
         return requestStatus;
@@ -78,6 +78,38 @@ public class ModelSportTeamList {
 
     public String getSpeciality() {
         return speciality;
+    }
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(String matchId) {
+        this.matchId = matchId;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getIsInPlayingSquad() {
+        return isInPlayingSquad;
+    }
+
+    public void setIsInPlayingSquad(String isInPlayingSquad) {
+        this.isInPlayingSquad = isInPlayingSquad;
+    }
+
+    public String getIsInPlayingBench() {
+        return isInPlayingBench;
+    }
+
+    public void setIsInPlayingBench(String isInPlayingBench) {
+        this.isInPlayingBench = isInPlayingBench;
     }
 
     public void setSpeciality(String speciality) {
@@ -254,5 +286,21 @@ public class ModelSportTeamList {
 
     public void setAddedStatus(String addedStatus) {
         this.addedStatus = addedStatus;
+    }
+
+    public String getAvtarId() {
+        return avtarId;
+    }
+
+    public void setAvtarId(String avtarId) {
+        this.avtarId = avtarId;
+    }
+
+    public String getIsReservedPlayer() {
+        return isReservedPlayer;
+    }
+
+    public void setIsReservedPlayer(String isReservedPlayer) {
+        this.isReservedPlayer = isReservedPlayer;
     }
 }

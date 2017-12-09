@@ -39,6 +39,7 @@ public class AppConstant {
     public static final String MATCHSTATUS_STARTED = "STARTED";
     public static final String BATSMAN = "Batsman";
     public static final String BOWLER = "Bowler";
+    public static final String PENDING = "PENDING";
     public static final String WICKET_KEEPER = "Wicket Keeper";
     public static final String ALL_ROUNDER = "All Rounder";
 

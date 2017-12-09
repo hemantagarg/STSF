@@ -19,10 +19,12 @@ import com.app.sportzfever.adapter.AdapterTeamLineupRoster;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -48,10 +50,13 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
     private View view_about;
     private Button btn_send_invite, btn_next;
     private TextView text_nodata, textSelectAll;
+    private ArrayList<String> listAvtarId = new ArrayList<>();
 
     public static FragmentPrepareLineup fragment_teamJoin_request;
     private final String TAG = FragmentPrepareLineup.class.getSimpleName();
-    private String teamId = "";
+    private String teamId = "", eventId = "";
+    private JSONObject jsonLinupArray;
+    private String playersCount = "";
 
     public static FragmentPrepareLineup getInstance() {
         if (fragment_teamJoin_request == null)
@@ -127,12 +132,52 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         manageHeaderView();
         getBundle();
         setlistener();
-        getServicelistRefresh();
     }
 
     private void getBundle() {
-        Bundle b = getArguments();
-        teamId = b.getString("teamId");
+        try {
+            Bundle b = getArguments();
+            teamId = b.getString("teamId");
+            eventId = b.getString("eventId");
+            playersCount = b.getString("playersCount");
+            String response = b.getString("jsonresponse");
+            if (!response.equalsIgnoreCase("")) {
+                jsonLinupArray = new JSONObject(response);
+                if (jsonLinupArray.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray jtaemown = jsonLinupArray.getJSONArray("playersAvailability");
+
+                    arrayListaddedPlayers.clear();
+                    for (int i = 0; i < jtaemown.length(); i++) {
+
+                        JSONObject jo = jtaemown.getJSONObject(i);
+                        modelSportTeamList = new ModelSportTeamList();
+
+                        modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                        listAvtarId.add(jo.getString("avatarId"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                        modelSportTeamList.setTeamId(jo.getString("teamId"));
+                        modelSportTeamList.setMatchId(jo.getString("matchId"));
+                        modelSportTeamList.setOrder(jo.getString("order"));
+                        modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                        modelSportTeamList.setIsAdded(1);
+                        modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
+                        modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                        modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
+                        modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setSpeciality(jo.getString("speciality"));
+                        modelSportTeamList.setRowType(1);
+                        if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                            btn_next.setVisibility(View.VISIBLE);
+                        }
+                        arrayListaddedPlayers.add(modelSportTeamList);
+                    }
+                    adapterTeamAddedPlayersLineup.notifyDataSetChanged();
+                }
+            }
+            getRoasterList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setlistener() {
@@ -140,6 +185,31 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             @Override
             public void onClick(View view) {
                 addAllData();
+            }
+        });
+        btn_send_invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (arrayListaddedPlayers.size() > 0) {
+                    sentInvite();
+                } else {
+                    Toast.makeText(context, "Please add atleast one player", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
+                Bundle bundle = new Bundle();
+                bundle.putString("teamId", teamId);
+                bundle.putString("eventId", eventId);
+                bundle.putString("playersCount", playersCount);
+                bundle.putString("jsonresponse", jsonLinupArray.toString());
+                fragmentPrepareLineup.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+
             }
         });
     }
@@ -161,6 +231,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         adapterTeamAddedPlayersLineup.notifyDataSetChanged();
         adapterSportTeamList.notifyDataSetChanged();
     }
+
 
     private void addDataInList(int position) {
 
@@ -184,7 +255,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         }
     }
 
-    private void getServicelistRefresh() {
+    private void getRoasterList() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
@@ -192,7 +263,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + teamId + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -202,6 +273,68 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         }
     }
 
+    private void sentInvite() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                JSONObject jsonObject = makeJsonRequest();
+
+                //   http://sfscoring.betasportzfever.com/getMatchLineup/23/77/479a44a634f82b0394f78352d302ec36
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
+                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject makeJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            JSONArray newMatchlineUp = new JSONArray();
+            for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
+                JSONObject jo = new JSONObject();
+                jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
+                if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase("Invitation not sent")) {
+                    jo.put("inviteStatus", AppConstant.PENDING);
+                } else {
+                    jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
+                }
+                jo.put("isInBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
+                jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
+                jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
+                jo.put("order", i + 1 + "");
+                jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
+                newMatchlineUp.put(jo);
+            }
+            jsonObject.put("matchId", eventId);
+            jsonObject.put("teamId", teamId);
+            jsonObject.put("isTeamScoringOnSf", "1");
+            jsonObject.put("newMatchlineUp", newMatchlineUp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private void getTeamLineup() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //   http://sfscoring.betasportzfever.com/getMatchLineup/23/77/479a44a634f82b0394f78352d302ec36
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_MATCH_LINEUP + teamId + "/" + eventId + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
@@ -222,7 +355,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                         modelSportTeamList = new ModelSportTeamList();
 
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
-                        modelSportTeamList.setAvatar(jo.getString("avatar"));
+                        modelSportTeamList.setAvtarId(jo.getString("avatar"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
@@ -231,7 +364,9 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                         modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
                         modelSportTeamList.setRowType(1);
                         if (!modelSportTeamList.getRequestStatus().equalsIgnoreCase("PENDING")) {
-                            arrayList.add(modelSportTeamList);
+                            if (!listAvtarId.contains(modelSportTeamList.getAvtarId())) {
+                                arrayList.add(modelSportTeamList);
+                            }
                         }
                     }
 
@@ -250,30 +385,46 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
 
                 }
 
-            } else if (position == 4) {
+            } else if (position == 2) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
-                    //  maxlistLength = jObject.getString("total");
+                    jsonLinupArray = jObject;
+                    JSONArray jtaemown = jObject.getJSONArray("playersAvailability");
 
-
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
+                    arrayListaddedPlayers.clear();
+                    for (int i = 0; i < jtaemown.length(); i++) {
 
                         JSONObject jo = jtaemown.getJSONObject(i);
-
                         modelSportTeamList = new ModelSportTeamList();
-                        arrayList.add(modelSportTeamList);
+
+                        modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                        listAvtarId.add(jo.getString("avatarId"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                        modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setSpeciality(jo.getString("speciality"));
+                        modelSportTeamList.setTeamId(jo.getString("teamId"));
+                        modelSportTeamList.setMatchId(jo.getString("matchId"));
+                        modelSportTeamList.setOrder(jo.getString("order"));
+                        modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                        modelSportTeamList.setIsAdded(1);
+                        modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
+                        modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                        modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
+                        modelSportTeamList.setRowType(1);
+                        if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                            modelSportTeamList.setIsInPlayingSquad("1");
+                            btn_next.setVisibility(View.VISIBLE);
+                        }
+                        arrayListaddedPlayers.add(modelSportTeamList);
                     }
-                    adapterSportTeamList.notifyDataSetChanged();
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
+                    adapterTeamAddedPlayersLineup.notifyDataSetChanged();
                 } else {
-                    adapterSportTeamList.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
+                }
+            } else if (position == 3) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getTeamLineup();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {

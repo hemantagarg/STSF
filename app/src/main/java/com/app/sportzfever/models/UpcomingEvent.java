@@ -53,7 +53,7 @@ public class UpcomingEvent {
 
     private String team1;
 
-    private String team2;
+    private String team2,playersCount;
 
     public String getTeam1Name() {
         return team1Name;
@@ -279,5 +279,13 @@ public class UpcomingEvent {
 
     public String getMatchStatus() {
         return matchStatus;
+    }
+
+    public String getPlayersCount() {
+        return playersCount;
+    }
+
+    public void setPlayersCount(String playersCount) {
+        this.playersCount = playersCount;
     }
 }

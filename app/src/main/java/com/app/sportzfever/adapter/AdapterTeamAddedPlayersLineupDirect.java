@@ -80,8 +80,9 @@ public class AdapterTeamAddedPlayersLineupDirect extends RecyclerView.Adapter<Re
 
             ModelSportTeamList m1 = (ModelSportTeamList) detail.get(i);
 
-            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getAvatarName());
-            ((CustomViewHolder) holder).text_speciality.setText("(" + m1.getPlayerName() + ")");
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getPlayerName());
+            ((CustomViewHolder) holder).text_avtarname.setText(m1.getAvatarName());
+            ((CustomViewHolder) holder).text_speciality.setText("(" + m1.getSpeciality() + ")");
             ((CustomViewHolder) holder).text_status.setText(m1.getAddedStatus());
 
             if (m1.getIsAdded() == 1) {
@@ -116,7 +117,7 @@ public class AdapterTeamAddedPlayersLineupDirect extends RecyclerView.Adapter<Re
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView text_avtarteamname, text_speciality, text_status;
+        TextView text_avtarteamname, text_speciality, text_status, text_avtarname;
         ImageView image_avtar, image_status;
         RelativeLayout relmatchvs;
         CardView card_view;
@@ -127,6 +128,7 @@ public class AdapterTeamAddedPlayersLineupDirect extends RecyclerView.Adapter<Re
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_name);
             this.text_speciality = (TextView) view.findViewById(R.id.text_speciality);
             this.text_status = (TextView) view.findViewById(R.id.text_status);
+            this.text_avtarname = (TextView) view.findViewById(R.id.text_avtarname);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_viewers);
             this.image_status = (ImageView) view.findViewById(R.id.image_status);
             this.card_view = (CardView) view.findViewById(R.id.card_view);

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/rl_header"
+        layout="@layout/header_layout" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_create_team"
+        android:layout_below="@+id/rl_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/dp15">
+
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_circle" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/red" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_circle" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/red" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:background="@drawable/red_outline_circle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear1"
+                android:layout_marginTop="@dimen/dp5"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Select Match"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Prepare Lineup"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="Let's Play"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/text_size_12" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp20"
+                android:padding="@dimen/dp5"
+                android:text="Captain"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:background="@drawable/edit_bg">
+
+                <TextView
+                    android:id="@+id/text_captain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp10"
+                    android:text="Select Captain"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <Spinner
+                    android:id="@+id/spinner_captain"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp0" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/arrow_down" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text="Vice Captain"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:background="@drawable/edit_bg">
+
+                <TextView
+                    android:id="@+id/textViceCaptain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp10"
+                    android:text="Select Vice Captain"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <Spinner
+                    android:id="@+id/spinner_vice_captain"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp0" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/arrow_down" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text="Wicket Keeper"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:background="@drawable/edit_bg">
+
+                <TextView
+                    android:id="@+id/text_wicket_keeper"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp10"
+                    android:text="Select Wicket keeper"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <Spinner
+                    android:id="@+id/spinner_wicket_keeper"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp0" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/arrow_down" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text="Search Scorer In (User/Lineup)"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:background="@drawable/edit_bg">
+
+                <TextView
+                    android:id="@+id/text_select_scorer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp10"
+                    android:text="User"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+
+                <Spinner
+                    android:id="@+id/spinner_select_scorer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp0" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp15"
+                    android:layout_height="@dimen/dp15"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/arrow_down" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_teamlineup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text="First Scorer"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/edit_bg">
+
+                    <TextView
+                        android:id="@+id/text_first_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/dp10"
+                        android:text="Select"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <Spinner
+                        android:id="@+id/spinner_first_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp0" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp15"
+                        android:layout_height="@dimen/dp15"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:src="@drawable/arrow_down" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text="Second Scorer"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/edit_bg">
+
+                    <TextView
+                        android:id="@+id/text_second_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/dp10"
+                        android:text="Select"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <Spinner
+                        android:id="@+id/spinner_second_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp0" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp15"
+                        android:layout_height="@dimen/dp15"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:src="@drawable/arrow_down" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text="Third Scorer"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/edit_bg">
+
+                    <TextView
+                        android:id="@+id/text_third_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/dp10"
+                        android:text="Select"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <Spinner
+                        android:id="@+id/spinner_third_scorer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp0" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp15"
+                        android:layout_height="@dimen/dp15"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:src="@drawable/arrow_down" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_userscorer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableRight="@drawable/right_arrow"
+                android:padding="@dimen/dp5"
+                android:text="Select Scorer"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btn_create_team"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/blue_button_selecor"
+        android:paddingBottom="@dimen/dp5"
+        android:paddingLeft="@dimen/dp20"
+        android:paddingRight="@dimen/dp20"
+        android:paddingTop="@dimen/dp5"
+        android:text="Create Lineup"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size_15" />
+
+</RelativeLayout>

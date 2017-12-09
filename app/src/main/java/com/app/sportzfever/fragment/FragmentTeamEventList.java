@@ -128,6 +128,8 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                     FragmentCheckPlayerAvailability fragment_postFeed = new FragmentCheckPlayerAvailability();
                     Bundle bundle = new Bundle();
                     bundle.putString("teamId", teamid);
+                    bundle.putString("eventId", arrayList.get(position).getId());
+                    bundle.putString("playersCount", arrayList.get(position).getPlayersCount());
                     fragment_postFeed.setArguments(bundle);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
                 } else {
@@ -200,6 +202,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                         upcomingEvent.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
                         upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
+                        upcomingEvent.setPlayersCount(jo.getString("playersCount"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
                         upcomingEvent.setTitle(jo.getString("title"));
                         if (jo.has("matchStatus")) {

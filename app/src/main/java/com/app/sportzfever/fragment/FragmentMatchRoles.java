@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,7 +16,6 @@ import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -27,21 +27,24 @@ import org.json.JSONObject;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentCheckPlayerAvailability extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
+public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
 
     private Bundle b;
     private Activity context;
     View mView;
     private Button btn_create_team;
-    private CheckBox checkbox_player_availability;
-    public static FragmentCheckPlayerAvailability fragment_friend_request;
-    private final String TAG = FragmentCheckPlayerAvailability.class.getSimpleName();
+    public static FragmentMatchRoles fragment_friend_request;
+    private final String TAG = FragmentMatchRoles.class.getSimpleName();
     private String teamId = "", eventId = "", playersCount = "";
     private JSONObject jsonresponse;
+    private TextView text_captain, textViceCaptain, text_wicket_keeper, text_select_scorer,
+            text_first_scorer, text_second_scorer, text_third_scorer, text_userscorer;
+    private Spinner spinner_captain, spinner_vice_captain, spinner_wicket_keeper, spinner_select_scorer,
+            spinner_first_scorer, spinner_second_scorer, spinner_third_scorer;
 
-    public static FragmentCheckPlayerAvailability getInstance() {
+    public static FragmentMatchRoles getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new FragmentCheckPlayerAvailability();
+            fragment_friend_request = new FragmentMatchRoles();
         return fragment_friend_request;
     }
 
@@ -50,7 +53,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        mView = inflater.inflate(R.layout.fragement_check_player_availability, container, false);
+        mView = inflater.inflate(R.layout.fragement_match_roles, container, false);
         context = getActivity();
         b = getArguments();
 
@@ -71,22 +74,41 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
         getBundle();
         setlistener();
         manageHeaderView();
-        getTeamLineup();
     }
 
     private void init() {
-        checkbox_player_availability = (CheckBox) mView.findViewById(R.id.checkbox_player_availability);
-        checkbox_player_availability.setChecked(true);
         btn_create_team = (Button) mView.findViewById(R.id.btn_create_team);
+        text_captain = (TextView) mView.findViewById(R.id.text_captain);
+        textViceCaptain = (TextView) mView.findViewById(R.id.textViceCaptain);
+        text_wicket_keeper = (TextView) mView.findViewById(R.id.text_wicket_keeper);
+        text_select_scorer = (TextView) mView.findViewById(R.id.text_select_scorer);
+        text_first_scorer = (TextView) mView.findViewById(R.id.text_first_scorer);
+        text_second_scorer = (TextView) mView.findViewById(R.id.text_second_scorer);
+        text_third_scorer = (TextView) mView.findViewById(R.id.text_third_scorer);
+        text_userscorer = (TextView) mView.findViewById(R.id.text_userscorer);
+        spinner_captain = (Spinner) mView.findViewById(R.id.spinner_captain);
+        spinner_vice_captain = (Spinner) mView.findViewById(R.id.spinner_vice_captain);
+        spinner_wicket_keeper = (Spinner) mView.findViewById(R.id.spinner_wicket_keeper);
+        spinner_select_scorer = (Spinner) mView.findViewById(R.id.spinner_select_scorer);
+        spinner_first_scorer = (Spinner) mView.findViewById(R.id.spinner_first_scorer);
+        spinner_second_scorer = (Spinner) mView.findViewById(R.id.spinner_second_scorer);
+        spinner_third_scorer = (Spinner) mView.findViewById(R.id.spinner_third_scorer);
+
     }
 
     private void getBundle() {
-
         if (b != null) {
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
             playersCount = b.getString("playersCount");
+            String response = b.getString("jsonresponse");
+
+            setData();
         }
+    }
+
+    private void setData() {
+
     }
 
 
@@ -113,7 +135,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Create Team Lineup");
+        HeaderViewManager.getInstance().setHeading(true, "Match Roles");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -143,26 +165,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkbox_player_availability.isChecked()) {
-                    FragmentPrepareLineup fragmentPrepareLineup = new FragmentPrepareLineup();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("teamId", teamId);
-                    bundle.putString("eventId", eventId);
-                    bundle.putString("playersCount", playersCount);
-                    bundle.putString("jsonresponse", jsonresponse.toString());
-                    fragmentPrepareLineup.setArguments(bundle);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
-                } else {
-                    FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("teamId", teamId);
-                    bundle.putString("eventId", eventId);
-                    bundle.putString("playersCount", playersCount);
-                    bundle.putString("jsonresponse", jsonresponse.toString());
-                    fragmentPrepareLineup.setArguments(bundle);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
 
-                }
             }
         });
     }
@@ -189,12 +192,6 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     jsonresponse = response;
 
-                    String checkAvailability = response.getString("checkAvailability");
-                    if (checkAvailability.equalsIgnoreCase("0")) {
-                        checkbox_player_availability.setChecked(false);
-                    } else {
-                        checkbox_player_availability.setChecked(true);
-                    }
                 } else {
                 }
             }
