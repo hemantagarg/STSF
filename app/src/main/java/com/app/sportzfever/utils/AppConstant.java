@@ -37,6 +37,11 @@ public class AppConstant {
     public static final String MATCHSTATUS_ENDED = "ENDED";
     public static final String MATCHSTATUS_NOTSTARTED = "NOT STARTED";
     public static final String MATCHSTATUS_STARTED = "STARTED";
+    public static final String BATSMAN = "Batsman";
+    public static final String BOWLER = "Bowler";
+    public static final String WICKET_KEEPER = "Wicket Keeper";
+    public static final String ALL_ROUNDER = "All Rounder";
+
 
     /*
        * Change this to your publishable key.

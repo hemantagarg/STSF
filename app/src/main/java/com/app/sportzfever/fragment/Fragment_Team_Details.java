@@ -55,6 +55,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     private LinearLayout ll_follow;
     String isTeamMember = "", isTeamfollower = "";
     private String id = "";
+    private boolean isTeamOwnerOrCaptain = false;
     private String teamAvatarId = "";
 
     public static Fragment_Team_Details getInstance() {
@@ -119,8 +120,10 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             if (AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("ownerId")) ||
                     AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("captainId"))) {
                 btn_join_team.setVisibility(View.GONE);
+                isTeamOwnerOrCaptain = true;
             } else {
                 btn_join_team.setVisibility(View.VISIBLE);
+                isTeamOwnerOrCaptain = false;
             }
 
             if (isTeamMember.equalsIgnoreCase("1")) {
@@ -347,9 +350,11 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         tab1.setArguments(b1);
         adapter.addFrag(tab1, "Gallery");
 
-        FragmentUpcomingTournamentEvent tab3 = new FragmentUpcomingTournamentEvent();
+        FragmentTeamEventList tab3 = new FragmentTeamEventList();
         Bundle b2 = new Bundle();
+        b2.putString("teamid", id);
         b2.putString("teamavtarid", teamAvatarId);
+        b2.putBoolean("isTeamOwnerOrCaptain", isTeamOwnerOrCaptain);
         tab3.setArguments(b2);
         adapter.addFrag(tab3, "Event");
 

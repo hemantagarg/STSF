@@ -60,6 +60,7 @@
                 android:layout_width="@dimen/dp20"
                 android:layout_height="@dimen/dp20"
                 android:layout_marginRight="@dimen/dp10"
+                android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_gravity="right" />
 

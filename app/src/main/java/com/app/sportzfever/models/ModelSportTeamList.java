@@ -26,12 +26,11 @@ public class ModelSportTeamList {
     private String location;
 
     private String ownerId;
-
-
+    private int isAdded = 0;
 
     private String sportName;
 
-    private String requestStatus;
+    private String requestStatus, addedStatus = "Invitation not sent";
 
     private String jerseyNumber;
 
@@ -45,69 +44,56 @@ public class ModelSportTeamList {
 
     private String avatar;
 
-    public String getRequestStatus ()
-    {
+    public String getRequestStatus() {
         return requestStatus;
     }
 
-    public void setRequestStatus (String requestStatus)
-    {
+    public void setRequestStatus(String requestStatus) {
         this.requestStatus = requestStatus;
     }
 
-    public String getJerseyNumber ()
-    {
+    public String getJerseyNumber() {
         return jerseyNumber;
     }
 
-    public void setJerseyNumber (String jerseyNumber)
-    {
+    public void setJerseyNumber(String jerseyNumber) {
         this.jerseyNumber = jerseyNumber;
     }
 
-    public String getAvatarName ()
-    {
+    public String getAvatarName() {
         return avatarName;
     }
 
-    public void setAvatarName (String avatarName)
-    {
+    public void setAvatarName(String avatarName) {
         this.avatarName = avatarName;
     }
 
-    public String getPlayerName ()
-    {
+    public String getPlayerName() {
         return playerName;
     }
 
-    public void setPlayerName (String playerName)
-    {
+    public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
-    public String getSpeciality ()
-    {
+    public String getSpeciality() {
         return speciality;
     }
 
-    public void setSpeciality (String speciality)
-    {
+    public void setSpeciality(String speciality) {
         this.speciality = speciality;
     }
 
 
-
-    public String getAvatar ()
-    {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar (String avatar)
-    {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
-    private String teamId="";
+    private String teamId = "";
 
     private String totalPlayersInTeam;
 
@@ -125,164 +111,148 @@ public class ModelSportTeamList {
 
     private String fansCount;
 
-    public String getTeamName ()
-    {
+    public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName (String teamName)
-    {
+    public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
 
-    public String getOwnerName ()
-    {
+    public String getOwnerName() {
         return ownerName;
     }
 
-    public void setOwnerName (String ownerName)
-    {
+    public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
     }
 
-    public String getTeamAvatarId ()
-    {
+    public String getTeamAvatarId() {
         return teamAvatarId;
     }
 
-    public void setTeamAvatarId (String teamAvatarId)
-    {
+    public void setTeamAvatarId(String teamAvatarId) {
         this.teamAvatarId = teamAvatarId;
     }
 
-    public String getLocation ()
-    {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation (String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public String getOwnerId ()
-    {
+    public String getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId (String ownerId)
-    {
+    public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
 
-    public String getProfilePicture ()
-    {
+    public String getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture (String profilePicture)
-    {
+    public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
 
-    public String getSportName ()
-    {
+    public String getSportName() {
         return sportName;
     }
 
-    public void setSportName (String sportName)
-    {
+    public void setSportName(String sportName) {
         this.sportName = sportName;
     }
 
 
-    public String getTeamId ()
-    {
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId (String teamId)
-    {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
-    public String getTotalPlayersInTeam ()
-    {
+    public String getTotalPlayersInTeam() {
         return totalPlayersInTeam;
     }
 
-    public void setTotalPlayersInTeam (String totalPlayersInTeam)
-    {
+    public void setTotalPlayersInTeam(String totalPlayersInTeam) {
         this.totalPlayersInTeam = totalPlayersInTeam;
     }
 
-    public String getOwnerPic ()
-    {
+    public String getOwnerPic() {
         return ownerPic;
     }
 
-    public void setOwnerPic (String ownerPic)
-    {
+    public void setOwnerPic(String ownerPic) {
         this.ownerPic = ownerPic;
     }
 
-    public String getIsActive ()
-    {
+    public String getIsActive() {
         return isActive;
     }
 
-    public void setIsActive (String isActive)
-    {
+    public void setIsActive(String isActive) {
         this.isActive = isActive;
     }
 
-    public String getCaptainName ()
-    {
+    public String getCaptainName() {
         return captainName;
     }
 
-    public void setCaptainName (String captainName)
-    {
+    public void setCaptainName(String captainName) {
         this.captainName = captainName;
     }
 
-    public String getCaptainId ()
-    {
+    public String getCaptainId() {
         return captainId;
     }
 
-    public void setCaptainId (String captainId)
-    {
+    public void setCaptainId(String captainId) {
         this.captainId = captainId;
     }
 
-    public String getDescription ()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription (String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getCaptainPic ()
-    {
+    public String getCaptainPic() {
         return captainPic;
     }
 
-    public void setCaptainPic (String captainPic)
-    {
+    public void setCaptainPic(String captainPic) {
         this.captainPic = captainPic;
     }
 
-    public String getFansCount ()
-    {
+    public String getFansCount() {
         return fansCount;
     }
 
-    public void setFansCount (String fansCount)
-    {
+    public void setFansCount(String fansCount) {
         this.fansCount = fansCount;
+    }
+
+    public int getIsAdded() {
+        return isAdded;
+    }
+
+    public void setIsAdded(int isAdded) {
+        this.isAdded = isAdded;
+    }
+
+    public String getAddedStatus() {
+        return addedStatus;
+    }
+
+    public void setAddedStatus(String addedStatus) {
+        this.addedStatus = addedStatus;
     }
 }

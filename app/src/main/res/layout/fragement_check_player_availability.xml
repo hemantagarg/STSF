@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/rl_header"
+        layout="@layout/header_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header"
+        android:padding="@dimen/dp20">
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="@dimen/dp15"
+                android:layout_height="@dimen/dp15"
+                android:background="@drawable/red_outline_circle" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp2"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/view_color" />
+
+            <ImageView
+                android:layout_width="@dimen/dp15"
+                android:layout_height="@dimen/dp15"
+                android:background="@drawable/red_outline_circle" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp2"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/view_color" />
+
+            <ImageView
+                android:layout_width="@dimen/dp15"
+                android:layout_height="@dimen/dp15"
+                android:background="@drawable/red_outline_circle" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear1"
+            android:layout_marginTop="@dimen/dp5"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select Match"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/text_size_12" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="Prepare Lineup"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/text_size_12" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="Let's Play"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/text_size_12" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/text_create_lineup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp20"
+            android:padding="@dimen/dp10"
+            android:text="Create Team Lineup"
+            android:textColor="@color/text_color_black"
+            android:textSize="@dimen/text_size_20" />
+
+        <CheckBox
+            android:id="@+id/checkbox_player_availability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_create_lineup"
+            android:layout_marginTop="@dimen/dp10"
+            android:padding="@dimen/dp10"
+            android:text="Check fo player availability"
+            android:textColor="@color/text_color_black"
+            android:textSize="@dimen/text_size_16" />
+
+        <TextView
+            android:id="@+id/text_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkbox_player_availability"
+            android:layout_centerHorizontal="true"
+            android:text="(Uncheck section to directly add players to lineup)"
+            android:textColor="@color/text_color_black"
+            android:textSize="@dimen/text_size_13" />
+
+
+        <Button
+            android:id="@+id/btn_create_team"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/text_info"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp30"
+            android:background="@drawable/blue_button_selecor"
+            android:paddingBottom="@dimen/dp5"
+            android:paddingLeft="@dimen/dp20"
+            android:paddingRight="@dimen/dp20"
+            android:paddingTop="@dimen/dp5"
+            android:text="Create Lineup"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size_15" />
+
+    </RelativeLayout>
+</RelativeLayout>

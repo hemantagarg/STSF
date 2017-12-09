@@ -33,13 +33,12 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentUpcomingTournamentEvent extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentTeamEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
     private Bundle b;
     private Context context;
-
     private AdapterUpcomingTournamentEvent adapterUpcomingEvent;
     private UpcomingEvent upcomingEvent;
     private ArrayList<UpcomingEvent> arrayList;
@@ -51,13 +50,14 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
     private boolean loading = true;
     private TextView text_nodata;
     private String maxlistLength = "";
-    private String avtarid = "", teamavtarid = "";
-    public static FragmentUpcomingTournamentEvent fragment_teamJoin_request;
-    private final String TAG = FragmentUpcomingTournamentEvent.class.getSimpleName();
+    private String teamid = "", teamavtarid = "";
+    public static FragmentTeamEventList fragment_teamJoin_request;
+    private final String TAG = FragmentTeamEventList.class.getSimpleName();
+    private boolean isTeamOwnerOrCaptain = false;
 
-    public static FragmentUpcomingTournamentEvent getInstance() {
+    public static FragmentTeamEventList getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentUpcomingTournamentEvent();
+            fragment_teamJoin_request = new FragmentTeamEventList();
         return fragment_teamJoin_request;
     }
 
@@ -97,6 +97,8 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
         Bundle bundle = getArguments();
         if (bundle != null) {
             teamavtarid = bundle.getString("teamavtarid");
+            teamid = bundle.getString("teamid");
+            isTeamOwnerOrCaptain = bundle.getBoolean("isTeamOwnerOrCaptain");
         }
     }
 
@@ -122,24 +124,32 @@ public class FragmentUpcomingTournamentEvent extends BaseFragment implements Api
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
             if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
-                if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
-                    Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", arrayList.get(position).getId());
-                    fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
-                    FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", arrayList.get(position).getId());
-                    fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
-                    Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", arrayList.get(position).getId());
-                    fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                if (isTeamOwnerOrCaptain) {
+                    FragmentCheckPlayerAvailability fragment_postFeed = new FragmentCheckPlayerAvailability();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("teamId", teamid);
+                    fragment_postFeed.setArguments(bundle);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                } else {
+                    if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
+                        Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", arrayList.get(position).getId());
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", arrayList.get(position).getId());
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+                        Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", arrayList.get(position).getId());
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    }
                 }
             }
         }

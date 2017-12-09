@@ -133,6 +133,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+
             }
         });
 
