@@ -2,10 +2,14 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +23,14 @@ import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.ModelSportTeamList;
 import com.app.sportzfever.utils.AppUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 06-01-2016.
@@ -41,6 +49,19 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             text_first_scorer, text_second_scorer, text_third_scorer, text_userscorer;
     private Spinner spinner_captain, spinner_vice_captain, spinner_wicket_keeper, spinner_select_scorer,
             spinner_first_scorer, spinner_second_scorer, spinner_third_scorer;
+    private ModelSportTeamList modelSportTeamList;
+    private ArrayList<ModelSportTeamList> arrayList = new ArrayList<>();
+    private ArrayList<String> arrayListCaptain = new ArrayList<>();
+    private ArrayList<String> arrayListViceCaptain = new ArrayList<>();
+    private ArrayList<String> arrayListWicketKeeper = new ArrayList<>();
+    private ArrayList<String> arrayListFirstScorer = new ArrayList<>();
+    private ArrayList<String> arrayListSecondScorer = new ArrayList<>();
+    private ArrayList<String> arrayListThirdScorer = new ArrayList<>();
+    private ArrayList<String> arrayListScorerType = new ArrayList<>();
+    private ArrayAdapter<String> adapterCaptain, adapterViceCaptain, adapterWicketKeeper, adapterScorerType, adapterFirstScorer,
+            adapterThirdScorer, adapterSecondScorer;
+    private LinearLayout linear_teamlineup;
+    private boolean isFirstTime = true;
 
     public static FragmentMatchRoles getInstance() {
         if (fragment_friend_request == null)
@@ -76,6 +97,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         manageHeaderView();
     }
 
+
     private void init() {
         btn_create_team = (Button) mView.findViewById(R.id.btn_create_team);
         text_captain = (TextView) mView.findViewById(R.id.text_captain);
@@ -93,24 +115,69 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         spinner_first_scorer = (Spinner) mView.findViewById(R.id.spinner_first_scorer);
         spinner_second_scorer = (Spinner) mView.findViewById(R.id.spinner_second_scorer);
         spinner_third_scorer = (Spinner) mView.findViewById(R.id.spinner_third_scorer);
-
+        linear_teamlineup = (LinearLayout) mView.findViewById(R.id.linear_teamlineup);
     }
 
     private void getBundle() {
+
         if (b != null) {
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
             playersCount = b.getString("playersCount");
             String response = b.getString("jsonresponse");
+            Log.e("respnse", response);
+            setData(response);
+        }
 
-            setData();
+    }
+
+    private void setData(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray newMatchlineUp = jsonObject.getJSONArray("newMatchlineUp");
+            for (int i = 0; i < newMatchlineUp.length(); i++) {
+                JSONObject jo = newMatchlineUp.getJSONObject(i);
+                modelSportTeamList = new ModelSportTeamList();
+                modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
+                modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                modelSportTeamList.setIsReservedPlayer(jo.getString("isReservedPlayer"));
+                modelSportTeamList.setOrder(jo.getString("order"));
+                modelSportTeamList.setSpeciality(jo.getString("role"));
+                arrayList.add(modelSportTeamList);
+            }
+            setSpinnerData();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void setData() {
+    private void setSpinnerData() {
 
+        arrayListScorerType.add("User");
+        arrayListScorerType.add("Team Lineup");
+        adapterScorerType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListScorerType);
+        spinner_second_scorer.setAdapter(adapterScorerType);
+
+        adapterCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListCaptain);
+        spinner_captain.setAdapter(adapterCaptain);
+
+        adapterViceCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListViceCaptain);
+        spinner_vice_captain.setAdapter(adapterViceCaptain);
+
+        adapterWicketKeeper = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListWicketKeeper);
+        spinner_wicket_keeper.setAdapter(adapterWicketKeeper);
+
+        adapterFirstScorer = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListFirstScorer);
+        spinner_first_scorer.setAdapter(adapterFirstScorer);
+
+        adapterSecondScorer = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListSecondScorer);
+        spinner_second_scorer.setAdapter(adapterSecondScorer);
+
+        adapterThirdScorer = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListThirdScorer);
+        spinner_third_scorer.setAdapter(adapterThirdScorer);
     }
-
 
     private void getTeamLineup() {
         try {
@@ -168,6 +235,104 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
             }
         });
+        text_userscorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+        text_captain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_captain.performClick();
+            }
+        });
+
+        textViceCaptain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_vice_captain.performClick();
+            }
+        });
+        text_wicket_keeper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_wicket_keeper.performClick();
+            }
+        });
+
+        text_select_scorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_select_scorer.performClick();
+            }
+        });
+        text_first_scorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_first_scorer.performClick();
+            }
+        });
+        text_second_scorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_second_scorer.performClick();
+            }
+        });
+        text_third_scorer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinner_third_scorer.performClick();
+            }
+        });
+        spinner_select_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    if (position == 0) {
+                        text_userscorer.setVisibility(View.VISIBLE);
+                        linear_teamlineup.setVisibility(View.GONE);
+                    } else {
+                        text_userscorer.setVisibility(View.GONE);
+                        linear_teamlineup.setVisibility(View.VISIBLE);
+                    }
+                    text_select_scorer.setText(spinner_select_scorer.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_captain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    text_captain.setText(spinner_captain.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_vice_captain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    textViceCaptain.setText(spinner_captain.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     @Override

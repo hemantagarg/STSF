@@ -12,6 +12,7 @@ public class ModelSearchPeoples {
     private String totalPost;
     private String totalTeam;
     private String totalFriend;
+    private boolean ischecked;
     private String currentLocation, noOfTeam, totalMatch;
     private int rowType;
 
@@ -404,5 +405,13 @@ public class ModelSearchPeoples {
 
     public void setNotGoing(String notGoing) {
         this.notGoing = notGoing;
+    }
+
+    public boolean ischecked() {
+        return ischecked;
+    }
+
+    public void setIschecked(boolean ischecked) {
+        this.ischecked = ischecked;
     }
 }
