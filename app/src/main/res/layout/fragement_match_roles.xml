@@ -265,7 +265,8 @@
                 android:id="@+id/linear_teamlineup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -399,6 +400,7 @@
                 android:background="@drawable/edit_bg"
                 android:drawablePadding="@dimen/dp10"
                 android:drawableRight="@drawable/right_arrow"
+                android:gravity="center_vertical"
                 android:padding="@dimen/dp5"
                 android:text="Select Scorer"
                 android:textColor="@color/black"

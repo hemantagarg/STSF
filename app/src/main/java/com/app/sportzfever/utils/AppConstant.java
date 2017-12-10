@@ -56,4 +56,5 @@ public class AppConstant {
             "pk_test_s32DYwH0LJTPxtQqVbOddSHy";
 
 
+    public static int FRAGMENT_CODE = 201;
 }

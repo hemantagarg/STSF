@@ -1,14 +1,19 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +36,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by admin on 06-01-2016.
  */
@@ -46,6 +53,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
+    private TextView text_save;
     private boolean loading = true;
     public static Fragment_SearchUserList fragment_friend_request;
     private final String TAG = Fragment_SearchUserList.class.getSimpleName();
@@ -54,6 +62,8 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private String maxlistLength = "";
     private View mView;
     private int addedCount = 0;
+    private EditText edt_search;
+    private ImageView image_search;
 
     public static Fragment_SearchUserList getInstance() {
         if (fragment_friend_request == null)
@@ -85,6 +95,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        text_save = (TextView) view.findViewById(R.id.text_save);
+        image_search = (ImageView) view.findViewById(R.id.image_search);
+        edt_search = (EditText) view.findViewById(R.id.edt_search);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
@@ -170,7 +183,6 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         };
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -179,6 +191,40 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     }
 
     private void setlistener() {
+        image_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!edt_search.getText().toString().equalsIgnoreCase("")) {
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, "Please enter something to search", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    getServicelistRefresh();
+                    return true;
+                }
+                return false;
+            }
+        });
+        text_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addedCount > 0) {
+                    JSONObject jsonObject = makeJsonRequest();
+                    Intent intent = new Intent(context, Fragment_SearchUserList.class);
+                    intent.putExtra("userData", jsonObject.toString());
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+                    context.onBackPressed();
+                } else {
+                    Toast.makeText(context, "Please select atleast one user", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -241,23 +287,43 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
 
     }
 
+    private JSONObject makeJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < arrayList.size(); i++) {
+                JSONObject jsonObject1 = new JSONObject();
+                if (arrayList.get(i).ischecked()) {
+                    jsonObject1.put("id", arrayList.get(i).getUserId());
+                    jsonObject1.put("name", arrayList.get(i).getName());
+                    array.put(jsonObject1);
+                }
+            }
+            jsonObject.put("userList", array);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            if (addedCount <= 3) {
-                if (arrayList.get(position).ischecked()) {
-                    arrayList.get(position).setIschecked(false);
-                    addedCount--;
-                } else {
+            if (arrayList.get(position).ischecked()) {
+                arrayList.get(position).setIschecked(false);
+                addedCount--;
+            } else {
+                if (addedCount < 3) {
                     arrayList.get(position).setIschecked(true);
                     addedCount++;
+                } else {
+                    Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
                 }
-                adapterSearchUserList.notifyDataSetChanged();
-            } else {
-                Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
             }
+            adapterSearchUserList.notifyDataSetChanged();
         }
+
     }
 
 
@@ -289,7 +355,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCH + AppUtils.getUserId(context)
-                        + "/" + "ALL/" + keyword + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                        + "/" + "PEOPLE/" + edt_search.getText().toString() + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
@@ -306,9 +372,8 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCH + AppUtils.getUserId(context)
-                        + "/" + "ALL/" + keyword + "/0/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-
+                        + "/" + "PEOPLE/" + edt_search.getText().toString() + "/0/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -325,11 +390,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                 AppUtils.onKeyBoardDown(context);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    JSONObject peoples = data.getJSONObject("peoples");
 
-                    JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                    maxlistLength = peoples.getString("totalPeoples");
-                    arrayList.clear();
+                    JSONArray peoplesArray = data.getJSONArray("peoples");
+                    maxlistLength = data.getString("totalPeoples");
                     for (int i = 0; i < peoplesArray.length(); i++) {
 
                         JSONObject jo = peoplesArray.getJSONObject(i);
@@ -376,10 +439,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    JSONObject peoples = data.getJSONObject("peoples");
                     arrayList.remove(arrayList.size() - 1);
-                    JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                    maxlistLength = peoples.getString("totalPeoples");
+                    JSONArray peoplesArray = data.getJSONArray("peoples");
+                    maxlistLength = data.getString("totalPeoples");
 
                     for (int i = 0; i < peoplesArray.length(); i++) {
 

@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +21,12 @@ import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -31,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by admin on 06-01-2016.
@@ -142,7 +147,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
                 modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
                 modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
-                modelSportTeamList.setIsReservedPlayer(jo.getString("isReservedPlayer"));
+                //  modelSportTeamList.setIsReservedPlayer(jo.getString("isReservedPlayer"));
                 modelSportTeamList.setOrder(jo.getString("order"));
                 modelSportTeamList.setSpeciality(jo.getString("role"));
                 arrayList.add(modelSportTeamList);
@@ -158,7 +163,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         arrayListScorerType.add("User");
         arrayListScorerType.add("Team Lineup");
         adapterScorerType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListScorerType);
-        spinner_second_scorer.setAdapter(adapterScorerType);
+        spinner_select_scorer.setAdapter(adapterScorerType);
 
         adapterCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListCaptain);
         spinner_captain.setAdapter(adapterCaptain);
@@ -238,8 +243,9 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         text_userscorer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                Fragment_SearchUserList fragmentSearchUserList = new Fragment_SearchUserList();
+                fragmentSearchUserList.setTargetFragment(FragmentMatchRoles.this, AppConstant.FRAGMENT_CODE);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
             }
         });
         text_captain.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +305,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                     }
                     text_select_scorer.setText(spinner_select_scorer.getSelectedItem().toString());
                 }
+                isFirstTime = false;
             }
 
             @Override
@@ -325,6 +332,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 if (!isFirstTime) {
                     textViceCaptain.setText(spinner_captain.getSelectedItem().toString());
                 }
+                isFirstTime = false;
             }
 
             @Override
@@ -333,6 +341,37 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             }
         });
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                String userData = data.getStringExtra("userData");
+                Log.e("userData", userData);
+                setUserData(userData);
+            }
+        }
+    }
+
+    private void setUserData(String userData) {
+        try {
+            JSONObject jsonObject = new JSONObject(userData);
+            String names = "";
+            JSONArray userList = jsonObject.getJSONArray("userList");
+            for (int i = 0; i < userList.length(); i++) {
+                JSONObject jo = userList.getJSONObject(i);
+                if (names.equalsIgnoreCase("")) {
+                    names = jo.getString("name");
+                } else {
+                    names = names + "," + jo.getString("name");
+                }
+            }
+            text_userscorer.setText(names);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
