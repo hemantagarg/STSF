@@ -18,9 +18,11 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterUpcomingTournamentEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.GlobalConstants;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.UpcomingEvent;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
  */
 public class FragmentCreateEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
+    View mView;
 
     private RecyclerView list_request;
     private Bundle b;
@@ -72,12 +75,12 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragement_create_event, container, false);
+         mView = inflater.inflate(R.layout.fragement_create_event, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
 
-        return view_about;
+        return mView;
     }
 
 
@@ -95,16 +98,41 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         listShare.add("Event (Public)");
-        listShare.add("Meet Up (With In Team )");
-        listShare.add("Practise (With In Team )");
-        listShare.add("Match (Public )");
+        listShare.add("Meet Up (With In Team)");
+        listShare.add("Practise (With In Team)");
+        listShare.add("Match (Public)");
         adapterShare = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listShare);
         spinnerShareWith.setAdapter(adapterShare);
         getBundle();
+        manageHeaderView();
         setlistener();
         getServicelistRefresh();
     }
+    private void manageHeaderView() {
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
 
+        HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Create Event");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                getActivity().onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
     private void getBundle() {
 
         Bundle bundle = getArguments();
@@ -186,7 +214,6 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         try {
             if (position == 1) {
                 if (context != null && isAdded()) {
-                    getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
