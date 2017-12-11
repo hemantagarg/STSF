@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,9 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     public static FragmentCreateEventList fragment_teamJoin_request;
     private final String TAG = FragmentCreateEventList.class.getSimpleName();
     private boolean isTeamOwnerOrCaptain = false;
+    private ArrayList<String> listShare = new ArrayList<>();
+    private ArrayAdapter<String> adapterShare;
+    private Spinner spinnerShareWith;
 
     public static FragmentCreateEventList getInstance() {
         if (fragment_teamJoin_request == null)
@@ -85,11 +90,19 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         floating_create_event = (FloatingActionButton) view.findViewById(R.id.floating_create_event);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        listShare.add("Event (Public)");
+        listShare.add("Meet Up (With In Team )");
+        listShare.add("Practise (With In Team )");
+        listShare.add("Match (Public )");
+        adapterShare = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listShare);
+        spinnerShareWith.setAdapter(adapterShare);
         getBundle();
         setlistener();
         getServicelistRefresh();
