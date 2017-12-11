@@ -45,14 +45,13 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private AdapterUpcomingTournamentEvent adapterUpcomingEvent;
     private UpcomingEvent upcomingEvent;
     private ArrayList<UpcomingEvent> arrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+   // private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConnectionDetector cd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
     private TextView text_nodata;
-    private FloatingActionButton floating_create_event;
     private String maxlistLength = "";
     private String teamid = "", teamavtarid = "";
     public static FragmentCreateEventList fragment_teamJoin_request;
@@ -86,14 +85,12 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
-        list_request = (RecyclerView) view.findViewById(R.id.list_request);
+
+        list_request = (RecyclerView) view.findViewById(R.id.floating_create_event);
         layoutManager = new LinearLayoutManager(context);
         spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
 
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
-        floating_create_event = (FloatingActionButton) view.findViewById(R.id.floating_create_event);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -123,27 +120,9 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     }
 
     private void setlistener() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                getServicelistRefresh();
-            }
-        });
-
-        floating_create_event.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment_Create_Event fragment_postFeed = new Fragment_Create_Event();
-                Bundle bundle = new Bundle();
-                bundle.putString("id", AppUtils.getUserId(context));
-                fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
-
-            }
 
 
-        });
+
     }
 
     @Override
@@ -250,9 +229,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                     adapterUpcomingEvent = new AdapterUpcomingTournamentEvent(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterUpcomingEvent);
 
-                    if (mSwipeRefreshLayout != null) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+
                     if (arrayList.size() > 0) {
                         text_nodata.setVisibility(View.GONE);
                     } else {
@@ -262,9 +239,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText("No Upcoming Event found");
-                    if (mSwipeRefreshLayout != null) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+
                 }
 
             } else if (position == 4) {
