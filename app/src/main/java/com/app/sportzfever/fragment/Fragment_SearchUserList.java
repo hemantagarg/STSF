@@ -425,11 +425,11 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                         text_nodata.setVisibility(View.GONE);
                     } else {
                         text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Friend found");
+                        text_nodata.setText("No User found");
                     }
                 } else {
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Friend  found");
+                    text_nodata.setText("No User found");
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

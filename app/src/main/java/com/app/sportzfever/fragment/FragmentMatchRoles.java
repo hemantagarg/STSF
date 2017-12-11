@@ -67,6 +67,9 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             adapterThirdScorer, adapterSecondScorer;
     private LinearLayout linear_teamlineup;
     private boolean isFirstTime = true;
+    private String teamCheckAvailibility = "", selectedFirstScorer = "", selectedSecondScorer = "", selectedThirdScorer = "";
+    private JSONObject jsonObject;
+    private JSONObject selectedUserList;
 
     public static FragmentMatchRoles getInstance() {
         if (fragment_friend_request == null)
@@ -129,6 +132,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
             playersCount = b.getString("playersCount");
+            teamCheckAvailibility = b.getString("teamCheckAvailibility");
             String response = b.getString("jsonresponse");
             Log.e("respnse", response);
             setData(response);
@@ -138,13 +142,14 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
     private void setData(String response) {
         try {
-            JSONObject jsonObject = new JSONObject(response);
+            jsonObject = new JSONObject(response);
             JSONArray newMatchlineUp = jsonObject.getJSONArray("newMatchlineUp");
             for (int i = 0; i < newMatchlineUp.length(); i++) {
                 JSONObject jo = newMatchlineUp.getJSONObject(i);
                 modelSportTeamList = new ModelSportTeamList();
                 modelSportTeamList.setAvtarId(jo.getString("avatarId"));
                 modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                modelSportTeamList.setPlayerName(jo.getString("playerName"));
                 modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
                 modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
                 //  modelSportTeamList.setIsReservedPlayer(jo.getString("isReservedPlayer"));
@@ -164,6 +169,15 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         arrayListScorerType.add("Team Lineup");
         adapterScorerType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListScorerType);
         spinner_select_scorer.setAdapter(adapterScorerType);
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            arrayListCaptain.add(arrayList.get(i).getPlayerName());
+            arrayListViceCaptain.add(arrayList.get(i).getPlayerName());
+            arrayListWicketKeeper.add(arrayList.get(i).getPlayerName());
+            arrayListFirstScorer.add(arrayList.get(i).getPlayerName());
+            arrayListSecondScorer.add(arrayList.get(i).getPlayerName());
+            arrayListThirdScorer.add(arrayList.get(i).getPlayerName());
+        }
 
         adapterCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListCaptain);
         spinner_captain.setAdapter(adapterCaptain);
@@ -237,7 +251,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                JSONObject jsonObject = makeJsonRequest();
             }
         });
         text_userscorer.setOnClickListener(new View.OnClickListener() {
@@ -330,7 +344,81 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (!isFirstTime) {
-                    textViceCaptain.setText(spinner_captain.getSelectedItem().toString());
+                    textViceCaptain.setText(spinner_vice_captain.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_first_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    if (selectedFirstScorer.equalsIgnoreCase("")) {
+                        removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
+                    } else {
+                        addItemInArrayList(selectedFirstScorer, "1");
+                        removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
+                    }
+                    selectedFirstScorer = spinner_first_scorer.getSelectedItem().toString();
+                    text_first_scorer.setText(spinner_first_scorer.getSelectedItem().toString());
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_second_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    if (selectedSecondScorer.equalsIgnoreCase("")) {
+                        removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
+                    } else {
+                        addItemInArrayList(selectedSecondScorer, "2");
+                        removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
+                    }
+                    selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
+                    text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_wicket_keeper.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    text_wicket_keeper.setText(spinner_wicket_keeper.getSelectedItem().toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_third_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (!isFirstTime) {
+                    if (selectedThirdScorer.equalsIgnoreCase("")) {
+                        removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
+                    } else {
+                        addItemInArrayList(selectedThirdScorer, "3");
+                        removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
+                    }
+                    selectedThirdScorer = spinner_third_scorer.getSelectedItem().toString();
+                    text_third_scorer.setText(spinner_third_scorer.getSelectedItem().toString());
                 }
                 isFirstTime = false;
             }
@@ -340,7 +428,60 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
             }
         });
+    }
 
+    private void removeItemFromArrayList(String name, String id) {
+        if (id.equalsIgnoreCase("1")) {
+            arrayListSecondScorer.remove(name);
+            arrayListThirdScorer.remove(name);
+        } else if (id.equalsIgnoreCase("2")) {
+            arrayListFirstScorer.remove(name);
+            arrayListThirdScorer.remove(name);
+        } else if (id.equalsIgnoreCase("3")) {
+            arrayListFirstScorer.remove(name);
+            arrayListSecondScorer.remove(name);
+        }
+    }
+
+    private void addItemInArrayList(String name, String id) {
+        if (id.equalsIgnoreCase("1")) {
+            arrayListSecondScorer.add(name);
+            arrayListThirdScorer.add(name);
+        } else if (id.equalsIgnoreCase("2")) {
+            arrayListFirstScorer.add(name);
+            arrayListThirdScorer.add(name);
+        } else if (id.equalsIgnoreCase("3")) {
+            arrayListFirstScorer.add(name);
+            arrayListSecondScorer.add(name);
+        }
+    }
+
+    private JSONObject makeJsonRequest() {
+        try {
+            JSONArray newMatchlineUp = new JSONArray();
+            jsonObject.put("teamCheckAvailibility", teamCheckAvailibility);
+            JSONArray scorers = new JSONArray();
+            if (spinner_select_scorer.getSelectedItemPosition() == 0) {
+                if (selectedUserList != null) {
+                    JSONArray userList = selectedUserList.getJSONArray("userList");
+                    for (int i = 0; i < userList.length(); i++) {
+                        JSONObject jo1 = userList.getJSONObject(i);
+                        JSONObject userId = new JSONObject();
+                        userId.put("userId", jo1.getString("id"));
+                        userId.put("order", i + 1 + "");
+                        scorers.put(userId);
+                    }
+                }
+            } else {
+
+            }
+            jsonObject.put("scorers", scorers);
+            Log.e("jsonbjet", jsonObject.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     @Override
@@ -357,9 +498,9 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
     private void setUserData(String userData) {
         try {
-            JSONObject jsonObject = new JSONObject(userData);
+            selectedUserList = new JSONObject(userData);
             String names = "";
-            JSONArray userList = jsonObject.getJSONArray("userList");
+            JSONArray userList = selectedUserList.getJSONArray("userList");
             for (int i = 0; i < userList.length(); i++) {
                 JSONObject jo = userList.getJSONObject(i);
                 if (names.equalsIgnoreCase("")) {
@@ -376,7 +517,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
     @Override
     public void onItemClickListener(int position, int flag) {
-   /*     Intent in = new Intent(context, ActivityChat.class);
+   /*   Intent in = new Intent(context, ActivityChat.class);
         if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
             in.putExtra("reciever_id", arrayList.get(position).getSenderID());
         } else {

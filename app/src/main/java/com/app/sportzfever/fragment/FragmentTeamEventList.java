@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
     private boolean loading = true;
     private TextView text_nodata;
     private FloatingActionButton floating_create_event;
+    private Button btn_create_match;
     private String maxlistLength = "";
     private String teamid = "", teamavtarid = "";
     public static FragmentTeamEventList fragment_teamJoin_request;
@@ -85,6 +87,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        btn_create_match = (Button) view.findViewById(R.id.btn_create_match);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         floating_create_event = (FloatingActionButton) view.findViewById(R.id.floating_create_event);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,7 +123,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
             }
         });
 
-        floating_create_event.setOnClickListener(new View.OnClickListener() {
+        btn_create_match.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentCreateEventList fragment_postFeed = new FragmentCreateEventList();

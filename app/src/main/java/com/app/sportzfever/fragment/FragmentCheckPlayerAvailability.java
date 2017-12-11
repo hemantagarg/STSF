@@ -76,7 +76,6 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
 
     private void init() {
         checkbox_player_availability = (CheckBox) mView.findViewById(R.id.checkbox_player_availability);
-        checkbox_player_availability.setChecked(true);
         btn_create_team = (Button) mView.findViewById(R.id.btn_create_team);
     }
 
@@ -150,6 +149,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("eventId", eventId);
                     bundle.putString("playersCount", playersCount);
                     bundle.putString("jsonresponse", jsonresponse.toString());
+                    bundle.putString("teamCheckAvailibility", "1");
                     fragmentPrepareLineup.setArguments(bundle);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
                 } else {
@@ -158,6 +158,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("teamId", teamId);
                     bundle.putString("eventId", eventId);
                     bundle.putString("playersCount", playersCount);
+                    bundle.putString("teamCheckAvailibility", "0");
                     bundle.putString("jsonresponse", jsonresponse.toString());
                     fragmentPrepareLineup.setArguments(bundle);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);

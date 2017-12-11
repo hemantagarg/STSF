@@ -57,6 +57,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
     private String teamId = "", eventId = "";
     private JSONObject jsonLinupArray;
     private String playersCount = "";
+    private String teamCheckAvailibility = "";
 
     public static FragmentPrepareLineup getInstance() {
         if (fragment_teamJoin_request == null)
@@ -139,6 +140,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             Bundle b = getArguments();
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            teamCheckAvailibility = b.getString("teamCheckAvailibility");
             playersCount = b.getString("playersCount");
             String response = b.getString("jsonresponse");
             if (!response.equalsIgnoreCase("")) {
@@ -206,6 +208,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 bundle.putString("teamId", teamId);
                 bundle.putString("eventId", eventId);
                 bundle.putString("playersCount", playersCount);
+                bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
                 bundle.putString("jsonresponse", jsonLinupArray.toString());
                 fragmentPrepareLineup.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);

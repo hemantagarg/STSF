@@ -55,6 +55,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     private ArrayList<String> listAvtarId = new ArrayList<>();
     private int totalCount = 0;
     private String eventId = "";
+    private String teamCheckAvailibility = "";
 
     public static FragmentPrepareLineupDirect getInstance() {
         if (fragment_teamJoin_request == null)
@@ -142,6 +143,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
             Bundle b = getArguments();
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            teamCheckAvailibility = b.getString("teamCheckAvailibility");
             playersCount = b.getString("playersCount");
             text_selected_players.setText("0/" + playersCount + "\nPlayers");
             String response = b.getString("jsonresponse");
@@ -209,6 +211,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                 bundle.putString("teamId", teamId);
                 bundle.putString("eventId", eventId);
                 bundle.putString("playersCount", playersCount);
+                bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
                 bundle.putString("jsonresponse", jsonObject.toString());
                 fragmentPrepareLineup.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
@@ -225,6 +228,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                 if (arrayListaddedPlayers.get(i).getIsAdded() == 1) {
                     JSONObject jo = new JSONObject();
                     jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
+                    jo.put("playerName", arrayListaddedPlayers.get(i).getPlayerName());
                     jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
                     jo.put("isInBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
                     jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());

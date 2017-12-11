@@ -36,13 +36,13 @@ public class ModelSportTeamList {
 
     private String avatarName;
 
-    private String playerName;
+    private String playerName="";
 
     private String speciality = "";
 
     private String profilePicture;
 
-    private String avatar, avtarId, isReservedPlayer;
+    private String avatar, avtarId, isReservedPlayer="0";
 
     public String getRequestStatus() {
         return requestStatus;
