@@ -159,7 +159,11 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("eventId", eventId);
                     bundle.putString("playersCount", playersCount);
                     bundle.putString("teamCheckAvailibility", "0");
-                    bundle.putString("jsonresponse", jsonresponse.toString());
+                    if (jsonresponse != null) {
+                        bundle.putString("jsonresponse", jsonresponse.toString());
+                    } else {
+                        bundle.putString("jsonresponse", "");
+                    }
                     fragmentPrepareLineup.setArguments(bundle);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
 
