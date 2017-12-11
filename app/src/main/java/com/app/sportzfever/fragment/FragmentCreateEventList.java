@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentTeamEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentCreateEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
 
     private RecyclerView list_request;
@@ -53,13 +53,13 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
     private FloatingActionButton floating_create_event;
     private String maxlistLength = "";
     private String teamid = "", teamavtarid = "";
-    public static FragmentTeamEventList fragment_teamJoin_request;
-    private final String TAG = FragmentTeamEventList.class.getSimpleName();
+    public static FragmentCreateEventList fragment_teamJoin_request;
+    private final String TAG = FragmentCreateEventList.class.getSimpleName();
     private boolean isTeamOwnerOrCaptain = false;
 
-    public static FragmentTeamEventList getInstance() {
+    public static FragmentCreateEventList getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new FragmentTeamEventList();
+            fragment_teamJoin_request = new FragmentCreateEventList();
         return fragment_teamJoin_request;
     }
 
@@ -68,7 +68,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_event_list, container, false);
+        View view_about = inflater.inflate(R.layout.fragement_create_event, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -99,9 +99,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            teamavtarid = bundle.getString("teamavtarid");
             teamid = bundle.getString("teamid");
-            isTeamOwnerOrCaptain = bundle.getBoolean("isTeamOwnerOrCaptain");
         }
     }
 
@@ -123,9 +121,9 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
         floating_create_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentCreateEventList fragment_postFeed = new FragmentCreateEventList();
+                Fragment_Create_Event fragment_postFeed = new Fragment_Create_Event();
                 Bundle bundle = new Bundle();
-                bundle.putString("teamId", teamid);
+                bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
 
@@ -179,7 +177,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/" + teamavtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/" + 87 + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

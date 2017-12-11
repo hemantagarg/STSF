@@ -294,9 +294,9 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
         tabLayout.getTabAt(0).setText("Team Profile");
         tabLayout.getTabAt(1).setText("Team Wall");
-        tabLayout.getTabAt(2).setText("Roster");
+        tabLayout.getTabAt(2).setText("Player Management");
         tabLayout.getTabAt(3).setText("Gallery");
-        tabLayout.getTabAt(4).setText("Events");
+        tabLayout.getTabAt(4).setText("Event Management");
         tabLayout.getTabAt(5).setText("Tournament Fixtures");
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));

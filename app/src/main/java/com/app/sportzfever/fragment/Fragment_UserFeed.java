@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -116,6 +117,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
         setlistener();
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void setlistener() {
@@ -571,6 +574,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
                         modelFeed.setRowType(1);
                         arrayList.add(modelFeed);
+
                     }
 
                     Log.e("size", "**" + arrayList.size());
@@ -634,7 +638,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                     } else {
                         arrayList.get(feedClickedPosition).setIsLiked("0");
                     }
+
                     adapterFeed.notifyItemChanged(feedClickedPosition);
+                    adapterFeed.notifyDataSetChanged();
+                    getServicelistRefresh();
 
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
