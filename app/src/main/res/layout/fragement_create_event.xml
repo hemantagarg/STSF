@@ -99,7 +99,7 @@
 
                 <Spinner
                     android:id="@+id/spinnerShareWith"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
@@ -107,33 +107,182 @@
 
 
             </RelativeLayout>
+
             <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="invisible"
                 android:layout_below="@+id/rl_share"
                 android:background="@color/view_color" />
-            <EditText
-                android:id="@+id/edt_text_post"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="Please Enter Event Title"
-                android:maxHeight="@dimen/dp100"
-                android:padding="@dimen/dp15"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/edt_text_post"
-                android:background="@color/view_color" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+                <EditText
+                    android:id="@+id/edt_text_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_bg"
+                    android:hint="Please Enter Event Title"
+                    android:maxHeight="@dimen/dp100"
+                    android:padding="@dimen/dp10"
+                    android:layout_margin="@dimen/dp10"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
+ <LinearLayout
+     android:id="@+id/lin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+     android:layout_below="@+id/edt_text_post"
+    android:weightSum="2">
+
+                <com.app.sportzfever.utils.CustomTextView
+                    android:id="@+id/mTvToDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/edit_bg"
+                    android:drawablePadding="@dimen/dp10"
+                    android:drawableRight="@drawable/date"
+                    android:hint="Start Date"
+                    android:layout_weight="1"
+                    android:layout_below="@+id/edt_text_post"
+
+                    android:padding="@dimen/dp10"
+                    android:textColor="@color/textcolordark"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size_15" />
+                <com.app.sportzfever.utils.CustomTextView
+                    android:id="@+id/mTvTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/edit_bg"
+                    android:drawablePadding="@dimen/dp10"
+                    android:drawableRight="@drawable/clock"
+                    android:hint="Start Time"
+                    android:layout_weight="1"
+
+                    android:layout_below="@+id/edt_text_post"
+
+                    android:padding="@dimen/dp10"
+                    android:textColor="@color/textcolordark"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size_15" />
+</LinearLayout>
+                <CheckBox
+                    android:id="@+id/checkboxend_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15"
+                    android:layout_below="@+id/lin"/>
+                <LinearLayout
+                    android:id="@+id/lin2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/checkboxend_date"
+                    android:weightSum="2">
+                    <com.app.sportzfever.utils.CustomTextView
+                        android:id="@+id/mTvToDateend"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg"
+                        android:drawablePadding="@dimen/dp10"
+                        android:drawableRight="@drawable/date"
+                        android:hint="End Date"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/edt_text_post"
+
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textColorHint="@color/text_hint_color"
+                        android:textSize="@dimen/text_size_15" />
+                    <com.app.sportzfever.utils.CustomTextView
+                        android:id="@+id/mTvTimeend"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg"
+                        android:drawablePadding="@dimen/dp10"
+                        android:drawableRight="@drawable/clock"
+                        android:hint="End Time"
+                        android:layout_weight="1"
+
+                        android:layout_below="@+id/edt_text_post"
+
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textColorHint="@color/text_hint_color"
+                        android:textSize="@dimen/text_size_15" />
+                </LinearLayout>
+                <EditText
+                    android:id="@+id/mEdtComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/edit_bg"
+                    android:hint="Location"
+                    android:singleLine="true"
+                    android:layout_below="@+id/lin2"
+                    android:padding="@dimen/dp10"
+                    android:textColor="@color/textcolordark"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size_15" />
+                <EditText
+                    android:id="@+id/mEdtdetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/edit_bg"
+                    android:hint="Details"
+                    android:layout_below="@+id/mEdtComment"
+                    android:padding="@dimen/dp10"
+                    android:textColor="@color/textcolordark"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size_15" />
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/edt_text_post"
+                    android:background="@color/view_color" />
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/event_rosterlist"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_height="wrap_content" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/floating_create_event"
                 android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp10"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
