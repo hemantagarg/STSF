@@ -17,7 +17,7 @@ public class ModelSportTeamList {
 
     private int rowType;
 
-    private String teamName;
+    private String teamName,userId;
 
     private String ownerName;
 
@@ -302,5 +302,13 @@ public class ModelSportTeamList {
 
     public void setIsReservedPlayer(String isReservedPlayer) {
         this.isReservedPlayer = isReservedPlayer;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -59,6 +59,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private ArrayList<String> arrayListNames = new ArrayList<>();
     private ArrayList<String> arrayListCaptain = new ArrayList<>();
     private ArrayList<String> arrayListAvtarId = new ArrayList<>();
+    private ArrayList<String> arrayListUserId = new ArrayList<>();
     private ArrayList<String> arrayListViceCaptain = new ArrayList<>();
     private ArrayList<String> arrayListWicketKeeper = new ArrayList<>();
     private ArrayList<String> arrayListFirstScorer = new ArrayList<>();
@@ -136,13 +137,14 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             playersCount = b.getString("playersCount");
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             String response = b.getString("jsonresponse");
+            String linepArray = b.getString("linepArray");
             Log.e("respnse", response);
-            setData(response);
+            setData(response, linepArray);
         }
 
     }
 
-    private void setData(String response) {
+    private void setData(String response, String linepArray) {
         try {
             jsonObject = new JSONObject(response);
             JSONArray newMatchlineUp = jsonObject.getJSONArray("newMatchlineUp");
@@ -150,6 +152,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 JSONObject jo = newMatchlineUp.getJSONObject(i);
                 modelSportTeamList = new ModelSportTeamList();
                 modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                modelSportTeamList.setUserId(jo.getString("userId"));
                 modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
                 modelSportTeamList.setPlayerName(jo.getString("playerName"));
                 modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
@@ -160,6 +163,23 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 arrayList.add(modelSportTeamList);
             }
             setSpinnerData();
+            setSelectedItems(linepArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSelectedItems(String response) {
+        try {
+            if (!response.equalsIgnoreCase("")) {
+                JSONObject jObject = new JSONObject(response);
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject matchRoles = jObject.getJSONObject("matchRoles");
+
+
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,6 +201,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
         for (int i = 0; i < arrayList.size(); i++) {
             arrayListAvtarId.add(arrayList.get(i).getAvtarId());
+            arrayListUserId.add(arrayList.get(i).getUserId());
             arrayListNames.add(arrayList.get(i).getPlayerName());
             arrayListCaptain.add(arrayList.get(i).getPlayerName());
             arrayListViceCaptain.add(arrayList.get(i).getPlayerName());
@@ -475,21 +496,21 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 }
             } else {
                 if (spinner_first_scorer.getSelectedItem() != null && spinner_first_scorer.getSelectedItemPosition() != 0) {
-                    String id = gteAvtarIdFromList(spinner_first_scorer.getSelectedItem().toString());
+                    String id = gteUserIdFromList(spinner_first_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
                     userId.put("order", "1");
                     scorers.put(userId);
                 }
                 if (spinner_second_scorer.getSelectedItem() != null && spinner_second_scorer.getSelectedItemPosition() != 0) {
-                    String id = gteAvtarIdFromList(spinner_second_scorer.getSelectedItem().toString());
+                    String id = gteUserIdFromList(spinner_second_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
                     userId.put("order", "2");
                     scorers.put(userId);
                 }
                 if (spinner_third_scorer.getSelectedItem() != null && spinner_third_scorer.getSelectedItemPosition() != 0) {
-                    String id = gteAvtarIdFromList(spinner_third_scorer.getSelectedItem().toString());
+                    String id = gteUserIdFromList(spinner_third_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
                     userId.put("order", "3");
@@ -549,6 +570,17 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
         return id;
     }
+
+    private String gteUserIdFromList(String name) {
+        String id = "";
+        for (int i = 0; i < arrayList.size(); i++) {
+            int pos = arrayListNames.indexOf(name);
+            id = arrayListUserId.get(pos);
+        }
+
+        return id;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
