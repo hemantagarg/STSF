@@ -73,6 +73,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private String teamCheckAvailibility = "", selectedFirstScorer = "", selectedSecondScorer = "", selectedThirdScorer = "";
     private JSONObject jsonObject;
     private JSONObject selectedUserList;
+    private String matchId = "";
 
     public static FragmentMatchRoles getInstance() {
         if (fragment_friend_request == null)
@@ -147,6 +148,8 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private void setData(String response, String linepArray) {
         try {
             jsonObject = new JSONObject(response);
+            JSONObject lineuparray = new JSONObject(linepArray);
+            matchId = lineuparray.getString("matchId");
             JSONArray newMatchlineUp = jsonObject.getJSONArray("newMatchlineUp");
             for (int i = 0; i < newMatchlineUp.length(); i++) {
                 JSONObject jo = newMatchlineUp.getJSONObject(i);
@@ -162,8 +165,8 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 modelSportTeamList.setSpeciality(jo.getString("role"));
                 arrayList.add(modelSportTeamList);
             }
-            setSpinnerData();
-            setSelectedItems(linepArray);
+            setSpinnerData(linepArray);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,7 +178,57 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 JSONObject jObject = new JSONObject(response);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject matchRoles = jObject.getJSONObject("matchRoles");
+                    JSONObject captain = matchRoles.getJSONObject("captain");
+                    if (captain.has("avatarId")) {
+                        if (arrayListAvtarId.contains(captain.getString("avatarId"))) {
+                            int pos = arrayListAvtarId.indexOf(captain.getString("avatarId"));
+                            spinner_captain.setSelection(pos + 1);
+                        }
+                    }
+                    JSONObject viceCaptain = matchRoles.getJSONObject("viceCaptain");
+                    if (viceCaptain.has("avatarId")) {
+                        if (arrayListAvtarId.contains(viceCaptain.getString("avatarId"))) {
+                            int po1 = arrayListAvtarId.indexOf(viceCaptain.getString("avatarId"));
+                            spinner_vice_captain.setSelection(po1 + 1);
+                        }
+                    }
+                    JSONObject wicketKeeper = matchRoles.getJSONObject("wicketKeeper");
+                    if (viceCaptain.has("avatarId")) {
+                        if (arrayListAvtarId.contains(wicketKeeper.getString("avatarId"))) {
+                            int po1 = arrayListAvtarId.indexOf(wicketKeeper.getString("avatarId"));
+                            spinner_wicket_keeper.setSelection(po1 + 1);
+                        }
+                    }
+                    JSONArray scorers = jObject.getJSONArray("scorers");
+                    int size = scorers.length();
+                    if (size > 0) {
+                        JSONObject jo = scorers.getJSONObject(0);
+                        if (jo.has("scorerId")) {
+                            if (arrayListUserId.contains(jo.getString("scorerId"))) {
+                                int po1 = arrayListUserId.indexOf(jo.getString("scorerId"));
+                                spinner_first_scorer.setSelection(po1 + 1);
+                            }
+                        }
+                        if (size > 1) {
+                            JSONObject jo1 = scorers.getJSONObject(1);
+                            if (jo1.has("scorerId")) {
+                                if (arrayListUserId.contains(jo1.getString("scorerId"))) {
+                                    int po1 = arrayListUserId.indexOf(jo1.getString("scorerId"));
+                                    spinner_second_scorer.setSelection(po1 + 1);
+                                }
+                            }
+                        }
+                        if (size > 2) {
+                            JSONObject jo2 = scorers.getJSONObject(2);
+                            if (jo2.has("scorerId")) {
+                                if (arrayListUserId.contains(jo2.getString("scorerId"))) {
+                                    int po1 = arrayListUserId.indexOf(jo2.getString("scorerId"));
+                                    spinner_third_scorer.setSelection(po1 + 1);
+                                }
+                            }
+                        }
 
+                    }
 
                 }
             }
@@ -185,12 +238,13 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         }
     }
 
-    private void setSpinnerData() {
+    private void setSpinnerData(String linepArray) {
 
         arrayListScorerType.add("User");
         arrayListScorerType.add("Team Lineup");
         adapterScorerType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListScorerType);
         spinner_select_scorer.setAdapter(adapterScorerType);
+        spinner_select_scorer.setSelection(1);
 
         arrayListCaptain.add("Select Captain");
         arrayListWicketKeeper.add("Select Wicket Keeper");
@@ -228,6 +282,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
 
         adapterThirdScorer = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListThirdScorer);
         spinner_third_scorer.setAdapter(adapterThirdScorer);
+        setSelectedItems(linepArray);
     }
 
     private void getTeamLineup() {
@@ -290,6 +345,11 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             @Override
             public void onClick(View view) {
                 Fragment_SearchUserList fragmentSearchUserList = new Fragment_SearchUserList();
+                if (selectedUserList != null) {
+                    Bundle b = new Bundle();
+                    b.putString("selectedUser", selectedUserList.toString());
+                    fragmentSearchUserList.setArguments(b);
+                }
                 fragmentSearchUserList.setTargetFragment(FragmentMatchRoles.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
             }
@@ -536,6 +596,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 jsonObject.put("wicketKeeper", captain);
             }
             jsonObject.put("scorers", scorers);
+            jsonObject.put("matchId", matchId);
             Log.e("jsonbjet", jsonObject.toString());
             sentInvite();
         } catch (Exception e) {

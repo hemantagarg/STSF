@@ -49,7 +49,8 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private AdapterSearchUserList adapterSearchUserList;
     private ModelSearchPeoples userFriendList;
     private TextView text_nodata;
-    private ArrayList<ModelSearchPeoples> arrayList;
+    private ArrayList<ModelSearchPeoples> arrayList = new ArrayList<>();
+    private ArrayList<ModelSearchPeoples> arrayListAddedUsers = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
@@ -106,47 +107,45 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     }
 
     private void getBundle() {
-/*
         try {
             Bundle bundle = getArguments();
             if (bundle != null) {
-                String data = bundle.getString("data");
-                keyword = bundle.getString("keyword");
-                JSONObject jsonObject = new JSONObject(data);
-                JSONObject peoples = jsonObject.getJSONObject("peoples");
+                if (bundle.containsKey("selectedUser")) {
+                    String data = bundle.getString("selectedUser");
 
-                JSONArray peoplesArray = peoples.getJSONArray("peoples");
-                maxlistLength = peoples.getString("totalPeoples");
-                arrayList.clear();
-                for (int i = 0; i < peoplesArray.length(); i++) {
+                    JSONObject jsonObject = new JSONObject(data);
 
-                    JSONObject jo = peoplesArray.getJSONObject(i);
+                    JSONArray userList = jsonObject.getJSONArray("userList");
 
-                    userFriendList = new ModelSearchPeoples();
-                    userFriendList.setUserId(jo.getString("userId"));
-                    userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                    userFriendList.setTotalPost(jo.getString("totalPost"));
-                    userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                    userFriendList.setName(jo.getString("name"));
-                    userFriendList.setEmail(jo.getString("email"));
-                    userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                    userFriendList.setAbout(jo.getString("about"));
-                    userFriendList.setHometown(jo.getString("hometown"));
-                    userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                    userFriendList.setProfilePicture(jo.getString("profilePicture"));
+                    for (int i = 0; i < userList.length(); i++) {
 
-                    userFriendList.setRowType(1);
+                        JSONObject jo = userList.getJSONObject(i);
 
-                    arrayList.add(userFriendList);
+                        userFriendList = new ModelSearchPeoples();
+                        userFriendList.setUserId(jo.getString("id"));
+                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
+                        userFriendList.setTotalPost(jo.getString("totalPost"));
+                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
+                        userFriendList.setName(jo.getString("name"));
+                        userFriendList.setEmail(jo.getString("email"));
+                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
+                        userFriendList.setAbout(jo.getString("about"));
+                        userFriendList.setHometown(jo.getString("hometown"));
+                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
+                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
+                        userFriendList.setIschecked(true);
+                        userFriendList.setRowType(1);
+
+                        arrayListAddedUsers.add(userFriendList);
+                    }
+                    adapterSearchUserList = new AdapterSearchUserList(getActivity(), this, arrayListAddedUsers);
+                    list_request.setAdapter(adapterSearchUserList);
+                    addedCount = arrayListAddedUsers.size();
                 }
-                adapterSearchUserList = new AdapterSearchUserList(getActivity(), this, arrayList);
-                list_request.setAdapter(adapterSearchUserList);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-*/
     }
 
     /*******************************************************************
@@ -205,7 +204,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    getServicelistRefresh();
+                    if (!edt_search.getText().toString().equalsIgnoreCase("")) {
+                        getServicelistRefresh();
+                    }
                     return true;
                 }
                 return false;
@@ -292,10 +293,19 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         try {
             JSONArray array = new JSONArray();
             for (int i = 0; i < arrayList.size(); i++) {
-                JSONObject jsonObject1 = new JSONObject();
                 if (arrayList.get(i).ischecked()) {
+                    JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("id", arrayList.get(i).getUserId());
                     jsonObject1.put("name", arrayList.get(i).getName());
+                    jsonObject1.put("totalFriend", arrayList.get(i).getTotalFriend());
+                    jsonObject1.put("totalPost", arrayList.get(i).getTotalPost());
+                    jsonObject1.put("totalTeam", arrayList.get(i).getTotalTeam());
+                    jsonObject1.put("email", arrayList.get(i).getEmail());
+                    jsonObject1.put("dateOfBirth", arrayList.get(i).getDateOfBirth());
+                    jsonObject1.put("about", arrayList.get(i).getAbout());
+                    jsonObject1.put("hometown", arrayList.get(i).getHometown());
+                    jsonObject1.put("currentLocation", arrayList.get(i).getCurrentLocation());
+                    jsonObject1.put("profilePicture", arrayList.get(i).getProfilePicture());
                     array.put(jsonObject1);
                 }
             }
@@ -312,41 +322,28 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         if (flag == 1) {
             if (arrayList.get(position).ischecked()) {
                 arrayList.get(position).setIschecked(false);
+                addInlist(position, false);
                 addedCount--;
             } else {
                 if (addedCount < 3) {
                     arrayList.get(position).setIschecked(true);
                     addedCount++;
+                    addInlist(position, true);
                 } else {
                     Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
                 }
             }
             adapterSearchUserList.notifyDataSetChanged();
         }
-
     }
 
-
-    private void acceptTeamrequest(String id, String ADDFRIEND) {
-        try {
-            AppUtils.onKeyBoardDown(context);
-            if (AppUtils.isNetworkAvailable(context)) {
-
-                JSONObject jsonObject = new JSONObject();
-
-                jsonObject.put("toUserId", id);
-                jsonObject.put("fromUserId", AppUtils.getUserId(context));
-                jsonObject.put("type", ADDFRIEND);
-
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDASFRIEND;
-                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void addInlist(int position, boolean add) {
+        if (add) {
+            arrayListAddedUsers.add(arrayList.get(position));
+        } else {
+            arrayListAddedUsers.remove(arrayList.get(position));
         }
+        Log.e("arraysize", "**" + arrayListAddedUsers.size());
     }
 
     private void onLoadMore() {
@@ -390,7 +387,10 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                 AppUtils.onKeyBoardDown(context);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-
+                    arrayList.clear();
+                    if (arrayListAddedUsers.size() > 0) {
+                        arrayList.addAll(arrayListAddedUsers);
+                    }
                     JSONArray peoplesArray = data.getJSONArray("peoples");
                     maxlistLength = data.getString("totalPeoples");
                     for (int i = 0; i < peoplesArray.length(); i++) {
