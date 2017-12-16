@@ -79,6 +79,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
 
     }
 
+
     /*****************************************************************************
      * Function name - manageHeaderClick
      * Description - manage the click on the left and right image view of header
@@ -101,6 +102,8 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
     @Override
     public void onResume() {
         super.onResume();
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
         setData();
     }
 

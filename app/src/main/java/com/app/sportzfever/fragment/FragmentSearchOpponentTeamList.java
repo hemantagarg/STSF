@@ -41,7 +41,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by admin on 06-01-2016.
  */
-public class Fragment_SearchUserList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_request;
     private Bundle b;
@@ -56,8 +56,8 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private int skipCount = 0;
     private TextView text_save;
     private boolean loading = true;
-    public static Fragment_SearchUserList fragment_friend_request;
-    private final String TAG = Fragment_SearchUserList.class.getSimpleName();
+    public static FragmentSearchOpponentTeamList fragment_friend_request;
+    private final String TAG = FragmentSearchOpponentTeamList.class.getSimpleName();
     private String keyword = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private String maxlistLength = "";
@@ -66,9 +66,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private EditText edt_search;
     private ImageView image_search;
 
-    public static Fragment_SearchUserList getInstance() {
+    public static FragmentSearchOpponentTeamList getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new Fragment_SearchUserList();
+            fragment_friend_request = new FragmentSearchOpponentTeamList();
         return fragment_friend_request;
     }
 
@@ -136,7 +136,6 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                         userFriendList.setIschecked(true);
                         userFriendList.setRowType(1);
 
-                        arrayListAddedUsers.add(userFriendList);
                         arrayList.add(userFriendList);
                     }
                     adapterSearchUserList = new AdapterSearchUserList(getActivity(), this, arrayList);
@@ -218,7 +217,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
             public void onClick(View view) {
                 if (addedCount > 0) {
                     JSONObject jsonObject = makeJsonRequest();
-                    Intent intent = new Intent(context, Fragment_SearchUserList.class);
+                    Intent intent = new Intent(context, FragmentSearchOpponentTeamList.class);
                     intent.putExtra("userData", jsonObject.toString());
                     getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
                     context.onBackPressed();
@@ -367,10 +366,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private void getServicelistRefresh() {
         AppUtils.onKeyBoardDown(context);
         try {
-            skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCH + AppUtils.getUserId(context)
-                        + "/" + "PEOPLE/" + edt_search.getText().toString() + "/0/" + AppUtils.getAuthToken(context);
+                // http://sfscoring.betasportzfever.com/searchTeams/challenger/479a44a634f82b0394f78352d302ec36
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCHTEAM_CHALLENGER + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
