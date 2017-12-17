@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +59,10 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     private int totalCount = 0;
     private String eventId = "";
     private String teamCheckAvailibility = "", linepArray = "";
+    private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7, text_name8, text_name9, text_name10, text_name11;
+    private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
+    private ImageView image_cross;
+    private RelativeLayout rl_preview, rl_previewopen;
 
     public static FragmentPrepareLineupDirect getInstance() {
         if (fragment_teamJoin_request == null)
@@ -114,6 +121,13 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        init(view);
+        manageHeaderView();
+        getBundle();
+        setlistener();
+    }
+
+    private void init(View view) {
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         list_added_players = (RecyclerView) view.findViewById(R.id.list_added_players);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
@@ -121,6 +135,32 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
         text_AR_count = (TextView) view.findViewById(R.id.text_AR_count);
         text_bat_count = (TextView) view.findViewById(R.id.text_bat_count);
         text_Bowl_count = (TextView) view.findViewById(R.id.text_Bowl_count);
+
+        text_name5 = (TextView) view.findViewById(R.id.text_name5);
+        text_name1 = (TextView) view.findViewById(R.id.text_name1);
+        text_name2 = (TextView) view.findViewById(R.id.text_name2);
+        text_name3 = (TextView) view.findViewById(R.id.text_name3);
+        text_name4 = (TextView) view.findViewById(R.id.text_name4);
+        text_name6 = (TextView) view.findViewById(R.id.text_name6);
+        text_name7 = (TextView) view.findViewById(R.id.text_name7);
+        text_name8 = (TextView) view.findViewById(R.id.text_name8);
+        text_name9 = (TextView) view.findViewById(R.id.text_name9);
+        text_name10 = (TextView) view.findViewById(R.id.text_name10);
+        text_name11 = (TextView) view.findViewById(R.id.text_name11);
+        ll1 = (LinearLayout) view.findViewById(R.id.ll1);
+        ll2 = (LinearLayout) view.findViewById(R.id.ll2);
+        ll3 = (LinearLayout) view.findViewById(R.id.ll3);
+        ll4 = (LinearLayout) view.findViewById(R.id.ll4);
+        ll5 = (LinearLayout) view.findViewById(R.id.ll5);
+        ll6 = (LinearLayout) view.findViewById(R.id.ll6);
+        ll7 = (LinearLayout) view.findViewById(R.id.ll7);
+        ll8 = (LinearLayout) view.findViewById(R.id.ll8);
+        ll9 = (LinearLayout) view.findViewById(R.id.ll9);
+        ll10 = (LinearLayout) view.findViewById(R.id.ll10);
+        ll11 = (LinearLayout) view.findViewById(R.id.ll11);
+        image_cross = (ImageView) view.findViewById(R.id.image_cross);
+        rl_preview = (RelativeLayout) view.findViewById(R.id.rl_preview);
+        rl_previewopen = (RelativeLayout) view.findViewById(R.id.rl_previewopen);
         text_selected_players = (TextView) view.findViewById(R.id.text_selected_players);
         text_Wk_count = (TextView) view.findViewById(R.id.text_Wk_count);
         btn_next = (Button) view.findViewById(R.id.btn_next);
@@ -133,9 +173,6 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
         arrayListaddedPlayers = new ArrayList<>();
         adapterTeamAddedPlayersLineup = new AdapterTeamAddedPlayersLineupDirect(context, this, arrayListaddedPlayers);
         list_added_players.setAdapter(adapterTeamAddedPlayersLineup);
-        manageHeaderView();
-        getBundle();
-        setlistener();
     }
 
     private void getBundle() {
@@ -220,6 +257,27 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
             }
         });
+
+        rl_previewopen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPreviewData();
+                rl_preview.setVisibility(View.VISIBLE);
+            }
+        });
+        image_cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rl_preview.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setPreviewData() {
+        if (arrayListaddedPlayers!=null && arrayListaddedPlayers.size()>0)
+        {
+
+        }
     }
 
     private JSONObject makeJsonRequest() {

@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,10 +21,13 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 06-01-2016.
@@ -33,11 +38,21 @@ public class FragmentAvtarBioEdit extends BaseFragment implements ApiResponse, O
     private Bundle b;
     private Activity context;
     private ModelAvtarProfile modelAvtarProfile;
-    private EditText avtar_name, avtar_battinghand, avtar_jersery_number, avtar_battingstyle,
-            avtar_bowlingstyle, avtar_bowlinghand, avtar_speciality, avtar_favouritefieldposition, avtar_aboutme;
+    private EditText avtar_name, avtar_jersery_number,
+            avtar_aboutme;
     public static FragmentAvtarBioEdit fragment_teamJoin_request;
     private final String TAG = FragmentAvtarBioEdit.class.getSimpleName();
     private String avtarId = "";
+    private Spinner spinner_battinghand, spinner_battingstyle, spinner_bowlingstyle,
+            spinner_bowlinghand, spinner_speciality, spinner_field_position;
+    ArrayList<String> listBattinghand = new ArrayList<>();
+    ArrayList<String> listBattingStyle = new ArrayList<>();
+    ArrayList<String> listBowlingStyle = new ArrayList<>();
+    ArrayList<String> listBowlinghand = new ArrayList<>();
+    ArrayList<String> listSpeciality = new ArrayList<>();
+    ArrayList<String> listFieldPosition = new ArrayList<>();
+    ArrayAdapter<String> adapterBattinghand, adapterBattingStyle, adapterBowlingStyle,
+            adapterBowlinghand, adapterSpeciality, adapterFieldPosition;
     View view_about;
 
     public static FragmentAvtarBioEdit getInstance() {
@@ -101,17 +116,77 @@ public class FragmentAvtarBioEdit extends BaseFragment implements ApiResponse, O
         super.onViewCreated(view, savedInstanceState);
 
         avtar_name = (EditText) view.findViewById(R.id.avtar_name);
-        avtar_battinghand = (EditText) view.findViewById(R.id.avtar_battinghand);
         avtar_jersery_number = (EditText) view.findViewById(R.id.avtar_jersery_number);
-        avtar_battingstyle = (EditText) view.findViewById(R.id.avtar_battingstyle);
-        avtar_bowlingstyle = (EditText) view.findViewById(R.id.avtar_bowlingstyle);
-        avtar_bowlinghand = (EditText) view.findViewById(R.id.avtar_bowlinghand);
-        avtar_speciality = (EditText) view.findViewById(R.id.avtar_speciality);
-        avtar_favouritefieldposition = (EditText) view.findViewById(R.id.avtar_favouritefieldposition);
         avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
         btn_submit = (Button) view.findViewById(R.id.btn_submit);
-        getBundle();
+        spinner_battinghand = (Spinner) view.findViewById(R.id.spinner_battinghand);
+        spinner_battingstyle = (Spinner) view.findViewById(R.id.spinner_battingstyle);
+        spinner_bowlingstyle = (Spinner) view.findViewById(R.id.spinner_bowlingstyle);
+        spinner_bowlinghand = (Spinner) view.findViewById(R.id.spinner_bowlinghand);
+        spinner_speciality = (Spinner) view.findViewById(R.id.spinner_speciality);
+        spinner_field_position = (Spinner) view.findViewById(R.id.spinner_field_position);
+        setSpinnerdata();
         setlistener();
+    }
+
+    private void setSpinnerdata() {
+
+        listBattinghand.add(AppConstant.NA);
+        listBattinghand.add(AppConstant.RIGHTHAND);
+        listBattinghand.add(AppConstant.LEFTHAND);
+        adapterBattinghand = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBattinghand);
+        spinner_battinghand.setAdapter(adapterBattinghand);
+
+        listBowlinghand.add(AppConstant.NA);
+        listBowlinghand.add(AppConstant.RIGHTHAND);
+        listBowlinghand.add(AppConstant.LEFTHAND);
+        adapterBowlinghand = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBowlinghand);
+        spinner_bowlinghand.setAdapter(adapterBowlinghand);
+
+        listBattingStyle.add(AppConstant.NA);
+        listBattingStyle.add(AppConstant.DEFENSIVE);
+        listBattingStyle.add(AppConstant.AGGRESIVE);
+        listBattingStyle.add(AppConstant.MODERATE);
+        adapterBattingStyle = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBattingStyle);
+        spinner_battingstyle.setAdapter(adapterBattingStyle);
+
+        listBowlingStyle.add(AppConstant.NA);
+        listBowlingStyle.add(AppConstant.FAST);
+        listBowlingStyle.add(AppConstant.MEDIUM);
+        listBowlingStyle.add(AppConstant.SLOW);
+        listBowlingStyle.add(AppConstant.OFF_BREAK_SPIN);
+        listBowlingStyle.add(AppConstant.LEG_BREAK_SPIN);
+        adapterBowlingStyle = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBowlingStyle);
+        spinner_bowlingstyle.setAdapter(adapterBowlingStyle);
+
+
+        listSpeciality.add(AppConstant.NA);
+        listSpeciality.add(AppConstant.BATSMAN);
+        listSpeciality.add(AppConstant.BOWLER);
+        listSpeciality.add(AppConstant.WICKET_KEEPER);
+        listSpeciality.add(AppConstant.ALL_ROUNDER);
+        adapterSpeciality = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listSpeciality);
+        spinner_speciality.setAdapter(adapterSpeciality);
+
+        listFieldPosition.add(AppConstant.NA);
+        listFieldPosition.add(AppConstant.SLIP);
+        listFieldPosition.add(AppConstant.SHORT_LEG);
+        listFieldPosition.add(AppConstant.WICKET_KEEPER);
+        listFieldPosition.add(AppConstant.MID_WICKET);
+        listFieldPosition.add(AppConstant.DEEP_MID_WICKET);
+        listFieldPosition.add(AppConstant.FINE_LEG);
+        listFieldPosition.add(AppConstant.SILLY_POINT);
+        listFieldPosition.add(AppConstant.LONG_ON);
+        listFieldPosition.add(AppConstant.LONG_OFF);
+        listFieldPosition.add(AppConstant.MID_ON);
+        listFieldPosition.add(AppConstant.SQUARE_LEG);
+        listFieldPosition.add(AppConstant.DEEP_SQUARE_LEG);
+        listFieldPosition.add(AppConstant.POINT);
+        listFieldPosition.add(AppConstant.DEEP_COVER);
+        listFieldPosition.add(AppConstant.THIRD_MAN);
+        adapterFieldPosition = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listFieldPosition);
+        spinner_field_position.setAdapter(adapterFieldPosition);
+        getBundle();
     }
 
     private void getBundle() {
@@ -125,12 +200,37 @@ public class FragmentAvtarBioEdit extends BaseFragment implements ApiResponse, O
                 avtarId = jo.getString("avatarId");
                 avtar_name.setText(jo.getString("name"));
                 avtar_aboutme.setText(jo.getString("description"));
-                avtar_battinghand.setText(jo.getString("battingHand"));
-                avtar_battingstyle.setText(jo.getString("battingStyle"));
-                avtar_bowlingstyle.setText(jo.getString("bowlingStyle"));
-                avtar_bowlinghand.setText(jo.getString("bowlingHand"));
-                avtar_speciality.setText(jo.getString("speciality"));
-                avtar_favouritefieldposition.setText(jo.getString("favouriteFieldPosition"));
+                if (jo.getString("battingHand") != null && !jo.getString("battingHand").equalsIgnoreCase("")) {
+                    if (listBattinghand.contains(jo.getString("battingHand"))) {
+                        spinner_battinghand.setSelection(listBattinghand.indexOf(jo.getString("battingHand")));
+                    }
+                }
+
+                if (jo.getString("battingStyle") != null && !jo.getString("battingStyle").equalsIgnoreCase("")) {
+                    if (listBattingStyle.contains(jo.getString("battingStyle"))) {
+                        spinner_battingstyle.setSelection(listBattingStyle.indexOf(jo.getString("battingStyle")));
+                    }
+                }
+                if (jo.getString("bowlingStyle") != null && !jo.getString("bowlingStyle").equalsIgnoreCase("")) {
+                    if (listBowlingStyle.contains(jo.getString("bowlingStyle"))) {
+                        spinner_bowlingstyle.setSelection(listBowlingStyle.indexOf(jo.getString("bowlingStyle")));
+                    }
+                }
+                if (jo.getString("bowlingHand") != null && !jo.getString("bowlingHand").equalsIgnoreCase("")) {
+                    if (listBowlinghand.contains(jo.getString("bowlingHand"))) {
+                        spinner_bowlinghand.setSelection(listBowlinghand.indexOf(jo.getString("bowlingHand")));
+                    }
+                }
+                if (jo.getString("speciality") != null && !jo.getString("speciality").equalsIgnoreCase("")) {
+                    if (listSpeciality.contains(jo.getString("speciality"))) {
+                        spinner_speciality.setSelection(listSpeciality.indexOf(jo.getString("speciality")));
+                    }
+                }
+                if (jo.getString("favouriteFieldPosition") != null && !jo.getString("favouriteFieldPosition").equalsIgnoreCase("")) {
+                    if (listFieldPosition.contains(jo.getString("favouriteFieldPosition"))) {
+                        spinner_field_position.setSelection(listFieldPosition.indexOf(jo.getString("favouriteFieldPosition")));
+                    }
+                }
                 avtar_jersery_number.setText(jo.getString("jersyNumber"));
 
             }
@@ -164,12 +264,12 @@ public class FragmentAvtarBioEdit extends BaseFragment implements ApiResponse, O
                 jsonObject.put("sportName", "Cricket");
                 jsonObject.put("avatarId", avtarId);
                 jsonObject.put("name", avtar_name.getText().toString());
-                jsonObject.put("battingHand", avtar_battinghand.getText().toString());
-                jsonObject.put("battingStyle", avtar_battingstyle.getText().toString());
-                jsonObject.put("bowlingHand", avtar_bowlinghand.getText().toString());
-                jsonObject.put("bowlingStyle", avtar_bowlingstyle.getText().toString());
-                jsonObject.put("speciality", avtar_speciality.getText().toString());
-                jsonObject.put("favouriteFieldPosition", avtar_favouritefieldposition.getText().toString());
+                jsonObject.put("battingHand", spinner_battinghand.getSelectedItem().toString());
+                jsonObject.put("battingStyle", spinner_battingstyle.getSelectedItem().toString());
+                jsonObject.put("bowlingHand", spinner_bowlinghand.getSelectedItem().toString());
+                jsonObject.put("bowlingStyle", spinner_bowlingstyle.getSelectedItem().toString());
+                jsonObject.put("speciality", spinner_speciality.getSelectedItem().toString());
+                jsonObject.put("favouriteFieldPosition", spinner_field_position.getSelectedItem().toString());
                 jsonObject.put("jersyNumber", avtar_jersery_number.getText().toString());
                 jsonObject.put("description", avtar_aboutme.getText().toString());
 

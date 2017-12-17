@@ -36,26 +36,6 @@
                     android:padding="@dimen/dp10"
                     android:textColor="@color/text_hint_color"
                     android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
-
-                <EditText
-                    android:id="@+id/avtar_battinghand"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Batting Hand"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </android.support.design.widget.TextInputLayout>
@@ -73,106 +53,159 @@
                     android:padding="@dimen/dp10"
                     android:textColor="@color/text_hint_color"
                     android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Batting Hand"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
 
-                <EditText
-                    android:id="@+id/avtar_battingstyle"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_battinghand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Batting Style"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent" />
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Batting Style"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
 
-                <EditText
-                    android:id="@+id/avtar_bowlingstyle"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_battingstyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Bowling Style"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent" />
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Bowling Style"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
 
-                <EditText
-                    android:id="@+id/avtar_bowlinghand"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_bowlingstyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Bowling Hand"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent" />
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Bowling Hand"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
 
-                <EditText
-                    android:id="@+id/avtar_speciality"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_bowlinghand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Speciality"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent" />
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
 
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Speciality"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
 
-                <EditText
-                    android:id="@+id/avtar_favouritefieldposition"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_speciality"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Favourite Field Position"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent" />
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp10"
+                android:paddingTop="@dimen/dp5"
+                android:text="Favourite Field Position"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp5"
+                android:layout_marginRight="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/edit_bg">
+
+                <Spinner
+                    android:id="@+id/spinner_field_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:layout_marginTop="@dimen/dp10">
 
                 <EditText
                     android:id="@+id/avtar_aboutme"
@@ -182,7 +215,6 @@
                     android:padding="@dimen/dp10"
                     android:textColor="@color/text_hint_color"
                     android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </android.support.design.widget.TextInputLayout>

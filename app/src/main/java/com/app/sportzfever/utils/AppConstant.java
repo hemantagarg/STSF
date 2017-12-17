@@ -42,7 +42,31 @@ public class AppConstant {
     public static final String PENDING = "PENDING";
     public static final String WICKET_KEEPER = "Wicket Keeper";
     public static final String ALL_ROUNDER = "All Rounder";
-
+    public static final String NA = "N/A";
+    public static final String RIGHTHAND = "Right Hand";
+    public static final String LEFTHAND = "Left Hand";
+    public static final String DEFENSIVE = "Defensive";
+    public static final String AGGRESIVE = "Aggresive";
+    public static final String MODERATE = "Moderate";
+    public static final String FAST = "Fast";
+    public static final String MEDIUM = "Medium";
+    public static final String SLOW = "Slow";
+    public static final String OFF_BREAK_SPIN = "Off Break spin";
+    public static final String LEG_BREAK_SPIN = "Leg Break spin";
+    public static final String LONG_OFF = "Long Off";
+    public static final String SLIP = "Slip";
+    public static final String SHORT_LEG = "Short Leg";
+    public static final String MID_WICKET = "Mid Wicket";
+    public static final String DEEP_MID_WICKET = "Deep Mid Wicket";
+    public static final String FINE_LEG = "Fine Leg";
+    public static final String SILLY_POINT = "Silly Point";
+    public static final String LONG_ON = "Long On";
+    public static final String MID_ON = "Mid On";
+    public static final String SQUARE_LEG = "Squre Leg";
+    public static final String DEEP_SQUARE_LEG = "Deep Squre Leg";
+    public static final String POINT = "Point";
+    public static final String DEEP_COVER = "Deep Cover";
+    public static final String THIRD_MAN = "Third Man";
 
     /*
        * Change this to your publishable key.
