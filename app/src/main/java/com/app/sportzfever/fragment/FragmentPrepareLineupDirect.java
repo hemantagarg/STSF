@@ -274,9 +274,79 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     }
 
     private void setPreviewData() {
-        if (arrayListaddedPlayers!=null && arrayListaddedPlayers.size()>0)
-        {
+        ArrayList<ModelSportTeamList> addedPlayes = new ArrayList<>();
+        for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
+            if (arrayListaddedPlayers.get(i).getIsAdded() == 1) {
+                addedPlayes.add(arrayListaddedPlayers.get(i));
+            }
+        }
+        ll1.setVisibility(View.VISIBLE);
+        ll2.setVisibility(View.VISIBLE);
+        ll3.setVisibility(View.VISIBLE);
+        ll4.setVisibility(View.VISIBLE);
+        ll5.setVisibility(View.VISIBLE);
+        ll6.setVisibility(View.VISIBLE);
+        ll7.setVisibility(View.VISIBLE);
+        ll8.setVisibility(View.VISIBLE);
+        ll9.setVisibility(View.VISIBLE);
+        ll10.setVisibility(View.VISIBLE);
+        ll11.setVisibility(View.VISIBLE);
+        if (addedPlayes.size() > 0) {
+            text_name1.setText(addedPlayes.get(0).getPlayerName());
+            if (addedPlayes.size() > 1)
+                text_name2.setText(addedPlayes.get(1).getPlayerName());
+            else
+                ll2.setVisibility(View.GONE);
+            if (addedPlayes.size() > 2)
+                text_name3.setText(addedPlayes.get(2).getPlayerName());
+            else
+                ll3.setVisibility(View.GONE);
+            if (addedPlayes.size() > 3)
+                text_name4.setText(addedPlayes.get(3).getPlayerName());
+            else
+                ll4.setVisibility(View.GONE);
+            if (addedPlayes.size() > 4)
+                text_name5.setText(addedPlayes.get(4).getPlayerName());
+            else
+                ll5.setVisibility(View.GONE);
+            if (addedPlayes.size() > 5)
+                text_name6.setText(addedPlayes.get(5).getPlayerName());
+            else
+                ll6.setVisibility(View.GONE);
+            if (addedPlayes.size() > 6)
+                text_name7.setText(addedPlayes.get(6).getPlayerName());
+            else
+                ll7.setVisibility(View.GONE);
+            if (addedPlayes.size() > 7)
+                text_name8.setText(addedPlayes.get(7).getPlayerName());
+            else
+                ll8.setVisibility(View.GONE);
+            if (addedPlayes.size() > 8)
+                text_name9.setText(addedPlayes.get(8).getPlayerName());
+            else
+                ll9.setVisibility(View.GONE);
+            if (addedPlayes.size() > 9)
+                text_name10.setText(addedPlayes.get(9).getPlayerName());
+            else
+                ll10.setVisibility(View.GONE);
+            if (addedPlayes.size() > 10)
+                text_name11.setText(addedPlayes.get(10).getPlayerName());
+            else
+                ll11.setVisibility(View.GONE);
 
+
+        } else {
+            ll1.setVisibility(View.GONE);
+            ll2.setVisibility(View.GONE);
+            ll3.setVisibility(View.GONE);
+            ll4.setVisibility(View.GONE);
+            ll5.setVisibility(View.GONE);
+            ll6.setVisibility(View.GONE);
+            ll7.setVisibility(View.GONE);
+            ll8.setVisibility(View.GONE);
+            ll9.setVisibility(View.GONE);
+            ll10.setVisibility(View.GONE);
+            ll11.setVisibility(View.GONE);
         }
     }
 

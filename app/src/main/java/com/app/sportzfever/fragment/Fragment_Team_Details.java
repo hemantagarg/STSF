@@ -338,7 +338,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
         FragmentTeamRoster tab4 = new FragmentTeamRoster();
         Bundle b3 = new Bundle();
-        b3.putString("avtarid", id);
+        b3.putString("teamId", id);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Roaster");
 

@@ -1,13 +1,18 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -30,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by admin on 06-01-2016.
@@ -48,10 +56,11 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     private boolean loading = true;
     private View view_about;
     private TextView text_nodata;
-
+    private Button btn_add_player;
     public static FragmentTeamRoster fragment_teamJoin_request;
     private final String TAG = FragmentTeamRoster.class.getSimpleName();
-    private String avtarid = "";
+    private String teamId = "";
+    private int deletedPosition;
 
     public static FragmentTeamRoster getInstance() {
         if (fragment_teamJoin_request == null)
@@ -63,7 +72,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view_about = inflater.inflate(R.layout.fragment_teamdetail, container, false);
+        view_about = inflater.inflate(R.layout.fragment_teamroster, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -118,19 +127,18 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
+        btn_add_player = (Button) view.findViewById(R.id.btn_add_player);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         // manageHeaderView();
         getBundle();
         setlistener();
-
         getServicelistRefresh();
     }
 
     private void getBundle() {
         Bundle b = getArguments();
-        avtarid = b.getString("avtarid");
+        teamId = b.getString("teamId");
     }
 
     private void setlistener() {
@@ -140,6 +148,46 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                 getServicelistRefresh();
             }
         });
+
+        btn_add_player.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_SearchUserList fragmentSearchUserList = new Fragment_SearchUserList();
+                fragmentSearchUserList.setTargetFragment(FragmentTeamRoster.this, AppConstant.FRAGMENT_CODE);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                String userData = data.getStringExtra("userData");
+                Log.e("userData", userData);
+                addRoster(userData);
+            }
+        }
+    }
+
+    private void addRoster(String userData) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                JSONObject array = new JSONObject(userData);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("sportId", "1");
+                jsonObject.put("teamId", teamId);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.REMOVEFROMROSTER;
+                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbjectNoProgress(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -150,6 +198,63 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
             bundle.putString("id", arrayList.get(position).getAvatar());
             fragmentAvtar_details.setArguments(bundle);
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+        } else if (flag == 2) {
+            deletedPosition = position;
+            showConfirmationDialog(position);
+        }
+    }
+
+    private void showConfirmationDialog(final int position) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                context);
+
+        alertDialog.setTitle("Delete");
+
+        alertDialog.setMessage("Are you sure you want to Delete this Roster?");
+
+        alertDialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        deleteRoster(position);
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+
+    private void deleteRoster(int position) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+               /* https://sfscoring.betasportzfever.com/removeFromRoster
+                {
+                    "avatarId":"113",
+                        "sportId":"1",
+                        "teamId":"34"
+                }*/
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("avatarId", arrayList.get(position).getAvatar());
+                jsonObject.put("sportId", "1");
+                jsonObject.put("teamId", teamId);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.REMOVEFROMROSTER;
+                new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbjectNoProgress(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -160,7 +265,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + teamId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
 
             } else {
@@ -224,66 +329,19 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
-
-            } else if (position == 4) {
-
+            } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    JSONArray jtaemown = data.getJSONArray("teamThatIOwner");
-                    //  maxlistLength = jObject.getString("total");
-
-
-                    arrayList.removeAll(arrayList);
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = jtaemown.getJSONObject(i);
-
-                        modelSportTeamList = new ModelSportTeamList();
-
-
-                   /*     modelTournamentTeam.setTeamId(jo.getString("teamId"));
-
-                        modelTournamentTeam.setTeamName(jo.getString("teamName"));
-                        modelTournamentTeam.setTeamProfilePicture(jo.getString("teamProfilePicture"));
-                        modelTournamentTeam.setRowType(1);
-*/
-                 /*       JSONObject j1 = jo.getJSONObject("matchDate");
-
-                        modelPastMatches.setTime(j1.getString("time"));
-                        modelPastMatches.setDate(j1.getString("date"));
-                        modelPastMatches.setYear(j1.getString("year"));
-                        modelPastMatches.setMonthName(j1.getString("monthName"));
-                        modelPastMatches.setShortMonthName(j1.getString("ShortMonthName"));
-                        modelPastMatches.setRowType(1);*/
-
-                        arrayList.add(modelSportTeamList);
-                    }/* for (int i = 0; i < eventtime.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setShortDayName(jo.getString("shortDayName"));
-
-
-
-
-
-                        upcomingEvent.setRowType(1);
-
-                        arrayList.add(upcomingEvent);
-                    }*/
-
+                    arrayList.remove(deletedPosition);
                     adapterSportTeamList.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
                 } else {
-                    adapterSportTeamList.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 3) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {

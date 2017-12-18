@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -80,11 +82,17 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ModelSportTeamList m1 = (ModelSportTeamList) detail.get(i);
 
-            ((AdapterTeamRoster.CustomViewHolder) holder).text_avtarteamname.setText(m1.getPlayerName());
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getPlayerName());
            /* ((AdapterSportTeamList.CustomViewHolder) holder).text_jerseryno.setText(m1.getJerseyNumber());*/
-            ((AdapterTeamRoster.CustomViewHolder) holder).text_speciality.setText(m1.getSpeciality());
+            ((CustomViewHolder) holder).text_speciality.setText(m1.getSpeciality());
+            if (m1.getRequestStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                ((CustomViewHolder) holder).text_status.setTextColor(ContextCompat.getColor(mContext, R.color.button_gren));
+            } else {
+                ((CustomViewHolder) holder).text_status.setTextColor(ContextCompat.getColor(mContext, R.color.yellow));
+            }
+            ((CustomViewHolder) holder).text_status.setText(m1.getRequestStatus());
 
-            ((AdapterTeamRoster.CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
+            ((CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClickListener(i, 2);
@@ -102,7 +110,7 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Picasso.with(mContext)
                         .load(m1.getProfilePicture()).transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
-                        .into(((AdapterTeamRoster.CustomViewHolder) holder).image_avtar);
+                        .into(((CustomViewHolder) holder).image_avtar);
             }
 
         } else {
@@ -118,7 +126,7 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView text_avtarteamname, text_speciality;
+        TextView text_avtarteamname, text_speciality, text_status;
         ImageView image_avtar, image_status;
         RelativeLayout relmatchvs;
         CardView card_view;
@@ -128,6 +136,7 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             this.text_avtarteamname = (TextView) view.findViewById(R.id.text_name);
             this.text_speciality = (TextView) view.findViewById(R.id.text_speciality);
+            this.text_status = (TextView) view.findViewById(R.id.text_status);
             this.image_avtar = (ImageView) view.findViewById(R.id.image_viewers);
             this.image_status = (ImageView) view.findViewById(R.id.image_status);
             this.card_view = (CardView) view.findViewById(R.id.card_view);

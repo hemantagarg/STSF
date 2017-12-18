@@ -59,6 +59,17 @@
                     android:textColor="@color/view_color"
                     android:textSize="@dimen/text_size_16" />
 
+                <TextView
+                    android:id="@+id/text_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/image_status"
+                    android:text=""
+                    android:textColor="@color/view_color"
+                    android:textSize="@dimen/text_size_13" />
+
+
                 <ImageView
                     android:id="@+id/image_status"
                     android:layout_width="40dp"

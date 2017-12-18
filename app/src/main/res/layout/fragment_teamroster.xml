@@ -16,10 +16,6 @@
         android:textSize="@dimen/text_size_16"
         android:visibility="gone" />
 
-    <!--<include
-        android:id="@+id/rl_header"
-        layout="@layout/header_layout" />-->
-
     <RelativeLayout
         android:id="@+id/rl_main_layout"
         android:layout_width="match_parent"
@@ -39,8 +35,7 @@
             android:paddingRight="@dimen/dp10"
             android:paddingTop="@dimen/dp5"
             android:text="Add Player"
-            android:textSize="@dimen/text_size_14"
-            android:visibility="gone" />
+            android:textSize="@dimen/text_size_14" />
 
 
         <android.support.v4.widget.SwipeRefreshLayout
