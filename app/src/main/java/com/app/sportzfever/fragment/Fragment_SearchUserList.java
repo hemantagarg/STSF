@@ -157,7 +157,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Match Roles");
+        HeaderViewManager.getInstance().setHeading(true, "Search User");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
