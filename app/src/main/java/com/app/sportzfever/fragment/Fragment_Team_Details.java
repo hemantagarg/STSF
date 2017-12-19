@@ -343,6 +343,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         b3.putString("teamId", id);
         b3.putString("ownerId", ownerId);
         b3.putString("teamAvatarId", teamAvatarId);
+        b3.putBoolean("isTeamOwnerOrCaptain", isTeamOwnerOrCaptain);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Roaster");
 

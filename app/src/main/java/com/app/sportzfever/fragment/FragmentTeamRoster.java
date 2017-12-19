@@ -142,7 +142,13 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
         Bundle b = getArguments();
         teamId = b.getString("teamId");
         ownerId = b.getString("ownerId");
+        boolean isTeamOwnerOrCaptain = b.getBoolean("isTeamOwnerOrCaptain");
         teamAvatarId = b.getString("teamAvatarId");
+        if (isTeamOwnerOrCaptain) {
+            btn_add_player.setVisibility(View.VISIBLE);
+        } else {
+            btn_add_player.setVisibility(View.GONE);
+        }
     }
 
     private void setlistener() {
@@ -157,6 +163,9 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
             @Override
             public void onClick(View view) {
                 Fragment_SearchUserList fragmentSearchUserList = new Fragment_SearchUserList();
+                Bundle bundle = new Bundle();
+                bundle.putString("FromScreen", "Roster");
+                fragmentSearchUserList.setArguments(bundle);
                 fragmentSearchUserList.setTargetFragment(FragmentTeamRoster.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
             }
@@ -178,14 +187,24 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     private void addRoster(String userData) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                JSONObject array = new JSONObject(userData);
+                JSONObject data = new JSONObject(userData);
+                JSONArray idList = new JSONArray();
+                JSONArray userList = data.getJSONArray("userList");
+                for (int i = 0; i < userList.length(); i++) {
+                    JSONObject jo = userList.getJSONObject(i);
+                    JSONObject jo1 = new JSONObject();
+                    jo1.put("id", jo.getString("id"));
+                    idList.put(jo1);
+                }
+
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("sportId", "1");
                 jsonObject.put("userId", ownerId);
+                jsonObject.put("players", idList);
                 jsonObject.put("teamAvatar", teamAvatarId);
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDROSTER;
-                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbjectNoProgress(url, jsonObject, Request.Method.POST);
+                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();

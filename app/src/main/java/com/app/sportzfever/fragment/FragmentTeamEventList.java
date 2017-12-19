@@ -105,6 +105,11 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
             teamavtarid = bundle.getString("teamavtarid");
             teamid = bundle.getString("teamid");
             isTeamOwnerOrCaptain = bundle.getBoolean("isTeamOwnerOrCaptain");
+            if (isTeamOwnerOrCaptain) {
+                btn_create_match.setVisibility(View.VISIBLE);
+            } else {
+                btn_create_match.setVisibility(View.GONE);
+            }
         }
     }
 
