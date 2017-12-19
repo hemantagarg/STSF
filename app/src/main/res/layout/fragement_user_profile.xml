@@ -76,7 +76,7 @@
             android:layout_margin="@dimen/dp5"
             android:padding="@dimen/dp10"
             android:singleLine="true"
-            android:text="cCCZCZCCzcsc"
+            android:text=""
             android:textColor="@color/black"
             android:textStyle="bold" />
 

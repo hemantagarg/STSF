@@ -1,12 +1,16 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,11 +23,17 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAvtarProfile;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.GPSTracker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import static com.app.sportzfever.R.id.spinner_battinghand;
 
 /**
  * Created by admin on 06-01-2016.
@@ -33,15 +43,17 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     private Button btn_submit;
     private Bundle b;
     private Activity context;
+    private Spinner avtar_gender;
     private ModelAvtarProfile modelAvtarProfile;
-    private EditText avtar_name, avtar_dob, avtar_gender, avtar_hometown,
+    private EditText avtar_name, avtar_dob, avtar_hometown,
             avtar_currentlocation, avtar_aboutme;
     public static FragmentPersonalProfileEdit fragment_teamJoin_request;
     private final String TAG = FragmentPersonalProfileEdit.class.getSimpleName();
     private String avtarId = "";
     View view_about;
     String latitude = "0.0", longitude = "0.0";
-
+    ArrayList<String> listBattinghand = new ArrayList<>();
+    ArrayAdapter<String> adapterBattinghand;
     public static FragmentPersonalProfileEdit getInstance() {
         if (fragment_teamJoin_request == null)
             fragment_teamJoin_request = new FragmentPersonalProfileEdit();
@@ -104,7 +116,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
 
         avtar_name = (EditText) view.findViewById(R.id.avtar_name);
         avtar_dob = (EditText) view.findViewById(R.id.avtar_dob);
-        avtar_gender = (EditText) view.findViewById(R.id.avtar_gender);
+        avtar_gender = (Spinner) view.findViewById(R.id.avtar_gender);
         avtar_hometown = (EditText) view.findViewById(R.id.avtar_hometown);
         avtar_currentlocation = (EditText) view.findViewById(R.id.avtar_currentlocation);
         avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
@@ -118,6 +130,11 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
         } else {
         }
         setlistener();
+
+        listBattinghand.add(AppConstant.Male);
+        listBattinghand.add(AppConstant.FeMale);
+        adapterBattinghand = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBattinghand);
+        avtar_gender.setAdapter(adapterBattinghand);
     }
 
     private void getBundle() {
@@ -138,7 +155,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 avtar_hometown.setText(jo.getString("hometown"));
                 avtar_currentlocation.setText(jo.getString("currentLocation"));
                 avtar_aboutme.setText(jo.getString("about"));
-                avtar_gender.setText(jo.getString("gender"));
+              //  avtar_gender.setText(jo.getString("gender"));
 
             }
         } catch (Exception e) {
@@ -151,6 +168,24 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
             @Override
             public void onClick(View view) {
                 submitPost();
+            }
+        });
+        avtar_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                int yy = calendar.get(Calendar.YEAR);
+                int mm = calendar.get(Calendar.MONTH);
+                int dd = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear)
+                                + "-" + String.valueOf(dayOfMonth);
+                        avtar_dob.setText(date);
+                    }
+                }, yy, mm, dd);
+                datePicker.show();
             }
         });
 
@@ -169,7 +204,8 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", avtarId);
-                jsonObject.put("gender", avtar_gender.getText().toString());
+                jsonObject.put("gender", avtar_gender.getSelectedItem().toString());
+
                 jsonObject.put("homeTown", avtar_hometown.getText().toString());
                 jsonObject.put("currentLocation", avtar_currentlocation.getText().toString());
                 jsonObject.put("lat", latitude);

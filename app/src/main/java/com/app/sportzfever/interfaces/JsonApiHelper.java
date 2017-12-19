@@ -44,8 +44,8 @@ public interface JsonApiHelper {
     String GET_TOURNAMENT_DETAIL = "getTournamentDetail/";
     String GET_TEAM_PROFILE = "getTeamProfile/";
     String FOLLOW_UNFOLLOW = "followUnfollow";
-    String JOINTEAM = "joinTeamRequest/";
-    String LEAVETEAM = "leaveTeam/";
+    String JOINTEAM = "joinTeamRequest";
+    String LEAVETEAM = "leaveTeam";
     String RespondToTOURNAMENTFIXTURE = "RespondToTeamTournamentFixture/";
     String GET_USERABOUT = "getUserProfile/";
     String GET_SHARE = "getShares/";
@@ -67,6 +67,7 @@ public interface JsonApiHelper {
     String ALLTOURNAMNENTTEAM = "getTeamsInTournament/";
     String ALLSPORTTEAMDETIAL = "getTeamProfile/";
     String REMOVEFROMROSTER = "removeFromRoster";
+    String ADDROSTER = "saveTeamToRoster";
     String GET_MATCH_LINEUP = "getMatchLineup/";
     String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
     String ALLTOURNAMNENTIMAGES = "getAlbumMatchTournament/tournament/";

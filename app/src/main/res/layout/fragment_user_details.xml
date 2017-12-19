@@ -71,7 +71,7 @@
                         android:layout_below="@+id/imge_user"
                         android:layout_centerHorizontal="true"
                         android:padding="@dimen/dp5"
-                        android:text="sasd"
+                        android:text=""
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14"

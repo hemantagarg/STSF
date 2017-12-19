@@ -44,6 +44,8 @@ public class AppConstant {
     public static final String ALL_ROUNDER = "All Rounder";
     public static final String NA = "N/A";
     public static final String RIGHTHAND = "Right Hand";
+    public static final String Male = "Male";
+    public static final String FeMale = "Female";
     public static final String LEFTHAND = "Left Hand";
     public static final String DEFENSIVE = "Defensive";
     public static final String AGGRESIVE = "Aggresive";

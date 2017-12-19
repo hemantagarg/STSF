@@ -53,6 +53,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Date Of Birth"
                     android:padding="@dimen/dp10"
+                    android:editable="false"
                     android:textColor="@color/text_hint_color"
                     android:textSize="@dimen/text_size_15"
                     android:textStyle="bold"
@@ -64,17 +65,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp5">
-
-                <EditText
-                    android:id="@+id/avtar_gender"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Gender"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginLeft="@dimen/dp5"
+                    android:layout_marginRight="@dimen/dp5"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:background="@drawable/edit_bg">
+
+                    <Spinner
+                        android:id="@+id/avtar_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"/>
+
+                </RelativeLayout>
+
 
             </android.support.design.widget.TextInputLayout>
 

@@ -60,6 +60,8 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     public static FragmentTeamRoster fragment_teamJoin_request;
     private final String TAG = FragmentTeamRoster.class.getSimpleName();
     private String teamId = "";
+    private String ownerId = "";
+    private String teamAvatarId = "";
     private int deletedPosition;
 
     public static FragmentTeamRoster getInstance() {
@@ -139,6 +141,8 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     private void getBundle() {
         Bundle b = getArguments();
         teamId = b.getString("teamId");
+        ownerId = b.getString("ownerId");
+        teamAvatarId = b.getString("teamAvatarId");
     }
 
     private void setlistener() {
@@ -177,9 +181,10 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                 JSONObject array = new JSONObject(userData);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("sportId", "1");
-                jsonObject.put("teamId", teamId);
+                jsonObject.put("userId", ownerId);
+                jsonObject.put("teamAvatar", teamAvatarId);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.REMOVEFROMROSTER;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.ADDROSTER;
                 new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbjectNoProgress(url, jsonObject, Request.Method.POST);
 
             } else {
@@ -310,6 +315,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
 
                     adapterSportTeamList = new AdapterTeamRoster(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterSportTeamList);
+
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

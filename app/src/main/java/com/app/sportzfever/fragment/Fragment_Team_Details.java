@@ -57,6 +57,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     private String id = "";
     private boolean isTeamOwnerOrCaptain = false;
     private String teamAvatarId = "";
+    private String ownerId = "";
 
     public static Fragment_Team_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -83,11 +84,11 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         btn_join_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  if (isTeamfollower.equalsIgnoreCase("1")) {
-                   LeaveTeam();
+                if (isTeamMember.equalsIgnoreCase("1")) {
+                    LeaveTeam("JOIN TEAM");
                 } else {
-                    JoinTeam();
-                }*/
+                    JoinTeam("LEAVE TEAM");
+                }
             }
         });
         btn_follow_team.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +110,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             String managerName = data.getString("ownerName");
             String teamName = data.getString("teamName");
             teamAvatarId = data.getString("teamAvatarId");
+            ownerId = data.getString("ownerId");
             String isActive = data.getString("isActive");
             String totalPlayersInTeam = data.getString("totalPlayersInTeam");
             String fansCount = data.getString("fansCount");
@@ -221,7 +223,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", AppUtils.getUserId(mActivity));
-                jsonObject.put("teamId", teamAvatarId);
+                jsonObject.put("teamId", id);
                 jsonObject.put("sportId", 1);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
@@ -241,7 +243,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", AppUtils.getUserId(mActivity));
-                jsonObject.put("teamId", teamAvatarId);
+                jsonObject.put("teamId", id);
                 jsonObject.put("sportId", 1);
 
                 //  https://sfscoring.betasportzfever.com/followUnfollow
@@ -339,6 +341,8 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         FragmentTeamRoster tab4 = new FragmentTeamRoster();
         Bundle b3 = new Bundle();
         b3.putString("teamId", id);
+        b3.putString("ownerId", ownerId);
+        b3.putString("teamAvatarId", teamAvatarId);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Roaster");
 
