@@ -84,7 +84,7 @@ public class AdapterTeamAddedPlayersLineup extends RecyclerView.Adapter<Recycler
             ((CustomViewHolder) holder).text_avtarname.setText(m1.getAvatarName());
             ((CustomViewHolder) holder).text_speciality.setText("(" + m1.getSpeciality() + ")");
             ((CustomViewHolder) holder).text_status.setText(m1.getAddedStatus());
-
+            ((CustomViewHolder) holder).text_status.setVisibility(View.VISIBLE);
             ((CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

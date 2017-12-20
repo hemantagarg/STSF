@@ -65,6 +65,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private int addedCount = 0;
     private EditText edt_search;
     private ImageView image_search;
+    private String fromScreen = "";
 
     public static Fragment_SearchUserList getInstance() {
         if (fragment_friend_request == null)
@@ -110,6 +111,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         try {
             Bundle bundle = getArguments();
             if (bundle != null) {
+                if (bundle.containsKey("FromScreen")) {
+                    fromScreen = bundle.getString("FromScreen");
+                }
                 if (bundle.containsKey("selectedUser")) {
                     String data = bundle.getString("selectedUser");
 
@@ -326,12 +330,18 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                 addInlist(position, false);
                 addedCount--;
             } else {
-                if (addedCount < 3) {
+                if (fromScreen.equalsIgnoreCase("Roster")) {
                     arrayList.get(position).setIschecked(true);
                     addedCount++;
                     addInlist(position, true);
                 } else {
-                    Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
+                    if (addedCount < 3) {
+                        arrayList.get(position).setIschecked(true);
+                        addedCount++;
+                        addInlist(position, true);
+                    } else {
+                        Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             adapterSearchUserList.notifyDataSetChanged();

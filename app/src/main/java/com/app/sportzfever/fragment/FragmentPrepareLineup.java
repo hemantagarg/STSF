@@ -58,6 +58,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
     private JSONObject jsonLinupArray;
     private String playersCount = "";
     private String teamCheckAvailibility = "";
+    private String matchId = "";
 
     public static FragmentPrepareLineup getInstance() {
         if (fragment_teamJoin_request == null)
@@ -146,6 +147,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             if (!response.equalsIgnoreCase("")) {
                 jsonLinupArray = new JSONObject(response);
                 if (jsonLinupArray.getString("result").equalsIgnoreCase("1")) {
+                    matchId = jsonLinupArray.getString("matchId");
                     JSONArray jtaemown = jsonLinupArray.getJSONArray("playersAvailability");
 
                     arrayListaddedPlayers.clear();
@@ -300,6 +302,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             JSONArray newMatchlineUp = new JSONArray();
             for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
                 JSONObject jo = new JSONObject();
+                jsonObject.put("matchId", matchId);
                 jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
                 if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase("Invitation not sent")) {
                     jo.put("inviteStatus", AppConstant.PENDING);
@@ -313,7 +316,6 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
                 newMatchlineUp.put(jo);
             }
-            jsonObject.put("matchId", eventId);
             jsonObject.put("teamId", teamId);
             jsonObject.put("isTeamScoringOnSf", "1");
             jsonObject.put("newMatchlineUp", newMatchlineUp);
