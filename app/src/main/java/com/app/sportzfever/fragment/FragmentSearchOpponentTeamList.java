@@ -20,14 +20,14 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterSearchUserList;
+import com.app.sportzfever.adapter.AdapterSearchOppositeTeamList;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelSearchPeoples;
+import com.app.sportzfever.models.ModelSearchOppositeTeam;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -46,11 +46,11 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
     private RecyclerView list_request;
     private Bundle b;
     private Activity context;
-    private AdapterSearchUserList adapterSearchUserList;
-    private ModelSearchPeoples userFriendList;
+    private AdapterSearchOppositeTeamList adapterSearchOppositeTeamList;
+    private ModelSearchOppositeTeam userFriendList;
     private TextView text_nodata;
-    private ArrayList<ModelSearchPeoples> arrayList = new ArrayList<>();
-    private ArrayList<ModelSearchPeoples> arrayListAddedUsers = new ArrayList<>();
+    private ArrayList<ModelSearchOppositeTeam> arrayList = new ArrayList<>();
+    private ArrayList<ModelSearchOppositeTeam> arrayListAddedUsers = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
@@ -102,10 +102,11 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-        getBundle();
+        //getBundle();
         manageHeaderView();
     }
 
+/*
     private void getBundle() {
         try {
             Bundle bundle = getArguments();
@@ -121,7 +122,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
 
                         JSONObject jo = userList.getJSONObject(i);
 
-                        userFriendList = new ModelSearchPeoples();
+                        userFriendList = new ModelSearchOppositeTeam();
                         userFriendList.setUserId(jo.getString("id"));
                         userFriendList.setTotalFriend(jo.getString("totalFriend"));
                         userFriendList.setTotalPost(jo.getString("totalPost"));
@@ -138,8 +139,8 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
 
                         arrayList.add(userFriendList);
                     }
-                    adapterSearchUserList = new AdapterSearchUserList(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterSearchUserList);
+                    adapterSearchOppositeTeamList = new AdapterSearchOppositeTeamList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterSearchOppositeTeamList);
                     addedCount = arrayListAddedUsers.size();
                 }
             }
@@ -147,6 +148,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
             e.printStackTrace();
         }
     }
+*/
 
     /*******************************************************************
      * Function name - manageHeaderView
@@ -156,7 +158,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Match Roles");
+        HeaderViewManager.getInstance().setHeading(true, "Search Team");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -233,6 +235,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
             }
         });
 
+/*
         list_request.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -255,7 +258,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
 
                                     recyclerView.post(new Runnable() {
                                         public void run() {
-                                            adapterSearchUserList.notifyItemInserted(arrayList.size() - 1);
+                                            adapterSearchOppositeTeamList.notifyItemInserted(arrayList.size() - 1);
                                         }
                                     });
 
@@ -285,6 +288,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
             }
 
         });
+*/
 
     }
 
@@ -293,19 +297,11 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         try {
             JSONArray array = new JSONArray();
             for (int i = 0; i < arrayList.size(); i++) {
-                if (arrayList.get(i).ischecked()) {
+                if (arrayList.get(i).isAdded()) {
                     JSONObject jsonObject1 = new JSONObject();
-                    jsonObject1.put("id", arrayList.get(i).getUserId());
-                    jsonObject1.put("name", arrayList.get(i).getName());
-                    jsonObject1.put("totalFriend", arrayList.get(i).getTotalFriend());
-                    jsonObject1.put("totalPost", arrayList.get(i).getTotalPost());
-                    jsonObject1.put("totalTeam", arrayList.get(i).getTotalTeam());
-                    jsonObject1.put("email", arrayList.get(i).getEmail());
-                    jsonObject1.put("dateOfBirth", arrayList.get(i).getDateOfBirth());
-                    jsonObject1.put("about", arrayList.get(i).getAbout());
-                    jsonObject1.put("hometown", arrayList.get(i).getHometown());
-                    jsonObject1.put("currentLocation", arrayList.get(i).getCurrentLocation());
-                    jsonObject1.put("profilePicture", arrayList.get(i).getProfilePicture());
+                    jsonObject1.put("id", arrayList.get(i).getTeamId());
+                    jsonObject1.put("name", arrayList.get(i).getTeamName());
+                    jsonObject1.put("profilePicture", arrayList.get(i).getTeamProfilePicture());
                     array.put(jsonObject1);
                 }
             }
@@ -320,20 +316,20 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            if (arrayList.get(position).ischecked()) {
-                arrayList.get(position).setIschecked(false);
+            if (arrayList.get(position).isAdded()) {
+                arrayList.get(position).setAdded(false);
                 addInlist(position, false);
                 addedCount--;
             } else {
-                if (addedCount < 3) {
-                    arrayList.get(position).setIschecked(true);
+                if (addedCount < 1) {
+                    arrayList.get(position).setAdded(true);
                     addedCount++;
                     addInlist(position, true);
                 } else {
-                    Toast.makeText(context, "You can add maximum 3 scorers", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "You can add maximum 1 team", Toast.LENGTH_SHORT).show();
                 }
             }
-            adapterSearchUserList.notifyDataSetChanged();
+            adapterSearchOppositeTeamList.notifyDataSetChanged();
         }
     }
 
@@ -352,7 +348,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
                 //  http://sfscoring.betasportzfever.com/getFeeds/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
 
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCH + AppUtils.getUserId(context)
-                        + "/" + "PEOPLE/" + edt_search.getText().toString() + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                        + "/" + "TEAM/" + edt_search.getText().toString() + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(4, context, this).getqueryNoProgress(url);
 
             } else {
@@ -367,8 +363,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         AppUtils.onKeyBoardDown(context);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/searchTeams/challenger/479a44a634f82b0394f78352d302ec36
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCHTEAM_CHALLENGER + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SEARCHTEAM + edt_search.getText().toString() + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -385,37 +380,32 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
             if (position == 1) {
                 AppUtils.onKeyBoardDown(context);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
+                    JSONArray data = jObject.getJSONArray("data");
                     arrayList.clear();
                     if (arrayListAddedUsers.size() > 0) {
                         arrayList.addAll(arrayListAddedUsers);
                     }
-                    JSONArray peoplesArray = data.getJSONArray("peoples");
-                    maxlistLength = data.getString("totalPeoples");
-                    for (int i = 0; i < peoplesArray.length(); i++) {
+                    for (int i = 0; i < data.length(); i++) {
 
-                        JSONObject jo = peoplesArray.getJSONObject(i);
+                        JSONObject jo = data.getJSONObject(i);
 
-                        userFriendList = new ModelSearchPeoples();
-                        userFriendList.setUserId(jo.getString("userId"));
-                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                        userFriendList.setTotalPost(jo.getString("totalPost"));
-                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                        userFriendList.setName(jo.getString("name"));
-                        userFriendList.setEmail(jo.getString("email"));
-                        userFriendList.setIschecked(false);
-                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                        userFriendList.setAbout(jo.getString("about"));
-                        userFriendList.setHometown(jo.getString("hometown"));
-                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
-
+                        userFriendList = new ModelSearchOppositeTeam();
+                        userFriendList.setTeamId(jo.getString("teamId"));
+                        userFriendList.setTeamAvatarId(jo.getString("teamAvatarId"));
+                        userFriendList.setTeamLocation(jo.getString("teamLocation"));
+                        userFriendList.setTeamName(jo.getString("teamName"));
+                        userFriendList.setRequestStatus(jo.getString("requestStatus"));
+                        userFriendList.setTeamProfilePicture(jo.getString("teamProfilePicture"));
+                        userFriendList.setAdded(jo.getBoolean("added"));
+                        userFriendList.setIsActive(jo.getString("isActive"));
+                        userFriendList.setSportId(jo.getString("sportId"));
+                        userFriendList.setSportName(jo.getString("sportName"));
                         userFriendList.setRowType(1);
 
                         arrayList.add(userFriendList);
                     }
-                    adapterSearchUserList = new AdapterSearchUserList(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterSearchUserList);
+                    adapterSearchOppositeTeamList = new AdapterSearchOppositeTeamList(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterSearchOppositeTeamList);
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -434,46 +424,6 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
                     }
                 }
 
-            } else if (position == 4) {
-
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = jObject.getJSONObject("data");
-                    arrayList.remove(arrayList.size() - 1);
-                    JSONArray peoplesArray = data.getJSONArray("peoples");
-                    maxlistLength = data.getString("totalPeoples");
-
-                    for (int i = 0; i < peoplesArray.length(); i++) {
-
-                        JSONObject jo = peoplesArray.getJSONObject(i);
-
-                        userFriendList = new ModelSearchPeoples();
-                        userFriendList.setUserId(jo.getString("userId"));
-                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                        userFriendList.setTotalPost(jo.getString("totalPost"));
-                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                        userFriendList.setName(jo.getString("name"));
-                        userFriendList.setEmail(jo.getString("email"));
-                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                        userFriendList.setAbout(jo.getString("about"));
-                        userFriendList.setHometown(jo.getString("hometown"));
-                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
-
-                        userFriendList.setRowType(1);
-
-                        arrayList.add(userFriendList);
-                    }
-                    adapterSearchUserList.notifyDataSetChanged();
-                    loading = true;
-                    if (data.length() == 0) {
-                        skipCount = skipCount - 10;
-                        //  return;
-                    }
-                } else {
-                    adapterSearchUserList.notifyDataSetChanged();
-                    skipCount = skipCount - 10;
-                    loading = true;
-                }
             } else if (position == 11) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

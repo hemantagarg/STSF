@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_save"
+        android:layout_marginBottom="@dimen/dp5"
         android:layout_below="@+id/rl_header">
 
         <LinearLayout
@@ -124,17 +125,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_selectteam"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dp10"
-                        android:background="@drawable/edit_bg"
-                        android:hint="Select Opponent Team"
-                        android:maxHeight="@dimen/dp100"
-                        android:padding="@dimen/dp10"
-                        android:textColor="@color/textcolordark"
-                        android:textSize="@dimen/text_size_15" />
+                        android:layout_height="@dimen/dp40"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg">
+
+                        <Spinner
+                            android:id="@+id/spinner_selectteam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </RelativeLayout>
 
 
                     <RelativeLayout
@@ -152,7 +156,8 @@
 
                     </RelativeLayout>
 
-                    <TextView android:id="@+id/text_overs"
+                    <TextView
+                        android:id="@+id/text_overs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/linear2"
@@ -369,6 +374,7 @@
                     android:layout_marginLeft="@dimen/dp10"
                     android:layout_marginRight="@dimen/dp10"
                     android:layout_marginTop="@dimen/dp15"
+                    android:layout_marginBottom="@dimen/dp5"
                     android:background="@drawable/edit_bg"
                     android:hint="Details"
                     android:padding="@dimen/dp10"
@@ -390,7 +396,8 @@
                 android:id="@+id/event_rosterlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp10" />
+                android:layout_marginTop="@dimen/dp10"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/floating_create_event"

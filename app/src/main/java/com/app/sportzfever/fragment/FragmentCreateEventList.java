@@ -51,6 +51,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by admin on 06-01-2016.
  */
@@ -68,15 +70,17 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayListRoster;
     private ImageView image_map;
-    private TextView mTvToDate, mTvTime, mTvToDateend, mTvTimeend, text_selectteam, text_overs;
+    private TextView mTvToDate, mTvTime, mTvToDateend, mTvTimeend, text_overs;
     private String teamid = "", teamavtarid = "";
     public static FragmentCreateEventList fragment_teamJoin_request;
     private final String TAG = FragmentCreateEventList.class.getSimpleName();
     private boolean isTeamOwnerOrCaptain = false;
     private ArrayList<String> listEventType = new ArrayList<>();
     private ArrayList<String> listMatchType = new ArrayList<>();
-    private ArrayAdapter<String> adapterShare, adapterMatchType;
-    private Spinner spinnerShareWith, spinner_matchtype;
+    private ArrayList<String> listTeamName = new ArrayList<>();
+    private ArrayList<String> listTeamId = new ArrayList<>();
+    private ArrayAdapter<String> adapterShare, adapterMatchType, adapterteam;
+    private Spinner spinnerShareWith, spinner_matchtype, spinner_selectteam;
     private CheckBox checkboxend_date;
     private LinearLayout linear_matchPublic, linear_enddatetime;
     private RelativeLayout rl_main;
@@ -121,8 +125,10 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         list_request = (RecyclerView) view.findViewById(R.id.floating_create_event);
         event_rosterlist = (RecyclerView) view.findViewById(R.id.event_rosterlist);
         event_rosterlist.setLayoutManager(new LinearLayoutManager(context));
+        event_rosterlist.setNestedScrollingEnabled(false);
         spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
         spinner_matchtype = (Spinner) view.findViewById(R.id.spinner_matchtype);
+        spinner_selectteam = (Spinner) view.findViewById(R.id.spinner_selectteam);
         checkboxend_date = (CheckBox) view.findViewById(R.id.checkboxend_date);
         mTvToDate = (TextView) view.findViewById(R.id.mTvToDate);
         mTvTime = (TextView) view.findViewById(R.id.mTvTime);
@@ -130,7 +136,6 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         mTvTimeend = (TextView) view.findViewById(R.id.mTvTimeend);
         image_map = (ImageView) view.findViewById(R.id.image_map);
         mTvToDateend = (TextView) view.findViewById(R.id.mTvToDateend);
-        text_selectteam = (TextView) view.findViewById(R.id.text_selectteam);
         text_overs = (TextView) view.findViewById(R.id.text_overs);
         linear_matchPublic = (LinearLayout) view.findViewById(R.id.linear_matchPublic);
         linear_enddatetime = (LinearLayout) view.findViewById(R.id.linear_enddatetime);
@@ -154,6 +159,14 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         listMatchType.add("Unlimited over");
         adapterMatchType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listMatchType);
         spinner_matchtype.setAdapter(adapterMatchType);
+
+        listTeamName.add("Select Opponent Team");
+        listTeamName.add("Find Opponent Team");
+        listTeamId.add("0");
+        listTeamId.add("-1");
+        adapterteam = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listTeamName);
+        spinner_selectteam.setAdapter(adapterteam);
+
     }
 
     private void manageHeaderView() {
@@ -234,6 +247,22 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
+
+            }
+        });
+        spinner_selectteam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                if (position == listTeamName.size() - 1) {
+                    FragmentSearchOpponentTeamList fragmentSearchUserList = new FragmentSearchOpponentTeamList();
+                    fragmentSearchUserList.setTargetFragment(FragmentCreateEventList.this, AppConstant.FRAGMENT_CODE);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
@@ -384,6 +413,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         }
     }
 
+
     private void getServicelistRoster() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
@@ -422,7 +452,32 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             latitude = data.getStringExtra("latitude");
             longitude = data.getStringExtra("longitude");
         }
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                String userData = data.getStringExtra("userData");
+                Log.e("userData", userData);
+                setUserData(userData);
+            }
+        }
+    }
 
+    private void setUserData(String userData) {
+        try {
+            JSONObject selectedUserList = new JSONObject(userData);
+            String id = "";
+            JSONArray userList = selectedUserList.getJSONArray("userList");
+            Log.e("userList", "*" + userList.toString());
+            for (int i = 0; i < userList.length(); i++) {
+                JSONObject jo = userList.getJSONObject(i);
+                listTeamName.add(listTeamName.size() - 1, jo.getString("name"));
+                listTeamId.add(listTeamId.size() - 1, jo.getString("id"));
+                id = jo.getString("id");
+            }
+            spinner_selectteam.setSelection(listTeamId.indexOf(id));
+            adapterteam.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
