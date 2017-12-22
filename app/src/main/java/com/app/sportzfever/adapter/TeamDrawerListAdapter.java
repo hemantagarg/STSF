@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -78,11 +80,12 @@ public class TeamDrawerListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((CustomViewHolder) holder).lblListItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClickListener(i,1);
+                    listener.onItemClickListener(i, 1);
                 }
             });
-
-
+            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
+                Picasso.with(mContext).load(m1.getProfilePicture()).into(((CustomViewHolder) holder).image_logo);
+            }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -97,13 +100,13 @@ public class TeamDrawerListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView lblListItem;
-
+        ImageView image_logo;
         RelativeLayout relmatchvs;
 
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-
+            this.image_logo = (ImageView) view.findViewById(R.id.image_logo);
             this.lblListItem = (TextView) view.findViewById(R.id.lblListItem);
         }
 

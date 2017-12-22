@@ -35,6 +35,7 @@ public class ImagesListActivity extends AppCompatActivity {
     private int dotsCount;
     private LinearLayout pager_indicator;
     private TextView tv_toolbar_title;
+    private int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,9 @@ public class ImagesListActivity extends AppCompatActivity {
         nameList = new ArrayList<>();
         urlList = new ArrayList<>();
         Bundle bundle = getIntent().getBundleExtra("bundle");
-
+        if (bundle.containsKey("position")) {
+            position = bundle.getInt("position");
+        }
         ArrayList<Images> imagesArrayList = (ArrayList<Images>) bundle.getSerializable("images");
         try {
             for (int i = 0; i < imagesArrayList.size(); i++) {
@@ -84,8 +87,7 @@ public class ImagesListActivity extends AppCompatActivity {
             view_pager.setAdapter(mCustomPagerAdapter);
             pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
             setUiPageViewController();
-            view_pager.setCurrentItem(0);
-
+            view_pager.setCurrentItem(position);
             setListener();
 
         } catch (Exception e) {

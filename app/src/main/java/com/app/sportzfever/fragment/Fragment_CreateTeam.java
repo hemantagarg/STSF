@@ -59,7 +59,7 @@ import eu.janmuller.android.simplecropimage.CropImage;
 public class Fragment_CreateTeam extends AppCompatActivity implements ApiResponse, OnCustomItemClicListener {
 
     private Activity context;
-    private EditText edt_about_team, edt_team_name, edt_location;
+    private EditText edt_about_team, edt_team_name;
     private Button btn_browse, btn_create_team;
     TextView edt_team_logo;
     private String selectedimagespath = "";
@@ -76,7 +76,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
     public static final int REQUEST_CODE_TAKE_PICTURE = 0x2;
     public static final int REQUEST_CODE_CROP_IMAGE = 0x3;
     private File mFileTemp, selectedFilePath;
-
+    private TextView edt_location;
     public static final int REQUEST_TAKE_GALLERY_VIDEO = 7;
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
     private ImageView image_map;
@@ -112,7 +112,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
     }
 
     private void init() {
-        edt_location = (EditText) findViewById(R.id.edt_location);
+        edt_location = (TextView) findViewById(R.id.edt_location);
         edt_about_team = (EditText) findViewById(R.id.edt_about_team);
         edt_team_name = (EditText) findViewById(R.id.edt_team_name);
         edt_team_logo = (TextView) findViewById(R.id.edt_team_logo);
@@ -165,6 +165,21 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
 
     private void setlistener() {
 
+        edt_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GPSTracker gps = new GPSTracker(context);
+                if (gps.isGPSEnabled) {
+                    Intent i = new Intent(context, PickLocation.class);
+                    i.putExtra("lat", latitude);
+                    i.putExtra("lng", longitude);
+                    startActivityForResult(i, 511);
+
+                } else {
+                    gps.showSettingsAlert();
+                }
+            }
+        });
         btn_browse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

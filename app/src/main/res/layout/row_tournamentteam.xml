@@ -27,7 +27,7 @@
             android:layout_below="@+id/image_avtar"
             android:layout_centerHorizontal="true"
             android:singleLine="true"
-            android:text="TEXT"
+            android:text=""
             android:textColor="@color/black" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_below="@+id/text_avtarteamname"
             android:layout_centerHorizontal="true"
             android:paddingBottom="@dimen/dp5"
-            android:text="TEXT"
+            android:text=""
             android:textColor="@color/view_color" />
 
     </RelativeLayout>

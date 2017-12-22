@@ -335,6 +335,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         Bundle b11 = new Bundle();
         b11.putString("avtarid", id);
         b11.putString("teamAvatarId", teamAvatarId);
+        b11.putBoolean("isTeamOwnerOrCaptain", isTeamOwnerOrCaptain);
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 

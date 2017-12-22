@@ -91,7 +91,8 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
-
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
     }
 
     /*******************************************************************
@@ -251,7 +252,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
         listSearchText.add("Search for " + text + " in all tournaments");
         listSearchText.add("Search for " + text + " in all posts");
         listSearchText.add("Search for " + text + " in all events");
-        listSearchText.add("Search all results for " + text);
+        //listSearchText.add("Search all results for " + text);
         adapterSearch.notifyDataSetChanged();
         spinner_search.setVisibility(View.VISIBLE);
         spinner_search.performClick();
@@ -346,9 +347,6 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
                     if (ifIsFirstSerach) {
                         ifIsFirstSerach = false;
                         setupTabIcons();
-                    }
-                    if (currentTabPosition == 5) {
-                        currentTabPosition = 0;
                     }
                     TabLayout.Tab tab = tabLayout.getTabAt(currentTabPosition);
                     tab.select();

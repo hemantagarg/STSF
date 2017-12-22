@@ -441,8 +441,8 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+ "/" + id;
+                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();

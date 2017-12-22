@@ -85,7 +85,8 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private LinearLayout linear_matchPublic, linear_enddatetime;
     private RelativeLayout rl_main;
     String latitude = "0.0", longitude = "0.0";
-    private EditText edt_eventtitle, mEdtlocation, mEdtdetails, edt_no_overs, edt_no_players;
+    private EditText edt_eventtitle, mEdtdetails, edt_no_overs, edt_no_players;
+    private TextView mEdtlocation;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     public static FragmentCreateEventList getInstance() {
@@ -140,7 +141,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         linear_matchPublic = (LinearLayout) view.findViewById(R.id.linear_matchPublic);
         linear_enddatetime = (LinearLayout) view.findViewById(R.id.linear_enddatetime);
         edt_eventtitle = (EditText) view.findViewById(R.id.edt_eventtitle);
-        mEdtlocation = (EditText) view.findViewById(R.id.mEdtlocation);
+        mEdtlocation = (TextView) view.findViewById(R.id.mEdtlocation);
         mEdtdetails = (EditText) view.findViewById(R.id.mEdtdetails);
         edt_no_overs = (EditText) view.findViewById(R.id.edt_no_overs);
         edt_no_players = (EditText) view.findViewById(R.id.edt_no_players);
@@ -293,6 +294,23 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 }
             }
         });
+
+        mEdtlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GPSTracker gps = new GPSTracker(context);
+                if (gps.isGPSEnabled) {
+                    Intent i = new Intent(context, PickLocation.class);
+                    i.putExtra("lat", latitude);
+                    i.putExtra("lng", longitude);
+                    startActivityForResult(i, 511);
+
+                } else {
+                    gps.showSettingsAlert();
+                }
+            }
+        });
+
 
         spinnerShareWith.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

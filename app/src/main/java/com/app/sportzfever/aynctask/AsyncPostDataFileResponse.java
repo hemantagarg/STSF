@@ -45,6 +45,7 @@ public class AsyncPostDataFileResponse extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         // TODO Auto-generated method stub
         super.onPreExecute();
+        AppUtils.onKeyBoardDown(context);
         dialog = ProgressDialog.show(context, "", "Processing...");
         if (requestData == null) {
             requestData = new MultipartEntity();
@@ -61,7 +62,7 @@ public class AsyncPostDataFileResponse extends AsyncTask<String, Void, String> {
                 .setConnectionTimeout(httpclient.getParams(), 11000); // Timeout
 */
         HttpPost httppost = new HttpPost(url);
-      //  httppost.addHeader("Content-Type", "undefined");
+        //  httppost.addHeader("Content-Type", "undefined");
         httppost.addHeader("Authorization", AppUtils.getAuthToken(context));
         try {
             httppost.setEntity(requestData);

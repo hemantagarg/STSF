@@ -240,7 +240,7 @@ public class FragmentGalleryDetails extends BaseFragment implements ApiResponse,
             }
             Bundle b = new Bundle();
             b.putSerializable("images", imagesArrayList);
-
+            b.putSerializable("position", position);
             Intent intent = new Intent(context, ImagesListActivity.class);
             intent.putExtra("bundle", b);
             startActivity(intent);

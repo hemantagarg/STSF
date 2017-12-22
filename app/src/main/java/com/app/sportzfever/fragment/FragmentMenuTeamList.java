@@ -3,7 +3,7 @@ package com.app.sportzfever.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,7 +113,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
 
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        list_request.setLayoutManager(new GridLayoutManager(context, 2));
+        list_request.setLayoutManager(new LinearLayoutManager(context));
         listAdapter = new TeamDrawerListAdapter(context, this, teamlist);
         list_request.setAdapter(listAdapter);
     }
@@ -133,6 +133,8 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
                 }
                 modelSportTeamList.setRowType(1);
                 modelSportTeamList.setTeamName(headerobj.getString("SubMenu2Name"));
+                if (headerobj.has("teamProfilePicture"))
+                modelSportTeamList.setProfilePicture(headerobj.getString("teamProfilePicture"));
 
                 teamlist.add(modelSportTeamList);
                 listAdapter.notifyDataSetChanged();

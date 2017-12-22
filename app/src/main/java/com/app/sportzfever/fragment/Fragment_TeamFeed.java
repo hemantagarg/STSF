@@ -72,6 +72,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
     public static Fragment_TeamFeed fragment_userFeed;
     private final String TAG = Fragment_TeamFeed.class.getSimpleName();
     private String avtarid = "", teamAvatarId = "";
+    private boolean isTeamOwnerOrCaptain = false;
 
     public static Fragment_TeamFeed getInstance() {
         if (fragment_userFeed == null)
@@ -103,7 +104,12 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
             teamAvatarId = bundle.getString("teamAvatarId");
+            isTeamOwnerOrCaptain = bundle.getBoolean("isTeamOwnerOrCaptain");
         }
+        if (isTeamOwnerOrCaptain)
+            floating_post.setVisibility(View.VISIBLE);
+        else
+            floating_post.setVisibility(View.GONE);
     }
 
 
@@ -439,8 +445,8 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
+                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();

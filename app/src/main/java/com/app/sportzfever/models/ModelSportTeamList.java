@@ -40,7 +40,7 @@ public class ModelSportTeamList {
 
     private String speciality = "";
 
-    private String profilePicture;
+    private String profilePicture="";
 
     private String avatar, avtarId, isReservedPlayer="0";
 

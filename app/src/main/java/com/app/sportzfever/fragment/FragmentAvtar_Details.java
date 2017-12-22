@@ -39,6 +39,8 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.entity.mime.MultipartEntity;
@@ -110,7 +112,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
 
     public void setUserData(String image, String name, String sportname, String isTeamfollower) {
         if (image != null && !image.equalsIgnoreCase("")) {
-            Picasso.with(mActivity).load(image).transform(new CircleTransform()).placeholder(R.drawable.user).into(imge_user);
+            Picasso.with(mActivity).load(image).transform(new CircleTransform()).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.user).into(imge_user);
             Picasso.with(mActivity).load(image).placeholder(R.drawable.logo).into(imge_banner);
         }
         text_username.setText(name);
@@ -395,7 +398,8 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
                 }
                 selectedFilePath = new File(path);
                 Log.e("filepath", "**" + selectedFilePath);
-                Picasso.with(mActivity).load(selectedFilePath).skipMemoryCache().transform(new CircleTransform()).into(imge_user);
+                Picasso.with(mActivity).load(selectedFilePath).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                        .networkPolicy(NetworkPolicy.NO_CACHE).transform(new CircleTransform()).into(imge_user);
                 uploadPhoto();
                 //     profile_image.setImageBitmap(bitmap);
                 break;

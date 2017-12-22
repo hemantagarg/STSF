@@ -96,6 +96,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageFooterVisibitlity(true);
+        Dashboard.getInstance().selectTab(0);
         Dashboard.getInstance().manageHeaderVisibitlity(true);
         getServicelistRefresh();
     }
@@ -240,12 +241,10 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);
 
         } else if (flag == 4) {
-
             if (arrayList.get(position).getImages() != null && arrayList.get(position).getImages().size() > 0) {
                 ArrayList<Images> imagesArrayList = arrayList.get(position).getImages();
                 Bundle b = new Bundle();
                 b.putSerializable("images", imagesArrayList);
-
                 Intent intent = new Intent(context, ImagesListActivity.class);
                 intent.putExtra("bundle", b);
                 startActivity(intent);
@@ -440,8 +439,8 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS;
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
+                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();

@@ -46,7 +46,6 @@ import com.app.sportzfever.fragment.Fragment_ChatMain;
 import com.app.sportzfever.fragment.Fragment_LiveMatch_Details;
 import com.app.sportzfever.fragment.Fragment_MatchFeed;
 import com.app.sportzfever.fragment.Fragment_Matches;
-import com.app.sportzfever.fragment.Fragment_Notification;
 import com.app.sportzfever.fragment.Fragment_NotificationDetails;
 import com.app.sportzfever.fragment.Fragment_PastMatch_Details;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
@@ -313,6 +312,14 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         text_matches.setTextColor(getResources().getColor(R.color.textcolordark));
         text_gallery.setTextColor(getResources().getColor(R.color.textcolordark));
         text_tournament.setTextColor(getResources().getColor(R.color.textcolordark));
+    }
+
+    public void selectTab(int position) {
+        try {
+            tabLayout.getTabAt(position).select();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setListener() {
