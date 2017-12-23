@@ -167,6 +167,13 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         };
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+    }
+
     private void setlistener() {
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -191,7 +191,10 @@ public class PickLocation extends FragmentActivity implements OnClickListener, O
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
-
+                        if (location != null && !location.equalsIgnoreCase("")) {
+                            location = location.replace("null", "");
+                            location = location.replace(":", "");
+                        }
                         Intent i = new Intent();
                         i.putExtra("location", location);
                         i.putExtra("latitude", pic_lat);

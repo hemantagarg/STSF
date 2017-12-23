@@ -69,18 +69,11 @@ public class AppConstant {
     public static final String POINT = "Point";
     public static final String DEEP_COVER = "Deep Cover";
     public static final String THIRD_MAN = "Third Man";
-
-    /*
-       * Change this to your publishable key.
-       *
-       * You can get your key here: https://dashboard.stripe.com/account/apikeys
-       */
-   /* public static final String PUBLISHABLE_KEY =
-            "pk_live_cBJ2tWite5lxWKhXxKS2TTpw";
-*/
-    public static final String PUBLISHABLE_KEY =
-            "pk_test_s32DYwH0LJTPxtQqVbOddSHy";
-
-
     public static int FRAGMENT_CODE = 201;
+    public static final String MATCH = "MATCH";
+    public static final String PRACTISE = "PRACTISE";
+    public static final String MEET_UP = "MEET UP";
+    public static final String EVENT = "EVENT";
+
+
 }

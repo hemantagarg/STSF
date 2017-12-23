@@ -210,24 +210,24 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                         modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
-                        if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.BATSMAN)) {
-                            Batcount++;
-                            text_bat_count.setText(Batcount + "");
-                        } else if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.BOWLER)) {
-                            BowlCount++;
-                            text_Bowl_count.setText(BowlCount + "");
-                        } else if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.WICKET_KEEPER)) {
-                            WkCount++;
-                            text_Wk_count.setText(WkCount + "");
-                        } else {
-                            AKCount++;
-                            text_AR_count.setText(AKCount + "");
-                        }
                         modelSportTeamList.setRowType(1);
-                        if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                        if (modelSportTeamList.getAddedStatus().equals(AppConstant.ACCEPTED)) {
+                            if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.BATSMAN)) {
+                                Batcount++;
+                                text_bat_count.setText(Batcount + "");
+                            } else if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.BOWLER)) {
+                                BowlCount++;
+                                text_Bowl_count.setText(BowlCount + "");
+                            } else if (modelSportTeamList.getSpeciality().equalsIgnoreCase(AppConstant.WICKET_KEEPER)) {
+                                WkCount++;
+                                text_Wk_count.setText(WkCount + "");
+                            } else {
+                                AKCount++;
+                                text_AR_count.setText(AKCount + "");
+                            }
                             btn_next.setVisibility(View.VISIBLE);
+                            arrayListaddedPlayers.add(modelSportTeamList);
                         }
-                        arrayListaddedPlayers.add(modelSportTeamList);
                     }
                     totalCount = AKCount + Batcount + BowlCount + WkCount;
                     text_selected_players.setText(totalCount + "/" + playersCount + "\nPlayers");

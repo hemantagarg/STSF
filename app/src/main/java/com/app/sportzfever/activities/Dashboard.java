@@ -912,6 +912,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         if (currentFragment instanceof Fragment_MatchFeed) {
             ((Fragment_MatchFeed) currentFragment).onResume();
         }
+        if (currentFragment instanceof Fragment_Team) {
+            ((Fragment_Team) currentFragment).onResume();
+        }
         if (currentFragment instanceof FragmentAvtar_Details) {
             ((FragmentAvtar_Details) currentFragment).onResume();
         }
@@ -926,6 +929,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
         if (currentFragment instanceof FragmentUpcomingMatchDetails) {
             ((FragmentUpcomingMatchDetails) currentFragment).onResume();
+        }
+        if (currentFragment instanceof FragmentPersonal_User_Details) {
+            ((FragmentPersonal_User_Details) currentFragment).onResume();
         }
     }
 

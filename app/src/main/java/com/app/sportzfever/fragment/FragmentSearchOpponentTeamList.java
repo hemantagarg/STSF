@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,62 +94,17 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_save = (TextView) view.findViewById(R.id.text_save);
+        text_save.setVisibility(View.GONE);
         image_search = (ImageView) view.findViewById(R.id.image_search);
         edt_search = (EditText) view.findViewById(R.id.edt_search);
-        list_request.setLayoutManager(layoutManager);
+        list_request.setLayoutManager(new GridLayoutManager(context, 2));
         arrayList = new ArrayList<>();
         setlistener();
         //getBundle();
         manageHeaderView();
     }
-
-/*
-    private void getBundle() {
-        try {
-            Bundle bundle = getArguments();
-            if (bundle != null) {
-                if (bundle.containsKey("selectedUser")) {
-                    String data = bundle.getString("selectedUser");
-
-                    JSONObject jsonObject = new JSONObject(data);
-
-                    JSONArray userList = jsonObject.getJSONArray("userList");
-
-                    for (int i = 0; i < userList.length(); i++) {
-
-                        JSONObject jo = userList.getJSONObject(i);
-
-                        userFriendList = new ModelSearchOppositeTeam();
-                        userFriendList.setUserId(jo.getString("id"));
-                        userFriendList.setTotalFriend(jo.getString("totalFriend"));
-                        userFriendList.setTotalPost(jo.getString("totalPost"));
-                        userFriendList.setTotalTeam(jo.getString("totalTeam"));
-                        userFriendList.setName(jo.getString("name"));
-                        userFriendList.setEmail(jo.getString("email"));
-                        userFriendList.setDateOfBirth(jo.getString("dateOfBirth"));
-                        userFriendList.setAbout(jo.getString("about"));
-                        userFriendList.setHometown(jo.getString("hometown"));
-                        userFriendList.setCurrentLocation(jo.getString("currentLocation"));
-                        userFriendList.setProfilePicture(jo.getString("profilePicture"));
-                        userFriendList.setIschecked(true);
-                        userFriendList.setRowType(1);
-
-                        arrayList.add(userFriendList);
-                    }
-                    adapterSearchOppositeTeamList = new AdapterSearchOppositeTeamList(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterSearchOppositeTeamList);
-                    addedCount = arrayListAddedUsers.size();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-*/
 
     /*******************************************************************
      * Function name - manageHeaderView
@@ -217,15 +173,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         text_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addedCount > 0) {
-                    JSONObject jsonObject = makeJsonRequest();
-                    Intent intent = new Intent(context, FragmentSearchOpponentTeamList.class);
-                    intent.putExtra("userData", jsonObject.toString());
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
-                    context.onBackPressed();
-                } else {
-                    Toast.makeText(context, "Please select atleast one user", Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -292,44 +240,15 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
 
     }
 
-    private JSONObject makeJsonRequest() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray array = new JSONArray();
-            for (int i = 0; i < arrayList.size(); i++) {
-                if (arrayList.get(i).isAdded()) {
-                    JSONObject jsonObject1 = new JSONObject();
-                    jsonObject1.put("id", arrayList.get(i).getTeamId());
-                    jsonObject1.put("name", arrayList.get(i).getTeamName());
-                    jsonObject1.put("profilePicture", arrayList.get(i).getTeamProfilePicture());
-                    array.put(jsonObject1);
-                }
-            }
-            jsonObject.put("userList", array);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
 
     @Override
     public void onItemClickListener(int position, int flag) {
-        if (flag == 1) {
-            if (arrayList.get(position).isAdded()) {
-                arrayList.get(position).setAdded(false);
-                addInlist(position, false);
-                addedCount--;
-            } else {
-                if (addedCount < 1) {
-                    arrayList.get(position).setAdded(true);
-                    addedCount++;
-                    addInlist(position, true);
-                } else {
-                    Toast.makeText(context, "You can add maximum 1 team", Toast.LENGTH_SHORT).show();
-                }
-            }
-            adapterSearchOppositeTeamList.notifyDataSetChanged();
+        if (flag == 2) {
+            Intent intent = new Intent(context, FragmentSearchOpponentTeamList.class);
+            intent.putExtra("id", arrayList.get(position).getTeamId());
+            intent.putExtra("name", arrayList.get(position).getTeamName());
+            getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+            context.onBackPressed();
         }
     }
 

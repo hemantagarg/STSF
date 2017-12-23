@@ -102,23 +102,31 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp5">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/avtar_currentlocation"
+                <TextView
+                    android:id="@+id/edt_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:background="@color/text_selected_bg"
                     android:hint="Current Location"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_size_15"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:maxLines="3"
+                    android:padding="@dimen/dp15"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15" />
 
-            </android.support.design.widget.TextInputLayout>
+                <ImageView android:id="@+id/image_map"
+                    android:layout_width="@dimen/dp30"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/blumap" />
+
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

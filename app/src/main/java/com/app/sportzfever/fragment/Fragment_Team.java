@@ -55,6 +55,7 @@ public class Fragment_Team extends BaseFragment {
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(true);
+        Dashboard.getInstance().manageFooterVisibitlity(true);
     }
 
     @Override

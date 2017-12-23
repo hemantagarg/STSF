@@ -102,4 +102,5 @@ public interface JsonApiHelper {
     String GET_GROUP_CHATBOX_DATA = "getGroupChatboxData/";
     String GET_ORGNIZERDATA = "tournamentMobilePageAction/";
     String MANAGE_LINEUP_MATCH = "manageLineUpForMatch";
+    String CREATEMATCH = "createMatch";
 }

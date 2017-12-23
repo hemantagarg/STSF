@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -79,11 +77,6 @@ public class AdapterSearchOppositeTeamList extends RecyclerView.Adapter<Recycler
             ModelSearchOppositeTeam m1 = (ModelSearchOppositeTeam) detail.get(i);
 
             ((CustomViewHolder) holder).text_name.setText(m1.getTeamName());
-            ((CustomViewHolder) holder).text_post.setVisibility(View.GONE);
-            ((CustomViewHolder) holder).text_friends.setVisibility(View.GONE);
-            ((CustomViewHolder) holder).text_about.setText(m1.getTeamLocation());
-            ((CustomViewHolder) holder).checkbox.setChecked(m1.isAdded());
-
             if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeamProfilePicture())
@@ -92,13 +85,6 @@ public class AdapterSearchOppositeTeamList extends RecyclerView.Adapter<Recycler
                         .into(((CustomViewHolder) holder).image_viewers);
             }
 
-            ((CustomViewHolder) holder).checkbox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 1);
-
-                }
-            });
             ((CustomViewHolder) holder).rl_main.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,25 +105,15 @@ public class AdapterSearchOppositeTeamList extends RecyclerView.Adapter<Recycler
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView text_name, text_message, text_date, text_team, text_post, text_friends, text_about;
+        TextView text_name;
         ImageView image_viewers;
         RelativeLayout rl_main;
-        Button btn_confirm;
-        CheckBox checkbox;
 
         public CustomViewHolder(View view) {
             super(view);
 
-            this.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
             this.image_viewers = (ImageView) view.findViewById(R.id.image_viewers);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
-            this.text_message = (TextView) view.findViewById(R.id.text_message);
-            this.text_friends = (TextView) view.findViewById(R.id.text_friends);
-            this.text_about = (TextView) view.findViewById(R.id.text_about);
-            this.text_post = (TextView) view.findViewById(R.id.text_post);
-            this.text_team = (TextView) view.findViewById(R.id.text_team);
-            this.text_date = (TextView) view.findViewById(R.id.text_date);
-            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
             this.rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
         }
 

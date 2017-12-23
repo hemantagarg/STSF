@@ -78,8 +78,13 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
         img_profilepic = (ImageView) view.findViewById(R.id.img_profilepic);
         image_edit = (ImageView) view.findViewById(R.id.image_edit);
 
-        getBundle();
         setlistener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBundle();
     }
 
     private void getBundle() {

@@ -172,6 +172,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                         modelSportTeamList.setRowType(1);
                         if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
                             btn_next.setVisibility(View.VISIBLE);
+                            btn_send_invite.setVisibility(View.GONE);
                         }
                         arrayListaddedPlayers.add(modelSportTeamList);
                     }
@@ -204,7 +205,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                sentInvite();
                 FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
                 Bundle bundle = new Bundle();
                 bundle.putString("teamId", teamId);
@@ -318,6 +319,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             }
             jsonObject.put("teamId", teamId);
             jsonObject.put("isTeamScoringOnSf", "1");
+            jsonObject.put("teamCheckAvailibility", "1");
             jsonObject.put("newMatchlineUp", newMatchlineUp);
 
         } catch (Exception e) {
@@ -419,6 +421,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                         if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
                             modelSportTeamList.setIsInPlayingSquad("1");
                             btn_next.setVisibility(View.VISIBLE);
+                            btn_send_invite.setVisibility(View.GONE);
                         }
                         arrayListaddedPlayers.add(modelSportTeamList);
                     }

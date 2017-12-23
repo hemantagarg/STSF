@@ -291,7 +291,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/avtar_specialitylive"
+            android:layout_below="@+id/avtar_speciality"
             android:alpha=".3"
             android:background="@color/view_color"
             android:visibility="gone" />

@@ -2,7 +2,9 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.activities.PickLocation;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -33,8 +37,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.app.sportzfever.R.id.spinner_battinghand;
-
 /**
  * Created by admin on 06-01-2016.
  */
@@ -46,7 +48,8 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     private Spinner avtar_gender;
     private ModelAvtarProfile modelAvtarProfile;
     private EditText avtar_name, avtar_dob, avtar_hometown,
-            avtar_currentlocation, avtar_aboutme;
+            avtar_aboutme;
+    private TextView edt_location;
     public static FragmentPersonalProfileEdit fragment_teamJoin_request;
     private final String TAG = FragmentPersonalProfileEdit.class.getSimpleName();
     private String avtarId = "";
@@ -54,6 +57,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     String latitude = "0.0", longitude = "0.0";
     ArrayList<String> listBattinghand = new ArrayList<>();
     ArrayAdapter<String> adapterBattinghand;
+
     public static FragmentPersonalProfileEdit getInstance() {
         if (fragment_teamJoin_request == null)
             fragment_teamJoin_request = new FragmentPersonalProfileEdit();
@@ -118,7 +122,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
         avtar_dob = (EditText) view.findViewById(R.id.avtar_dob);
         avtar_gender = (Spinner) view.findViewById(R.id.avtar_gender);
         avtar_hometown = (EditText) view.findViewById(R.id.avtar_hometown);
-        avtar_currentlocation = (EditText) view.findViewById(R.id.avtar_currentlocation);
+        edt_location = (TextView) view.findViewById(R.id.edt_location);
         avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
         //  avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
         btn_submit = (Button) view.findViewById(R.id.btn_submit);
@@ -153,9 +157,9 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
 //                avtar_aboutme.setText(jo.getString("description"));
                 avtar_dob.setText(dateOfBirth.getString("datetime"));
                 avtar_hometown.setText(jo.getString("hometown"));
-                avtar_currentlocation.setText(jo.getString("currentLocation"));
+                edt_location.setText(jo.getString("currentLocation"));
                 avtar_aboutme.setText(jo.getString("about"));
-              //  avtar_gender.setText(jo.getString("gender"));
+                //  avtar_gender.setText(jo.getString("gender"));
 
             }
         } catch (Exception e) {
@@ -189,6 +193,22 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
             }
         });
 
+        edt_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GPSTracker gps = new GPSTracker(context);
+                if (gps.isGPSEnabled) {
+                    Intent i = new Intent(context, PickLocation.class);
+                    i.putExtra("lat", latitude);
+                    i.putExtra("lng", longitude);
+                    startActivityForResult(i, 511);
+
+                } else {
+                    gps.showSettingsAlert();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -207,7 +227,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 jsonObject.put("gender", avtar_gender.getSelectedItem().toString());
 
                 jsonObject.put("homeTown", avtar_hometown.getText().toString());
-                jsonObject.put("currentLocation", avtar_currentlocation.getText().toString());
+                jsonObject.put("currentLocation", edt_location.getText().toString());
                 jsonObject.put("lat", latitude);
                 jsonObject.put("lng", longitude);
                 jsonObject.put("height", "");
@@ -227,12 +247,23 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("color upload 88888", +requestCode + "");
+        if (requestCode == 511 && resultCode == 512) {
+            edt_location.setText(data.getStringExtra("location"));
+            latitude = data.getStringExtra("latitude");
+            longitude = data.getStringExtra("longitude");
+        }
+
+    }
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-              //  Dashboard.getInstance().setProgressLoader(false);
+                //  Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     //JSONObject data = jObject.getJSONObject("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_save"
-        android:layout_marginBottom="@dimen/dp5"
-        android:layout_below="@+id/rl_header">
+        android:layout_below="@+id/rl_header"
+        android:layout_marginBottom="@dimen/dp5">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -136,10 +136,20 @@
                         <Spinner
                             android:id="@+id/spinner_selectteam"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/text_selectTeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:hint="Find opponent Team"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_15" />
 
                     </RelativeLayout>
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -182,7 +192,7 @@
                         android:inputType="number"
                         android:maxHeight="@dimen/dp100"
                         android:padding="@dimen/dp10"
-                        android:text="16"
+                        android:text="20"
                         android:textColor="@color/textcolordark"
                         android:textSize="@dimen/text_size_15" />
 
@@ -222,7 +232,7 @@
                     android:layout_below="@+id/linear_matchPublic"
                     android:layout_margin="@dimen/dp10"
                     android:background="@drawable/edit_bg"
-                    android:hint="Please Enter Event Title"
+                    android:hint="Enter Event Title"
                     android:maxHeight="@dimen/dp100"
                     android:padding="@dimen/dp10"
                     android:textColor="@color/textcolordark"
@@ -371,10 +381,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rl_location"
+                    android:layout_marginBottom="@dimen/dp5"
                     android:layout_marginLeft="@dimen/dp10"
                     android:layout_marginRight="@dimen/dp10"
                     android:layout_marginTop="@dimen/dp15"
-                    android:layout_marginBottom="@dimen/dp5"
                     android:background="@drawable/edit_bg"
                     android:hint="Details"
                     android:padding="@dimen/dp10"
@@ -391,6 +401,15 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/text_invite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp10"
+                android:text="Invite teammates for this event"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/event_rosterlist"
@@ -415,6 +434,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/blue_button_selecor"
         android:text="Save"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_size_15" />
 
 </RelativeLayout>

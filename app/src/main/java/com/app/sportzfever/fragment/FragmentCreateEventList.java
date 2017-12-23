@@ -1,8 +1,10 @@
 package com.app.sportzfever.fragment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -29,7 +32,7 @@ import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.PickLocation;
-import com.app.sportzfever.adapter.AdapterTeamRoster;
+import com.app.sportzfever.adapter.AdapterCreateTeamRoster;
 import com.app.sportzfever.adapter.AdapterUpcomingTournamentEvent;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
@@ -66,7 +69,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private AdapterUpcomingTournamentEvent adapterUpcomingEvent;
     private UpcomingEvent upcomingEvent;
     private ArrayList<UpcomingEvent> arrayList;
-    private AdapterTeamRoster adapterSportTeamList;
+    private AdapterCreateTeamRoster adapterCreateTeamRoster;
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayListRoster;
     private ImageView image_map;
@@ -77,17 +80,17 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private boolean isTeamOwnerOrCaptain = false;
     private ArrayList<String> listEventType = new ArrayList<>();
     private ArrayList<String> listMatchType = new ArrayList<>();
-    private ArrayList<String> listTeamName = new ArrayList<>();
-    private ArrayList<String> listTeamId = new ArrayList<>();
     private ArrayAdapter<String> adapterShare, adapterMatchType, adapterteam;
     private Spinner spinnerShareWith, spinner_matchtype, spinner_selectteam;
     private CheckBox checkboxend_date;
     private LinearLayout linear_matchPublic, linear_enddatetime;
     private RelativeLayout rl_main;
-    String latitude = "0.0", longitude = "0.0";
+    String latitude = "0.0", longitude = "0.0", selectedTeamId = "";
     private EditText edt_eventtitle, mEdtdetails, edt_no_overs, edt_no_players;
-    private TextView mEdtlocation;
+    private TextView mEdtlocation, text_invite, text_selectTeam;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private Button btn_save;
+    private String EventType = "";
 
     public static FragmentCreateEventList getInstance() {
         if (fragment_teamJoin_request == null)
@@ -118,7 +121,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         getBundle();
         manageHeaderView();
         setlistener();
-        getServicelistRefresh();
+        // getServicelistRefresh();
         getServicelistRoster();
     }
 
@@ -134,6 +137,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         mTvToDate = (TextView) view.findViewById(R.id.mTvToDate);
         mTvTime = (TextView) view.findViewById(R.id.mTvTime);
         rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
+        btn_save = (Button) view.findViewById(R.id.btn_save);
         mTvTimeend = (TextView) view.findViewById(R.id.mTvTimeend);
         image_map = (ImageView) view.findViewById(R.id.image_map);
         mTvToDateend = (TextView) view.findViewById(R.id.mTvToDateend);
@@ -142,6 +146,8 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         linear_enddatetime = (LinearLayout) view.findViewById(R.id.linear_enddatetime);
         edt_eventtitle = (EditText) view.findViewById(R.id.edt_eventtitle);
         mEdtlocation = (TextView) view.findViewById(R.id.mEdtlocation);
+        text_invite = (TextView) view.findViewById(R.id.text_invite);
+        text_selectTeam = (TextView) view.findViewById(R.id.text_selectTeam);
         mEdtdetails = (EditText) view.findViewById(R.id.mEdtdetails);
         edt_no_overs = (EditText) view.findViewById(R.id.edt_no_overs);
         edt_no_players = (EditText) view.findViewById(R.id.edt_no_players);
@@ -160,13 +166,6 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         listMatchType.add("Unlimited over");
         adapterMatchType = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listMatchType);
         spinner_matchtype.setAdapter(adapterMatchType);
-
-        listTeamName.add("Select Opponent Team");
-        listTeamName.add("Find Opponent Team");
-        listTeamId.add("0");
-        listTeamId.add("-1");
-        adapterteam = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listTeamName);
-        spinner_selectteam.setAdapter(adapterteam);
 
     }
 
@@ -211,7 +210,20 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     }
 
     private void setlistener() {
-
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (spinnerShareWith.getSelectedItemPosition() == 4) {
+                    if (validateMatch()) {
+                        makeMatchJsonRequest();
+                    }
+                } else {
+                    if (validateEvent()) {
+                        makeEventJsonRequest();
+                    }
+                }
+            }
+        });
         mTvToDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -251,20 +263,12 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
 
             }
         });
-        spinner_selectteam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        text_selectTeam.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-
-                if (position == listTeamName.size() - 1) {
-                    FragmentSearchOpponentTeamList fragmentSearchUserList = new FragmentSearchOpponentTeamList();
-                    fragmentSearchUserList.setTargetFragment(FragmentCreateEventList.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                FragmentSearchOpponentTeamList fragmentSearchUserList = new FragmentSearchOpponentTeamList();
+                fragmentSearchUserList.setTargetFragment(FragmentCreateEventList.this, AppConstant.FRAGMENT_CODE);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
             }
         });
 
@@ -321,13 +325,23 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 } else {
                     rl_main.setVisibility(View.VISIBLE);
                     if (position == 4) {
+                        EventType = AppConstant.MATCH;
                         linear_matchPublic.setVisibility(View.VISIBLE);
                         edt_eventtitle.setVisibility(View.GONE);
                         event_rosterlist.setVisibility(View.GONE);
+                        text_invite.setVisibility(View.GONE);
                     } else {
                         linear_matchPublic.setVisibility(View.GONE);
                         edt_eventtitle.setVisibility(View.VISIBLE);
                         event_rosterlist.setVisibility(View.VISIBLE);
+                        text_invite.setVisibility(View.VISIBLE);
+                        if (position == 1) {
+                            EventType = AppConstant.EVENT;
+                        } else if (position == 2) {
+                            EventType = AppConstant.MEET_UP;
+                        } else if (position == 3) {
+                            EventType = AppConstant.PRACTISE;
+                        }
                     }
                 }
             }
@@ -394,41 +408,178 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
 
     }
 
-    @Override
-    public void onItemClickListener(int position, int flag) {
-        if (flag == 1) {
-            if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
-                if (isTeamOwnerOrCaptain) {
-                    FragmentCheckPlayerAvailability fragment_postFeed = new FragmentCheckPlayerAvailability();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("teamId", teamid);
-                    bundle.putString("eventId", arrayList.get(position).getId());
-                    bundle.putString("playersCount", arrayList.get(position).getPlayersCount());
-                    fragment_postFeed.setArguments(bundle);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
-                } else {
-                    if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
-                        Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", arrayList.get(position).getId());
-                        fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                    } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
-                        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", arrayList.get(position).getId());
-                        fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                    } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
-                        Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", arrayList.get(position).getId());
-                        fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                    }
-                }
+    private JSONObject makeMatchJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("team1Id", teamid);
+            jsonObject.put("team2Id", selectedTeamId);
+
+            jsonObject.put("startDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
+            if (checkboxend_date.isChecked() && !mTvToDateend.getText().toString().equalsIgnoreCase("")) {
+                jsonObject.put("endDate", mTvToDateend.getText().toString() + " " + mTvTimeend.getText().toString());
+            } else {
+                jsonObject.put("endDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
+            }
+            jsonObject.put("lat", latitude);
+            jsonObject.put("lng", longitude);
+            jsonObject.put("userId", AppUtils.getUserId(context));
+            jsonObject.put("noOfPlayers", edt_no_players.getText().toString());
+            jsonObject.put("noOfOvers", edt_no_overs.getText().toString());
+            jsonObject.put("inviteStatus", AppConstant.PENDING);
+            jsonObject.put("description", mEdtdetails.getText().toString());
+            jsonObject.put("location", mEdtlocation.getText().toString());
+            jsonObject.put("isActive", "0");
+            jsonObject.put("eventType", EventType);
+
+            sentInvite(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private JSONObject makeEventJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray usersAndAvatars = new JSONArray();
+            for (int i = 0; i < arrayListRoster.size(); i++) {
+
+                JSONObject jo = new JSONObject();
+                jo.put("avatarId", arrayListRoster.get(i).getAvtarId());
+                jo.put("userId", arrayListRoster.get(i).getUserId());
+                usersAndAvatars.put(jo);
+            }
+
+            jsonObject.put("startDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
+            if (checkboxend_date.isChecked() && !mTvToDateend.getText().toString().equalsIgnoreCase("")) {
+                jsonObject.put("endDate", mTvToDateend.getText().toString() + " " + mTvTimeend.getText().toString());
+            } else {
+                jsonObject.put("endDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
+            }
+            jsonObject.put("userId", AppUtils.getUserId(context));
+            jsonObject.put("title", edt_eventtitle.getText().toString());
+            jsonObject.put("description", mEdtdetails.getText().toString());
+            jsonObject.put("location", mEdtlocation.getText().toString());
+            jsonObject.put("eventType", EventType);
+            jsonObject.put("isActive", "0");
+            jsonObject.put("lat", latitude);
+            jsonObject.put("lng", longitude);
+            jsonObject.put("usersAndAvatars", usersAndAvatars);
+            sentInvite(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private void sentInvite(JSONObject jsonObject) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATEMATCH;
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean validateMatch() {
+        boolean isValid = false;
+        String title = text_selectTeam.getText().toString();
+        String date = mTvToDate.getText().toString();
+        String overs = edt_no_overs.getText().toString();
+        String players = edt_no_players.getText().toString();
+        String time = mTvTime.getText().toString();
+        String location = mEdtlocation.getText().toString();
+        if (!date.equalsIgnoreCase("") && !title.equalsIgnoreCase("") && !overs.equalsIgnoreCase("") && !players.equalsIgnoreCase("")
+                && !time.equalsIgnoreCase("") && !location.equalsIgnoreCase("")) {
+            if (teamid.equals(selectedTeamId)) {
+                isValid = false;
+                Toast.makeText(context, "Please select another opponent team", Toast.LENGTH_SHORT).show();
+            } else {
+                isValid = true;
+            }
+        } else {
+            if (title.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select opponent team", Toast.LENGTH_SHORT).show();
+            } else if (overs.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please enter no of overs", Toast.LENGTH_SHORT).show();
+            } else if (players.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please enter no of players", Toast.LENGTH_SHORT).show();
+            } else if (date.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select date", Toast.LENGTH_SHORT).show();
+            } else if (time.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select time", Toast.LENGTH_SHORT).show();
+            } else if (location.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select location", Toast.LENGTH_SHORT).show();
             }
         }
+
+        return isValid;
+    }
+
+
+    private boolean validateEvent() {
+        boolean isValid = false;
+        String title = edt_eventtitle.getText().toString();
+        String date = mTvToDate.getText().toString();
+        String time = mTvTime.getText().toString();
+        String location = mEdtlocation.getText().toString();
+        if (!date.equalsIgnoreCase("") && !title.equalsIgnoreCase("") && !time.equalsIgnoreCase("") && !location.equalsIgnoreCase("")) {
+            isValid = true;
+        } else {
+            if (title.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please enter event title", Toast.LENGTH_SHORT).show();
+            } else if (date.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select date", Toast.LENGTH_SHORT).show();
+            } else if (time.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select time", Toast.LENGTH_SHORT).show();
+            } else if (location.equalsIgnoreCase("")) {
+                Toast.makeText(context, "Please select location", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void onItemClickListener(int position, int flag) {
+        if (flag == 2) {
+            showConfirmationDialog(position);
+        }
+    }
+
+    private void showConfirmationDialog(final int position) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                context);
+
+        alertDialog.setTitle("Remove Player");
+
+        alertDialog.setMessage("Are you sure you want to Remove this Player?");
+
+        alertDialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        arrayListRoster.remove(position);
+                        adapterCreateTeamRoster.notifyDataSetChanged();
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
 
 
@@ -438,21 +589,6 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + teamid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbjectNoProgress(url, null, Request.Method.GET);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getServicelistRefresh() {
-        Dashboard.getInstance().setProgressLoader(true);
-        try {
-            if (AppUtils.isNetworkAvailable(context)) {
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/" + teamid + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
@@ -472,29 +608,11 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == AppConstant.FRAGMENT_CODE) {
-                String userData = data.getStringExtra("userData");
-                Log.e("userData", userData);
-                setUserData(userData);
+                String id = data.getStringExtra("id");
+                String name = data.getStringExtra("name");
+                selectedTeamId = (id);
+                text_selectTeam.setText(name);
             }
-        }
-    }
-
-    private void setUserData(String userData) {
-        try {
-            JSONObject selectedUserList = new JSONObject(userData);
-            String id = "";
-            JSONArray userList = selectedUserList.getJSONArray("userList");
-            Log.e("userList", "*" + userList.toString());
-            for (int i = 0; i < userList.length(); i++) {
-                JSONObject jo = userList.getJSONObject(i);
-                listTeamName.add(listTeamName.size() - 1, jo.getString("name"));
-                listTeamId.add(listTeamId.size() - 1, jo.getString("id"));
-                id = jo.getString("id");
-            }
-            spinner_selectteam.setSelection(listTeamId.indexOf(id));
-            adapterteam.notifyDataSetChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -504,40 +622,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
 
-                    //  data = jObject.getString("total");
-                    arrayList.clear();
-                    for (int i = 0; i < data.length(); i++) {
-
-                        JSONObject jo = data.getJSONObject(i);
-
-                        upcomingEvent = new UpcomingEvent();
-
-                        upcomingEvent.setId(jo.getString("id"));
-                        upcomingEvent.setTitle(jo.getString("title"));
-                        upcomingEvent.setLocation(jo.getString("location"));
-                        upcomingEvent.setEventType(jo.getString("eventType"));
-                        upcomingEvent.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
-                        upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
-                        upcomingEvent.setTeam1Name(jo.getString("team1Name"));
-                        upcomingEvent.setPlayersCount(jo.getString("playersCount"));
-                        upcomingEvent.setTeam2Name(jo.getString("team2Name"));
-                        upcomingEvent.setTitle(jo.getString("title"));
-                        if (jo.has("matchStatus")) {
-                            upcomingEvent.setMatchStatus(jo.getString("matchStatus"));
-                        }
-                        JSONObject j1 = jo.getJSONObject("startDate");
-
-                        upcomingEvent.setDayName(j1.getString("dayName"));
-                        upcomingEvent.setMonthName(j1.getString("monthName"));
-                        upcomingEvent.setDate(j1.getString("date"));
-                        upcomingEvent.setTime(j1.getString("time"));
-                        upcomingEvent.setRowType(1);
-                        arrayList.add(upcomingEvent);
-                    }
-                    adapterUpcomingEvent = new AdapterUpcomingTournamentEvent(getActivity(), this, arrayList);
-                    list_request.setAdapter(adapterUpcomingEvent);
 
                 } else {
                 }
@@ -555,18 +640,20 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                         modelSportTeamList = new ModelSportTeamList();
 
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
-                        modelSportTeamList.setAvatar(jo.getString("avatar"));
+                        modelSportTeamList.setAvtarId(jo.getString("avatar"));
+                        modelSportTeamList.setUserId(jo.getString("userId"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setRequestStatus(jo.getString("requestStatus"));
                         modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
                         modelSportTeamList.setRowType(1);
-
-                        arrayListRoster.add(modelSportTeamList);
+                        if (modelSportTeamList.getRequestStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                            arrayListRoster.add(modelSportTeamList);
+                        }
                     }
-                    adapterSportTeamList = new AdapterTeamRoster(getActivity(), this, arrayListRoster);
-                    event_rosterlist.setAdapter(adapterSportTeamList);
+                    adapterCreateTeamRoster = new AdapterCreateTeamRoster(getActivity(), this, arrayListRoster);
+                    event_rosterlist.setAdapter(adapterCreateTeamRoster);
                 } else {
                 }
             }

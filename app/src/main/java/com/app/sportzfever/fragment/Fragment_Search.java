@@ -63,7 +63,7 @@ public class Fragment_Search extends BaseFragment implements ApiResponse {
     ArrayList<String> listSearchText = new ArrayList<>();
     View view_about;
     private ImageView headerRightImage, headerLeftImage;
-    private boolean isFirstTime = true;
+    private boolean isFirstTime = false;
     private int currentTabPosition = 0;
 
     public static Fragment_Search fragment_team;

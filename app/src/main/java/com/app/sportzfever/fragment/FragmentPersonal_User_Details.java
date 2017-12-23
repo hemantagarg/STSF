@@ -104,11 +104,12 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
         vendorProfileFragment = this;
         initViews();
         getBundle();
-        getUserDetails();
         setCollapsingToolbar();
         setListener();
         return view;
     }
+
+
 
     private void setListener() {
         image_edit.setOnClickListener(new View.OnClickListener() {
@@ -518,7 +519,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
     @Override
     public void onResume() {
         super.onResume();
-
+        getUserDetails();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         Dashboard.getInstance().manageFooterVisibitlity(false);
     }

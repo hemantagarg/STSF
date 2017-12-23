@@ -11,23 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/lblListItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_toRightOf="@+id/image_logo"
-            android:padding="10dp"
-            android:text=""
-            android:textColor="@color/textcolordark"
-            android:textSize="@dimen/text_size_12" />
 
         <ImageView
             android:id="@+id/image_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/dp5" />
+
+        <TextView
+            android:id="@+id/lblListItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:text=""
+            android:textColor="@color/textcolordark"
+            android:textSize="@dimen/text_size_12" />
+
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>
