@@ -128,7 +128,7 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_11"
                             android:textStyle="bold"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <com.app.sportzfever.utils.CustomTextView
                             android:id="@+id/text_scorerforb"
@@ -145,7 +145,7 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_11"
                             android:textStyle="bold"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
                     </RelativeLayout>
 
                     <LinearLayout
