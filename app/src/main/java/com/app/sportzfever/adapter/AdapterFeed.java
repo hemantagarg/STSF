@@ -19,6 +19,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
 import com.app.sportzfever.models.ModelFeed;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -173,8 +174,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
 
+
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
                 ((CustomViewHolder) holder).text_time.setText(m1.getDateString());
+                if (m1.getStatusType().equals(AppConstant.EVENT)) {
+                    ((CustomViewHolder) holder).text_message.setText(m1.getEventTitle() + "\n" + m1.getDateTime());
+                }
 
                 if (m1.getIsLiked().equalsIgnoreCase("0")) {
                     ((CustomViewHolder) holder).text_like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like_grey, 0, 0, 0);
@@ -193,33 +198,21 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 if (m1.getCommentsCount() > 0) {
-                    ((CustomViewHolder) holder).text_comment_count.setVisibility(View.VISIBLE);
-                    if (m1.getCommentsCount() > 1)
-                        ((CustomViewHolder) holder).text_comment_count.setText(m1.getCommentsCount() + " Comments");
-                    else
-                        ((CustomViewHolder) holder).text_comment_count.setText(m1.getCommentsCount() + " Comment");
+                    ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount()+"");
                 } else {
-                    ((CustomViewHolder) holder).text_comment_count.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).text_comment.setText("0");
                 }
 
                 if (m1.getLikeCount() > 0) {
-                    ((CustomViewHolder) holder).text_like_count.setVisibility(View.VISIBLE);
-                    if (m1.getLikeCount() > 1)
-                        ((CustomViewHolder) holder).text_like_count.setText(m1.getLikeCount() + " Likes");
-                    else
-                        ((CustomViewHolder) holder).text_like_count.setText(m1.getLikeCount() + " Like");
+                    ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount()+"");
                 } else {
-                    ((CustomViewHolder) holder).text_like_count.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).text_like.setText("0");
                 }
 
                 if (m1.getShareCount() > 0) {
-                    ((CustomViewHolder) holder).text_share_count.setVisibility(View.VISIBLE);
-                    if (m1.getShareCount() > 1)
-                        ((CustomViewHolder) holder).text_share_count.setText(m1.getShareCount() + " Shares");
-                    else
-                        ((CustomViewHolder) holder).text_share_count.setText(m1.getShareCount() + " Share");
+                    ((CustomViewHolder) holder).text_share.setText(m1.getShareCount()+"");
                 } else {
-                    ((CustomViewHolder) holder).text_share_count.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).text_share.setText("0");
                 }
 
                 if (m1.getUser().equalsIgnoreCase(AppUtils.getUserId(mContext))) {
@@ -229,11 +222,11 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
 
-                if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {
+           /*     if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {
                     ((CustomViewHolder) holder).view2.setVisibility(View.VISIBLE);
                 } else {
                     ((CustomViewHolder) holder).view2.setVisibility(View.GONE);
-                }
+                }*/
 
                 ((CustomViewHolder) holder).text_comment_count.setOnClickListener(new View.OnClickListener() {
                     @Override

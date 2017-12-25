@@ -37,6 +37,7 @@ import com.app.sportzfever.fragment.BaseFragment;
 import com.app.sportzfever.fragment.FragmentAvtar_Details;
 import com.app.sportzfever.fragment.FragmentGallery;
 import com.app.sportzfever.fragment.FragmentMenuTeamList;
+import com.app.sportzfever.fragment.FragmentPersonalProfileEdit;
 import com.app.sportzfever.fragment.FragmentPersonal_User_Details;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
@@ -930,9 +931,14 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         if (currentFragment instanceof FragmentUpcomingMatchDetails) {
             ((FragmentUpcomingMatchDetails) currentFragment).onResume();
         }
+        if (currentFragment instanceof FragmentPersonalProfileEdit) {
+            ((FragmentPersonalProfileEdit) currentFragment).onResume();
+        }
         if (currentFragment instanceof FragmentPersonal_User_Details) {
             ((FragmentPersonal_User_Details) currentFragment).onResume();
         }
+
+
     }
 
     @Override

@@ -21,13 +21,14 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/dp5">
 
-            <ImageView android:id="@+id/image_menu"
+            <ImageView
+                android:id="@+id/image_menu"
                 android:layout_width="@dimen/dp20"
                 android:layout_height="@dimen/dp30"
                 android:layout_alignParentRight="true"
-                android:visibility="gone"
                 android:layout_marginRight="@dimen/dp5"
-                android:src="@drawable/menu_dotsicon" />
+                android:src="@drawable/menu_dotsicon"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/text_sharePost"
@@ -85,26 +86,13 @@
 
             </RelativeLayout>
 
-
-            <TextView
-                android:id="@+id/text_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/image_viewers"
-                android:layout_marginBottom="@dimen/dp5"
-                android:layout_marginEnd="@dimen/dp10"
-                android:layout_marginStart="@dimen/dp10"
-                android:layout_marginTop="@dimen/dp5"
-                android:maxLines="3"
-                android:text="Hard work beats talent when talent does not work hard.\nGenius is 1% inspiration, 99% perspiration."
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_14" />
-
             <LinearLayout
                 android:id="@+id/ll_feed_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_message"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_below="@+id/image_viewers"
                 android:orientation="vertical">
 
                 <ImageView
@@ -118,6 +106,7 @@
                     android:id="@+id/ll_multiple_images"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/dp5"
                     android:layout_below="@+id/text_message"
                     android:orientation="horizontal"
                     android:visibility="gone"
@@ -194,6 +183,7 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_below="@+id/ll_feed_images"
                 android:alpha=".3"
                 android:background="@color/view_color" />
@@ -203,8 +193,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view2"
+                android:layout_marginTop="@dimen/dp5"
                 android:orientation="horizontal"
-                android:padding="@dimen/dp5">
+                android:padding="@dimen/dp5"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/text_like_count"
@@ -241,11 +233,26 @@
 
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/text_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll2"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_marginEnd="@dimen/dp10"
+                android:layout_marginStart="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp5"
+                android:maxLines="3"
+                android:text="Hard work beats talent when talent does not work hard.\nGenius is 1% inspiration, 99% perspiration."
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/ll2"
+                android:layout_below="@+id/text_message"
                 android:alpha=".3"
                 android:background="@color/view_color" />
 
@@ -254,9 +261,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view1"
-                android:weightSum="3"
                 android:orientation="horizontal"
-                android:padding="@dimen/dp5">
+                android:padding="@dimen/dp5"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/text_like"
@@ -264,11 +271,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/dp10"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/like_grey"
                     android:drawablePadding="@dimen/dp10"
                     android:padding="@dimen/dp5"
-                    android:text="Like"
-                    android:layout_weight="1"
+                    android:text="0"
                     android:textColor="@color/text_hint_color" />
 
                 <TextView
@@ -277,12 +284,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/dp10"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/comment_grey"
                     android:drawablePadding="@dimen/dp10"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:padding="@dimen/dp5"
-                    android:layout_weight="1"
-                    android:text="Comment"
+                    android:text="0"
                     android:textColor="@color/text_hint_color" />
 
                 <TextView
@@ -291,11 +298,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/dp10"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/share_grey"
                     android:drawablePadding="@dimen/dp10"
                     android:padding="@dimen/dp5"
-                    android:layout_weight="1"
-                    android:text="Share"
+                    android:text="0"
                     android:textColor="@color/text_hint_color" />
 
 

@@ -431,7 +431,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             jsonObject.put("isActive", "0");
             jsonObject.put("eventType", EventType);
 
-            sentInvite(jsonObject);
+            createMatchEvent(jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,7 +476,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         try {
             if (AppUtils.isNetworkAvailable(context)) {
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATEMATCH;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATEEVENT;
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
@@ -486,6 +486,22 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             e.printStackTrace();
         }
     }
+
+    private void createMatchEvent(JSONObject jsonObject) {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.CREATEVENTMATCH;
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private boolean validateMatch() {
         boolean isValid = false;

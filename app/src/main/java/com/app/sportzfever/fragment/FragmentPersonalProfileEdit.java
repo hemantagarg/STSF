@@ -47,9 +47,9 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     private Activity context;
     private Spinner avtar_gender;
     private ModelAvtarProfile modelAvtarProfile;
-    private EditText avtar_name, avtar_dob, avtar_hometown,
+    private EditText avtar_name, avtar_dob,
             avtar_aboutme;
-    private TextView edt_location;
+    private TextView edt_location, text_hometown;
     public static FragmentPersonalProfileEdit fragment_teamJoin_request;
     private final String TAG = FragmentPersonalProfileEdit.class.getSimpleName();
     private String avtarId = "";
@@ -95,6 +95,11 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     /*****************************************************************************
      * Function name - manageHeaderClick
      * Description - manage the click on the left and right image view of header
@@ -121,7 +126,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
         avtar_name = (EditText) view.findViewById(R.id.avtar_name);
         avtar_dob = (EditText) view.findViewById(R.id.avtar_dob);
         avtar_gender = (Spinner) view.findViewById(R.id.avtar_gender);
-        avtar_hometown = (EditText) view.findViewById(R.id.avtar_hometown);
+        text_hometown = (TextView) view.findViewById(R.id.text_hometown);
         edt_location = (TextView) view.findViewById(R.id.edt_location);
         avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
         //  avtar_aboutme = (EditText) view.findViewById(R.id.avtar_aboutme);
@@ -156,7 +161,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 avtar_name.setText(jo.getString("userName"));
 //                avtar_aboutme.setText(jo.getString("description"));
                 avtar_dob.setText(dateOfBirth.getString("datetime"));
-                avtar_hometown.setText(jo.getString("hometown"));
+                text_hometown.setText(jo.getString("hometown"));
                 edt_location.setText(jo.getString("currentLocation"));
                 avtar_aboutme.setText(jo.getString("about"));
                 //  avtar_gender.setText(jo.getString("gender"));
@@ -208,6 +213,22 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 }
             }
         });
+        text_hometown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GPSTracker gps = new GPSTracker(context);
+                if (gps.isGPSEnabled) {
+                    Intent i = new Intent(context, PickLocation.class);
+                    i.putExtra("lat", latitude);
+                    i.putExtra("lng", longitude);
+                    startActivityForResult(i, 522);
+
+                } else {
+                    gps.showSettingsAlert();
+                }
+            }
+        });
+
 
     }
 
@@ -226,7 +247,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 jsonObject.put("userId", avtarId);
                 jsonObject.put("gender", avtar_gender.getSelectedItem().toString());
 
-                jsonObject.put("homeTown", avtar_hometown.getText().toString());
+                jsonObject.put("homeTown", text_hometown.getText().toString());
                 jsonObject.put("currentLocation", edt_location.getText().toString());
                 jsonObject.put("lat", latitude);
                 jsonObject.put("lng", longitude);
@@ -256,6 +277,12 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
             latitude = data.getStringExtra("latitude");
             longitude = data.getStringExtra("longitude");
         }
+        if (requestCode == 522 && resultCode == 512) {
+            text_hometown.setText(data.getStringExtra("location"));
+            latitude = data.getStringExtra("latitude");
+            longitude = data.getStringExtra("longitude");
+        }
+
 
     }
 

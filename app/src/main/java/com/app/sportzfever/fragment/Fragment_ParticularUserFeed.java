@@ -63,6 +63,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
     private int skipCount = 0;
     private boolean loading = true;
     private String maxlistLength = "";
+    private View layout_post_feed;
     private EditText edt_text_post;
     private TextView text_post;
     int feedClickedPosition = 0;
@@ -102,6 +103,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
+        layout_post_feed = view.findViewById(R.id.layout_post_feed);
         text_post = (TextView) view.findViewById(R.id.text_post);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -135,6 +137,16 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
             }
         });
 
+        layout_post_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", AppUtils.getUserId(context));
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+            }
+        });
         text_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -445,7 +457,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+ "/" + id;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
                 new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {

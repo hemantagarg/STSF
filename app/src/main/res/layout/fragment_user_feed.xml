@@ -88,6 +88,9 @@
 
             </RelativeLayout>
 
+            <include android:id="@+id/layout_post_feed"
+                layout="@layout/post_feed_box" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_request"
                 android:layout_width="match_parent"
@@ -112,7 +115,8 @@
     <RelativeLayout
         android:id="@+id/rl_nodata"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
         <TextView
             android:id="@+id/text_nodata"

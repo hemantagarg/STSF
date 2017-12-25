@@ -73,6 +73,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     private final String TAG = Fragment_MatchFeed.class.getSimpleName();
     private String eventId = "";
     private String tournamentId = "";
+    private View layout_post_feed;
 
     public static Fragment_MatchFeed getInstance() {
         if (fragment_userFeed == null)
@@ -111,7 +112,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        layout_post_feed = view.findViewById(R.id.layout_post_feed);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
@@ -147,7 +148,17 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });
-
+        layout_post_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_PostMatchFeed fragment_postFeed = new Fragment_PostMatchFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", eventId);
+                bundle.putString("tournamentId", tournamentId);
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+            }
+        });
         text_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -441,7 +452,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+ "/" + id;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
                 new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {

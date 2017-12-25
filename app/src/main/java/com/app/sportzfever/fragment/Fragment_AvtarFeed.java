@@ -68,6 +68,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
     private TextView text_post;
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
+    private View layout_post_feed;
 
     public static Fragment_AvtarFeed fragment_userFeed;
     private final String TAG = Fragment_AvtarFeed.class.getSimpleName();
@@ -113,6 +114,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        layout_post_feed = view.findViewById(R.id.layout_post_feed);
         text_post = (TextView) view.findViewById(R.id.text_post);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -144,7 +146,16 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });
-
+        layout_post_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_PostAvtarFeed fragment_postFeed = new Fragment_PostAvtarFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", AppUtils.getAvtarId(context));
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+            }
+        });
         text_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -438,7 +449,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 jsonObject.put("description", text);
                 jsonObject.put("statusId", id);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS+ "/" + id ;
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
                 new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
@@ -642,14 +653,14 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }  else if (position == 13) {
+            } else if (position == 13) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }else if (position == 10) {
+            } else if (position == 10) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

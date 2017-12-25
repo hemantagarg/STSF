@@ -72,7 +72,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
     private Button btn_follow_team;
     private ViewPager viewPager;
     private ArrayList<ModelAvtarMyTeam> arrayList;
-    JSONObject userDetailObject, AvtarDetail;
+    JSONObject userDetailObject;
     private String id = "", path = "";
     private String isFriend = "";
     public static final int REQUEST_CODE_GALLERY = 0x1;
@@ -108,7 +108,6 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
         setListener();
         return view;
     }
-
 
 
     private void setListener() {
@@ -448,6 +447,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
                 Dashboard.getInstance().setProgressLoader(false);
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = response.getJSONObject("data");
+                    userDetailObject = new JSONObject();
                     userDetailObject = data;
 
                     String image = data.getString("profilePicture");

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,6 +52,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
     private boolean loading = true;
     String maxlistLength = "";
     View view;
+    private TextView text_nodata;
 
     public static Fragment_Group_Chat getInstance() {
         if (fragment_chat == null)
@@ -89,6 +91,7 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -103,21 +106,33 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
     private void setData() {
         try {
             String data1 = AppUtils.getGroupChatList(context);
-            JSONArray data = new JSONArray(data1);
-            arrayList.clear();
-            Gson gson = new Gson();
-            for (int i = 0; i < data.length(); i++) {
 
-                ModeJoinedGroup modeJoinedGroup = null;
-                try {
-                    modeJoinedGroup = gson.fromJson(data.getJSONObject(i).toString(), ModeJoinedGroup.class);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            JSONObject main = new JSONObject(data1);
+            if (main.getString("result").equalsIgnoreCase("1")) {
+                JSONArray data = main.getJSONArray("data");
+                arrayList.clear();
+                if (data != null && data.length() > 0) {
+                    Gson gson = new Gson();
+                    for (int i = 0; i < data.length(); i++) {
+
+                        ModeJoinedGroup modeJoinedGroup = null;
+                        try {
+                            modeJoinedGroup = gson.fromJson(data.getJSONObject(i).toString(), ModeJoinedGroup.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        arrayList.add(modeJoinedGroup);
+                    }
+                    adapterGroupChats = new AdapterGroupChats(getActivity(), this, arrayList);
+                    list_request.setAdapter(adapterGroupChats);
                 }
-                arrayList.add(modeJoinedGroup);
             }
-            adapterGroupChats = new AdapterGroupChats(getActivity(), this, arrayList);
-            list_request.setAdapter(adapterGroupChats);
+            if (arrayList.size() > 0) {
+                text_nodata.setVisibility(View.GONE);
+            } else {
+                text_nodata.setVisibility(View.VISIBLE);
+                text_nodata.setText(main.getString("message"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -187,8 +202,16 @@ public class Fragment_Group_Chat extends BaseFragment implements ApiResponse, On
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText(jObject.getString("message"));
+                    }
 
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText(jObject.getString("message"));
                     AppUtils.setGroupChatList(context, "");
                     if (adapterGroupChats != null) {
                         arrayList.clear();

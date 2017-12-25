@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -52,6 +53,7 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
     private boolean loading = true;
     String maxlistLength = "";
     View view;
+    private TextView text_nodata;
 
     public static Fragment_FriendList getInstance() {
         if (fragment_chat == null)
@@ -87,6 +89,7 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
+        text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -97,22 +100,41 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
     private void setData() {
         try {
             String data1 = AppUtils.getFriendList(context);
-            JSONArray data = new JSONArray(data1);
-            arrayList.clear();
-            Gson gson = new Gson();
-            for (int i = 0; i < data.length(); i++) {
+            if (!data1.equalsIgnoreCase("")) {
+                JSONObject main = new JSONObject(data1);
+                if (main.getString("result").equalsIgnoreCase("1")) {
+                    JSONArray data = main.getJSONArray("data");
+                    arrayList.clear();
+                    if (data != null && data.length() > 0) {
+                        Gson gson = new Gson();
+                        for (int i = 0; i < data.length(); i++) {
 
-                ModelFriendList modelFriendList = null;
-                try {
-                    modelFriendList = gson.fromJson(data.getJSONObject(i).toString(), ModelFriendList.class);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                            ModelFriendList modelFriendList = null;
+                            try {
+                                modelFriendList = gson.fromJson(data.getJSONObject(i).toString(), ModelFriendList.class);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            arrayList.add(modelFriendList);
+                        }
+                        adapterFriendList = new AdapterFriendList(context, this, arrayList);
+                        list_request.setAdapter(adapterFriendList);
+                    }
                 }
-                arrayList.add(modelFriendList);
-            }
-            adapterFriendList = new AdapterFriendList(context, this, arrayList);
-            list_request.setAdapter(adapterFriendList);
 
+                if (arrayList.size() > 0) {
+                    text_nodata.setVisibility(View.GONE);
+                } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText(main.getString("message"));
+                }
+            }
+            if (arrayList.size() > 0) {
+                text_nodata.setVisibility(View.GONE);
+            } else {
+                text_nodata.setVisibility(View.VISIBLE);
+                text_nodata.setText("No Contacts Found");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -164,7 +186,7 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    AppUtils.setFriendList(context, data.toString());
+                    AppUtils.setFriendList(context, jObject.toString());
                     arrayList.clear();
                     Gson gson = new Gson();
                     for (int i = 0; i < data.length(); i++) {
@@ -183,8 +205,15 @@ public class Fragment_FriendList extends BaseFragment implements ApiResponse, On
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-
+                    if (arrayList.size() > 0) {
+                        text_nodata.setVisibility(View.GONE);
+                    } else {
+                        text_nodata.setVisibility(View.VISIBLE);
+                        text_nodata.setText(jObject.getString("message"));
+                    }
                 } else {
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText(jObject.getString("message"));
 
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);

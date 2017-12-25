@@ -17,13 +17,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/layout_post_feed"
+                layout="@layout/post_feed_box" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp5"
                 android:layout_marginTop="@dimen/dp5"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/edt_text_post"
@@ -103,11 +107,11 @@
         android:id="@+id/floating_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:src="@drawable/add_white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/add_white"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/text_nodata"

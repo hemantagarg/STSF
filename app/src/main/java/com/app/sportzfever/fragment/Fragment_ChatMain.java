@@ -200,16 +200,16 @@ public class Fragment_ChatMain extends BaseFragment implements ApiResponse {
         try {
             if (method == 11) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                   // JSONArray data = jObject.getJSONArray("data");
 
-                    AppUtils.setFriendList(context, data.toString());
+                    AppUtils.setFriendList(context, jObject.toString());
                 }
 
             } else if (method == 12) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    JSONArray data = jObject.getJSONArray("data");
+                 //   JSONArray data = jObject.getJSONArray("data");
 
-                    AppUtils.setGroupChatList(context, data.toString());
+                    AppUtils.setGroupChatList(context, jObject.toString());
                 }
 
             } else if (method == 1) {

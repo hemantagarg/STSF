@@ -87,6 +87,9 @@
 
             </RelativeLayout>
 
+            <include android:id="@+id/layout_post_feed"
+                layout="@layout/post_feed_box" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_request"
                 android:layout_width="match_parent"

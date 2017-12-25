@@ -69,6 +69,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
     private TextView text_post;
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
+    private View layout_post_feed;
 
     public static Fragment_UserFeed fragment_userFeed;
     private final String TAG = Fragment_UserFeed.class.getSimpleName();
@@ -108,6 +109,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
         text_post = (TextView) view.findViewById(R.id.text_post);
+        layout_post_feed = view.findViewById(R.id.layout_post_feed);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -130,6 +132,18 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             }
         });
         floating_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", AppUtils.getUserId(context));
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+
+            }
+        });
+
+        layout_post_feed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment_PostFeed fragment_postFeed = new Fragment_PostFeed();
@@ -552,6 +566,13 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
                         modelFeed.setIsLiked(jo.getString("isUserLiked"));
+                        if (jo.getString("statusType").equals(AppConstant.EVENT)) {
+                            JSONObject event = jo.getJSONObject("event");
+                            modelFeed.setEventTitle(event.getString("title"));
+
+                            JSONObject startDate = event.getJSONObject("startDate");
+                            modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                        }
 
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
@@ -691,6 +712,15 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
                         modelFeed.setIsLiked(jo.getString("isUserLiked"));
+
+                        if (jo.getString("statusType").equals(AppConstant.EVENT)) {
+                            JSONObject event = jo.getJSONObject("event");
+                            modelFeed.setEventTitle(event.getString("title"));
+
+                            JSONObject startDate = event.getJSONObject("startDate");
+                            modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                        }
+
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
                             JSONArray imagesArray = jo.getJSONArray("images");

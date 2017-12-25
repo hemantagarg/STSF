@@ -66,6 +66,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
     private EditText edt_text_post;
     private TextView text_nodata;
     private TextView text_post;
+    private View layout_post_feed;
     int feedClickedPosition = 0;
     private FloatingActionButton floating_post;
 
@@ -120,6 +121,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         edt_text_post = (EditText) view.findViewById(R.id.edt_text_post);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        layout_post_feed = view.findViewById(R.id.layout_post_feed);
         text_post = (TextView) view.findViewById(R.id.text_post);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -142,6 +144,16 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
             }
         });
         floating_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment_PostAvtarFeed fragment_postFeed = new Fragment_PostAvtarFeed();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", teamAvatarId);
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+            }
+        });
+        layout_post_feed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment_PostAvtarFeed fragment_postFeed = new Fragment_PostAvtarFeed();

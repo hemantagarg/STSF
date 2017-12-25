@@ -53,6 +53,7 @@
             android:layout_below="@+id/rl_top"
             android:layout_toLeftOf="@+id/text_save"
             android:padding="@dimen/dp10"
+            android:visibility="visible"
             android:text="You can select three scorers from all users"
             android:textColor="@color/textcolordark"
             android:textSize="@dimen/text_size_14" />
@@ -78,7 +79,7 @@
             android:id="@+id/swipeRefreshLayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/text_detai"
+            android:layout_below="@+id/text_save"
             android:layout_marginTop="@dimen/dp5">
 
             <android.support.v7.widget.RecyclerView

@@ -46,7 +46,7 @@ public class ModelFeed implements Serializable {
 
     private String dateTimeUpdated;
 
-    private String event;
+    private String event,eventTitle;
 
     private String description;
 
@@ -388,5 +388,13 @@ public class ModelFeed implements Serializable {
 
     public void setTeamId(String teamId) {
         this.teamId = teamId;
+    }
+
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
     }
 }

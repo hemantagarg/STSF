@@ -54,7 +54,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
-    private TextView text_save;
+    private TextView text_save,text_detai;
     private boolean loading = true;
     public static Fragment_SearchUserList fragment_friend_request;
     private final String TAG = Fragment_SearchUserList.class.getSimpleName();
@@ -98,6 +98,7 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_save = (TextView) view.findViewById(R.id.text_save);
+        text_detai = (TextView) view.findViewById(R.id.text_detai);
         image_search = (ImageView) view.findViewById(R.id.image_search);
         edt_search = (EditText) view.findViewById(R.id.edt_search);
         list_request.setLayoutManager(layoutManager);
@@ -148,6 +149,10 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
                     addedCount = arrayListAddedUsers.size();
                 }
             }
+
+            if (fromScreen.equalsIgnoreCase("Roster")) {
+                text_detai.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,6 +167,9 @@ public class Fragment_SearchUserList extends BaseFragment implements ApiResponse
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
         HeaderViewManager.getInstance().setHeading(true, "Search User");
+        if (fromScreen.equalsIgnoreCase("Roster")) {
+            HeaderViewManager.getInstance().setHeading(true, "Invite players to team");
+        }
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
