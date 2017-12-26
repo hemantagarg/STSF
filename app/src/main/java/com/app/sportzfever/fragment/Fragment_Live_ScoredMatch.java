@@ -42,6 +42,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
 
     private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling, recycler_recent_balls;
     private Bundle b;
+    private TextView text_recentball;
     private Activity context;
     private AdapterTeamBattingMatch adapterTeam1BattingMatch, adapterTeam2BattingMatch;
     private AdapterTeamBowlingMatch adapterTeam1BowlingMatch, adapterTeam2BowlingMatch;
@@ -101,6 +102,7 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
         list_team2batting = (RecyclerView) view.findViewById(R.id.list_team2batting);
         list_team2bowling = (RecyclerView) view.findViewById(R.id.list_team2bowling);
         recycler_recent_balls = (RecyclerView) view.findViewById(R.id.recycler_recent_balls);
+        text_recentball = (TextView) view.findViewById(R.id.text_recentball);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         list_team1batting.setLayoutManager(new LinearLayoutManager(context));
         list_team1bowling.setLayoutManager(new LinearLayoutManager(context));
@@ -209,14 +211,17 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                     text_nodata.setVisibility(View.GONE);
                     layout_team1.setVisibility(View.VISIBLE);
                     recycler_recent_balls.setVisibility(View.VISIBLE);
+                    text_recentball.setVisibility(View.VISIBLE);
                 } else {
                     layout_team1.setVisibility(View.GONE);
                     recycler_recent_balls.setVisibility(View.GONE);
+                    text_recentball.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
                     text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 recycler_recent_balls.setVisibility(View.GONE);
+                text_recentball.setVisibility(View.GONE);
                 layout_team1.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
                 text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");

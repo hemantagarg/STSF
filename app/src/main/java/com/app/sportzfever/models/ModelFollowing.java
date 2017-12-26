@@ -13,6 +13,16 @@ public class ModelFollowing
 
     private String name;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
+
     private String avatar;
 
     public String getAvatarType ()

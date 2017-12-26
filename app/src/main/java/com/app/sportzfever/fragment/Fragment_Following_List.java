@@ -130,7 +130,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
             } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
                 Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
                 Bundle bundle = new Bundle();
-                bundle.putString("id", arrayList.get(position).getAvatar());
+                bundle.putString("id", arrayList.get(position).getId());
                 fragmentAvtar_details.setArguments(bundle);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
             }
@@ -197,6 +197,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
                         modelFollowing.setAvatarType(jo.getString("avatarType"));
                         modelFollowing.setName(jo.getString("name"));
+                        modelFollowing.setId(jo.getString("id"));
                         modelFollowing.setRowType(1);
 
                         arrayList.add(modelFollowing);
@@ -215,6 +216,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                         modelFollowing.setFan_date_time(jo.getString("fan_date_time"));
                         modelFollowing.setAvatarType(jo.getString("avatarType"));
                         modelFollowing.setName(jo.getString("name"));
+                        modelFollowing.setId(jo.getString("id"));
 
                         modelFollowing.setRowType(1);
 
