@@ -101,27 +101,19 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
     }
 
     private void setlistener() {
-
-
         text_addfriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment_Search tab2 = new Fragment_Search();
-
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
-
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
-
-
-
     }
 
     @Override
