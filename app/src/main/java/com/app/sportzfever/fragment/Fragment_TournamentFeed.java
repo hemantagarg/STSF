@@ -117,6 +117,7 @@ public class Fragment_TournamentFeed extends BaseFragment implements ApiResponse
         text_post = (TextView) view.findViewById(R.id.text_post);
         layout_post_feed = view.findViewById(R.id.layout_post_feed);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
+        floating_post.setVisibility(View.GONE);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);

@@ -105,7 +105,7 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     private void setData(String maindata) {
         try {
             data = new JSONObject(maindata);
-            JSONObject jdob = data.getJSONObject("dateOfBirth");
+
             modelAboutMe = new ModelAboutMe();
 
             modelAboutMe.setUserId(data.getString("userId"));
@@ -127,10 +127,12 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
             avtar_specialitylive.setText(modelAboutMe.getAbout());
             avtar_heigtlive.setText(modelAboutMe.getHeight() + " " + modelAboutMe.getHeightUnit());
             avtar_weightlive.setText(modelAboutMe.getWeight());
-            avtar_battingheldlive.setText(jdob.getString("date") + " " + jdob.getString("monthName") + " " + jdob.getString("year"));
             if (!modelAboutMe.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(context).load(modelAboutMe.getProfilePicture()).placeholder(R.drawable.ic_launcher).into(img_profilepic);
             }
+            JSONObject jdob = data.getJSONObject("dateOfBirth");
+            avtar_battingheldlive.setText(jdob.getString("date") + " " + jdob.getString("monthName") + " " + jdob.getString("year"));
+
             modelAboutMe.setRowType(1);
 
         } catch (JSONException e) {

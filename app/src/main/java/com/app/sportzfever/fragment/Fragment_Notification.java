@@ -62,7 +62,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
+        getServicelistRefresh();
     }
 
     @Override
@@ -93,8 +93,8 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
         arrayList = new ArrayList<>();
         setlistener();
 
-        getServicelistRefresh();
     }
+
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

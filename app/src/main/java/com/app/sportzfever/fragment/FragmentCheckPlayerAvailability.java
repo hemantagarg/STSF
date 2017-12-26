@@ -36,7 +36,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
     private CheckBox checkbox_player_availability;
     public static FragmentCheckPlayerAvailability fragment_friend_request;
     private final String TAG = FragmentCheckPlayerAvailability.class.getSimpleName();
-    private String teamId = "", eventId = "", playersCount = "";
+    private String teamId = "", eventId = "", playersCount = "",title="";
     private JSONObject jsonresponse;
 
     public static FragmentCheckPlayerAvailability getInstance() {
@@ -84,6 +84,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
         if (b != null) {
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            title = b.getString("title");
             playersCount = b.getString("playersCount");
         }
     }
@@ -148,6 +149,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("teamId", teamId);
                     bundle.putString("eventId", eventId);
                     bundle.putString("playersCount", playersCount);
+                    bundle.putString("title", title);
                     bundle.putString("jsonresponse", jsonresponse.toString());
                     bundle.putString("teamCheckAvailibility", "1");
                     fragmentPrepareLineup.setArguments(bundle);
@@ -156,6 +158,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
                     Bundle bundle = new Bundle();
                     bundle.putString("teamId", teamId);
+                    bundle.putString("title", title);
                     bundle.putString("eventId", eventId);
                     bundle.putString("playersCount", playersCount);
                     bundle.putString("teamCheckAvailibility", "0");

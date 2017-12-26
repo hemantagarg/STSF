@@ -178,7 +178,11 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((CustomViewHolder) holder).text_message.setText(Html.fromHtml(m1.getDescription()));
                 ((CustomViewHolder) holder).text_time.setText(m1.getDateString());
                 if (m1.getStatusType().equals(AppConstant.EVENT)) {
-                    ((CustomViewHolder) holder).text_message.setText(m1.getEventTitle() + "\n" + m1.getDateTime());
+                    ((CustomViewHolder) holder).text_message.setText(m1.getEventTitle());
+                    ((CustomViewHolder) holder).text_location_time.setText(m1.getDateTime());
+                    ((CustomViewHolder) holder).text_location_time.setVisibility(View.VISIBLE);
+                }else {
+                    ((CustomViewHolder) holder).text_location_time.setVisibility(View.GONE);
                 }
 
                 if (m1.getIsLiked().equalsIgnoreCase("0")) {
@@ -198,19 +202,19 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 if (m1.getCommentsCount() > 0) {
-                    ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount()+"");
+                    ((CustomViewHolder) holder).text_comment.setText(m1.getCommentsCount() + "");
                 } else {
                     ((CustomViewHolder) holder).text_comment.setText("0");
                 }
 
                 if (m1.getLikeCount() > 0) {
-                    ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount()+"");
+                    ((CustomViewHolder) holder).text_like.setText(m1.getLikeCount() + "");
                 } else {
                     ((CustomViewHolder) holder).text_like.setText("0");
                 }
 
                 if (m1.getShareCount() > 0) {
-                    ((CustomViewHolder) holder).text_share.setText(m1.getShareCount()+"");
+                    ((CustomViewHolder) holder).text_share.setText(m1.getShareCount() + "");
                 } else {
                     ((CustomViewHolder) holder).text_share.setText("0");
                 }
@@ -352,7 +356,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView text_name, text_message, text_time, text_like, text_comment, text_share,
-                text_imag_count, text_sharePost, text_like_count, text_comment_count, text_share_count;
+                text_imag_count, text_sharePost, text_like_count, text_comment_count, text_share_count, text_location_time;
         ImageView image_viewers, image_feed1, image_feed2, image_feed3, image_menu;
         LinearLayout ll_feed_images, ll_multiple_images;
         RelativeLayout rl_moreimages;
@@ -379,6 +383,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_like = (TextView) view.findViewById(R.id.text_like);
             this.text_time = (TextView) view.findViewById(R.id.text_time);
+            this.text_location_time = (TextView) view.findViewById(R.id.text_location_time);
             this.text_share = (TextView) view.findViewById(R.id.text_share);
             this.text_comment = (TextView) view.findViewById(R.id.text_comment);
 

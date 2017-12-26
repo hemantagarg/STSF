@@ -293,13 +293,19 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     }
 
     private void setupTabIcons() {
-
-        tabLayout.getTabAt(0).setText("Team Profile");
-        tabLayout.getTabAt(1).setText("Team Wall");
-        tabLayout.getTabAt(2).setText("Player Management");
-        tabLayout.getTabAt(3).setText("Gallery");
-        tabLayout.getTabAt(4).setText("Event Management");
-        tabLayout.getTabAt(5).setText("Tournament Fixtures");
+        if (!isTeamOwnerOrCaptain) {
+            tabLayout.getTabAt(0).setText("Team Profile");
+            tabLayout.getTabAt(1).setText("Team Wall");
+            tabLayout.getTabAt(2).setText("Gallery");
+            tabLayout.getTabAt(3).setText("Event Management");
+        } else {
+            tabLayout.getTabAt(0).setText("Team Profile");
+            tabLayout.getTabAt(1).setText("Team Wall");
+            tabLayout.getTabAt(2).setText("Player Management");
+            tabLayout.getTabAt(3).setText("Gallery");
+            tabLayout.getTabAt(4).setText("Event Management");
+            tabLayout.getTabAt(5).setText("Tournament Fixtures");
+        }
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
 
@@ -339,15 +345,16 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
-        FragmentTeamRoster tab4 = new FragmentTeamRoster();
-        Bundle b3 = new Bundle();
-        b3.putString("teamId", id);
-        b3.putString("ownerId", ownerId);
-        b3.putString("teamAvatarId", teamAvatarId);
-        b3.putBoolean("isTeamOwnerOrCaptain", isTeamOwnerOrCaptain);
-        tab4.setArguments(b3);
-        adapter.addFrag(tab4, "Roaster");
-
+        if (isTeamOwnerOrCaptain) {
+            FragmentTeamRoster tab4 = new FragmentTeamRoster();
+            Bundle b3 = new Bundle();
+            b3.putString("teamId", id);
+            b3.putString("ownerId", ownerId);
+            b3.putString("teamAvatarId", teamAvatarId);
+            b3.putBoolean("isTeamOwnerOrCaptain", isTeamOwnerOrCaptain);
+            tab4.setArguments(b3);
+            adapter.addFrag(tab4, "Roaster");
+        }
 
         FragmentTeamGallery tab1 = new FragmentTeamGallery();
         Bundle b1 = new Bundle();
@@ -364,12 +371,13 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         tab3.setArguments(b2);
         adapter.addFrag(tab3, "Event");
 
-        Fragment_TeamTournamentFixture_List tab5 = new Fragment_TeamTournamentFixture_List();
-        Bundle b5 = new Bundle();
-        b5.putString("teamid", id);
-        tab5.setArguments(b5);
-        adapter.addFrag(tab5, "Tour");
-
+        if (isTeamOwnerOrCaptain) {
+            Fragment_TeamTournamentFixture_List tab5 = new Fragment_TeamTournamentFixture_List();
+            Bundle b5 = new Bundle();
+            b5.putString("teamid", id);
+            tab5.setArguments(b5);
+            adapter.addFrag(tab5, "Tour");
+        }
         viewPager.setAdapter(adapter);
     }
 

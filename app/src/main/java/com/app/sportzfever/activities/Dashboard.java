@@ -394,8 +394,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     bundle.putString("array", menucategoriesArrayTeam.toString());
                     fragmentMenuTeamList.setArguments(bundle);
                     pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentMenuTeamList, true);
+                    parent.collapseGroup(groupPosition);
                     drawer.closeDrawer(GravityCompat.START);
-
                 } else {
                     List<DrawerListModel> list = alldata.get(groupnamelist.get(groupPosition));
                     Log.e("child clicked", list.get(childPosition).getSubMenu1AvatarId());
@@ -406,6 +406,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     bundle.putString("id", avtarid);
                     fragmentAvtar_details.setArguments(bundle);
                     pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                    parent.collapseGroup(groupPosition);
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 return true;

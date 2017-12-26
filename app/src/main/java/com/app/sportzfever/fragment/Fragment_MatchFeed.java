@@ -118,6 +118,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_post = (TextView) view.findViewById(R.id.text_post);
         floating_post = (FloatingActionButton) view.findViewById(R.id.floating_post);
+        floating_post.setVisibility(View.GONE);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);

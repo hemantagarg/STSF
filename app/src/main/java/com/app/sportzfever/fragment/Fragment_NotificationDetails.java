@@ -6,10 +6,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
@@ -32,6 +34,7 @@ public class Fragment_NotificationDetails extends BaseFragment {
 
     public static Fragment_NotificationDetails fragment_team;
     private final String TAG = Fragment_NotificationDetails.class.getSimpleName();
+    private FrameLayout frameLayout;
 
     public static Fragment_NotificationDetails getInstance() {
         if (fragment_team == null)
@@ -44,7 +47,7 @@ public class Fragment_NotificationDetails extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_team, container, false);
+        View view_about = inflater.inflate(R.layout.fragment_notiication_detail, container, false);
         context = getActivity();
         b = getArguments();
 
@@ -62,19 +65,55 @@ public class Fragment_NotificationDetails extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
-
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
+        frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
         setupTabIcons();
+        setListener();
+        setFragment(new Fragment_Notification());
+    }
+
+    private void setFragment(Fragment fragment) {
+        FragmentManager manager = getChildFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.frameLayout, fragment);
+        ft.commit();
+    }
+
+
+    private void setupTabIcons() {
+        tabLayout.addTab(tabLayout.newTab().setText("User Notification"));
+        tabLayout.addTab(tabLayout.newTab().setText("Team Notification"));
+
+    /*    tabLayout.getTabAt(0).setText("User Notification");
+        tabLayout.getTabAt(1).setText("Team Notification");
+*/
+        tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
     }
 
-    private void setupTabIcons() {
+    private void setListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        setFragment(new Fragment_Notification());
+                        break;
+                    case 1:
+                        setFragment(new Fragment_NotificationTeam());
+                        break;
+                }
+            }
 
-        tabLayout.getTabAt(0).setText("User Notification");
-        tabLayout.getTabAt(1).setText("Team Notification");
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 

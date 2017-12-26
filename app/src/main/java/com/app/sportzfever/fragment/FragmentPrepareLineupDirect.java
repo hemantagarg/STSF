@@ -58,7 +58,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     private ArrayList<String> listAvtarId = new ArrayList<>();
     private int totalCount = 0;
     private String eventId = "";
-    private String teamCheckAvailibility = "", linepArray = "";
+    private String teamCheckAvailibility = "", linepArray = "", title = "";
     private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7, text_name8, text_name9, text_name10, text_name11;
     private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
     private ImageView image_cross;
@@ -91,7 +91,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
         Dashboard.getInstance().manageFooterVisibitlity(false);
 
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Prepare Lineup");
+        HeaderViewManager.getInstance().setHeading(true, title);
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -122,8 +122,8 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init(view);
-        manageHeaderView();
         getBundle();
+        manageHeaderView();
         setlistener();
     }
 
@@ -180,6 +180,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
             Bundle b = getArguments();
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            title = b.getString("title");
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             playersCount = b.getString("playersCount");
             text_selected_players.setText("0/" + playersCount + "\nPlayers");
@@ -249,6 +250,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                 Bundle bundle = new Bundle();
                 bundle.putString("teamId", teamId);
                 bundle.putString("eventId", eventId);
+                bundle.putString("title", title);
                 bundle.putString("playersCount", playersCount);
                 bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
                 bundle.putString("jsonresponse", jsonObject.toString());

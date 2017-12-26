@@ -105,7 +105,7 @@ public class Fragment_Friend_Request extends BaseFragment implements ApiResponse
             @Override
             public void onClick(View view) {
                 Fragment_Search tab2 = new Fragment_Search();
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FRIENDS_BAR, tab2, true);
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

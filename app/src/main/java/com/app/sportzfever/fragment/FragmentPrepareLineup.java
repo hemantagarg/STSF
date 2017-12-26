@@ -57,7 +57,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
     private String teamId = "", eventId = "";
     private JSONObject jsonLinupArray;
     private String playersCount = "";
-    private String teamCheckAvailibility = "";
+    private String teamCheckAvailibility = "",title = "";
     private String matchId = "";
 
     public static FragmentPrepareLineup getInstance() {
@@ -87,11 +87,11 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         Dashboard.getInstance().manageFooterVisibitlity(false);
 
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Prepare Lineup");
+        HeaderViewManager.getInstance().setHeading(true, title);
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
-        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setRightSideHeaderView(true, R.drawable.refresh);
         HeaderViewManager.getInstance().setLogoView(false);
-        HeaderViewManager.getInstance().setProgressLoader(false, false);
+        HeaderViewManager.getInstance().setProgressLoader(false, true);
 
     }
 
@@ -109,6 +109,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
 
             @Override
             public void onClickOfHeaderRightView() {
+                getTeamLineup();
                 //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
             }
         };
@@ -131,8 +132,8 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         arrayListaddedPlayers = new ArrayList<>();
         adapterTeamAddedPlayersLineup = new AdapterTeamAddedPlayersLineup(context, this, arrayListaddedPlayers);
         list_added_players.setAdapter(adapterTeamAddedPlayersLineup);
-        manageHeaderView();
         getBundle();
+        manageHeaderView();
         setlistener();
     }
 
@@ -141,6 +142,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             Bundle b = getArguments();
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            title = b.getString("title");
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             playersCount = b.getString("playersCount");
             String response = b.getString("jsonresponse");
@@ -266,11 +268,8 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.ALLSPORTTEAMDETIAL + teamId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }

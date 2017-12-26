@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
-import com.app.sportzfever.adapter.AdapterNotification;
 import com.app.sportzfever.adapter.AdapterNotificationTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
@@ -63,7 +62,7 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
     @Override
     public void onResume() {
         super.onResume();
-        Dashboard.getInstance().manageHeaderVisibitlity(true);
+        getServicelistRefresh();
     }
 
     @Override
@@ -93,8 +92,6 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-
-        getServicelistRefresh();
     }
 
     private void setlistener() {

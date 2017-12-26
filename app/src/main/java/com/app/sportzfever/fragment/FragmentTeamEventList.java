@@ -152,6 +152,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                     Bundle bundle = new Bundle();
                     bundle.putString("teamId", teamid);
                     bundle.putString("eventId", arrayList.get(position).getId());
+                    bundle.putString("title", arrayList.get(position).getTitle());
                     bundle.putString("playersCount", arrayList.get(position).getPlayersCount());
                     fragment_postFeed.setArguments(bundle);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);

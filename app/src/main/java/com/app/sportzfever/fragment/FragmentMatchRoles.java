@@ -48,7 +48,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private Button btn_create_team;
     public static FragmentMatchRoles fragment_friend_request;
     private final String TAG = FragmentMatchRoles.class.getSimpleName();
-    private String teamId = "", eventId = "", playersCount = "";
+    private String teamId = "", eventId = "", playersCount = "", title = "";
     private JSONObject jsonresponse;
     private TextView text_captain, textViceCaptain, text_wicket_keeper, text_select_scorer,
             text_first_scorer, text_second_scorer, text_third_scorer, text_userscorer;
@@ -135,6 +135,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         if (b != null) {
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
+            title = b.getString("title");
             playersCount = b.getString("playersCount");
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             String response = b.getString("jsonresponse");
@@ -308,7 +309,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Match Roles");
+        HeaderViewManager.getInstance().setHeading(true, title);
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
