@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Inns"
+                        android:text="INNS"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -144,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Overs"
+                        android:text="OVERS"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
 
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Runs"
+                        android:text="RUNS"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -235,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Wkts"
+                        android:text="WKTS"
                         android:textColor="@color/stats"
 
                         android:textStyle="bold" />
@@ -278,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Best"
+                        android:text="BEST"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -371,7 +371,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Avg"
+                        android:text="AVG"
                         android:textColor="@color/stats"
 
                         android:textStyle="bold" />

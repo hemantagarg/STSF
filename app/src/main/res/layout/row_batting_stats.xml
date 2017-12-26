@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="Inns"
+                        android:text="INNS"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
@@ -373,7 +373,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="4s"
+                        android:text="4S"
                         android:textColor="@color/stats"
 
                         android:textStyle="bold" />
@@ -415,7 +415,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:paddingTop="@dimen/dp15"
-                        android:text="6s"
+                        android:text="6S"
                         android:textColor="@color/stats"
                         android:textStyle="bold" />
 
