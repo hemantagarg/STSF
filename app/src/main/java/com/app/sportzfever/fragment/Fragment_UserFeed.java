@@ -20,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +28,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.activities.ImagesListActivity;
 import com.app.sportzfever.adapter.AdapterFeed;
+import com.app.sportzfever.aynctask.AsyncPostDataFileResponse;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -40,10 +40,13 @@ import com.app.sportzfever.models.ModelFeed;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -354,7 +357,6 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
             final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
             Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
-            Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
 
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -447,15 +449,17 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
     private void updateFeed(String text, String id) {
         try {
+            Charset encoding = Charset.forName("UTF-8");
+            MultipartEntity reqEntity = new MultipartEntity();
+            StringBody statusid = new StringBody("id", encoding);
+            StringBody description = new StringBody(text, encoding);
+
+            reqEntity.addPart("statusId", statusid);
+            reqEntity.addPart("description", description);
+
             if (AppUtils.isNetworkAvailable(context)) {
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("description", text);
-              //  jsonObject.put("statusId", id);
-
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATESTATUS + "/" + id;
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-
+                new AsyncPostDataFileResponse(context, Fragment_UserFeed.this, 10, reqEntity, url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
