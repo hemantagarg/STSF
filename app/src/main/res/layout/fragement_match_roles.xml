@@ -98,6 +98,26 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/text_matchrole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear2"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_gravity="center"
+                android:text="Match Roles"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_15" />
+            <TextView
+                android:id="@+id/text_matchroles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_matchrole"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_gravity="left"
+                android:text="SF is proud to have an efficient team manager like you!!\n Give match roles now and are you good to go!!"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15" />
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear2"
@@ -105,6 +125,8 @@
                 android:layout_marginTop="@dimen/dp20"
                 android:padding="@dimen/dp5"
                 android:text="Captain"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableLeft="@drawable/aestrick"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15" />
 
@@ -227,6 +249,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp10"
                 android:padding="@dimen/dp5"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableLeft="@drawable/aestrick"
                 android:text="Search Scorer In (User/Lineup)"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15" />

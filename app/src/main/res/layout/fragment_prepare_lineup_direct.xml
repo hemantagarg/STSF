@@ -105,16 +105,46 @@
             android:visibility="gone" />
 
         <TextView
+            android:id="@+id/textmatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Match Lineup"
+android:textStyle="bold"
+            android:padding="@dimen/dp10"
+
+            android:textSize="@dimen/text_size_20"
+            />
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Good to know that you are sure about who all are playing. So go ahead and make your final lineup.
+"
+
+            android:textSize="@dimen/text_size_15"
+          /><TextView
+            android:id="@+id/textSEC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Don't worry, your scorer can amend lineup for you before the match for any last minute changes..
+"
+
+            android:textSize="@dimen/text_size_15"
+          />
+        <TextView
             android:id="@+id/textSelectAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:padding="@dimen/dp5"
             android:text="Select All"
+            android:visibility="gone"
             android:textColor="@color/button_bg"
             android:textSize="@dimen/text_size_15"
-            android:visibility="gone" />
-
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,7 +167,7 @@
                     android:padding="@dimen/dp5"
                     android:text="WK"
                     android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/text_size_13"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -145,6 +175,7 @@
                     android:id="@+id/img1"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
+                    android:visibility="gone"
                     android:layout_below="@+id/text_Wk"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/cricket" />
@@ -179,7 +210,7 @@
                     android:padding="@dimen/dp5"
                     android:text="BAT"
                     android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/text_size_13"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -187,6 +218,7 @@
                     android:id="@+id/img2"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
+                    android:visibility="gone"
                     android:layout_below="@+id/text_bat"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/cricket" />
@@ -221,7 +253,7 @@
                     android:padding="@dimen/dp5"
                     android:text="AR"
                     android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/text_size_13"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -229,6 +261,7 @@
                     android:id="@+id/img3"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
+                    android:visibility="gone"
                     android:layout_below="@+id/text_AR"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/cricket" />
@@ -263,7 +296,7 @@
                     android:padding="@dimen/dp5"
                     android:text="BOWL"
                     android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/text_size_13"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -271,6 +304,7 @@
                     android:id="@+id/img4"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
+                    android:visibility="gone"
                     android:layout_below="@+id/text_Bowl"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/cricket" />

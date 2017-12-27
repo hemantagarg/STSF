@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 public class FragmentCheckPlayerAvailability extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
 
     private Bundle b;
+    private TextView totalplayer;
     private Activity context;
     View mView;
     private Button btn_create_team;
@@ -77,6 +79,8 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
     private void init() {
         checkbox_player_availability = (CheckBox) mView.findViewById(R.id.checkbox_player_availability);
         btn_create_team = (Button) mView.findViewById(R.id.btn_create_team);
+        totalplayer = (TextView) mView.findViewById(R.id.totalplayer);
+
     }
 
     private void getBundle() {
@@ -86,6 +90,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
             eventId = b.getString("eventId");
             title = b.getString("title");
             playersCount = b.getString("playersCount");
+            totalplayer.setText(playersCount);
         }
     }
 
