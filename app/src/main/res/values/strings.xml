@@ -55,6 +55,6 @@
     <string name="avtaraboutme">About me : </string>
     <string name="tournament_text">Welcome to SF Tournament Page. We are super excited to have you here.\nYou can click on "Find Tournaments" button below to view events happening near you area.\nYou can "Create Tournaments" by clicking on Switch To Tournament Organizer Mode button.</string>
     <string name="team_roster">Team Roster</string>
-    <string name="team_roster_desc">This is your entire team. Either add players to "AVAILABILITY CHECK" section to find who are available OR uncheck that section to directly add players to "MATCH LINEUP". In both cases, any player added to "MATCH LINEUP" will be informed. </string>
+    <string name="team_roster_desc">Select which players you want for this match.SF will check with them and let you know.You can make your final lineup from available players once they have responded.\n Note:\n1. Permanent players need to be added via Player Management.\n 2. Being "Available" does not mean player is in final lineup till you make the final lineup.  </string>
 
 </resources>

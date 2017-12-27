@@ -103,17 +103,48 @@
             android:text="Create Team Lineup"
             android:textColor="@color/text_color_black"
             android:textSize="@dimen/text_size_20" />
+        <com.app.sportzfever.utils.CustomTextView
+            android:id="@+id/pick"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16"
+            android:layout_below="@+id/text_create_lineup"
+            android:text="PICK"
+            android:layout_height="wrap_content" />
 
+  <com.app.sportzfever.utils.CustomTextView
+    android:id="@+id/totalplayer"
+    android:layout_width="wrap_content"
+android:layout_centerHorizontal="true"
+      android:textStyle="bold"
+      android:padding="@dimen/dp10"
+android:drawablePadding="@dimen/dp10"
+      android:drawableLeft="@drawable/playerimglineup"
+      android:textSize="@dimen/text_size_20"
+      android:layout_below="@+id/pick"
+android:text="11"
+    android:layout_height="wrap_content" />
+
+        <com.app.sportzfever.utils.CustomTextView
+            android:id="@+id/player"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16"
+            android:layout_below="@+id/totalplayer"
+            android:text="PLAYERS"
+            android:layout_height="wrap_content" />
         <CheckBox
             android:id="@+id/checkbox_player_availability"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_create_lineup"
+            android:layout_below="@+id/player"
             android:layout_marginTop="@dimen/dp10"
             android:padding="@dimen/dp10"
-            android:text="Check fo player availability"
+            android:text="Check Availability of your team for this match.\n SF will check for their availability for this match."
             android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/text_size_13" />
 
         <TextView
             android:id="@+id/text_info"
@@ -121,9 +152,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/checkbox_player_availability"
             android:layout_centerHorizontal="true"
-            android:text="(Uncheck section to directly add players to lineup)"
+            android:text="(Uncheck this box if you are sure and directly want to add them to lineup)"
             android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_13" />
+            android:textSize="@dimen/text_size_10" />
 
 
         <Button
