@@ -542,11 +542,11 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-                boolean allowedToPost = jObject.getBoolean("allowedToPost");
-                if (allowedToPost)
-                    floating_post.setVisibility(View.VISIBLE);
+                String allowedToPost = jObject.getString("allowedToPost");
+                if (allowedToPost.equalsIgnoreCase("1"))
+                    layout_post_feed.setVisibility(View.VISIBLE);
                 else
-                    floating_post.setVisibility(View.GONE);
+                    layout_post_feed.setVisibility(View.GONE);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");

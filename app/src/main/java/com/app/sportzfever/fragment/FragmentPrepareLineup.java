@@ -57,7 +57,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
     private String teamId = "", eventId = "";
     private JSONObject jsonLinupArray;
     private String playersCount = "";
-    private String teamCheckAvailibility = "",title = "";
+    private String teamCheckAvailibility = "", title = "";
     private String matchId = "";
 
     public static FragmentPrepareLineup getInstance() {
@@ -182,6 +182,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 }
             }
             getRoasterList();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -211,6 +212,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
                 Bundle bundle = new Bundle();
                 bundle.putString("teamId", teamId);
+                bundle.putString("title", title);
                 bundle.putString("eventId", eventId);
                 bundle.putString("playersCount", playersCount);
                 bundle.putString("teamCheckAvailibility", teamCheckAvailibility);

@@ -471,7 +471,7 @@ public class FragmentPersonal_User_Details extends BaseFragment implements View.
             } else if (method == 3) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
-
+                    AppUtils.setUserImage(mActivity, response.getString("profilePicture"));
                 } else {
                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }

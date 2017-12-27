@@ -1,9 +1,9 @@
 package com.app.sportzfever.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,7 +65,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
 
     private RecyclerView list_request, event_rosterlist;
     private Bundle b;
-    private Context context;
+    private Activity context;
     private AdapterUpcomingTournamentEvent adapterUpcomingEvent;
     private UpcomingEvent upcomingEvent;
     private ArrayList<UpcomingEvent> arrayList;
@@ -457,6 +457,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 jsonObject.put("endDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
             }
             jsonObject.put("userId", AppUtils.getUserId(context));
+            jsonObject.put("teamId", teamid);
             jsonObject.put("title", edt_eventtitle.getText().toString());
             jsonObject.put("description", mEdtdetails.getText().toString());
             jsonObject.put("location", mEdtlocation.getText().toString());
@@ -638,9 +639,11 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    context.onBackPressed();
 
                 } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
 
             } else if (position == 11) {

@@ -48,6 +48,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     private ArrayList<ModelSportTeamList> arrayList, arrayListaddedPlayers;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
+    int addedCount = 0;
     private View view_about;
     private Button btn_send_invite, btn_next;
     private int WkCount = 0, Batcount = 0, AKCount = 0, BowlCount = 0;
@@ -130,6 +131,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     private void init(View view) {
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         list_added_players = (RecyclerView) view.findViewById(R.id.list_added_players);
+        list_added_players.setNestedScrollingEnabled(false);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         textSelectAll = (TextView) view.findViewById(R.id.textSelectAll);
         text_AR_count = (TextView) view.findViewById(R.id.text_AR_count);
@@ -177,6 +179,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
 
     private void getBundle() {
         try {
+            JSONArray playersAvailability = null;
             Bundle b = getArguments();
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
@@ -190,6 +193,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                 JSONObject jObject = new JSONObject(response);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray jtaemown = jObject.getJSONArray("lineupPlayers");
+                    playersAvailability = jObject.getJSONArray("playersAvailability");
 
                     arrayListaddedPlayers.clear();
                     for (int i = 0; i < jtaemown.length(); i++) {
@@ -235,7 +239,45 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                     adapterTeamAddedPlayersLineup.notifyDataSetChanged();
                 }
             }
-            getServicelistRefresh();
+            if (!teamCheckAvailibility.equalsIgnoreCase("1")) {
+                getServicelistRefresh();
+            } else {
+                addPlayers(playersAvailability);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addPlayers(JSONArray playersAvailability) {
+        try {
+            if (playersAvailability != null && playersAvailability.length() > 0) {
+                for (int i = 0; i < playersAvailability.length(); i++) {
+
+                    JSONObject jo = playersAvailability.getJSONObject(i);
+                    modelSportTeamList = new ModelSportTeamList();
+
+                    modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                    modelSportTeamList.setUserId(jo.getString("userId"));
+                    listAvtarId.add(jo.getString("avatarId"));
+                    modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                    modelSportTeamList.setTeamId(jo.getString("teamId"));
+                    modelSportTeamList.setMatchId(jo.getString("matchId"));
+                    modelSportTeamList.setOrder(jo.getString("order"));
+                    modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                    modelSportTeamList.setIsAdded(0);
+                    modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
+                    modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                    modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
+                    modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                    modelSportTeamList.setSpeciality(jo.getString("speciality"));
+                    modelSportTeamList.setRowType(1);
+                    if (modelSportTeamList.getAddedStatus().equals(AppConstant.ACCEPTED)) {
+                        arrayListaddedPlayers.add(modelSportTeamList);
+                    }
+                }
+            }
+            adapterTeamAddedPlayersLineup.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,17 +288,21 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
             @Override
             public void onClick(View view) {
                 JSONObject jsonObject = makeJsonRequest();
-                FragmentMatchRoles fragmentPrepareLineup = new FragmentMatchRoles();
-                Bundle bundle = new Bundle();
-                bundle.putString("teamId", teamId);
-                bundle.putString("eventId", eventId);
-                bundle.putString("title", title);
-                bundle.putString("playersCount", playersCount);
-                bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
-                bundle.putString("jsonresponse", jsonObject.toString());
-                bundle.putString("linepArray", linepArray);
-                fragmentPrepareLineup.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                if (addedCount > 0) {
+                    FragmentMatchRoles fragmentPrepareLineup = new FragmentMatchRoles();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("teamId", teamId);
+                    bundle.putString("eventId", eventId);
+                    bundle.putString("title", title);
+                    bundle.putString("playersCount", playersCount);
+                    bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
+                    bundle.putString("jsonresponse", jsonObject.toString());
+                    bundle.putString("linepArray", linepArray);
+                    fragmentPrepareLineup.setArguments(bundle);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                } else {
+                    Toast.makeText(context, "Please add atlest one player", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -368,6 +414,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                     jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
                     jo.put("order", i + 1 + "");
                     jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
+                    addedCount++;
                     newMatchlineUp.put(jo);
                 }
             }
@@ -438,7 +485,6 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     }
 
     private void getServicelistRefresh() {
-        Dashboard.getInstance().setProgressLoader(true);
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
@@ -488,7 +534,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                         modelSportTeamList.setAddedStatus(jo.getString("requestStatus"));
                         modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
                         modelSportTeamList.setRowType(1);
-                        if (!modelSportTeamList.getAddedStatus().equalsIgnoreCase("PENDING")) {
+                        if (modelSportTeamList.getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
                             if (!listAvtarId.contains(modelSportTeamList.getAvtarId())) {
                                 arrayListaddedPlayers.add(modelSportTeamList);
                             }
