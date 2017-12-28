@@ -203,9 +203,15 @@ public class FragmentSportsTeamDetailList extends BaseFragment implements ApiRes
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setRequestStatus(jo.getString("requestStatus"));
                         modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
+
+                        if (!modelSportTeamList.getRequestStatus().equalsIgnoreCase("PENDING")) {
+
+                            arrayList.add(modelSportTeamList);
+
+                        }
                         modelSportTeamList.setRowType(1);
 
-                        arrayList.add(modelSportTeamList);
+                       // arrayList.add(modelSportTeamList);
                     }
 
 
