@@ -409,8 +409,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:drawablePadding="@dimen/dp10"
-            android:drawableRight="@drawable/up_arrow_white"
+            android:drawableLeft="@drawable/up_arrow_white"
             android:text="Team Preview"
+
             android:textColor="@color/textcolordark"
             android:textSize="@dimen/text_size_14" />
 

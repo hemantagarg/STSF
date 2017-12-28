@@ -108,7 +108,7 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
             isTeamOwnerOrCaptain = bundle.getBoolean("isTeamOwnerOrCaptain");
         }
         if (isTeamOwnerOrCaptain)
-            floating_post.setVisibility(View.VISIBLE);
+            floating_post.setVisibility(View.GONE);
         else
             floating_post.setVisibility(View.GONE);
     }

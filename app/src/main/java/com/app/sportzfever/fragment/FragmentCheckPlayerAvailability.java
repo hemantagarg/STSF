@@ -118,7 +118,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Create Team Lineup");
+        HeaderViewManager.getInstance().setHeading(true, title);
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);

@@ -444,7 +444,7 @@
         android:paddingLeft="@dimen/dp20"
         android:paddingRight="@dimen/dp20"
         android:paddingTop="@dimen/dp5"
-        android:text="Create Lineup"
+        android:text="Let's Play"
         android:textAllCaps="false"
         android:textSize="@dimen/text_size_15" />
 
