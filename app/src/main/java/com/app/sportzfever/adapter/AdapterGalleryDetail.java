@@ -51,7 +51,7 @@ public class AdapterGalleryDetail extends RecyclerView.Adapter<RecyclerView.View
             vh = new CustomViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.progressbar_item, parent, false);
+                    R.layout.right_progressbar_item, parent, false);
 
             vh = new ProgressViewHolder(v);
         }
