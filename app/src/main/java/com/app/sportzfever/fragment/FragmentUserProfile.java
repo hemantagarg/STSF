@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAboutMe;
 import com.app.sportzfever.models.ModelAvtarProfile;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by admin on 06-01-2016.
@@ -88,7 +92,6 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     }
 
     private void getBundle() {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
@@ -148,10 +151,21 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                 Bundle b = new Bundle();
                 b.putString("data", data.toString());
                 tab2.setArguments(b);
+                tab2.setTargetFragment(FragmentUserProfile.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
             }
         });
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                getServicelistRefresh();
+            }
+        }
     }
 
     @Override

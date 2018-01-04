@@ -195,6 +195,7 @@ public class CommonAsyncTaskHashmap {
         // String url = context.getResources().getString(R.string.base_url) + addurl;
         Log.e("request", ": " + url + "  " + jsonObject);
         pd.show();
+        AppUtils.onKeyBoardDown(context);
         JsonObjectRequest mJsonRequest = new JsonObjectRequest(
                 MethodType,
                 url,

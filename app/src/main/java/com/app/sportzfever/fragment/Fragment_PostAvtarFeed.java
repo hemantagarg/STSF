@@ -422,6 +422,7 @@ public class Fragment_PostAvtarFeed extends BaseFragment implements ApiResponse,
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 //                    JSONArray data = jObject.getJSONArray("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, new Intent());
                     context.onBackPressed();
 
                 } else {
