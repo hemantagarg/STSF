@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -120,6 +121,11 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init(view);
@@ -189,11 +195,14 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
             text_selected_players.setText("0/" + playersCount + "\nPlayers");
             String response = b.getString("jsonresponse");
             linepArray = b.getString("jsonresponse");
+            String strPlayersAvailability = "";
+            if (b.containsKey("playersAvailability")) {
+                strPlayersAvailability = b.getString("playersAvailability");
+            }
             if (!response.equalsIgnoreCase("")) {
                 JSONObject jObject = new JSONObject(response);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray jtaemown = jObject.getJSONArray("lineupPlayers");
-                    playersAvailability = jObject.getJSONArray("playersAvailability");
 
                     arrayListaddedPlayers.clear();
                     for (int i = 0; i < jtaemown.length(); i++) {
@@ -242,42 +251,46 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
             if (!teamCheckAvailibility.equalsIgnoreCase("1")) {
                 getServicelistRefresh();
             } else {
-                addPlayers(playersAvailability);
+                addPlayers(strPlayersAvailability);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addPlayers(JSONArray playersAvailability) {
+    private void addPlayers(String strPlayersAvailability) {
         try {
-            if (playersAvailability != null && playersAvailability.length() > 0) {
-                for (int i = 0; i < playersAvailability.length(); i++) {
+            if (!strPlayersAvailability.equalsIgnoreCase("")) {
+                JSONObject jo1 = new JSONObject(strPlayersAvailability);
+                JSONArray playersAvailability = jo1.getJSONArray("playersAvailability");
+                if (playersAvailability != null && playersAvailability.length() > 0) {
+                    for (int i = 0; i < playersAvailability.length(); i++) {
 
-                    JSONObject jo = playersAvailability.getJSONObject(i);
-                    modelSportTeamList = new ModelSportTeamList();
+                        JSONObject jo = playersAvailability.getJSONObject(i);
+                        modelSportTeamList = new ModelSportTeamList();
 
-                    modelSportTeamList.setAvtarId(jo.getString("avatarId"));
-                    modelSportTeamList.setUserId(jo.getString("userId"));
-                    listAvtarId.add(jo.getString("avatarId"));
-                    modelSportTeamList.setPlayerName(jo.getString("playerName"));
-                    modelSportTeamList.setTeamId(jo.getString("teamId"));
-                    modelSportTeamList.setMatchId(jo.getString("matchId"));
-                    modelSportTeamList.setOrder(jo.getString("order"));
-                    modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
-                    modelSportTeamList.setIsAdded(0);
-                    modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
-                    modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
-                    modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
-                    modelSportTeamList.setAvatarName(jo.getString("avatarName"));
-                    modelSportTeamList.setSpeciality(jo.getString("speciality"));
-                    modelSportTeamList.setRowType(1);
-                    if (modelSportTeamList.getAddedStatus().equals(AppConstant.ACCEPTED)) {
-                        arrayListaddedPlayers.add(modelSportTeamList);
+                        modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                        modelSportTeamList.setUserId(jo.getString("userId"));
+                        listAvtarId.add(jo.getString("avatarId"));
+                        modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                        modelSportTeamList.setTeamId(jo.getString("teamId"));
+                        modelSportTeamList.setMatchId(jo.getString("matchId"));
+                        modelSportTeamList.setOrder(jo.getString("order"));
+                        modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                        modelSportTeamList.setIsAdded(0);
+                        modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
+                        modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                        modelSportTeamList.setProfilePicture(jo.getString("playerProfilePicture"));
+                        modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setSpeciality(jo.getString("speciality"));
+                        modelSportTeamList.setRowType(1);
+                        if (modelSportTeamList.getAddedStatus().equals(AppConstant.ACCEPTED)) {
+                            arrayListaddedPlayers.add(modelSportTeamList);
+                        }
                     }
                 }
+                adapterTeamAddedPlayersLineup.notifyDataSetChanged();
             }
-            adapterTeamAddedPlayersLineup.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,6 +312,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                     bundle.putString("jsonresponse", jsonObject.toString());
                     bundle.putString("linepArray", linepArray);
                     fragmentPrepareLineup.setArguments(bundle);
+                    fragmentPrepareLineup.setTargetFragment(FragmentPrepareLineupDirect.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
                 } else {
                     Toast.makeText(context, "Please add atlest one player", Toast.LENGTH_SHORT).show();
@@ -428,6 +442,14 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
         return jsonObject;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == AppConstant.RESULTCODE_FINISH) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+            context.onBackPressed();
+        }
+    }
 
     @Override
     public void onItemClickListener(int position, int flag) {

@@ -696,6 +696,8 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             if (method == 1) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+                    context.onBackPressed();
                 } else {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }

@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -110,6 +111,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             @Override
             public void onClickOfHeaderRightView() {
                 getTeamLineup();
+                getRoasterList();
                 //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
             }
         };
@@ -160,6 +162,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
 
                         modelSportTeamList.setAvtarId(jo.getString("avatarId"));
                         listAvtarId.add(jo.getString("avatarId"));
+                        modelSportTeamList.setUserId(jo.getString("userId"));
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
                         modelSportTeamList.setTeamId(jo.getString("teamId"));
                         modelSportTeamList.setMatchId(jo.getString("matchId"));
@@ -209,6 +212,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
             @Override
             public void onClick(View view) {
                 sentInvite();
+                JSONObject playerAvalablity = makeAddedPlayerJsonRequest();
                 FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
                 Bundle bundle = new Bundle();
                 bundle.putString("teamId", teamId);
@@ -217,13 +221,55 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 bundle.putString("playersCount", playersCount);
                 bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
                 bundle.putString("jsonresponse", jsonLinupArray.toString());
+                bundle.putString("playersAvailability", playerAvalablity.toString());
                 fragmentPrepareLineup.setArguments(bundle);
+                fragmentPrepareLineup.setTargetFragment(FragmentPrepareLineup.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
 
             }
         });
     }
 
+    private JSONObject makeAddedPlayerJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray newMatchlineUp = new JSONArray();
+            for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
+                if (arrayListaddedPlayers.get(i).getIsAdded() == 1) {
+                    JSONObject jo = new JSONObject();
+                    jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
+                    jo.put("userId", arrayListaddedPlayers.get(i).getUserId());
+                    jo.put("playerName", arrayListaddedPlayers.get(i).getPlayerName());
+                    jo.put("teamId", arrayListaddedPlayers.get(i).getTeamId());
+                    jo.put("matchId", arrayListaddedPlayers.get(i).getMatchId());
+                    jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
+                    jo.put("speciality", arrayListaddedPlayers.get(i).getSpeciality());
+                    jo.put("playerProfilePicture", arrayListaddedPlayers.get(i).getProfilePicture());
+                    jo.put("avatarName", arrayListaddedPlayers.get(i).getAvatarName());
+                    jo.put("isInPlayingBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
+                    jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
+                  //  jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
+                    jo.put("order", i + 1 + "");
+                    jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
+                    newMatchlineUp.put(jo);
+                }
+            }
+            jsonObject.put("playersAvailability", newMatchlineUp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == AppConstant.RESULTCODE_FINISH) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+            context.onBackPressed();
+        }
+    }
 
     @Override
     public void onItemClickListener(int position, int flag) {
@@ -240,8 +286,24 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         arrayListaddedPlayers.remove(position);
         adapterTeamAddedPlayersLineup.notifyDataSetChanged();
         adapterSportTeamList.notifyDataSetChanged();
+        checkListIfAccepted();
     }
 
+    private void checkListIfAccepted() {
+        boolean isPlayerAccepted = false;
+        for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
+            if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                isPlayerAccepted = true;
+            }
+        }
+        if (isPlayerAccepted) {
+            btn_next.setVisibility(View.VISIBLE);
+            btn_send_invite.setVisibility(View.GONE);
+        } else {
+            btn_next.setVisibility(View.GONE);
+            btn_send_invite.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void addDataInList(int position) {
 
@@ -250,6 +312,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
         arrayList.remove(position);
         adapterTeamAddedPlayersLineup.notifyDataSetChanged();
         adapterSportTeamList.notifyDataSetChanged();
+        checkListIfAccepted();
     }
 
 
@@ -364,7 +427,9 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
 
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
                         modelSportTeamList.setAvtarId(jo.getString("avatar"));
+                        modelSportTeamList.setUserId(jo.getString("userId"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setIsInPlayingBench("0");
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setIsAdded(0);
@@ -409,6 +474,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                         listAvtarId.add(jo.getString("avatarId"));
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                        modelSportTeamList.setUserId(jo.getString("userId"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setTeamId(jo.getString("teamId"));
                         modelSportTeamList.setMatchId(jo.getString("matchId"));
