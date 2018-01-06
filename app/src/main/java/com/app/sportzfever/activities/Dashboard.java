@@ -657,8 +657,6 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         chat_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
-
-
     }
 
     private void getUserDetails() {

@@ -74,6 +74,9 @@ public class AppConstant {
     public static final String PRACTISE = "PRACTISE";
     public static final String MEET_UP = "MEET UP";
     public static final String EVENT = "EVENT";
+    public static final String UPDATENAME = "UPDATENAME";
+    public static final String UPDATECAPTAIN = "UPDATECAPTAIN";
+    public static final String DELETETEAM = "DELETETEAM";
     public static final int RESULTCODE_FINISH = 206;
 
 

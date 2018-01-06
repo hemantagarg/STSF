@@ -20,6 +20,7 @@
             android:paddingBottom="@dimen/dp5"
             android:paddingLeft="@dimen/dp10"
             android:paddingRight="@dimen/dp10"
+            android:textColor="@color/white"
             android:paddingTop="@dimen/dp5"
             android:text="Create Event"
             android:textSize="@dimen/text_size_14" />

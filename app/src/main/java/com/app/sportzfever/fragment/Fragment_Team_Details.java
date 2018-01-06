@@ -2,9 +2,12 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,10 +23,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +45,7 @@ import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.MemoryPolicy;
@@ -47,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +70,8 @@ import java.util.List;
 
 import eu.janmuller.android.simplecropimage.CropImage;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
@@ -71,7 +82,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     private final String TAG = Fragment_Team_Details.class.getSimpleName();
     private TabLayout tabLayout;
     private TextView text_username, text_address, mTvTotalPlayers, mTvTotalFans, mTvTotalMatches;
-    private ImageView image_back, imge_user, imge_banner, image_edit;
+    private ImageView image_back, imge_user, imge_banner, image_edit, image_menu;
     private Button btn_join_team, btn_follow_team;
     private RelativeLayout rl_banner;
     private ViewPager viewPager;
@@ -88,6 +99,10 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     public static final int REQUEST_CODE_CROP_IMAGE = 0x3;
     private File mFileTemp, selectedFilePath;
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
+    private ArrayList<String> arrayListId = new ArrayList<>();
+    private ArrayList<String> arrayListName = new ArrayList<>();
+    ArrayAdapter<String> adapterUser;
+    private boolean isDeleteTeam = false;
 
     public static Fragment_Team_Details getInstance() {
         if (vendorProfileFragment == null)
@@ -122,6 +137,13 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 selectImage1();
+            }
+        });
+
+        image_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                teamEditOptions();
             }
         });
 
@@ -163,15 +185,18 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             isTeamMember = data.getString("isTeamMember");
             String image = data.getString("ownerPic");
             isTeamfollower = data.getString("isTeamfollower");
+            setRoasterData(data);
 
             if (AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("ownerId")) ||
                     AppUtils.getLoginUserAvtarId(mActivity).equalsIgnoreCase(data.getString("captainId"))) {
                 btn_join_team.setVisibility(View.GONE);
                 image_edit.setVisibility(View.VISIBLE);
+                image_menu.setVisibility(View.VISIBLE);
                 isTeamOwnerOrCaptain = true;
             } else {
                 btn_join_team.setVisibility(View.VISIBLE);
                 image_edit.setVisibility(View.GONE);
+                image_menu.setVisibility(View.GONE);
                 isTeamOwnerOrCaptain = false;
             }
 
@@ -215,6 +240,27 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setRoasterData(JSONObject data) {
+        try {
+            JSONArray teamProfile = data.getJSONArray("teamProfile");
+            arrayListId.clear();
+            arrayListName.clear();
+            arrayListId.add("-1");
+            arrayListName.add("Choose New Captain");
+
+            for (int i = 0; i < teamProfile.length(); i++) {
+                JSONObject jo = teamProfile.getJSONObject(i);
+                if (jo.getString("requestStatus").equalsIgnoreCase(AppConstant.ACCEPTED)) {
+                    arrayListId.add(jo.getString("avatar"));
+                    arrayListName.add(jo.getString("playerName"));
+                }
+            }
+            adapterUser = new ArrayAdapter<String>(mActivity, R.layout.row_spinner, R.id.textview, arrayListName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -321,6 +367,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         imge_user = (ImageView) view.findViewById(R.id.imge_user);
         imge_banner = (ImageView) view.findViewById(R.id.imge_banner);
         image_edit = (ImageView) view.findViewById(R.id.image_edit);
+        image_menu = (ImageView) view.findViewById(R.id.image_menu);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         text_username = (TextView) view.findViewById(R.id.text_username);
@@ -431,45 +478,6 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
     }
 
 
-    @Override
-    public void onPostSuccess(int method, JSONObject response) {
-        try {
-            if (method == 1) {
-                if (response.getString("result").equalsIgnoreCase("1")) {
-
-                    //  JSONObject data = response.getJSONObject("data");
-                    if (isTeamfollower.equalsIgnoreCase("1")) {
-                        isTeamfollower = "0";
-                        btn_follow_team.setText("Follow");
-                    } else {
-                        isTeamfollower = "1";
-                        btn_follow_team.setText("Following");
-                    }
-                } else {
-                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            } else if (method == 2) {
-                if (response.getString("result").equalsIgnoreCase("1")) {
-                    JSONObject data = response.getJSONObject("data");
-                    setUserData(data);
-                }
-            } else if (method == 3) {
-                if (response.getString("result").equalsIgnoreCase("1")) {
-                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onPostFail(int method, String response) {
-
-    }
-
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -545,6 +553,259 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_CHAT_BAR, fragment, true);
     }
 
+    private void teamEditOptions() {
+        final CharSequence[] items = {"Edit Name",
+                "Change Captain", "Delete Team", "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                mActivity);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Edit Name")) {
+                    editTeamName();
+                } else if (items[item].equals("Change Captain")) {
+                    editTeamCaptain();
+                } else if (items[item].equals("Delete Team")) {
+                    deleteTeamPopup();
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    private void deleteTeamPopup() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                mActivity);
+
+        alertDialog.setTitle("Delete Team?");
+
+        alertDialog.setMessage("Are you sure you want to delete ? The team will be deleted but data will remain safe with us.");
+
+        alertDialog.setPositiveButton("CONFRM",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            isDeleteTeam = true;
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("type", AppConstant.DELETETEAM);
+                            jsonObject.put("teamId", id);
+                            updateTeamName(jsonObject);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+
+    }
+
+
+    /**
+     * Open dialog for the edit team name
+     */
+    private void editTeamName() {
+        try {
+            final Dialog dialog = new Dialog(mActivity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) mActivity
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_post_dialog, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            name_requirement_txt.setText("Edit Team Name");
+            edt_comment.setHint("Enter Team Name");
+            edt_comment.setText(text_username.getText().toString());
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (!edt_comment.getText().toString().equalsIgnoreCase("")) {
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("type", AppConstant.UPDATENAME);
+                            jsonObject.put("teamId", id);
+                            jsonObject.put("teamName", edt_comment.getText().toString());
+                            jsonObject.put("sportId", "1");
+                            updateTeamName(jsonObject);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        edt_comment.setError("Please enter team name");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
+    /**
+     * Open dialog for the edit team name
+     */
+    private void editTeamCaptain() {
+        try {
+            final Dialog dialog = new Dialog(mActivity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) mActivity
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_tem_captain, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            final Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+            if (adapterUser != null)
+                spinnerShareWith.setAdapter(adapterUser);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (spinnerShareWith.getSelectedItemPosition() != 0) {
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("type", AppConstant.UPDATECAPTAIN);
+                            jsonObject.put("teamId", id);
+                            jsonObject.put("captainId", arrayListId.get(spinnerShareWith.getSelectedItemPosition()));
+                            updateTeamName(jsonObject);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        edt_comment.setError("Please select captain");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
+    private void updateTeamName(JSONObject jsonObject) {
+        try {
+            if (AppUtils.isNetworkAvailable(mActivity)) {
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPDATE_TEAM;
+                new CommonAsyncTaskHashmap(5, mActivity, this).getqueryJsonbject(url, jsonObject, Request.Method.PUT);
+
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @Override
+    public void onPostSuccess(int method, JSONObject response) {
+        try {
+            if (method == 1) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+
+                    //  JSONObject data = response.getJSONObject("data");
+                    if (isTeamfollower.equalsIgnoreCase("1")) {
+                        isTeamfollower = "0";
+                        btn_follow_team.setText("Follow");
+                    } else {
+                        isTeamfollower = "1";
+                        btn_follow_team.setText("Following");
+                    }
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (method == 2) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = response.getJSONObject("data");
+                    setUserData(data);
+                }
+            } else if (method == 3) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (method == 5) {
+                if (response.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    if (isDeleteTeam) {
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, new Intent());
+                        mActivity.onBackPressed();
+                    } else {
+                        getServicelistRefresh();
+                    }
+                } else {
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPostFail(int method, String response) {
+
+    }
 
     private void selectImage1() {
         final CharSequence[] items = {"Choose from Library",

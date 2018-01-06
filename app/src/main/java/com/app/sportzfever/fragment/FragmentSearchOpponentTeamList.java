@@ -55,7 +55,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
-    private TextView text_save;
+    private TextView text_save,text_detai;
     private boolean loading = true;
     public static FragmentSearchOpponentTeamList fragment_friend_request;
     private final String TAG = FragmentSearchOpponentTeamList.class.getSimpleName();
@@ -96,7 +96,9 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_save = (TextView) view.findViewById(R.id.text_save);
+        text_detai = (TextView) view.findViewById(R.id.text_detai);
         text_save.setVisibility(View.GONE);
+        text_detai.setVisibility(View.GONE);
         image_search = (ImageView) view.findViewById(R.id.image_search);
         edt_search = (EditText) view.findViewById(R.id.edt_search);
         list_request.setLayoutManager(new GridLayoutManager(context, 2));
@@ -114,7 +116,7 @@ public class FragmentSearchOpponentTeamList extends BaseFragment implements ApiR
     private void manageHeaderView() {
         Dashboard.getInstance().manageHeaderVisibitlity(false);
         HeaderViewManager.getInstance().InitializeHeaderView(null, mView, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Search Team");
+        HeaderViewManager.getInstance().setHeading(true, "Find opponent team");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);

@@ -252,11 +252,11 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset < 100) {
-                    text_startdate.setText(matchTitle);
-                   // collapsingToolbarLayout.setTitle(matchTitle);
+                 //   text_startdate.setText(matchTitle);
+                    collapsingToolbarLayout.setTitle(matchTitle);
                     isShow = true;
                 } else if (isShow) {
-                    text_startdate.setText("Match Center");
+                   // text_startdate.setText("Match Center");
                     collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
                     isShow = false;
                 }

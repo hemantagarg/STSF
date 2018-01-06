@@ -426,6 +426,7 @@ public class Fragment_PostAvtarFeed extends BaseFragment implements ApiResponse,
                     context.onBackPressed();
 
                 } else {
+                    Toast.makeText(getActivity(), jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

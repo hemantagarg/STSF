@@ -180,7 +180,6 @@ public class Fragment_TeamFeed extends BaseFragment implements ApiResponse, OnCu
         });
 
         list_request.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);

@@ -62,7 +62,6 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentCreateEventList extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     View mView;
-
     private RecyclerView list_request, event_rosterlist;
     private Bundle b;
     private Activity context;
@@ -73,7 +72,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayListRoster;
     private ImageView image_map;
-    private TextView mTvToDate, mTvTime, mTvToDateend, mTvTimeend, text_overs;
+    private TextView mTvToDate, mTvTime, mTvToDateend, mTvTimeend, text_overs, text_matchdesc;
     private String teamid = "", teamavtarid = "";
     public static FragmentCreateEventList fragment_teamJoin_request;
     private final String TAG = FragmentCreateEventList.class.getSimpleName();
@@ -142,6 +141,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         image_map = (ImageView) view.findViewById(R.id.image_map);
         mTvToDateend = (TextView) view.findViewById(R.id.mTvToDateend);
         text_overs = (TextView) view.findViewById(R.id.text_overs);
+        text_matchdesc = (TextView) view.findViewById(R.id.text_matchdesc);
         linear_matchPublic = (LinearLayout) view.findViewById(R.id.linear_matchPublic);
         linear_enddatetime = (LinearLayout) view.findViewById(R.id.linear_enddatetime);
         edt_eventtitle = (EditText) view.findViewById(R.id.edt_eventtitle);
@@ -153,6 +153,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
         edt_no_players = (EditText) view.findViewById(R.id.edt_no_players);
         list_request.setLayoutManager(new LinearLayoutManager(context));
         arrayList = new ArrayList<>();
+        //  text_matchdesc.setText(Html.fromHtml(context.getResources().getString(R.string.match_desc)));
         arrayListRoster = new ArrayList<>();
         listEventType.add("Select Event Type");
         listEventType.add("Event (Public)");
@@ -234,8 +235,8 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear)
-                                + "-" + String.valueOf(dayOfMonth);
+                        String date = year + "-" + (monthOfYear + 1)
+                                + "-" + dayOfMonth;
                         mTvToDate.setText(date);
                     }
                 }, yy, mm, dd);
@@ -322,10 +323,19 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
 
                 if (position == 0) {
                     rl_main.setVisibility(View.GONE);
+                    text_matchdesc.setVisibility(View.VISIBLE);
+                    btn_save.setVisibility(View.GONE);
+                    linear_matchPublic.setVisibility(View.GONE);
+                    edt_eventtitle.setVisibility(View.GONE);
+                    event_rosterlist.setVisibility(View.GONE);
+                    text_invite.setVisibility(View.GONE);
                 } else {
+                    text_matchdesc.setVisibility(View.GONE);
                     rl_main.setVisibility(View.VISIBLE);
+                    btn_save.setVisibility(View.VISIBLE);
                     if (position == 4) {
                         EventType = AppConstant.MATCH;
+                        setHeaderTitle("Create match event");
                         linear_matchPublic.setVisibility(View.VISIBLE);
                         edt_eventtitle.setVisibility(View.GONE);
                         event_rosterlist.setVisibility(View.GONE);
@@ -337,9 +347,13 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                         text_invite.setVisibility(View.VISIBLE);
                         if (position == 1) {
                             EventType = AppConstant.EVENT;
+                            setHeaderTitle("Create event");
                         } else if (position == 2) {
                             EventType = AppConstant.MEET_UP;
+                            setHeaderTitle("Create meetup event");
+
                         } else if (position == 3) {
+                            setHeaderTitle("Create practise event");
                             EventType = AppConstant.PRACTISE;
                         }
                     }
@@ -380,8 +394,8 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear)
-                                + "-" + String.valueOf(dayOfMonth);
+                        String date = year + "-" + (monthOfYear + 1)
+                                + "-" + dayOfMonth;
                         mTvToDateend.setText(date);
                     }
                 }, yy, mm, dd);
@@ -406,6 +420,10 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             }
         });
 
+    }
+
+    private void setHeaderTitle(String title) {
+        HeaderViewManager.getInstance().setHeading(true, title);
     }
 
     private JSONObject makeMatchJsonRequest() {
@@ -640,6 +658,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, new Intent());
                     context.onBackPressed();
 
                 } else {
