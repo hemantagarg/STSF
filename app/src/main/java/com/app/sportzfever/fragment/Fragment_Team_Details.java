@@ -555,7 +555,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
     private void teamEditOptions() {
         final CharSequence[] items = {"Edit Name",
-                "Change Captain", "Delete Team", "Cancel"};
+                "Change Captain", "Delete Team"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 mActivity);
@@ -568,8 +568,6 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
                     editTeamCaptain();
                 } else if (items[item].equals("Delete Team")) {
                     deleteTeamPopup();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
                 }
             }
         });

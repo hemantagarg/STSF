@@ -94,7 +94,7 @@ public class ScoreActivity extends AppCompatActivity {
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Score");
+        getSupportActionBar().setTitle("Scorer Mode");
         webview = (WebView) findViewById(R.id.webview);
     }
 

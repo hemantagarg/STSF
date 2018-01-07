@@ -50,6 +50,7 @@ import com.app.sportzfever.fragment.Fragment_Matches;
 import com.app.sportzfever.fragment.Fragment_NotificationDetails;
 import com.app.sportzfever.fragment.Fragment_PastMatch_Details;
 import com.app.sportzfever.fragment.Fragment_PostFeed;
+import com.app.sportzfever.fragment.Fragment_Scoring;
 import com.app.sportzfever.fragment.Fragment_Search;
 import com.app.sportzfever.fragment.Fragment_Team;
 import com.app.sportzfever.fragment.Fragment_Tournaments;
@@ -357,8 +358,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Tournaments(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("6")) {
-                    Intent intent = new Intent(context, ScoreActivity.class);
-                    startActivity(intent);
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Scoring(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("7")) {
                     FragmentPersonal_User_Details fragmentUser_details = new FragmentPersonal_User_Details();
