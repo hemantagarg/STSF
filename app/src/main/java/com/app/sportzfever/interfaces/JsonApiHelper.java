@@ -31,6 +31,7 @@ public interface JsonApiHelper {
     String GET_MATCHINVITATIONAVAILABILITY = "getMatchAndPrctiseInvitations/";
     String GETALLSPORT = "getAllSport/";
     String GETMENU = "getMenu/";
+    String GETSETTINGS = "getSettings";
     String GET_UPCOMINGEVENTS = "getUpcomingEvent/";
     String GET_TOURNAMENTFIXTURE = "getTournamentFixtures/";
     String GET_COMMENTS = "getComments/";
@@ -58,6 +59,7 @@ public interface JsonApiHelper {
     String GET_ALLMYTOURNAMENT = "getAllTournamentsByOrganiser/";
     String GET_LIVEMATCHES = "getAllLiveMatches/";
     String GET_UPCOMINGMATCHES = "getAllUpcomingMatches/";
+    String SCORING_MATCHES = "listOfMatches/upcoming";
     String GET_RECENTCHAT = "getRecentChatData/";
     String SHAREFEED = "shareFeed";
     String LIKEUNLIKEPOST = "likeAndUnlikePost";
@@ -66,9 +68,11 @@ public interface JsonApiHelper {
     String AVTARMYTEAMIADMIN = "getAvatarDetailsMyTeams/";
     String ALLTOURNAMNENTTEAM = "getTeamsInTournament/";
     String ALLSPORTTEAMDETIAL = "getTeamProfile/";
+    String UPDATE_TEAM = "updateTeam";
     String REMOVEFROMROSTER = "removeFromRoster";
     String ADDROSTER = "saveTeamToRoster";
     String GET_MATCH_LINEUP = "getMatchLineup/";
+    String GET_LINEUP_FOR_MATCH = "matches/getLineUpForMatch/";
     String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
     String ALLTOURNAMNENTIMAGES = "getAlbumMatchTournament/tournament/";
     String ALLSPORTAVTARALBUMS = "getAlbumsAvatar/";
@@ -103,5 +107,5 @@ public interface JsonApiHelper {
     String GET_ORGNIZERDATA = "tournamentMobilePageAction/";
     String MANAGE_LINEUP_MATCH = "manageLineUpForMatch";
     String CREATEEVENT = "createEvent";
-    String CREATEVENTMATCH = "createEventMatch";
+    String CREATEVENTMATCH = "createMatch";
 }

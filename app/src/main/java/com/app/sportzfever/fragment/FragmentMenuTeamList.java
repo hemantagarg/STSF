@@ -5,30 +5,40 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.TeamDrawerListAdapter;
+import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
+import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
+import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.models.DrawerListModel;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemClicListener {
+public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
 
     private Bundle b;
     private Activity context;
@@ -113,7 +123,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
 
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
-        list_request.setLayoutManager(new GridLayoutManager(context,2));
+        list_request.setLayoutManager(new GridLayoutManager(context, 2));
         listAdapter = new TeamDrawerListAdapter(context, this, teamlist);
         list_request.setAdapter(listAdapter);
     }
@@ -134,7 +144,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
                 modelSportTeamList.setRowType(1);
                 modelSportTeamList.setTeamName(headerobj.getString("SubMenu2Name"));
                 if (headerobj.has("teamProfilePicture"))
-                modelSportTeamList.setProfilePicture(headerobj.getString("teamProfilePicture"));
+                    modelSportTeamList.setProfilePicture(headerobj.getString("teamProfilePicture"));
 
                 teamlist.add(modelSportTeamList);
                 listAdapter.notifyDataSetChanged();
@@ -155,9 +165,82 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
             Bundle bundle = new Bundle();
             bundle.putString("id", avtarid);
             fragmentAvtar_details.setArguments(bundle);
+            fragmentAvtar_details.setTargetFragment(FragmentMenuTeamList.this, AppConstant.FRAGMENT_CODE);
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
         }
 
     }
-}
 
+    public void getMenuData() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                //  https://sfscoring.betasportzfever.com/getMenu/1/479a44a634f82b0394f78352d302ec36
+             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GETMENU + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                getMenuData();
+            }
+        }
+    }
+
+    @Override
+    public void onPostSuccess(int method, JSONObject jObject) {
+        try {
+            if (method == 1) {
+                if (method == 1) {
+                    if (jObject.getString("result").equalsIgnoreCase("1")) {
+                        JSONArray menucategoriesArrayTeam;
+                        JSONObject data = jObject.getJSONObject("data");
+                        JSONArray servicearr = data.getJSONArray("Menu");
+
+                        for (int i = 0; i < servicearr.length(); i++) {
+                            JSONObject headerobj = servicearr.getJSONObject(i);
+                            ArrayList<DrawerListModel> list = new ArrayList<>();
+                            JSONArray menucategoriesArray = headerobj.getJSONArray("Menucategories");
+                            Log.e("Menucategories", menucategoriesArray.toString());
+
+                            if (menucategoriesArray.length() > 0) {
+                                for (int j = 0; j < menucategoriesArray.length(); j++) {
+                                    JSONObject obj = menucategoriesArray.getJSONObject(j);
+
+                                    DrawerListModel model = new DrawerListModel();
+                                    model.setSubMenu1Id(obj.getString("SubMenu1Id"));
+                                    model.setSubMenu1AvatarId(obj.getString("SubMenu1AvatarId"));
+                                    model.setName(obj.getString("SubMenu1Name"));
+                                    list.add(model);
+                                    if (headerobj.getString("MenuId").equalsIgnoreCase("2")) {
+                                        menucategoriesArrayTeam = obj.getJSONArray("SubMenu1Teams");
+                                        AppUtils.setTeamList(context, menucategoriesArrayTeam.toString());
+                                        setData();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onPostFail(int method, String response) {
+
+    }
+}

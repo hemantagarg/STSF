@@ -17,7 +17,7 @@ public class ModelUpcomingMatches {
     private int rowType;
     private String id;
 
-    private String team1Name;
+    private String team1Name,team1ScorerName,team2ScorerName;
 
     public String getShortMonthName() {
         return ShortMonthName;
@@ -69,18 +69,17 @@ public class ModelUpcomingMatches {
     private String date;
     private String monthName;
     private String year;
+    private String canEditLineup,isActiveScorer,activeScorerName,isTeam1ScoringOnSf,isTeam2ScoringOnSf;
 
-
-
-    private String eventId;
+    private String eventId,numberOfPlayers;
 
     private String team2Name;
 
-    private String location;
+    private String location,team2Id,team1Id;
 
     private String team1AvatarID;
 
-    private String matchStatus;
+    private String matchStatus,matchId;
 
     private String team1profilePicture;
 
@@ -211,4 +210,91 @@ public class ModelUpcomingMatches {
     }
 
 
+    public String getTeam1ScorerName() {
+        return team1ScorerName;
+    }
+
+    public void setTeam1ScorerName(String team1ScorerName) {
+        this.team1ScorerName = team1ScorerName;
+    }
+
+    public String getTeam2ScorerName() {
+        return team2ScorerName;
+    }
+
+    public void setTeam2ScorerName(String team2ScorerName) {
+        this.team2ScorerName = team2ScorerName;
+    }
+
+    public String getTeam2Id() {
+        return team2Id;
+    }
+
+    public void setTeam2Id(String team2Id) {
+        this.team2Id = team2Id;
+    }
+
+    public String getTeam1Id() {
+        return team1Id;
+    }
+
+    public void setTeam1Id(String team1Id) {
+        this.team1Id = team1Id;
+    }
+
+    public String getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(String numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public String getCanEditLineup() {
+        return canEditLineup;
+    }
+
+    public void setCanEditLineup(String canEditLineup) {
+        this.canEditLineup = canEditLineup;
+    }
+
+    public String getIsActiveScorer() {
+        return isActiveScorer;
+    }
+
+    public void setIsActiveScorer(String isActiveScorer) {
+        this.isActiveScorer = isActiveScorer;
+    }
+
+    public String getActiveScorerName() {
+        return activeScorerName;
+    }
+
+    public void setActiveScorerName(String activeScorerName) {
+        this.activeScorerName = activeScorerName;
+    }
+
+    public String getIsTeam1ScoringOnSf() {
+        return isTeam1ScoringOnSf;
+    }
+
+    public void setIsTeam1ScoringOnSf(String isTeam1ScoringOnSf) {
+        this.isTeam1ScoringOnSf = isTeam1ScoringOnSf;
+    }
+
+    public String getIsTeam2ScoringOnSf() {
+        return isTeam2ScoringOnSf;
+    }
+
+    public void setIsTeam2ScoringOnSf(String isTeam2ScoringOnSf) {
+        this.isTeam2ScoringOnSf = isTeam2ScoringOnSf;
+    }
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(String matchId) {
+        this.matchId = matchId;
+    }
 }

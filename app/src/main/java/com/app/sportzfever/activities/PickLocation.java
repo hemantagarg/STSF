@@ -372,6 +372,8 @@ public class PickLocation extends FragmentActivity implements OnClickListener, O
                     String city = addresses.get(0).getAddressLine(1);
                     String country = addresses.get(0).getAddressLine(2);
                     location = address + " : " + city + " : " + country;
+                    location = location.replace("null", "");
+                    location = location.replace(":", "");
                     addre.setText(location);
                     mapclick();
                 } catch (Exception e) {
@@ -440,6 +442,8 @@ public class PickLocation extends FragmentActivity implements OnClickListener, O
                     String city = addresses.get(0).getAddressLine(1);
                     String country = addresses.get(0).getAddressLine(2);
                     location = address + " : " + city + " : " + country;
+                    location = location.replace("null", "");
+                    location = location.replace(":", "");
                     addre.setText(location);
 
 						/*
@@ -818,6 +822,8 @@ public class PickLocation extends FragmentActivity implements OnClickListener, O
                 String city1 = addresses.get(0).getAddressLine(1);
                 String country1 = addresses.get(0).getAddressLine(2);
                 location = address1 + " : " + city1 + " : " + country1;
+                location = location.replace("null", "");
+                location = location.replace(":", "");
                 addre.setText(location);
             } else {
                 Toast.makeText(context, "No location found", Toast.LENGTH_SHORT).show();

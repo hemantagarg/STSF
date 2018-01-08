@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by admin on 06-01-2016.
@@ -135,12 +138,23 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                 Bundle bundle = new Bundle();
                 bundle.putString("teamId", teamid);
                 fragment_postFeed.setArguments(bundle);
+                fragment_postFeed.setTargetFragment(FragmentTeamEventList.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
 
             }
 
 
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                getServicelistRefresh();
+            }
+        }
     }
 
     @Override

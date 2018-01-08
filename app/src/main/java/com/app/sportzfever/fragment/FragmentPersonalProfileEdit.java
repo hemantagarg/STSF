@@ -37,6 +37,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by admin on 06-01-2016.
  */
@@ -189,7 +191,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear)
+                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear+1)
                                 + "-" + String.valueOf(dayOfMonth);
                         avtar_dob.setText(date);
                     }
@@ -294,6 +296,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     //JSONObject data = jObject.getJSONObject("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, new Intent());
                     context.onBackPressed();
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

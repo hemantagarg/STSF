@@ -45,6 +45,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by admin on 06-01-2016.
  */
@@ -129,6 +131,16 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
         getServicelistRefresh();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AppConstant.FRAGMENT_CODE) {
+                getServicelistRefresh();
+            }
+        }
+    }
+
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -143,6 +155,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getAvtarId(context));
                 fragment_postFeed.setArguments(bundle);
+                fragment_postFeed.setTargetFragment(Fragment_AvtarFeed.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });
@@ -153,6 +166,7 @@ public class Fragment_AvtarFeed extends BaseFragment implements ApiResponse, OnC
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getAvtarId(context));
                 fragment_postFeed.setArguments(bundle);
+                fragment_postFeed.setTargetFragment(Fragment_AvtarFeed.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
             }
         });

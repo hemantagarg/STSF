@@ -26,58 +26,6 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-
-            <LinearLayout
-                android:id="@+id/linear_album"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp10"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerAlbumPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/edt_generalProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
-                    android:background="@color/text_selected_bg"
-                    android:hint="General Profile"
-                    android:padding="@dimen/dp15"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
-                    android:background="@color/text_selected_bg">
-
-                    <Spinner
-                        android:id="@+id/spinner_album"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:padding="@dimen/dp10" />
-
-                </RelativeLayout>
-
-                <EditText
-                    android:id="@+id/edt_albumname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
-                    android:background="@color/text_selected_bg"
-                    android:hint="Album Name"
-                    android:maxLines="1"
-                    android:padding="@dimen/dp15"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
-            </LinearLayout>
-
             <RelativeLayout
                 android:id="@+id/rl_share"
                 android:layout_width="match_parent"
@@ -113,11 +61,21 @@
                 android:background="@color/view_color"
                 android:visibility="invisible" />
 
+            <TextView
+                android:id="@+id/text_matchdesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp10"
+                android:text="@string/match_desc"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_15" />
+
+
             <RelativeLayout
                 android:id="@+id/rl_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/linear_matchPublic"
@@ -424,8 +382,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp10"
                 android:visibility="gone" />
+
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
 
     <Button
         android:id="@+id/btn_save"

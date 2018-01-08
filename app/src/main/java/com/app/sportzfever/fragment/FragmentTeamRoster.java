@@ -60,7 +60,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
     public static FragmentTeamRoster fragment_teamJoin_request;
     private final String TAG = FragmentTeamRoster.class.getSimpleName();
     private String teamId = "";
-    private String ownerId = "";
+    private String ownerId = "", captainId = "";
     private String teamAvatarId = "";
     private int deletedPosition;
 
@@ -142,6 +142,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
         Bundle b = getArguments();
         teamId = b.getString("teamId");
         ownerId = b.getString("ownerId");
+        captainId = b.getString("captainId");
         boolean isTeamOwnerOrCaptain = b.getBoolean("isTeamOwnerOrCaptain");
         teamAvatarId = b.getString("teamAvatarId");
         if (isTeamOwnerOrCaptain) {
@@ -332,7 +333,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                     }
 
 
-                    adapterSportTeamList = new AdapterTeamRoster(getActivity(), this, arrayList);
+                    adapterSportTeamList = new AdapterTeamRoster(getActivity(), this, arrayList,captainId,ownerId);
                     list_request.setAdapter(adapterSportTeamList);
 
 

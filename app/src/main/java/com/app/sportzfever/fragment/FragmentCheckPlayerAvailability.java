@@ -1,6 +1,7 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONException;
@@ -158,6 +160,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("jsonresponse", jsonresponse.toString());
                     bundle.putString("teamCheckAvailibility", "1");
                     fragmentPrepareLineup.setArguments(bundle);
+                    fragmentPrepareLineup.setTargetFragment(FragmentCheckPlayerAvailability.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
                 } else {
                     FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
@@ -173,12 +176,22 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                         bundle.putString("jsonresponse", "");
                     }
                     fragmentPrepareLineup.setArguments(bundle);
+                    fragmentPrepareLineup.setTargetFragment(FragmentCheckPlayerAvailability.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
 
                 }
             }
         });
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == AppConstant.RESULTCODE_FINISH) {
+            context.onBackPressed();
+        }
+    }
+
 
     @Override
     public void onItemClickListener(int position, int flag) {

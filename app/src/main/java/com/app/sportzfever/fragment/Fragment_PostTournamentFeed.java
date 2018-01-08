@@ -422,9 +422,10 @@ public class Fragment_PostTournamentFeed extends BaseFragment implements ApiResp
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 //                    JSONArray data = jObject.getJSONArray("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, new Intent());
                     context.onBackPressed();
-
                 } else {
+                    Toast.makeText(getActivity(), jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

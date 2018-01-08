@@ -33,12 +33,14 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    private String captainId = "", ownerId = "";
 
-
-    public AdapterTeamRoster(Context context, OnCustomItemClicListener lis, ArrayList<ModelSportTeamList> list) {
+    public AdapterTeamRoster(Context context, OnCustomItemClicListener lis, ArrayList<ModelSportTeamList> list, String captainId, String ownerId) {
 
         this.detail = list;
         this.mContext = context;
+        this.captainId = captainId;
+        this.ownerId = ownerId;
         this.listener = lis;
 
     }
@@ -92,6 +94,12 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             ((CustomViewHolder) holder).text_status.setText(m1.getRequestStatus());
 
+            if (m1.getAvatar().equalsIgnoreCase(captainId) || m1.getAvatar().equalsIgnoreCase(ownerId)) {
+                ((CustomViewHolder) holder).image_status.setVisibility(View.INVISIBLE);
+            } else {
+                ((CustomViewHolder) holder).image_status.setVisibility(View.VISIBLE);
+            }
+
             ((CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,7 +112,6 @@ public class AdapterTeamRoster extends RecyclerView.Adapter<RecyclerView.ViewHol
                     listener.onItemClickListener(i, 1);
                 }
             });
-
 
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)

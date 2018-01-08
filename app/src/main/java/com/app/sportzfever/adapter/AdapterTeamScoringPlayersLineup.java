@@ -3,6 +3,7 @@ package com.app.sportzfever.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,8 @@ import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.ModelGallery;
+import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,16 +24,16 @@ import java.util.ArrayList;
 /**
  * Created by admin on 26-11-2015.
  */
-public class AdapterGalleryDetail extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTeamScoringPlayersLineup extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModelGallery> detail;
+    ArrayList<ModelSportTeamList> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterGalleryDetail(Context context, OnCustomItemClicListener lis, ArrayList<ModelGallery> list) {
+    public AdapterTeamScoringPlayersLineup(Context context, OnCustomItemClicListener lis, ArrayList<ModelSportTeamList> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -46,12 +48,12 @@ public class AdapterGalleryDetail extends RecyclerView.Adapter<RecyclerView.View
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_gallery_detail, parent, false);
+                    R.layout.row_teamaddedplayers, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.right_progressbar_item, parent, false);
+                    R.layout.progressbar_item, parent, false);
 
             vh = new ProgressViewHolder(v);
         }
@@ -76,17 +78,27 @@ public class AdapterGalleryDetail extends RecyclerView.Adapter<RecyclerView.View
 
         if (holder instanceof CustomViewHolder) {
 
-            ModelGallery m1 = (ModelGallery) detail.get(i);
+            ModelSportTeamList m1 = (ModelSportTeamList) detail.get(i);
 
-            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getImageDesc());
-            // ((CustomViewHolder) holder).text_total.setText(m1.getTotalImage()+" "+"Images");
-            if (!m1.getImage().equalsIgnoreCase("")) {
+            ((CustomViewHolder) holder).text_avtarteamname.setText(m1.getPlayerName());
+            ((CustomViewHolder) holder).text_avtarname.setText(m1.getAvatarName());
+            ((CustomViewHolder) holder).text_speciality.setText("(" + m1.getSpeciality() + ")");
+            ((CustomViewHolder) holder).text_status.setText(m1.getAddedStatus());
+            ((CustomViewHolder) holder).text_status.setVisibility(View.GONE);
+            ((CustomViewHolder) holder).text_speciality.setVisibility(View.GONE);
+            ((CustomViewHolder) holder).image_status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClickListener(i, 2);
+                }
+            });
+
+            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getImage())
+                        .load(m1.getProfilePicture()).transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
-                        .into(((AdapterGalleryDetail.CustomViewHolder) holder).image_avtar);
+                        .into(((CustomViewHolder) holder).image_avtar);
             }
-
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
@@ -100,35 +112,28 @@ public class AdapterGalleryDetail extends RecyclerView.Adapter<RecyclerView.View
         return detail.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_avtarteamname, text_total;
-        ImageView image_avtar;
-
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        TextView text_avtarteamname, text_speciality, text_status, text_avtarname;
+        ImageView image_avtar, image_status;
         RelativeLayout relmatchvs;
+        CardView card_view;
 
         public CustomViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
 
-
-            this.text_avtarteamname = (TextView) view.findViewById(R.id.text_avtarteamname);
-            this.text_total = (TextView) view.findViewById(R.id.text_total);
-
-            this.image_avtar = (ImageView) view.findViewById(R.id.image_avtar);
-
-
+            this.text_avtarteamname = (TextView) view.findViewById(R.id.text_name);
+            this.text_avtarname = (TextView) view.findViewById(R.id.text_avtarname);
+            this.text_speciality = (TextView) view.findViewById(R.id.text_speciality);
+            this.text_status = (TextView) view.findViewById(R.id.text_status);
+            this.image_avtar = (ImageView) view.findViewById(R.id.image_viewers);
+            this.image_status = (ImageView) view.findViewById(R.id.image_status);
+            this.card_view = (CardView) view.findViewById(R.id.card_view);
         }
-
-        @Override
-        public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
-        }
-
     }
 
     @Override
     public int getItemViewType(int position) {
-        ModelGallery m1 = (ModelGallery) detail.get(position);
+        ModelSportTeamList m1 = (ModelSportTeamList) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {

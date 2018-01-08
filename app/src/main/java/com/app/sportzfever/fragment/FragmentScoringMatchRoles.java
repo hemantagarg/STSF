@@ -40,14 +40,14 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by admin on 06-01-2016.
  */
-public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
+public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomItemClicListener, ApiResponse {
 
     private Bundle b;
     private Activity context;
     View mView;
     private Button btn_create_team;
-    public static FragmentMatchRoles fragment_friend_request;
-    private final String TAG = FragmentMatchRoles.class.getSimpleName();
+    public static FragmentScoringMatchRoles fragment_friend_request;
+    private final String TAG = FragmentScoringMatchRoles.class.getSimpleName();
     private String teamId = "", eventId = "", playersCount = "", title = "";
     private JSONObject jsonresponse;
     private TextView text_captain, textViceCaptain, text_wicket_keeper, text_select_scorer,
@@ -75,18 +75,16 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     private JSONObject selectedUserList;
     private String matchId = "";
 
-    public static FragmentMatchRoles getInstance() {
+    public static FragmentScoringMatchRoles getInstance() {
         if (fragment_friend_request == null)
-            fragment_friend_request = new FragmentMatchRoles();
+            fragment_friend_request = new FragmentScoringMatchRoles();
         return fragment_friend_request;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this com.app.justclap.fragment
-
-        mView = inflater.inflate(R.layout.fragement_match_roles, container, false);
+        mView = inflater.inflate(R.layout.fragement_scoring_match_roles, container, false);
         context = getActivity();
         b = getArguments();
 
@@ -131,7 +129,6 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
     }
 
     private void getBundle() {
-
         if (b != null) {
             teamId = b.getString("teamId");
             eventId = b.getString("eventId");
@@ -143,7 +140,6 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             Log.e("respnse", response);
             setData(response, linepArray);
         }
-
     }
 
     private void setData(String response, String linepArray) {
@@ -151,7 +147,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             jsonObject = new JSONObject(response);
             JSONObject lineuparray = new JSONObject(linepArray);
             matchId = lineuparray.getString("matchId");
-            JSONArray newMatchlineUp = jsonObject.getJSONArray("newMatchlineUp");
+            JSONArray newMatchlineUp = jsonObject.getJSONArray("playersAvailability");
             for (int i = 0; i < newMatchlineUp.length(); i++) {
                 JSONObject jo = newMatchlineUp.getJSONObject(i);
                 modelSportTeamList = new ModelSportTeamList();
@@ -159,9 +155,8 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                 modelSportTeamList.setUserId(jo.getString("userId"));
                 modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
                 modelSportTeamList.setPlayerName(jo.getString("playerName"));
-                modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
+                modelSportTeamList.setIsInPlayingBench(jo.getString("isInPlayingBench"));
                 modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
-                //  modelSportTeamList.setIsReservedPlayer(jo.getString("isReservedPlayer"));
                 modelSportTeamList.setOrder(jo.getString("order"));
                 modelSportTeamList.setSpeciality(jo.getString("role"));
                 arrayList.add(modelSportTeamList);
@@ -351,7 +346,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                     b.putString("selectedUser", selectedUserList.toString());
                     fragmentSearchUserList.setArguments(b);
                 }
-                fragmentSearchUserList.setTargetFragment(FragmentMatchRoles.this, AppConstant.FRAGMENT_CODE);
+                fragmentSearchUserList.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
             }
         });
@@ -598,6 +593,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
             }
             jsonObject.put("scorers", scorers);
             jsonObject.put("matchId", matchId);
+            jsonObject.put("teamId", teamId);
             Log.e("jsonbjet", jsonObject.toString());
             sentInvite();
         } catch (Exception e) {
