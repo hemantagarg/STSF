@@ -47,6 +47,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private ModelSportTeamList modelSportTeamList;
     private ArrayList<ModelSportTeamList> arrayList, arrayListaddedPlayers;
     private LinearLayoutManager layoutManager;
+    private JSONArray arrayListNewPlayers = new JSONArray();
+    private JSONArray arrayListExistingPlayers = new JSONArray();
     private int skipCount = 0, intAddedPlayers = 0;
     private View view_about;
     private Button btn_send_invite, btn_next;
@@ -124,7 +126,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         list_added_players = (RecyclerView) view.findViewById(R.id.list_added_players);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         textSelectAll = (TextView) view.findViewById(R.id.textSelectAll);
-        textSelectAll.setVisibility(View.GONE);
+        textSelectAll.setVisibility(View.VISIBLE);
         text_selected_players = (TextView) view.findViewById(R.id.text_selected_players);
         text_create_lineup = (TextView) view.findViewById(R.id.text_create_lineup);
         btn_next = (Button) view.findViewById(R.id.btn_next);
@@ -174,7 +176,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         textSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addAllData();
+                FragmentSearchNewPlayer fragmentPrepareLineup = new FragmentSearchNewPlayer();
+                Bundle bundle = new Bundle();
+                fragmentPrepareLineup.setArguments(bundle);
+                fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.SEARCH_FRAGMENT_CODE);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+
             }
         });
         btn_send_invite.setOnClickListener(new View.OnClickListener() {
@@ -215,24 +222,22 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         try {
             JSONArray newMatchlineUp = new JSONArray();
             for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
-                if (arrayListaddedPlayers.get(i).getIsAdded() == 1) {
-                    JSONObject jo = new JSONObject();
-                    jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
-                    jo.put("userId", arrayListaddedPlayers.get(i).getUserId());
-                    jo.put("playerName", arrayListaddedPlayers.get(i).getPlayerName());
-                    jo.put("teamId", arrayListaddedPlayers.get(i).getTeamId());
-                    jo.put("matchId", arrayListaddedPlayers.get(i).getMatchId());
-                    jo.put("inviteStatus", AppConstant.ACCEPTED);
-                    jo.put("speciality", arrayListaddedPlayers.get(i).getSpeciality());
-                    jo.put("playerProfilePicture", arrayListaddedPlayers.get(i).getProfilePicture());
-                    jo.put("avatarName", arrayListaddedPlayers.get(i).getAvatarName());
-                    jo.put("isInPlayingBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
-                    jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
-                    //  jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
-                    jo.put("order", i + 1 + "");
-                    jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
-                    newMatchlineUp.put(jo);
-                }
+                JSONObject jo = new JSONObject();
+                jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
+                jo.put("userId", arrayListaddedPlayers.get(i).getUserId());
+                jo.put("playerName", arrayListaddedPlayers.get(i).getPlayerName());
+                jo.put("teamId", arrayListaddedPlayers.get(i).getTeamId());
+                jo.put("matchId", arrayListaddedPlayers.get(i).getMatchId());
+                jo.put("inviteStatus", AppConstant.ACCEPTED);
+                jo.put("speciality", arrayListaddedPlayers.get(i).getSpeciality());
+                jo.put("playerProfilePicture", arrayListaddedPlayers.get(i).getProfilePicture());
+                jo.put("avatarName", arrayListaddedPlayers.get(i).getAvatarName());
+                jo.put("isInPlayingBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
+                jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
+                //  jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
+                jo.put("order", i + 1 + "");
+                jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
+                newMatchlineUp.put(jo);
             }
             jsonObject.put("playersAvailability", newMatchlineUp);
         } catch (Exception e) {
@@ -248,6 +253,63 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         if (resultCode == AppConstant.RESULTCODE_FINISH) {
             // getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
             context.onBackPressed();
+        }
+        if (requestCode == AppConstant.SEARCH_FRAGMENT_CODE) {
+            if (data != null) {
+                String userData = data.getStringExtra("userData");
+                setPlayerArray(userData, data.getBooleanExtra("isNewPlayer", false));
+            }
+        }
+    }
+
+    private void setPlayerArray(String userData, boolean isNewPlayer) {
+        try {
+            if (isNewPlayer) {
+                JSONObject jo = new JSONObject(userData);
+                modelSportTeamList = new ModelSportTeamList();
+                modelSportTeamList.setUserId("");
+                modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                modelSportTeamList.setSpeciality(jo.getString("role"));
+                modelSportTeamList.setNewPlayer(true);
+                modelSportTeamList.setOrder(arrayListaddedPlayers.size() + 1 + "");
+                modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                modelSportTeamList.setIsAdded(1);
+                modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
+                modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
+                modelSportTeamList.setRowType(1);
+                modelSportTeamList.setIsInPlayingSquad("1");
+                jo.put("order", modelSportTeamList.getOrder());
+                arrayListaddedPlayers.add(modelSportTeamList);
+                arrayListNewPlayers.put(jo);
+            } else {
+                JSONObject jo = new JSONObject(userData);
+                modelSportTeamList = new ModelSportTeamList();
+
+                modelSportTeamList.setUserId(jo.getString("userId"));
+                modelSportTeamList.setAvtarId(jo.getString("avatarId"));
+                modelSportTeamList.setPlayerName(jo.getString("playerName"));
+                modelSportTeamList.setAvatarName(jo.getString("avatarName"));
+                modelSportTeamList.setSpeciality(jo.getString("role"));
+                modelSportTeamList.setNewPlayer(true);
+                modelSportTeamList.setOrder(arrayListaddedPlayers.size() + 1 + "");
+                modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
+                modelSportTeamList.setIsAdded(1);
+                modelSportTeamList.setIsInPlayingBench(jo.getString("isInBench"));
+                modelSportTeamList.setAddedStatus(jo.getString("inviteStatus"));
+                modelSportTeamList.setProfilePicture(jo.getString("profilePicture"));
+                modelSportTeamList.setRowType(1);
+                modelSportTeamList.setIsInPlayingSquad("1");
+                jo.put("order", modelSportTeamList.getOrder());
+                arrayListaddedPlayers.add(modelSportTeamList);
+                arrayListExistingPlayers.put(jo);
+
+            }
+            adapterTeamAddedPlayersLineup.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -333,26 +395,38 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
 
             JSONArray newMatchlineUp = new JSONArray();
             for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
-                JSONObject jo = new JSONObject();
-                jsonObject.put("matchId", matchId);
-                jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
-                if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase("Invitation not sent")) {
-                    jo.put("inviteStatus", AppConstant.PENDING);
-                } else {
-                    jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
+                if (!arrayListaddedPlayers.get(i).isNewPlayer()) {
+                    JSONObject jo = new JSONObject();
+                    jsonObject.put("matchId", matchId);
+                    jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
+                    if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase("Invitation not sent")) {
+                        jo.put("inviteStatus", AppConstant.PENDING);
+                    } else {
+                        jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
+                    }
+                    jo.put("isInBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
+                    jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
+                    jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
+                    jo.put("order", i + 1 + "");
+                    jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
+                    newMatchlineUp.put(jo);
                 }
-                jo.put("isInBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
-                jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
-                jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
-                jo.put("order", i + 1 + "");
-                jo.put("role", arrayListaddedPlayers.get(i).getSpeciality());
-                newMatchlineUp.put(jo);
             }
             jsonObject.put("teamId", team1Id);
             jsonObject.put("isTeamScoringOnSf", "1");
             jsonObject.put("teamCheckAvailibility", "0");
             jsonObject.put("newMatchlineUp", newMatchlineUp);
-
+            jsonObject.put("existingPlayersToAdd", arrayListExistingPlayers);
+            jsonObject.put("newPlayersToAddInTeam", arrayListNewPlayers);
+            if (jsonLinupArray.has("captain")) {
+                jsonObject.put("captain", jsonLinupArray.getJSONObject("captain"));
+            }
+            if (jsonLinupArray.has("viceCaptain")) {
+                jsonObject.put("viceCaptain", jsonLinupArray.getJSONObject("viceCaptain"));
+            }
+            if (jsonLinupArray.has("scorers")) {
+                jsonObject.put("scorers", jsonLinupArray.getJSONArray("scorers"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -395,6 +469,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
                         modelSportTeamList.setAvtarId(jo.getString("avatar"));
                         modelSportTeamList.setUserId(jo.getString("userId"));
+                        modelSportTeamList.setNewPlayer(false);
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setIsInPlayingBench("0");
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
@@ -441,6 +516,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                         modelSportTeamList.setUserId(jo.getString("userId"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setTeamId(jo.getString("teamId"));
+                        modelSportTeamList.setNewPlayer(false);
                         modelSportTeamList.setMatchId(jo.getString("matchId"));
                         modelSportTeamList.setOrder(jo.getString("order"));
                         modelSportTeamList.setIsInPlayingSquad(jo.getString("isInPlayingSquad"));
