@@ -188,7 +188,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             @Override
             public void onClick(View view) {
                 if (arrayListaddedPlayers.size() > 0) {
-                    sentInvite();
+                    //   sentInvite();
                 } else {
                     Toast.makeText(context, "Please add atleast one player", Toast.LENGTH_SHORT).show();
                 }
@@ -197,7 +197,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sentInvite();
+                JSONObject jsonObject = makeJsonRequest();
+                sentInvite(jsonObject);
                 JSONObject playerAvalablity = makeAddedPlayerJsonRequest();
                 FragmentScoringMatchRoles fragmentPrepareLineup = new FragmentScoringMatchRoles();
                 Bundle bundle = new Bundle();
@@ -208,6 +209,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                 bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
                 bundle.putString("linepArray", jsonLinupArray.toString());
                 bundle.putString("jsonresponse", playerAvalablity.toString());
+                bundle.putString("jsonObject", jsonObject.toString());
 
                 fragmentPrepareLineup.setArguments(bundle);
                 fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
@@ -373,10 +375,9 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         }
     }
 
-    private void sentInvite() {
+    private void sentInvite(JSONObject jsonObject) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                JSONObject jsonObject = makeJsonRequest();
 
                 //   http://sfscoring.betasportzfever.com/getMatchLineup/23/77/479a44a634f82b0394f78352d302ec36
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;

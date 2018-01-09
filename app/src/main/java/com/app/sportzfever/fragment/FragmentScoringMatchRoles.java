@@ -73,7 +73,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     private String teamCheckAvailibility = "", selectedFirstScorer = "", selectedSecondScorer = "", selectedThirdScorer = "";
     private JSONObject jsonObject;
     private JSONObject selectedUserList;
-    private String matchId = "";
+    private String matchId = "", mainJsonObject = "";
 
     public static FragmentScoringMatchRoles getInstance() {
         if (fragment_friend_request == null)
@@ -137,6 +137,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             String response = b.getString("jsonresponse");
             String linepArray = b.getString("linepArray");
+            mainJsonObject = b.getString("jsonObject");
             Log.e("respnse", response);
             setData(response, linepArray);
         }
@@ -144,10 +145,10 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
     private void setData(String response, String linepArray) {
         try {
-            jsonObject = new JSONObject(response);
+            JSONObject jsonObject1 = new JSONObject(response);
             JSONObject lineuparray = new JSONObject(linepArray);
             matchId = lineuparray.getString("matchId");
-            JSONArray newMatchlineUp = jsonObject.getJSONArray("playersAvailability");
+            JSONArray newMatchlineUp = jsonObject1.getJSONArray("playersAvailability");
             for (int i = 0; i < newMatchlineUp.length(); i++) {
                 JSONObject jo = newMatchlineUp.getJSONObject(i);
                 modelSportTeamList = new ModelSportTeamList();
@@ -334,7 +335,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject jsonObject = makeJsonRequest();
+               makeJsonRequest();
             }
         });
         text_userscorer.setOnClickListener(new View.OnClickListener() {
@@ -537,7 +538,13 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
     private JSONObject makeJsonRequest() {
         try {
-            jsonObject.put("teamCheckAvailibility", teamCheckAvailibility);
+            JSONObject jo = new JSONObject(mainJsonObject);
+            jsonObject.put("isTeamScoringOnSf","1");
+            jsonObject.put("teamCheckAvailibility", "0");
+            jsonObject.put("newMatchlineUp", jo.getJSONArray("newMatchlineUp"));
+            jsonObject.put("existingPlayersToAdd", jo.getJSONArray("existingPlayersToAdd"));
+            jsonObject.put("newPlayersToAddInTeam", jo.getJSONArray("newPlayersToAddInTeam"));
+
             JSONArray scorers = new JSONArray();
             if (spinner_select_scorer.getSelectedItemPosition() == 0) {
                 if (selectedUserList != null) {
