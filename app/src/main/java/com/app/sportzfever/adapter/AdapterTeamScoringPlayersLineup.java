@@ -96,8 +96,10 @@ public class AdapterTeamScoringPlayersLineup extends RecyclerView.Adapter<Recycl
             if (!m1.getProfilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getProfilePicture()).transform(new CircleTransform())
-                        .placeholder(R.drawable.newsfeed)
+                        .placeholder(R.drawable.user)
                         .into(((CustomViewHolder) holder).image_avtar);
+            } else {
+                ((CustomViewHolder) holder).image_avtar.setImageResource(R.drawable.user);
             }
 
         } else {

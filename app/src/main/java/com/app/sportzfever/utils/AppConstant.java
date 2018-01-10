@@ -79,6 +79,7 @@ public class AppConstant {
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";
     public static final String DELETETEAM = "DELETETEAM";
     public static final int RESULTCODE_FINISH = 206;
+    public static final int RESULTCODE_FINISH1 = 207;
 
 
 }

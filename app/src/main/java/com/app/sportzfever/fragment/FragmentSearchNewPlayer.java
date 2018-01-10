@@ -55,6 +55,7 @@ public class FragmentSearchNewPlayer extends BaseFragment implements ApiResponse
     public static FragmentSearchNewPlayer fragment_friend_request;
     private final String TAG = FragmentSearchNewPlayer.class.getSimpleName();
     private View mView;
+    private ArrayList<String> emailList = new ArrayList<>();
     private EditText edt_search, edt_password;
     private ImageView image_search;
     private boolean isPlayerEmailFound = false;
@@ -100,8 +101,17 @@ public class FragmentSearchNewPlayer extends BaseFragment implements ApiResponse
         list_request.setLayoutManager(new LinearLayoutManager(context));
         arrayList = new ArrayList<>();
         setlistener();
-        //getBundle();
+        getBundle();
         manageHeaderView();
+    }
+
+    private void getBundle() {
+        Bundle b = getArguments();
+        if (b != null) {
+            if (b.containsKey("emailList")) {
+                emailList = b.getStringArrayList("emailList");
+            }
+        }
     }
 
     /*******************************************************************
@@ -237,7 +247,11 @@ public class FragmentSearchNewPlayer extends BaseFragment implements ApiResponse
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 2) {
-            changeButton(true);
+            if (emailList.contains(edt_search.getText().toString())) {
+                Toast.makeText(context, R.string.existing_player_message, Toast.LENGTH_SHORT).show();
+            } else {
+                changeButton(true);
+            }
         }
     }
 

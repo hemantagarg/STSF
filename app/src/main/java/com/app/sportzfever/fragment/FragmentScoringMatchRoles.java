@@ -73,7 +73,8 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     private String teamCheckAvailibility = "", selectedFirstScorer = "", selectedSecondScorer = "", selectedThirdScorer = "";
     private JSONObject jsonObject;
     private JSONObject selectedUserList;
-    private String matchId = "", mainJsonObject = "";
+    private String matchId = "", mainJsonObject = "", team2Id = "", team1Name = "", team2Name = "";
+    private boolean isTeam1;
 
     public static FragmentScoringMatchRoles getInstance() {
         if (fragment_friend_request == null)
@@ -103,7 +104,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         super.onViewCreated(view, savedInstanceState);
         init();
         getBundle();
-        setlistener();
+
         manageHeaderView();
     }
 
@@ -131,13 +132,19 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     private void getBundle() {
         if (b != null) {
             teamId = b.getString("teamId");
+            team2Id = b.getString("team2Id");
+            team1Name = b.getString("team1Name");
+            team2Name = b.getString("team2Name");
+            matchId = b.getString("matchId");
             eventId = b.getString("eventId");
             title = b.getString("title");
+            isTeam1 = b.getBoolean("isTeam1");
             playersCount = b.getString("playersCount");
             teamCheckAvailibility = b.getString("teamCheckAvailibility");
             String response = b.getString("jsonresponse");
             String linepArray = b.getString("linepArray");
             mainJsonObject = b.getString("jsonObject");
+
             Log.e("respnse", response);
             setData(response, linepArray);
         }
@@ -183,45 +190,54 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         }
                     }
                     JSONObject viceCaptain = matchRoles.getJSONObject("viceCaptain");
+/*
                     if (viceCaptain.has("avatarId")) {
                         if (arrayListAvtarId.contains(viceCaptain.getString("avatarId"))) {
                             int po1 = arrayListAvtarId.indexOf(viceCaptain.getString("avatarId"));
                             spinner_vice_captain.setSelection(po1 + 1);
                         }
                     }
+*/
                     JSONObject wicketKeeper = matchRoles.getJSONObject("wicketKeeper");
+/*
                     if (viceCaptain.has("avatarId")) {
                         if (arrayListAvtarId.contains(wicketKeeper.getString("avatarId"))) {
                             int po1 = arrayListAvtarId.indexOf(wicketKeeper.getString("avatarId"));
                             spinner_wicket_keeper.setSelection(po1 + 1);
                         }
                     }
+*/
                     JSONArray scorers = jObject.getJSONArray("scorers");
                     int size = scorers.length();
                     if (size > 0) {
                         JSONObject jo = scorers.getJSONObject(0);
-                        if (jo.has("scorerId")) {
-                            if (arrayListUserId.contains(jo.getString("scorerId"))) {
-                                int po1 = arrayListUserId.indexOf(jo.getString("scorerId"));
-                                spinner_first_scorer.setSelection(po1 + 1);
+                        if (jo.has("scorerName")) {
+                            if (arrayListFirstScorer.contains(jo.getString("scorerName"))) {
+                                int po1 = arrayListFirstScorer.indexOf(jo.getString("scorerName"));
+                                spinner_first_scorer.setSelection(po1-1);
                             }
                         }
                         if (size > 1) {
                             JSONObject jo1 = scorers.getJSONObject(1);
-                            if (jo1.has("scorerId")) {
-                                if (arrayListUserId.contains(jo1.getString("scorerId"))) {
-                                    int po1 = arrayListUserId.indexOf(jo1.getString("scorerId"));
-                                    spinner_second_scorer.setSelection(po1 + 1);
+                            if (jo1.has("scorerName")) {
+                                if (arrayListSecondScorer.contains(jo1.getString("scorerName"))) {
+                                    int po1 = arrayListSecondScorer.indexOf(jo1.getString("scorerName"));
+                                    Log.e("spinner_second_position", "**" + po1);
+                                    spinner_second_scorer.setSelection(po1-1);
                                 }
+                            } else {
+                                spinner_second_scorer.setSelection(0);
                             }
                         }
                         if (size > 2) {
                             JSONObject jo2 = scorers.getJSONObject(2);
-                            if (jo2.has("scorerId")) {
-                                if (arrayListUserId.contains(jo2.getString("scorerId"))) {
-                                    int po1 = arrayListUserId.indexOf(jo2.getString("scorerId"));
-                                    spinner_third_scorer.setSelection(po1 + 1);
+                            if (jo2.has("scorerName")) {
+                                if (arrayListThirdScorer.contains(jo2.getString("scorerName"))) {
+                                    int po1 = arrayListThirdScorer.indexOf(jo2.getString("scorerName"));
+                                    spinner_third_scorer.setSelection(po1-1);
                                 }
+                            } else {
+                                spinner_third_scorer.setSelection(0);
                             }
                         }
 
@@ -229,7 +245,11 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
                 }
             }
-
+            try {
+                setlistener();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -265,12 +285,12 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         adapterCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListCaptain);
         spinner_captain.setAdapter(adapterCaptain);
 
-        adapterViceCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListViceCaptain);
+       /* adapterViceCaptain = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListViceCaptain);
         spinner_vice_captain.setAdapter(adapterViceCaptain);
 
         adapterWicketKeeper = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListWicketKeeper);
         spinner_wicket_keeper.setAdapter(adapterWicketKeeper);
-
+*/
         adapterFirstScorer = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, arrayListFirstScorer);
         spinner_first_scorer.setAdapter(adapterFirstScorer);
 
@@ -331,11 +351,15 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         };
     }
 
-    private void setlistener() {
+    private void setlistener() throws Exception {
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               makeJsonRequest();
+                if (spinner_captain.getSelectedItem() != null && spinner_captain.getSelectedItemPosition() != 0) {
+                    makeJsonRequest();
+                } else {
+                    Toast.makeText(context, "Please select captain", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         text_userscorer.setOnClickListener(new View.OnClickListener() {
@@ -469,14 +493,17 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         spinner_second_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (selectedSecondScorer.equalsIgnoreCase("")) {
-                    removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
-                } else {
-                    addItemInArrayList(selectedSecondScorer, "2");
-                    removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
+                Log.e("spinner_second_position", "****" + position + "**" + arrayListSecondScorer.size());
+                if (spinner_second_scorer.getSelectedItem() != null) {
+                    if (selectedSecondScorer.equalsIgnoreCase("")) {
+                        removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
+                    } else {
+                        addItemInArrayList(selectedSecondScorer, "2");
+                        removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
+                    }
+                    selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
+                    text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
                 }
-                selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
-                text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
             }
 
             @Override
@@ -487,6 +514,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         spinner_third_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.e("spinner_third_position", "****" + position + "**" + arrayListThirdScorer.size());
                 if (selectedThirdScorer.equalsIgnoreCase("")) {
                     removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
                 } else {
@@ -505,15 +533,25 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     }
 
     private void removeItemFromArrayList(String name, String id) {
-        if (id.equalsIgnoreCase("1")) {
-            arrayListSecondScorer.remove(name);
-            arrayListThirdScorer.remove(name);
-        } else if (id.equalsIgnoreCase("2")) {
-            arrayListFirstScorer.remove(name);
-            arrayListThirdScorer.remove(name);
-        } else if (id.equalsIgnoreCase("3")) {
-            arrayListFirstScorer.remove(name);
-            arrayListSecondScorer.remove(name);
+        try {
+            if (id.equalsIgnoreCase("1")) {
+                if (arrayListSecondScorer.contains(name)) {
+                    arrayListSecondScorer.remove(name);
+                    arrayListThirdScorer.remove(name);
+                }
+            } else if (id.equalsIgnoreCase("2")) {
+                if (arrayListFirstScorer.contains(name)) {
+                    arrayListFirstScorer.remove(name);
+                    arrayListThirdScorer.remove(name);
+                }
+            } else if (id.equalsIgnoreCase("3")) {
+                if (arrayListSecondScorer.contains(name)) {
+                    arrayListFirstScorer.remove(name);
+                    arrayListSecondScorer.remove(name);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -539,8 +577,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     private JSONObject makeJsonRequest() {
         try {
             JSONObject jo = new JSONObject(mainJsonObject);
-            jsonObject.put("isTeamScoringOnSf","1");
-            jsonObject.put("teamCheckAvailibility", "0");
+            jsonObject = new JSONObject();
             jsonObject.put("newMatchlineUp", jo.getJSONArray("newMatchlineUp"));
             jsonObject.put("existingPlayersToAdd", jo.getJSONArray("existingPlayersToAdd"));
             jsonObject.put("newPlayersToAddInTeam", jo.getJSONArray("newPlayersToAddInTeam"));
@@ -586,7 +623,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 captain.put("avatar", id);
                 jsonObject.put("captain", captain);
             }
-            if (spinner_vice_captain.getSelectedItem() != null && spinner_vice_captain.getSelectedItemPosition() != 0) {
+           /* if (spinner_vice_captain.getSelectedItem() != null && spinner_vice_captain.getSelectedItemPosition() != 0) {
                 String id = gteAvtarIdFromList(spinner_vice_captain.getSelectedItem().toString());
                 JSONObject captain = new JSONObject();
                 captain.put("avatar", id);
@@ -597,9 +634,11 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 JSONObject captain = new JSONObject();
                 captain.put("avatar", id);
                 jsonObject.put("wicketKeeper", captain);
-            }
+            }*/
             jsonObject.put("scorers", scorers);
             jsonObject.put("matchId", matchId);
+            jsonObject.put("isTeamScoringOnSf", "1");
+            jsonObject.put("teamCheckAvailibility", "0");
             jsonObject.put("teamId", teamId);
             Log.e("jsonbjet", jsonObject.toString());
             sentInvite();
@@ -657,6 +696,10 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 setUserData(userData);
             }
         }
+        if (resultCode == AppConstant.RESULTCODE_FINISH) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+            context.onBackPressed();
+        }
     }
 
     private void setUserData(String userData) {
@@ -699,8 +742,25 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             if (method == 1) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-                    context.onBackPressed();
+                    if (isTeam1) {
+                        FragmentScoringPrepareLineup fragmentupcomingdetals = new FragmentScoringPrepareLineup();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        b.putString("matchId", matchId);
+                        b.putString("team1Id", team2Id);
+                        b.putString("team2Id", teamId);
+                        b.putBoolean("isTeam1", false);
+                        b.putString("playersCount", playersCount);
+                        b.putString("title", team2Name);
+                        b.putString("team1Name", team2Name);
+                        b.putString("team2Name", team1Name);
+                        fragmentupcomingdetals.setArguments(b);
+                        fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else {
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+                        context.onBackPressed();
+                    }
                 } else {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }

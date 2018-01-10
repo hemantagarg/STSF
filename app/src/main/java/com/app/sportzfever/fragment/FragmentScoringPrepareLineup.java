@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +57,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private Button btn_send_invite, btn_next;
     private TextView text_nodata, textSelectAll, text_selected_players, text_create_lineup;
     private ArrayList<String> listAvtarId = new ArrayList<>();
+    private ArrayList<String> emailIdlIst = new ArrayList<>();
+    private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7, text_name8, text_name9, text_name10, text_name11;
+    private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
+    private ImageView image_cross;
+    private RelativeLayout rl_preview, rl_previewopen;
+
 
     public static FragmentScoringPrepareLineup fragment_teamJoin_request;
     private final String TAG = FragmentScoringPrepareLineup.class.getSimpleName();
@@ -62,6 +71,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private String playersCount = "";
     private String teamCheckAvailibility = "", title = "";
     private String matchId = "";
+    private boolean isTeam1 = true;
 
     public static FragmentScoringPrepareLineup getInstance() {
         if (fragment_teamJoin_request == null)
@@ -122,6 +132,39 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        init(view);
+
+        getBundle();
+        manageHeaderView();
+        setlistener();
+    }
+
+    private void init(View view) {
+        text_name5 = (TextView) view.findViewById(R.id.text_name5);
+        text_name1 = (TextView) view.findViewById(R.id.text_name1);
+        text_name2 = (TextView) view.findViewById(R.id.text_name2);
+        text_name3 = (TextView) view.findViewById(R.id.text_name3);
+        text_name4 = (TextView) view.findViewById(R.id.text_name4);
+        text_name6 = (TextView) view.findViewById(R.id.text_name6);
+        text_name7 = (TextView) view.findViewById(R.id.text_name7);
+        text_name8 = (TextView) view.findViewById(R.id.text_name8);
+        text_name9 = (TextView) view.findViewById(R.id.text_name9);
+        text_name10 = (TextView) view.findViewById(R.id.text_name10);
+        text_name11 = (TextView) view.findViewById(R.id.text_name11);
+        ll1 = (LinearLayout) view.findViewById(R.id.ll1);
+        ll2 = (LinearLayout) view.findViewById(R.id.ll2);
+        ll3 = (LinearLayout) view.findViewById(R.id.ll3);
+        ll4 = (LinearLayout) view.findViewById(R.id.ll4);
+        ll5 = (LinearLayout) view.findViewById(R.id.ll5);
+        ll6 = (LinearLayout) view.findViewById(R.id.ll6);
+        ll7 = (LinearLayout) view.findViewById(R.id.ll7);
+        ll8 = (LinearLayout) view.findViewById(R.id.ll8);
+        ll9 = (LinearLayout) view.findViewById(R.id.ll9);
+        ll10 = (LinearLayout) view.findViewById(R.id.ll10);
+        ll11 = (LinearLayout) view.findViewById(R.id.ll11);
+        image_cross = (ImageView) view.findViewById(R.id.image_cross);
+        rl_preview = (RelativeLayout) view.findViewById(R.id.rl_preview);
+        rl_previewopen = (RelativeLayout) view.findViewById(R.id.rl_previewopen);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         list_added_players = (RecyclerView) view.findViewById(R.id.list_added_players);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
@@ -134,20 +177,19 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         list_request.setLayoutManager(layoutManager);
+        list_request.setNestedScrollingEnabled(false);
         list_added_players.setLayoutManager(new LinearLayoutManager(context));
         arrayList = new ArrayList<>();
         arrayListaddedPlayers = new ArrayList<>();
         adapterTeamAddedPlayersLineup = new AdapterTeamScoringPlayersLineup(context, this, arrayListaddedPlayers);
         list_added_players.setAdapter(adapterTeamAddedPlayersLineup);
-        getBundle();
-        manageHeaderView();
-        setlistener();
     }
 
     private void getBundle() {
         try {
             Bundle b = getArguments();
             team1Id = b.getString("team1Id");
+            isTeam1 = b.getBoolean("isTeam1");
             team2Id = b.getString("team2Id");
             eventId = b.getString("eventId");
             matchId = b.getString("matchId");
@@ -173,11 +215,25 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     }
 
     private void setlistener() {
+        rl_previewopen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPreviewData();
+                rl_preview.setVisibility(View.VISIBLE);
+            }
+        });
+        image_cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rl_preview.setVisibility(View.GONE);
+            }
+        });
         textSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentSearchNewPlayer fragmentPrepareLineup = new FragmentSearchNewPlayer();
                 Bundle bundle = new Bundle();
+                bundle.putStringArrayList("emailList", emailIdlIst);
                 fragmentPrepareLineup.setArguments(bundle);
                 fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.SEARCH_FRAGMENT_CODE);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
@@ -197,24 +253,33 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject jsonObject = makeJsonRequest();
-                sentInvite(jsonObject);
-                JSONObject playerAvalablity = makeAddedPlayerJsonRequest();
-                FragmentScoringMatchRoles fragmentPrepareLineup = new FragmentScoringMatchRoles();
-                Bundle bundle = new Bundle();
-                bundle.putString("teamId", team1Id);
-                bundle.putString("title", title);
-                bundle.putString("eventId", eventId);
-                bundle.putString("playersCount", playersCount);
-                bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
-                bundle.putString("linepArray", jsonLinupArray.toString());
-                bundle.putString("jsonresponse", playerAvalablity.toString());
-                bundle.putString("jsonObject", jsonObject.toString());
+                if (intAddedPlayers > 0) {
+                    JSONObject jsonObject = makeJsonRequest();
+                    sentInvite(jsonObject);
+                    JSONObject playerAvalablity = makeAddedPlayerJsonRequest();
+                    FragmentScoringMatchRoles fragmentPrepareLineup = new FragmentScoringMatchRoles();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("teamId", team1Id);
+                    bundle.putString("team1Id", team1Id);
+                    bundle.putString("team2Id", team2Id);
+                    bundle.putString("team1Name", team1Name);
+                    bundle.putString("team2Name", team2Name);
+                    bundle.putString("title", title);
+                    bundle.putString("eventId", eventId);
+                    bundle.putString("matchId", matchId);
+                    bundle.putBoolean("isTeam1", isTeam1);
+                    bundle.putString("playersCount", playersCount);
+                    bundle.putString("teamCheckAvailibility", teamCheckAvailibility);
+                    bundle.putString("linepArray", jsonLinupArray.toString());
+                    bundle.putString("jsonresponse", playerAvalablity.toString());
+                    bundle.putString("jsonObject", jsonObject.toString());
 
-                fragmentPrepareLineup.setArguments(bundle);
-                fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
-
+                    fragmentPrepareLineup.setArguments(bundle);
+                    fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                } else {
+                    Toast.makeText(context, "Please add players", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -253,7 +318,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == AppConstant.RESULTCODE_FINISH) {
-            // getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
             context.onBackPressed();
         }
         if (requestCode == AppConstant.SEARCH_FRAGMENT_CODE) {
@@ -400,11 +465,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     JSONObject jo = new JSONObject();
                     jsonObject.put("matchId", matchId);
                     jo.put("avatarId", arrayListaddedPlayers.get(i).getAvtarId());
-                    if (arrayListaddedPlayers.get(i).getAddedStatus().equalsIgnoreCase("Invitation not sent")) {
-                        jo.put("inviteStatus", AppConstant.PENDING);
-                    } else {
-                        jo.put("inviteStatus", arrayListaddedPlayers.get(i).getAddedStatus());
-                    }
+                    jo.put("inviteStatus", AppConstant.ACCEPTED);
                     jo.put("isInBench", arrayListaddedPlayers.get(i).getIsInPlayingBench());
                     jo.put("isInPlayingSquad", arrayListaddedPlayers.get(i).getIsInPlayingSquad());
                     jo.put("isReservedPlayer", arrayListaddedPlayers.get(i).getIsReservedPlayer());
@@ -470,9 +531,11 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                         modelSportTeamList.setPlayerName(jo.getString("playerName"));
                         modelSportTeamList.setAvtarId(jo.getString("avatar"));
                         modelSportTeamList.setUserId(jo.getString("userId"));
+                        emailIdlIst.add(jo.getString("email"));
                         modelSportTeamList.setNewPlayer(false);
                         modelSportTeamList.setAvatarName(jo.getString("avatarName"));
                         modelSportTeamList.setIsInPlayingBench("0");
+                        modelSportTeamList.setIsInPlayingSquad("1");
                         modelSportTeamList.setJerseyNumber(jo.getString("jerseyNumber"));
                         modelSportTeamList.setSpeciality(jo.getString("speciality"));
                         modelSportTeamList.setIsAdded(0);
@@ -546,6 +609,82 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             e.printStackTrace();
         }
     }
+
+    private void setPreviewData() {
+        ArrayList<ModelSportTeamList> addedPlayes = new ArrayList<>();
+        for (int i = 0; i < arrayListaddedPlayers.size(); i++) {
+            addedPlayes.add(arrayListaddedPlayers.get(i));
+        }
+        ll1.setVisibility(View.VISIBLE);
+        ll2.setVisibility(View.VISIBLE);
+        ll3.setVisibility(View.VISIBLE);
+        ll4.setVisibility(View.VISIBLE);
+        ll5.setVisibility(View.VISIBLE);
+        ll6.setVisibility(View.VISIBLE);
+        ll7.setVisibility(View.VISIBLE);
+        ll8.setVisibility(View.VISIBLE);
+        ll9.setVisibility(View.VISIBLE);
+        ll10.setVisibility(View.VISIBLE);
+        ll11.setVisibility(View.VISIBLE);
+        if (addedPlayes.size() > 0) {
+            text_name1.setText(addedPlayes.get(0).getPlayerName());
+            if (addedPlayes.size() > 1)
+                text_name2.setText(addedPlayes.get(1).getPlayerName());
+            else
+                ll2.setVisibility(View.GONE);
+            if (addedPlayes.size() > 2)
+                text_name3.setText(addedPlayes.get(2).getPlayerName());
+            else
+                ll3.setVisibility(View.GONE);
+            if (addedPlayes.size() > 3)
+                text_name4.setText(addedPlayes.get(3).getPlayerName());
+            else
+                ll4.setVisibility(View.GONE);
+            if (addedPlayes.size() > 4)
+                text_name5.setText(addedPlayes.get(4).getPlayerName());
+            else
+                ll5.setVisibility(View.GONE);
+            if (addedPlayes.size() > 5)
+                text_name6.setText(addedPlayes.get(5).getPlayerName());
+            else
+                ll6.setVisibility(View.GONE);
+            if (addedPlayes.size() > 6)
+                text_name7.setText(addedPlayes.get(6).getPlayerName());
+            else
+                ll7.setVisibility(View.GONE);
+            if (addedPlayes.size() > 7)
+                text_name8.setText(addedPlayes.get(7).getPlayerName());
+            else
+                ll8.setVisibility(View.GONE);
+            if (addedPlayes.size() > 8)
+                text_name9.setText(addedPlayes.get(8).getPlayerName());
+            else
+                ll9.setVisibility(View.GONE);
+            if (addedPlayes.size() > 9)
+                text_name10.setText(addedPlayes.get(9).getPlayerName());
+            else
+                ll10.setVisibility(View.GONE);
+            if (addedPlayes.size() > 10)
+                text_name11.setText(addedPlayes.get(10).getPlayerName());
+            else
+                ll11.setVisibility(View.GONE);
+
+
+        } else {
+            ll1.setVisibility(View.GONE);
+            ll2.setVisibility(View.GONE);
+            ll3.setVisibility(View.GONE);
+            ll4.setVisibility(View.GONE);
+            ll5.setVisibility(View.GONE);
+            ll6.setVisibility(View.GONE);
+            ll7.setVisibility(View.GONE);
+            ll8.setVisibility(View.GONE);
+            ll9.setVisibility(View.GONE);
+            ll10.setVisibility(View.GONE);
+            ll11.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     public void onPostFail(int method, String response) {

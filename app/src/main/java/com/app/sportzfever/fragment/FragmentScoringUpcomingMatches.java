@@ -22,6 +22,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingMatches;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -113,11 +114,13 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     b.putString("matchId", arrayList.get(position).getMatchId());
                     b.putString("team1Id", arrayList.get(position).getTeam1Id());
                     b.putString("team2Id", arrayList.get(position).getTeam2Id());
+                    b.putBoolean("isTeam1", true);
                     b.putString("playersCount", arrayList.get(position).getNumberOfPlayers());
                     b.putString("title", arrayList.get(position).getTeam1Name());
                     b.putString("team1Name", arrayList.get(position).getTeam1Name());
                     b.putString("team2Name", arrayList.get(position).getTeam2Name());
                     fragmentupcomingdetals.setArguments(b);
+                    fragmentupcomingdetals.setTargetFragment(FragmentScoringUpcomingMatches.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
                 } else {
 
