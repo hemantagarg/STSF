@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_stats"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="@dimen/dp10"
+                android:layout_marginLeft="@dimen/dp20"
+                android:layout_marginRight="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_teama"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/logocolor"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="TeamA"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_11" />
+
+                <Button
+                    android:id="@+id/btn_teamb"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg_unselected"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="TeamB"
+                    android:textAllCaps="false"
+                    android:textColor="@color/logocolor"
+                    android:textSize="@dimen/text_size_11" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/rl_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_stats"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_team1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/button_bg"
+                        android:padding="@dimen/dp10">
+
+                        <TextView
+                            android:id="@+id/text_team1batting"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/up_arrow_white"
+                            android:text="team Batting"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_team1batting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/layout_bg"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/dp10"
+                            android:weightSum="5">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:gravity="left"
+                                android:text="Batsmen"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".5"
+                                android:gravity="center"
+                                android:text="R"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".5"
+                                android:gravity="center"
+                                android:text="B"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="SR"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/list_team1batting"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/dp3"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/layout_bg"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp10"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:id="@+id/text_extras"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:gravity="left"
+                            android:text="Extras"
+                            android:textColor="@color/text_color_black"
+                            android:textSize="@dimen/text_size_14" />
+
+
+                        <TextView
+                            android:id="@+id/text_run"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".5"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/text_color_black"
+                            android:textSize="@dimen/text_size_14" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp5">
+
+                        <CheckBox
+                            android:id="@+id/checkbox_no_ball"
+                            android:layout_width="@dimen/dp0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/no_ball"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_13" />
+
+                        <CheckBox
+                            android:id="@+id/checkbox_wide_ball"
+                            android:layout_width="@dimen/dp0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/wide_ball"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_13" />
+
+                        <CheckBox
+                            android:id="@+id/checkbox_bye"
+                            android:layout_width="@dimen/dp0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/bye"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_13" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp5"
+                        android:weightSum="3">
+
+                        <CheckBox
+                            android:id="@+id/checkbox_leg_bye"
+                            android:layout_width="@dimen/dp0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/leg_bye"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_13" />
+
+                        <CheckBox
+                            android:id="@+id/checkbox_out"
+                            android:layout_width="@dimen/dp0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/out"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_13" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp5"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:id="@+id/textOk"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="OK"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text0"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="2"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="3"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp5"
+                        android:paddingRight="@dimen/dp5"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:id="@+id/text4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="4"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text6"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="6"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/text5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="5,7,8"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                        <TextView
+                            android:id="@+id/textMoreOptions"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dp2"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="@string/more_options"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_11" />
+
+                        <TextView
+                            android:id="@+id/textUndo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_button_selecor"
+                            android:gravity="center"
+                            android:padding="@dimen/dp10"
+                            android:text="@string/undo"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_12" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_recentball"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp10"
+                        android:text="Recent balls"
+                        android:textColor="@color/text_color_black"
+                        android:textSize="@dimen/text_size_14" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_recent_balls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp3"
+                        android:visibility="visible" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp5"
+                        android:background="@color/button_bg"
+                        android:padding="@dimen/dp10">
+
+                        <TextView
+                            android:id="@+id/text_team1bowling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/up_arrow_white"
+                            android:text="team Batting"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_team1bowling"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/layout_bg"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/dp10"
+                            android:weightSum="6">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:gravity="left"
+                                android:text="Bowlers"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:text="o"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:text="R"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".7"
+                                android:gravity="center"
+                                android:text="W"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Econ"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/list_team1bowling"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/dp3"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_team2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/button_bg"
+                        android:padding="@dimen/dp10">
+
+                        <TextView
+                            android:id="@+id/text_team2batting"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/up_arrow_white"
+                            android:text="team Batting"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_team2batting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/layout_bg"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/dp10"
+                            android:weightSum="5">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:text="Batsmen"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="R"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="B"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="SR"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/list_team2batting"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/dp3"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp5"
+                        android:background="@color/button_bg"
+                        android:padding="@dimen/dp10">
+
+                        <TextView
+                            android:id="@+id/text_team2bowling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/arrow_down_white"
+                            android:text="team Batting"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_team2bowling"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/layout_bg"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/dp10"
+                            android:weightSum="6">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:text="Bowlers"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="o"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="R"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="W"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14" />
+
+                            <View
+                                android:layout_width="@dimen/dp1"
+                                android:layout_height="match_parent"
+                                android:background="@color/view_color" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Econ"
+                                android:textColor="@color/text_color_black"
+                                android:textSize="@dimen/text_size_14"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/list_team2bowling"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/dp3"
+                            android:visibility="visible" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_nodata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="@dimen/dp10"
+                android:text="No data found"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_16"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
+public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
 
     private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling, recycler_recent_balls;
     private Bundle b;
@@ -51,10 +52,12 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private ArrayList<BowlingStats> arrayteam1Bowling, arrayteam2Bowling;
     private Button btn_teama, btn_teamb;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
-    LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
-    public static Fragment_Live_ScoredMatch fragment_teamJoin_request;
-    private final String TAG = Fragment_Live_ScoredMatch.class.getSimpleName();
+    private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
+    public static Fragment_LiveScoring fragment_teamJoin_request;
+    private final String TAG = Fragment_LiveScoring.class.getSimpleName();
     private String avtarid = "";
+    private TextView text_extras, text_run, textOk, text0, text1, text2, text3, text4, text5, text6, textMoreOptions, textUndo;
+    private CheckBox checkbox_no_ball, checkbox_wide_ball, checkbox_bye, checkbox_leg_bye, checkbox_out;
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
     private boolean isTeam2BattingVisible = true;
@@ -65,9 +68,9 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
 
-    public static Fragment_Live_ScoredMatch getInstance() {
+    public static Fragment_LiveScoring getInstance() {
         if (fragment_teamJoin_request == null)
-            fragment_teamJoin_request = new Fragment_Live_ScoredMatch();
+            fragment_teamJoin_request = new Fragment_LiveScoring();
         return fragment_teamJoin_request;
     }
 
@@ -75,9 +78,8 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_live_scorecard_match, container, false);
+        view = inflater.inflate(R.layout.fragment_live_scoring, container, false);
         context = getActivity();
-
         b = getArguments();
 
         return view;
@@ -86,7 +88,6 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         init();
         getBundle();
         setlistener();
@@ -124,6 +125,24 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
         text_team2batting = (TextView) view.findViewById(R.id.text_team2batting);
         btn_teamb = (Button) view.findViewById(R.id.btn_teamb);
         btn_teama = (Button) view.findViewById(R.id.btn_teama);
+
+        text_extras = (TextView) view.findViewById(R.id.text_extras);
+        text_run = (TextView) view.findViewById(R.id.text_run);
+        textOk = (TextView) view.findViewById(R.id.textOk);
+        text0 = (TextView) view.findViewById(R.id.text0);
+        text1 = (TextView) view.findViewById(R.id.text1);
+        text2 = (TextView) view.findViewById(R.id.text2);
+        text3 = (TextView) view.findViewById(R.id.text3);
+        text4 = (TextView) view.findViewById(R.id.text4);
+        text5 = (TextView) view.findViewById(R.id.text5);
+        text6 = (TextView) view.findViewById(R.id.text6);
+        textMoreOptions = (TextView) view.findViewById(R.id.textMoreOptions);
+        textUndo = (TextView) view.findViewById(R.id.textUndo);
+        checkbox_no_ball = (CheckBox) view.findViewById(R.id.checkbox_no_ball);
+        checkbox_wide_ball = (CheckBox) view.findViewById(R.id.checkbox_wide_ball);
+        checkbox_bye = (CheckBox) view.findViewById(R.id.checkbox_bye);
+        checkbox_leg_bye = (CheckBox) view.findViewById(R.id.checkbox_leg_bye);
+        checkbox_out = (CheckBox) view.findViewById(R.id.checkbox_out);
     }
 
 
@@ -437,7 +456,6 @@ public class Fragment_Live_ScoredMatch extends BaseFragment implements ApiRespon
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
                     data = jObject.getJSONObject("data");
-                    Fragment_LiveMatch_Details.getInstance().updateHeaderData(data);
                     setTeam1Data(data);
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);
