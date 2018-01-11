@@ -230,7 +230,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     text_nodata.setVisibility(View.GONE);
                     layout_team1.setVisibility(View.VISIBLE);
                     recycler_recent_balls.setVisibility(View.VISIBLE);
-                    text_recentball.setVisibility(View.VISIBLE);
+                    text_recentball.setVisibility(View.GONE);
                 } else {
                     layout_team1.setVisibility(View.GONE);
                     recycler_recent_balls.setVisibility(View.GONE);

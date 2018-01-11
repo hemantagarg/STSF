@@ -410,6 +410,7 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp10"
                         android:text="Recent balls"
+                        android:visibility="gone"
                         android:textColor="@color/text_color_black"
                         android:textSize="@dimen/text_size_14" />
 
