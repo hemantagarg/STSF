@@ -11,7 +11,7 @@ public class ModelSearchPeoples {
     private String about;
     private String totalPost;
     private String totalTeam;
-    private String totalFriend;
+    private String totalFriend, avatarName, avatarProfilePicture, fullName;
     private boolean ischecked;
     private String currentLocation, noOfTeam, totalMatch;
     private int rowType;
@@ -413,5 +413,29 @@ public class ModelSearchPeoples {
 
     public void setIschecked(boolean ischecked) {
         this.ischecked = ischecked;
+    }
+
+    public String getAvatarName() {
+        return avatarName;
+    }
+
+    public void setAvatarName(String avatarName) {
+        this.avatarName = avatarName;
+    }
+
+    public String getAvatarProfilePicture() {
+        return avatarProfilePicture;
+    }
+
+    public void setAvatarProfilePicture(String avatarProfilePicture) {
+        this.avatarProfilePicture = avatarProfilePicture;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

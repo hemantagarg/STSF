@@ -70,6 +70,7 @@ public class AppConstant {
     public static final String DEEP_COVER = "Deep Cover";
     public static final String THIRD_MAN = "Third Man";
     public static int FRAGMENT_CODE = 201;
+    public static int SEARCH_FRAGMENT_CODE = 202;
     public static final String MATCH = "MATCH";
     public static final String PRACTISE = "PRACTISE";
     public static final String MEET_UP = "MEET UP";
@@ -78,6 +79,7 @@ public class AppConstant {
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";
     public static final String DELETETEAM = "DELETETEAM";
     public static final int RESULTCODE_FINISH = 206;
+    public static final int RESULTCODE_FINISH1 = 207;
 
 
 }

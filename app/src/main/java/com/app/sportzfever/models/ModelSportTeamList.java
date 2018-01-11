@@ -17,7 +17,7 @@ public class ModelSportTeamList {
 
     private int rowType;
 
-    private String teamName,userId;
+    private String teamName, userId,email;
 
     private String ownerName;
 
@@ -36,13 +36,13 @@ public class ModelSportTeamList {
 
     private String avatarName;
 
-    private String playerName="";
+    private String playerName = "";
 
     private String speciality = "";
 
-    private String profilePicture="";
+    private String profilePicture = "";
 
-    private String avatar, avtarId, isReservedPlayer="0";
+    private String avatar, avtarId, isReservedPlayer = "0";
 
     public String getRequestStatus() {
         return requestStatus;
@@ -126,7 +126,7 @@ public class ModelSportTeamList {
     }
 
     private String teamId = "";
-
+    private boolean isNewPlayer;
     private String totalPlayersInTeam;
 
     private String ownerPic;
@@ -310,5 +310,13 @@ public class ModelSportTeamList {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public boolean isNewPlayer() {
+        return isNewPlayer;
+    }
+
+    public void setNewPlayer(boolean newPlayer) {
+        isNewPlayer = newPlayer;
     }
 }

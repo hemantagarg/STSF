@@ -390,7 +390,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/dp10"
                     android:padding="@dimen/dp5"
-                    android:text="Third Scorer"
+                    android:text="@string/third_scorer"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_15" />
 
@@ -435,7 +435,7 @@
                 android:drawableRight="@drawable/right_arrow"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dp5"
-                android:text="Select Scorer"
+                android:text="@string/select_scorer"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15" />
 
@@ -453,8 +453,9 @@
         android:paddingLeft="@dimen/dp20"
         android:paddingRight="@dimen/dp20"
         android:paddingTop="@dimen/dp5"
-        android:text="Let's Play"
+        android:text="@string/save_lineup_and_next"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_size_15" />
 
 </RelativeLayout>
