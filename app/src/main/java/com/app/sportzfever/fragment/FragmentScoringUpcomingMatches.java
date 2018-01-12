@@ -127,7 +127,11 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 }
             } else {
                 if (arrayList.get(position).getIsActiveScorer().equals("1")) {
-
+                    FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getEventId());
+                    fragmentSoringMatchDetails.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                 } else {
                     Toast.makeText(context, "you are not a scorer for this match", Toast.LENGTH_SHORT).show();
                 }

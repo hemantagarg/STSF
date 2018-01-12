@@ -62,5 +62,13 @@
     <string name="select_scorer">Select Scorer</string>
     <string name="third_scorer">Third Scorer</string>
     <string name="existing_player_message">This user is already in team roster, you can add this user from existing players list.</string>
+    <string name="playing_lineup">Playing Lineup</string>
+    <string name="no_ball">No Ball</string>
+    <string name="wide_ball">Wide Ball</string>
+    <string name="bye">Bye</string>
+    <string name="leg_bye">Leg Bye</string>
+    <string name="out">Out</string>
+    <string name="more_options">More Options</string>
+    <string name="undo">Undo</string>
 
 </resources>
