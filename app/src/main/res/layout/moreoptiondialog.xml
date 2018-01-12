@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="3"
+    android:orientation="horizontal">
+    <Button
+        android:id="@+id/btn_switchstrike"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/dp5"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp10"
+        android:textStyle="bold"
+
+        android:background="@drawable/blue_button_selecor"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_drinkbreak"
+        android:textSize="@dimen/dp10"
+android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/dp5"
+        android:background="@drawable/blue_button_selecor"
+        android:textColor="@color/white"
+
+        android:layout_weight="1"
+
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_endinning"
+        android:textStyle="bold"
+
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/dp5"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp10"
+
+        android:background="@drawable/blue_button_selecor"
+
+        android:layout_weight="1"
+
+        android:layout_height="wrap_content" />
+</LinearLayout>
+</LinearLayout>

@@ -75,6 +75,22 @@ public class AppConstant {
     public static final String PRACTISE = "PRACTISE";
     public static final String MEET_UP = "MEET UP";
     public static final String EVENT = "EVENT";
+    public static final String BOWLED = "BOWLED";
+    public static final String CATCH_OUT = "CATCH OUT";
+    public static final String CAUGHT_BEHIND = "CAUGHT BEHIND";
+    public static final String STUMPED = "STUMPED";
+    public static final String LBW = "LBW";
+    public static final String RUNOUT = "RUNOUT";
+    public static final String HITWICKET = "HITWICKET";
+    public static final String RETIRED_HURT = "RETIRED HURT";
+    public static final String HIT_BALL_TWICE = "HIT BALL TWICE";
+    public static final String HANDLED_BALL = "HANDLED BALL";
+    public static final String OBSTRUCTION_TO_FIELD = "OBSTRUCTION TO FIELD";
+    public static final String TIME_OUT = "TIME OUT";
+
+
+
+
     public static final String UPDATENAME = "UPDATENAME";
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";
     public static final String DELETETEAM = "DELETETEAM";

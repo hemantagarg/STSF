@@ -1,6 +1,8 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,9 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +36,7 @@ import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.models.ModelRecentBall;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.google.gson.Gson;
 
@@ -45,14 +53,16 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private Bundle b;
     private TextView text_recentball;
     private Activity context;
+    private Spinner spinnerouttype,spinneroutbyfieldername;
     private AdapterTeamBattingMatch adapterTeam1BattingMatch, adapterTeam2BattingMatch;
     private AdapterTeamBowlingMatch adapterTeam1BowlingMatch, adapterTeam2BowlingMatch;
+    private ArrayAdapter<String> adapterouttype, adapterMatchType, adapterteam;
 
     private ArrayList<BattingStats> arrayteam1Batting, arrayteam2Batting;
     private ArrayList<BowlingStats> arrayteam1Bowling, arrayteam2Bowling;
     private Button btn_teama, btn_teamb;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
-    private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling;
+    private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling,lin_out_action,lin_out_batsanspinner;
     public static Fragment_LiveScoring fragment_teamJoin_request;
     private final String TAG = Fragment_LiveScoring.class.getSimpleName();
     private String avtarid = "";
@@ -67,6 +77,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private AdapterRecentBalls adapterRecentBalls;
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
+    private ArrayList<String> listEventType = new ArrayList<>();
+    private String EventType = "";
 
     public static Fragment_LiveScoring getInstance() {
         if (fragment_teamJoin_request == null)
@@ -114,9 +126,15 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         layout_team1 = (LinearLayout) view.findViewById(R.id.layout_team1);
         layout_team2 = (LinearLayout) view.findViewById(R.id.layout_team2);
         layout_team1batting = (LinearLayout) view.findViewById(R.id.layout_team1batting);
+        lin_out_action = (LinearLayout) view.findViewById(R.id.lin_out_action);
+        lin_out_batsanspinner = (LinearLayout) view.findViewById(R.id.lin_out_batsanspinner);
         layout_team1bowling = (LinearLayout) view.findViewById(R.id.layout_team1bowling);
         layout_team2batting = (LinearLayout) view.findViewById(R.id.layout_team2batting);
         layout_team2bowling = (LinearLayout) view.findViewById(R.id.layout_team2bowling);
+//  spinner
+        spinnerouttype = (Spinner) view.findViewById(R.id.spinnerouttype);
+        spinneroutbyfieldername = (Spinner) view.findViewById(R.id.spinneroutbyfieldername);
+
 
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
         text_team1batting = (TextView) view.findViewById(R.id.text_team1batting);
@@ -143,6 +161,23 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         checkbox_bye = (CheckBox) view.findViewById(R.id.checkbox_bye);
         checkbox_leg_bye = (CheckBox) view.findViewById(R.id.checkbox_leg_bye);
         checkbox_out = (CheckBox) view.findViewById(R.id.checkbox_out);
+
+
+        listEventType.add("Select Out Type");
+        listEventType.add("BOWLED");
+        listEventType.add("CATCH OUT");
+        listEventType.add("CAUGHT BEHIND");
+        listEventType.add("STUMPED");
+        listEventType.add("LBW");
+        listEventType.add("RUNOUT");
+        listEventType.add("HITWICKET");
+        listEventType.add("RETIRED HURT");
+        listEventType.add("HIT BALL TWICE");
+        listEventType.add("HANDLED BALL");
+        listEventType.add("OBSTRUCTION TO FIELD");
+        listEventType.add("TIME OUT");
+        adapterouttype = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listEventType);
+        spinnerouttype.setAdapter(adapterouttype);
     }
 
 
@@ -300,6 +335,226 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
 
     private void setlistener() {
+
+        textMoreOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Dialog dialog = new Dialog(getActivity());
+                // Include dialog.xml file
+                dialog.setContentView(R.layout.moreoptiondialog);
+                // Set dialog title
+                dialog.setTitle("    SELECT YOUR OPTION");
+
+
+
+                dialog.show();
+
+           Button btn_switchstrike=(Button)dialog.findViewById(R.id.btn_switchstrike);
+                btn_switchstrike.setText(getContext().getString(R.string.switchstriker));
+           Button btn_drinkbreak=(Button)dialog.findViewById(R.id.btn_drinkbreak);
+                btn_drinkbreak.setText(getContext().getString(R.string.drinkbreak));
+
+                Button btn_endinning=(Button)dialog.findViewById(R.id.btn_endinning);
+                btn_endinning.setText(getContext().getString(R.string.endenning));
+
+            }
+        });
+        text5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Dialog dialog = new Dialog(getActivity());
+                // Include dialog.xml file
+                dialog.setContentView(R.layout.moreoptiondialog);
+                // Set dialog title
+                dialog.setTitle("    SELECT RUNS");
+
+
+
+                dialog.show();
+
+                Button btn_switchstrike=(Button)dialog.findViewById(R.id.btn_switchstrike);
+                btn_switchstrike.setText(getContext().getString(R.string.five));
+                Button btn_drinkbreak=(Button)dialog.findViewById(R.id.btn_drinkbreak);
+                btn_drinkbreak.setText(getContext().getString(R.string.seven));
+
+                Button btn_endinning=(Button)dialog.findViewById(R.id.btn_endinning);
+                btn_endinning.setText(getContext().getString(R.string.eight));
+
+            }
+        });
+        spinnerouttype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                if (position == 0) {
+                    spinneroutbyfieldername.setVisibility(View.GONE);
+                    lin_out_batsanspinner.setVisibility(View.GONE);
+
+                } else {
+                   // spinneroutbyfieldername.setVisibility(View.VISIBLE);
+                   // lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    if (position == 1) {
+                        EventType = AppConstant.BOWLED;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }
+                        //spinneroutbyfieldername.setVisibility(View.GONE);
+
+                        if (position == 2) {
+                            EventType = AppConstant.CATCH_OUT;
+                            spinneroutbyfieldername.setVisibility(View.VISIBLE);
+
+                        }  if (position == 3) {
+                            EventType = AppConstant.CAUGHT_BEHIND;
+                            spinneroutbyfieldername.setVisibility(View.VISIBLE);
+
+                        }  if (position == 4) {
+                            EventType = AppConstant.STUMPED;
+                        spinneroutbyfieldername.setVisibility(View.VISIBLE);
+
+                    }if (position == 5) {
+                            EventType = AppConstant.STUMPED;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+
+                    }if (position == 6) {
+                            EventType = AppConstant.RUNOUT;
+                        spinneroutbyfieldername.setVisibility(View.VISIBLE);
+                        lin_out_batsanspinner.setVisibility(View.VISIBLE);
+
+
+                    }if (position == 7) {
+                            EventType = AppConstant.HITWICKET;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }if (position == 8) {
+                            EventType = AppConstant.RETIRED_HURT;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }if (position == 9) {
+                            EventType = AppConstant.HIT_BALL_TWICE;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }if (position == 10) {
+                            EventType = AppConstant.HIT_BALL_TWICE;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }if (position == 11) {
+                            EventType = AppConstant.HIT_BALL_TWICE;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }if (position == 12) {
+                            EventType = AppConstant.HIT_BALL_TWICE;
+                        spinneroutbyfieldername.setVisibility(View.GONE);
+                        lin_out_batsanspinner.setVisibility(View.GONE);
+
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        checkbox_out.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+
+                lin_out_action.setVisibility(View.GONE);
+                lin_out_batsanspinner.setVisibility(View.GONE);
+                if (isChecked){
+                    lin_out_action.setVisibility(View.VISIBLE);
+                    lin_out_batsanspinner.setVisibility(View.VISIBLE);
+                    text0.setClickable(false);
+                    text1.setClickable(false);
+                    text2.setClickable(false);
+                    text3.setClickable(false);
+                    text4.setClickable(false);
+                    text5.setClickable(false);
+                    text6.setClickable(false);
+                    textUndo.setClickable(false);
+                    text0.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text1.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text2.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text3.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text4.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text5.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    text6.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                    textUndo.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+                }else {
+                    lin_out_action.setVisibility(View.GONE);
+                    lin_out_batsanspinner.setVisibility(View.GONE);
+                    text0.setClickable(true);
+                    text1.setClickable(true);
+                    text2.setClickable(true);
+                    text3.setClickable(true);
+                    text4.setClickable(true);
+                    text5.setClickable(true);
+                    text6.setClickable(true);
+                    textUndo.setClickable(true);
+                    text0.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text1.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text2.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text3.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text4.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text5.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    text6.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+                    textUndo.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+
+                }
+            }
+
+
+        });
+        checkbox_no_ball.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                checkbox_bye.setChecked(true);
+                checkbox_leg_bye.setChecked(true);
+                checkbox_out.setChecked(true);
+                checkbox_wide_ball.setChecked(false);
+                checkbox_no_ball.setChecked(true);
+
+            }
+        }); checkbox_wide_ball.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                checkbox_bye.setChecked(false);
+                checkbox_leg_bye.setChecked(false);
+                checkbox_out.setChecked(true);
+                checkbox_no_ball.setChecked(false);
+            }
+        });
+checkbox_bye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+            }
+        });checkbox_leg_bye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

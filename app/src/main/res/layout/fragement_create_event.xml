@@ -30,6 +30,7 @@
                 android:id="@+id/rl_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#F8F8F8"
                 android:padding="@dimen/dp10">
 
                 <TextView

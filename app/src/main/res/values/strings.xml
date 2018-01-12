@@ -70,5 +70,11 @@
     <string name="out">Out</string>
     <string name="more_options">More Options</string>
     <string name="undo">Undo</string>
+    <string name="switchstriker">Switch\nStriker</string>
+    <string name="drinkbreak">Drinks\nBreak</string>
+    <string name="endenning">End\nInning</string>
+    <string name="five">5</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
 
 </resources>
