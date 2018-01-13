@@ -89,6 +89,7 @@ public interface JsonApiHelper {
     String GETUSERALBUMS = "getUserAlbums/";
     String POSTCOMMENT = "comment";
     String SCORING = "scoring/";
+    String SAVE_BALL = "saveBall";
     String VIEWALLMATCHESSCORE = "viewMatchScoreCard/";
     String UPDATECOMMENT = "updateComment";
     String DELETECOMMENT = "deleteComment/";

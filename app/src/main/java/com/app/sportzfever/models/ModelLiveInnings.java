@@ -8,7 +8,7 @@ public class ModelLiveInnings {
     private String totalRunsScored;
 
     private String isScoredOnSF;
-    private String overRate;
+    private String overRate, batsmanOnStrike, batsmanOnNonStrike, previousBowlerId, currentBowlerId;
 
     private String[] fow;
 
@@ -32,7 +32,7 @@ public class ModelLiveInnings {
 
     private String playing;
 
-    private String id;
+    private String id,currentOverId;
 
     private String battingTeamProfilePic;
 
@@ -314,5 +314,45 @@ public class ModelLiveInnings {
 
     public void setOverRate(String overRate) {
         this.overRate = overRate;
+    }
+
+    public String getBatsmanOnStrike() {
+        return batsmanOnStrike;
+    }
+
+    public void setBatsmanOnStrike(String batsmanOnStrike) {
+        this.batsmanOnStrike = batsmanOnStrike;
+    }
+
+    public String getBatsmanOnNonStrike() {
+        return batsmanOnNonStrike;
+    }
+
+    public void setBatsmanOnNonStrike(String batsmanOnNonStrike) {
+        this.batsmanOnNonStrike = batsmanOnNonStrike;
+    }
+
+    public String getPreviousBowlerId() {
+        return previousBowlerId;
+    }
+
+    public void setPreviousBowlerId(String previousBowlerId) {
+        this.previousBowlerId = previousBowlerId;
+    }
+
+    public String getCurrentBowlerId() {
+        return currentBowlerId;
+    }
+
+    public void setCurrentBowlerId(String currentBowlerId) {
+        this.currentBowlerId = currentBowlerId;
+    }
+
+    public String getCurrentOverId() {
+        return currentOverId;
+    }
+
+    public void setCurrentOverId(String currentOverId) {
+        this.currentOverId = currentOverId;
     }
 }

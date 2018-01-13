@@ -70,7 +70,6 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
 
         view = inflater.inflate(R.layout.fragment_full_scorecard_match, container, false);
         context = getActivity();
-
         b = getArguments();
 
         return view;
@@ -79,7 +78,6 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         init();
         getBundle();
         setlistener();

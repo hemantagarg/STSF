@@ -87,9 +87,7 @@ public class AppConstant {
     public static final String HANDLED_BALL = "HANDLED BALL";
     public static final String OBSTRUCTION_TO_FIELD = "OBSTRUCTION TO FIELD";
     public static final String TIME_OUT = "TIME OUT";
-
-
-
+    public static final String SELECT_OUT_TYPE = "Select Out Type";
 
     public static final String UPDATENAME = "UPDATENAME";
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";

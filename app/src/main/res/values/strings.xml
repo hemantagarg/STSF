@@ -76,5 +76,11 @@
     <string name="five">5</string>
     <string name="seven">7</string>
     <string name="eight">8</string>
+    <string name="please_select_run_on_legbye">PLEASE SELECT RUN SCORED ON LEGBYE.</string>
+    <string name="please_select_run">PLEASE SELECT RUN SCORED.</string>
+    <string name="please_select_run_on_bye">PLEASE SELECT RUN SCORED ON BYE.</string>
+    <string name="please_select_out_type">PLEASE SELECT OUT TYPE.</string>
+    <string name="please_select_fielder">PLEASE SELECT FIELDER.</string>
+    <string name="please_select_batsman">PLEASE SELECT OUT BATSMAN.</string>
 
 </resources>

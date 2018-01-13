@@ -2,50 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical">
 
+    <TextView android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp10"
+        android:gravity="center"
+        android:textColor="@color/textcolordark"
+        android:textSize="@dimen/text_size_15" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="3"
-    android:orientation="horizontal">
-    <Button
-        android:id="@+id/btn_switchstrike"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_margin="@dimen/dp5"
-        android:textColor="@color/white"
-        android:textSize="@dimen/dp10"
-        android:textStyle="bold"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-        android:background="@drawable/blue_button_selecor"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btn_drinkbreak"
-        android:textSize="@dimen/dp10"
-android:textStyle="bold"
-        android:layout_width="0dp"
-        android:layout_margin="@dimen/dp5"
-        android:background="@drawable/blue_button_selecor"
-        android:textColor="@color/white"
+        <Button
+            android:id="@+id/btn_switchstrike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_weight="1"
+            android:background="@drawable/blue_button_selecor"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp10"
+            android:textStyle="bold" />
 
-        android:layout_weight="1"
+        <Button
+            android:id="@+id/btn_drinkbreak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_weight="1"
+            android:background="@drawable/blue_button_selecor"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp10"
+            android:textStyle="bold" />
 
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btn_endinning"
-        android:textStyle="bold"
-
-        android:layout_width="0dp"
-        android:layout_margin="@dimen/dp5"
-        android:textColor="@color/white"
-        android:textSize="@dimen/dp10"
-
-        android:background="@drawable/blue_button_selecor"
-
-        android:layout_weight="1"
-
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_endinning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_weight="1"
+            android:background="@drawable/blue_button_selecor"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp10"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

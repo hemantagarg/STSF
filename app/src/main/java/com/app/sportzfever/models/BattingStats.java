@@ -21,7 +21,7 @@ public class BattingStats {
     private String batsmanAvatarUrl;
 
     private String strikeRate;
-
+    private boolean isBattingStriker = false;
     private String fours;
 
     private String onStrike;
@@ -181,5 +181,13 @@ public class BattingStats {
 
     public int getRowType() {
         return rowType;
+    }
+
+    public boolean isBattingStriker() {
+        return isBattingStriker;
+    }
+
+    public void setBattingStriker(boolean battingStriker) {
+        isBattingStriker = battingStriker;
     }
 }
