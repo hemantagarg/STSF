@@ -73,6 +73,7 @@ public interface JsonApiHelper {
     String REMOVEFROMROSTER = "removeFromRoster";
     String ADDROSTER = "saveTeamToRoster";
     String GET_MATCH_LINEUP = "getMatchLineup/";
+    String CHECK_FOR_LNEUP_COMPLETE = "CheckForLineUpComplete/";
     String GET_LINEUP_FOR_MATCH = "matches/getLineUpForMatch/";
     String ALLTOURNAMNENTALBUMS = "getAlbumsImages/";
     String ALLTOURNAMNENTIMAGES = "getAlbumMatchTournament/tournament/";
@@ -84,6 +85,7 @@ public interface JsonApiHelper {
     String COMMENTARY = "commentary/";
     String GET_LIVE_SCORE = "getLiveScore/EVENT/";
     String UPCOMINGMATCHDETAILS = "getMatchStatisticsDetails/EVENT/";
+    String SAVE_SCORER_FOR_MATCH = "saveScoreForMatches";
     String LIKEANDUNLIKEFEED = "likeAndUnlikePost/";
     String CREATESTATUS = "createStatus";
     String GETUSERALBUMS = "getUserAlbums/";

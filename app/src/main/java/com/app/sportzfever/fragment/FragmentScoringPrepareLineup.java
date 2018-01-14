@@ -62,8 +62,6 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
     private ImageView image_cross;
     private RelativeLayout rl_preview, rl_previewopen;
-
-
     public static FragmentScoringPrepareLineup fragment_teamJoin_request;
     private final String TAG = FragmentScoringPrepareLineup.class.getSimpleName();
     private String team2Id = "", eventId = "", team1Id = "", team1Name = "", team2Name = "";
@@ -72,6 +70,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private String teamCheckAvailibility = "", title = "";
     private String matchId = "";
     private boolean isTeam1 = true;
+    private String isScorerForTeam1 = "", isScorerForTeam2 = "";
 
     public static FragmentScoringPrepareLineup getInstance() {
         if (fragment_teamJoin_request == null)
@@ -184,7 +183,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
 
     private void getBundle() {
         try {
-            Bundle b = getArguments();
+            b = getArguments();
             team1Id = b.getString("team1Id");
             isTeam1 = b.getBoolean("isTeam1");
             team2Id = b.getString("team2Id");
@@ -192,6 +191,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             matchId = b.getString("matchId");
             team1Name = b.getString("team1Name");
             team2Name = b.getString("team2Name");
+            isScorerForTeam1 = b.getString("isScorerForTeam1");
+            isScorerForTeam2 = b.getString("isScorerForTeam2");
             title = b.getString("title");
             playersCount = b.getString("playersCount");
             text_selected_players.setText("0/" + playersCount + "\nPlayers");
@@ -266,6 +267,10 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             bundle.putString("teamId", team1Id);
             bundle.putString("team1Id", team1Id);
             bundle.putString("team2Id", team2Id);
+            bundle.putString("isScorerForTeam1", isScorerForTeam1);
+            bundle.putString("isScorerForTeam2", isScorerForTeam2);
+            bundle.putString("team1ScorerName", b.getString("team1ScorerName"));
+            bundle.putString("team2ScorerName", b.getString("team2ScorerName"));
             bundle.putString("team1Name", team1Name);
             bundle.putString("team2Name", team2Name);
             bundle.putString("title", title);

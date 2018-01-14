@@ -2,20 +2,26 @@ package com.app.sportzfever.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,10 +60,14 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private Spinner spinnerouttype, spinneroutbyfieldername, spinneroutplayername;
     private AdapterLiveScoringTeamBattingMatch adapterTeam1BattingMatch;
     private AdapterTeamBowlingMatch adapterTeam1BowlingMatch;
-    private ArrayAdapter<String> adapterouttype, adapterFielderList, adapterBatsmanList;
-
+    private ArrayAdapter<String> adapterouttype, adapterFielderList, adapterBatsmanList, adapterSelctNewBatsman, adapterSelectNewBatsman2, adapterSelctNewBowler;
+    private ArrayList<String> battingStatsPlayerList = new ArrayList<>();
     private ArrayList<BattingStats> arrayteam1Batting;
     private ArrayList<String> listBatsman = new ArrayList<>();
+    private ArrayList<String> listNewBatsmanName = new ArrayList<>();
+    private ArrayList<String> listNewBowlerName = new ArrayList<>();
+    private ArrayList<String> listNewBowlerId = new ArrayList<>();
+    private ArrayList<String> listNewBatsmanId = new ArrayList<>();
     private ArrayList<String> listBatsmanId = new ArrayList<>();
     private ArrayList<String> listFielderId = new ArrayList<>();
     private ArrayList<String> listFielderName = new ArrayList<>();
@@ -73,7 +83,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
     private boolean isTeam2BattingVisible = true;
-    private boolean isTeam2BowlingVisible = true;
+    private boolean isTeam2BowlingVisible = true, isStriker = false;
     View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private AdapterRecentBalls adapterRecentBalls;
@@ -215,6 +225,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         try {
             if (jo != null) {
                 recentBallArrayList.clear();
+                clearTextSelection();
+                checkbox_out.setChecked(false);
+                checkbox_leg_bye.setChecked(false);
+                checkbox_bye.setChecked(false);
+                checkbox_no_ball.setChecked(false);
+                checkbox_wide_ball.setChecked(false);
+                runScored = -1;
                 JSONArray overBall = jo.getJSONArray("overBalls");
 
                 for (int j = 0; j < overBall.length(); j++) {
@@ -253,7 +270,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     } else {
                         currentOverId = modelInnings.getCurrentOverId();
                     }
+                    text_run.setText(modelInnings.getExtras());
+                    if (modelInnings.getExtraRuns() != null) {
+                        text_extras.setText("Extras ( wd " + modelInnings.getExtraRuns().getWd() + ", nb " + modelInnings.getExtraRuns().getNb() + " )");
+                    }
+
                 }
+
                 setFielderList(modelInnings, team1Squad, team2Squad);
                 listBatsmanId.add("-1");
                 listBatsman.add("Select Out Batsman");
@@ -273,11 +296,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                             listBatsmanId.add(battingStats.getBatsmanId());
                             listBatsman.add(battingStats.getBatsmanAvatarName());
                         }
+                        battingStatsPlayerList.add(battingStats.getBatsmanId());
                     }
                 }
 
                 adapterBatsmanList = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listBatsman);
                 spinneroutplayername.setAdapter(adapterBatsmanList);
+
 
                 if (modelInnings != null && modelInnings.getBowlingStats() != null && modelInnings.getBowlingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBowlingStats().length; i++) {
@@ -288,6 +313,20 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         }
                     }
                 }
+                if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
+
+                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad);
+                } else if (modelInnings.getBatsmanOnStrike().equals("-1")) {
+                    selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                    isStriker = true;
+                } else if (modelInnings.getBatsmanOnNonStrike().equals("-1")) {
+                    selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                    isStriker = false;
+                } else if (modelInnings.getCurrentBowlerId().equals("-1")) {
+                    setBowlerList(modelInnings, team1Squad, team2Squad);
+                }
+
+
                 adapterTeam1BattingMatch = new AdapterLiveScoringTeamBattingMatch(getActivity(), this, arrayteam1Batting);
                 list_team1batting.setAdapter(adapterTeam1BattingMatch);
 
@@ -307,11 +346,160 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 text_nodata.setVisibility(View.VISIBLE);
                 text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             e.printStackTrace();
         }
 
     }
+
+    private void selectBowlerBatsmanList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
+        try {
+            listNewBatsmanId.clear();
+            listNewBatsmanName.clear();
+            if (modelInnings != null) {
+                listNewBatsmanId.add("-1");
+                listNewBatsmanName.add("Select Batsman");
+                if (modelInnings.getBattingTeamId().equals(team1Id)) {
+                    if (team1Squad != null && team1Squad.length() > 0) {
+                        for (int i = 0; i < team1Squad.length(); i++) {
+                            JSONObject jo = team1Squad.getJSONObject(i);
+                            listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                            listNewBatsmanName.add(jo.getString("name"));
+                        }
+                    }
+                } else if (modelInnings.getBattingTeamId().equals(team2Id)) {
+                    if (team2Squad != null && team2Squad.length() > 0) {
+                        for (int i = 0; i < team2Squad.length(); i++) {
+                            JSONObject jo = team2Squad.getJSONObject(i);
+                            listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                            listNewBatsmanName.add(jo.getString("name"));
+                        }
+                    }
+                }
+                adapterSelctNewBatsman = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBatsmanName);
+                adapterSelectNewBatsman2 = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBatsmanName);
+
+                listNewBowlerId.clear();
+                listNewBowlerName.clear();
+                if (modelInnings != null) {
+                    listNewBowlerId.add("-1");
+                    listNewBowlerName.add("Select Bowler");
+                    if (modelInnings.getBowlingTeamId().equals(team1Id)) {
+                        if (team1Squad != null && team1Squad.length() > 0) {
+                            for (int i = 0; i < team1Squad.length(); i++) {
+                                JSONObject jo = team1Squad.getJSONObject(i);
+                                listNewBowlerName.add(jo.getString("name"));
+                                listNewBowlerId.add(jo.getString("playerAvatarId"));
+
+                            }
+                        }
+                    } else if (modelInnings.getBowlingTeamId().equals(team2Id)) {
+                        if (team2Squad != null && team2Squad.length() > 0) {
+                            for (int i = 0; i < team2Squad.length(); i++) {
+                                JSONObject jo = team2Squad.getJSONObject(i);
+                                listNewBowlerName.add(jo.getString("name"));
+                                listNewBowlerId.add(jo.getString("playerAvatarId"));
+                            }
+                        }
+                    }
+                    adapterSelctNewBowler = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBowlerName);
+                    selectNewBatsmanBowlerDialog();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void selectBatsmanList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
+        try {
+            listNewBatsmanId.clear();
+            listNewBatsmanName.clear();
+            if (modelInnings != null) {
+                listNewBatsmanId.add("-1");
+                listNewBatsmanName.add("Select Batsman");
+                if (modelInnings.getBattingTeamId().equals(team1Id)) {
+                    if (team1Squad != null && team1Squad.length() > 0) {
+                        for (int i = 0; i < team1Squad.length(); i++) {
+                            JSONObject jo = team1Squad.getJSONObject(i);
+                            if (!battingStatsPlayerList.contains(jo.getString("playerAvatarId"))) {
+                                listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                listNewBatsmanName.add(jo.getString("name"));
+                            }
+                        }
+                    }
+                } else if (modelInnings.getBattingTeamId().equals(team2Id)) {
+                    if (team2Squad != null && team2Squad.length() > 0) {
+                        for (int i = 0; i < team2Squad.length(); i++) {
+                            JSONObject jo = team2Squad.getJSONObject(i);
+                            if (!battingStatsPlayerList.contains(jo.getString("playerAvatarId"))) {
+                                listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                listNewBatsmanName.add(jo.getString("name"));
+                            }
+                        }
+                    }
+                }
+                adapterSelctNewBatsman = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBatsmanName);
+                selectNewBatsmanDialog();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setBowlerList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
+        try {
+            listNewBowlerId.clear();
+            listNewBowlerName.clear();
+            if (modelInnings != null) {
+                ArrayList<String> bowlerOversList = new ArrayList<>();
+                ArrayList<String> bowlerStatsList = new ArrayList<>();
+                for (int i = 0; i < modelInnings.getBowlingStats().length; i++) {
+                    bowlerStatsList.add(modelInnings.getBowlingStats()[i].getBowlerId());
+                    bowlerOversList.add(modelInnings.getBowlingStats()[i].getNumberOfOvers());
+                }
+
+                listNewBowlerId.add("-1");
+                listNewBowlerName.add("Select Bowler");
+                if (modelInnings.getBowlingTeamId().equals(team1Id)) {
+                    if (team1Squad != null && team1Squad.length() > 0) {
+                        for (int i = 0; i < team1Squad.length(); i++) {
+                            JSONObject jo = team1Squad.getJSONObject(i);
+                            if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
+                                String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
+                                listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
+                            } else {
+                                listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                            }
+                            listNewBowlerId.add(jo.getString("playerAvatarId"));
+
+                        }
+                    }
+                } else if (modelInnings.getBowlingTeamId().equals(team2Id)) {
+                    if (team2Squad != null && team2Squad.length() > 0) {
+                        for (int i = 0; i < team2Squad.length(); i++) {
+                            JSONObject jo = team2Squad.getJSONObject(i);
+                            if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
+                                String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
+                                listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
+                            } else {
+                                listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                            }
+                            listNewBowlerId.add(jo.getString("playerAvatarId"));
+                        }
+                    }
+                }
+                adapterSelctNewBowler = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBowlerName);
+                selectNewBowlerDialog();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void setFielderList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
         try {
@@ -344,6 +532,326 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
+
+
+    private void selectNewBatsmanBowlerDialog() {
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_batsman_bowler_dialog, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            cross_img_rel.setVisibility(View.GONE);
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            final Spinner spinnerBowler = (Spinner) view.findViewById(R.id.spinnerBowler);
+            final Spinner spinnerBatsmanTwo = (Spinner) view.findViewById(R.id.spinnerBatsmanTwo);
+            final Spinner spinnerBatsmanOne = (Spinner) view.findViewById(R.id.spinnerBatsmanOne);
+
+            if (adapterSelctNewBowler != null)
+                spinnerBowler.setAdapter(adapterSelctNewBowler);
+            spinnerBatsmanOne.setAdapter(adapterSelctNewBatsman);
+            spinnerBatsmanTwo.setAdapter(adapterSelectNewBatsman2);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (spinnerBatsmanTwo.getSelectedItemPosition() != 0) {
+                        try {
+                            addNewBowler(spinnerBatsmanTwo.getSelectedItemPosition());
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        edt_comment.setError("Please select Bowler");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
+    /**
+     * Open dialog for the change batsman
+     */
+    private void selectNewBowlerDialog() {
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_tem_captain, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            name_requirement_txt.setText("SELECT NEW BOWLER");
+            cross_img_rel.setVisibility(View.GONE);
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            final Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+            if (adapterSelctNewBowler != null)
+                spinnerShareWith.setAdapter(adapterSelctNewBowler);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (spinnerShareWith.getSelectedItemPosition() != 0) {
+                        try {
+                            addNewBowler(spinnerShareWith.getSelectedItemPosition());
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        edt_comment.setError("Please select Bowler");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
+    /**
+     * Open dialog for the change batsman
+     */
+    private void selectNewBatsmanDialog() {
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.edit_tem_captain, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            name_requirement_txt.setText("SELECT NEW BATSMAN");
+            cross_img_rel.setVisibility(View.GONE);
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            final Spinner spinnerShareWith = (Spinner) view.findViewById(R.id.spinnerShareWith);
+            if (adapterSelctNewBatsman != null)
+                spinnerShareWith.setAdapter(adapterSelctNewBatsman);
+
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (spinnerShareWith.getSelectedItemPosition() != 0) {
+                        try {
+                            addNewBatsman(spinnerShareWith.getSelectedItemPosition());
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        edt_comment.setError("Please select batsman");
+                        edt_comment.requestFocus();
+                    }
+
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
+    private void addNewBowler(int selectedBatsmanPosition) {
+
+        arrayteam1Bowling.clear();
+        BowlingStats bowlingStats = new BowlingStats();
+        bowlingStats.setBowlerId(listNewBowlerId.get(selectedBatsmanPosition));
+        bowlingStats.setName(listNewBowlerName.get(selectedBatsmanPosition));
+        bowlingStats.setEconomy("0");
+        bowlingStats.setMaiden("0");
+        bowlingStats.setNumberOfOvers("0");
+        bowlingStats.setRuns("0");
+        bowlingStats.setWickets("0");
+        bowlingStats.setExtras("0");
+        bowlingStats.setTotalDotBall("0");
+        bowlingStats.setTotalWideBall("0");
+        bowlingStats.setTotalNoBall("0");
+        arrayteam1Bowling.add(bowlingStats);
+        adapterTeam1BowlingMatch.notifyDataSetChanged();
+        bowlerId = bowlingStats.getBowlerId();
+        selectStriker(true);
+    }
+
+    private void addNewBatsman(int selectedBatsmanPosition) {
+
+        BattingStats battingStats = new BattingStats();
+        battingStats.setBatsmanId(listNewBatsmanId.get(selectedBatsmanPosition));
+        battingStats.setBatsmanAvatarName(listNewBatsmanName.get(selectedBatsmanPosition));
+        battingStats.setStatus("");
+        battingStats.setRuns("0");
+        battingStats.setDotball("0");
+        battingStats.setBalls("0");
+        battingStats.setFours("0");
+        battingStats.setSixes("0");
+        battingStats.setStrikeRate("0");
+        battingStats.setOutString("");
+        battingStats.setOnStrike("0");
+        battingStats.setPlayOrder("0");
+        if (isStriker) {
+            battingStats.setBattingStriker(true);
+            arrayteam1Batting.add(0, battingStats);
+        } else {
+            arrayteam1Batting.get(0).setBattingStriker(true);
+            arrayteam1Batting.add(battingStats);
+        }
+        adapterTeam1BattingMatch.notifyDataSetChanged();
+        listBatsmanId.add(battingStats.getBatsmanId());
+        listBatsman.add(battingStats.getBatsmanAvatarName());
+        selectStriker(false);
+    }
+
+    private void selectStriker(boolean isBowler) {
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // inflate the layout dialog_layout.xml and set it as contentView
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.select_striker_dialog, null, false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setContentView(view);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
+            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            final TextView text_name1 = (TextView) view.findViewById(R.id.text_name1);
+            final TextView text_name2 = (TextView) view.findViewById(R.id.text_name2);
+            cross_img_rel.setVisibility(View.GONE);
+
+            if (listBatsman.size() > 2) {
+                text_name1.setText(listBatsman.get(1));
+                text_name2.setText(listBatsman.get(2));
+            }
+
+            if (isBowler) {
+                for (int i = 0; i < arrayteam1Batting.size(); i++) {
+                    if (arrayteam1Batting.get(i).isBattingStriker()) {
+                        int id = listBatsmanId.indexOf(arrayteam1Batting.get(i).getBatsmanId());
+                        if (id == 1) {
+                            text_name1.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                            strikerBatsmanId = listBatsmanId.get(1);
+                        } else {
+                            text_name2.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                            strikerBatsmanId = listBatsmanId.get(2);
+                        }
+                    }
+                }
+            } else {
+                if (isStriker) {
+                    text_name2.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    strikerBatsmanId = listBatsmanId.get(2);
+                } else {
+                    text_name1.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    strikerBatsmanId = listBatsmanId.get(1);
+                }
+            }
+
+            text_name1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    text_name1.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    text_name2.setBackgroundColor(ContextCompat.getColor(context, R.color.blue_color));
+                    strikerBatsmanId = listBatsmanId.get(1);
+                }
+            });
+            text_name2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    text_name2.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    text_name1.setBackgroundColor(ContextCompat.getColor(context, R.color.blue_color));
+                    strikerBatsmanId = listBatsmanId.get(2);
+                }
+            });
+
+            Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < arrayteam1Batting.size(); i++) {
+                        if (arrayteam1Batting.get(i).getBatsmanId().equals(strikerBatsmanId)) {
+                            arrayteam1Batting.get(i).setBattingStriker(true);
+                        } else {
+                            arrayteam1Batting.get(i).setBattingStriker(false);
+                        }
+                        dialog.dismiss();
+                        adapterTeam1BattingMatch.notifyDataSetChanged();
+                    }
+                }
+            });
+
+            cross_img_rel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " Exception error : " + e);
+        }
+    }
+
 
     private void setlistener() {
 
@@ -896,7 +1404,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 }
             } else if (position == 2) {
                 //    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                context.onBackPressed();
+                getLiveScoresRefresh();
             } else {
                 Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
             }

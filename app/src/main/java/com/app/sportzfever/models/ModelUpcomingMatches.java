@@ -17,7 +17,7 @@ public class ModelUpcomingMatches {
     private int rowType;
     private String id;
 
-    private String team1Name,team1ScorerName,team2ScorerName;
+    private String team1Name, team1ScorerName, team2ScorerName, isScorerForTeam1, isScorerForTeam2;
 
     public String getShortMonthName() {
         return ShortMonthName;
@@ -69,17 +69,17 @@ public class ModelUpcomingMatches {
     private String date;
     private String monthName;
     private String year;
-    private String canEditLineup,isActiveScorer,activeScorerName,isTeam1ScoringOnSf,isTeam2ScoringOnSf;
+    private String canEditLineup, isActiveScorer, activeScorerName, isTeam1ScoringOnSf, isTeam2ScoringOnSf;
 
-    private String eventId,numberOfPlayers;
+    private String eventId, numberOfPlayers;
 
     private String team2Name;
 
-    private String location,team2Id,team1Id;
+    private String location, team2Id, team1Id;
 
     private String team1AvatarID;
 
-    private String matchStatus,matchId;
+    private String matchStatus, matchId;
 
     private String team1profilePicture;
 
@@ -87,125 +87,100 @@ public class ModelUpcomingMatches {
 
     private String numberOfOvers;
 
-    public String getId ()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTeam1Name ()
-    {
+    public String getTeam1Name() {
         return team1Name;
     }
 
-    public void setTeam1Name (String team1Name)
-    {
+    public void setTeam1Name(String team1Name) {
         this.team1Name = team1Name;
     }
 
-    public String getTeam2profilePicture ()
-    {
+    public String getTeam2profilePicture() {
         return team2profilePicture;
     }
 
-    public void setTeam2profilePicture (String team2profilePicture)
-    {
+    public void setTeam2profilePicture(String team2profilePicture) {
         this.team2profilePicture = team2profilePicture;
     }
 
-    public String getTeam2AvatarID ()
-    {
+    public String getTeam2AvatarID() {
         return team2AvatarID;
     }
 
-    public void setTeam2AvatarID (String team2AvatarID)
-    {
+    public void setTeam2AvatarID(String team2AvatarID) {
         this.team2AvatarID = team2AvatarID;
     }
 
 
-
-    public String getEventId ()
-    {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId (String eventId)
-    {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
-    public String getTeam2Name ()
-    {
+    public String getTeam2Name() {
         return team2Name;
     }
 
-    public void setTeam2Name (String team2Name)
-    {
+    public void setTeam2Name(String team2Name) {
         this.team2Name = team2Name;
     }
 
-    public String getLocation ()
-    {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation (String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public String getTeam1AvatarID ()
-    {
+    public String getTeam1AvatarID() {
         return team1AvatarID;
     }
 
-    public void setTeam1AvatarID (String team1AvatarID)
-    {
+    public void setTeam1AvatarID(String team1AvatarID) {
         this.team1AvatarID = team1AvatarID;
     }
 
-    public String getMatchStatus ()
-    {
+    public String getMatchStatus() {
         return matchStatus;
     }
 
-    public void setMatchStatus (String matchStatus)
-    {
+    public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
     }
 
-    public String getTeam1profilePicture ()
-    {
+    public String getTeam1profilePicture() {
         return team1profilePicture;
     }
 
-    public void setTeam1profilePicture (String team1profilePicture)
-    {
+    public void setTeam1profilePicture(String team1profilePicture) {
         this.team1profilePicture = team1profilePicture;
     }
 
-    public String getTournamentName ()
-    {
+    public String getTournamentName() {
         return tournamentName;
     }
 
-    public void setTournamentName (String tournamentName)
-    {
+    public void setTournamentName(String tournamentName) {
         this.tournamentName = tournamentName;
     }
 
-    public String getNumberOfOvers ()
-    {
+    public String getNumberOfOvers() {
         return numberOfOvers;
     }
 
-    public void setNumberOfOvers (String numberOfOvers)
-    {
+    public void setNumberOfOvers(String numberOfOvers) {
         this.numberOfOvers = numberOfOvers;
     }
 
@@ -296,5 +271,21 @@ public class ModelUpcomingMatches {
 
     public void setMatchId(String matchId) {
         this.matchId = matchId;
+    }
+
+    public String getIsScorerForTeam1() {
+        return isScorerForTeam1;
+    }
+
+    public void setIsScorerForTeam1(String isScorerForTeam1) {
+        this.isScorerForTeam1 = isScorerForTeam1;
+    }
+
+    public String getIsScorerForTeam2() {
+        return isScorerForTeam2;
+    }
+
+    public void setIsScorerForTeam2(String isScorerForTeam2) {
+        this.isScorerForTeam2 = isScorerForTeam2;
     }
 }

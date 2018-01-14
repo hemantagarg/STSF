@@ -82,5 +82,6 @@
     <string name="please_select_out_type">PLEASE SELECT OUT TYPE.</string>
     <string name="please_select_fielder">PLEASE SELECT FIELDER.</string>
     <string name="please_select_batsman">PLEASE SELECT OUT BATSMAN.</string>
+    <string name="cannot_scorer_message">You can not start inning... please ask other team scorer to login and start inning</string>
 
 </resources>
