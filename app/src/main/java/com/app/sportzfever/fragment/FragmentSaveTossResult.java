@@ -135,21 +135,18 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
 
 
     private void saveResult() {
-        Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.sf.com/saveScoreForMatches
 
-                JSONObject jsonObject = new JSONObject();
                 JSONObject match = new JSONObject();
-                match.put("action", "");
-                match.put("tossSelection", listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()));
-                match.put("tossResultId", spinnerSelectionType.getSelectedItem().toString());
-                match.put("matchId", matchId);
-                jsonObject.put("match", match);
 
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORER_FOR_MATCH;
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                match.put("tossWinnerTeamId", listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()));
+                match.put("tossSelection", spinnerSelectionType.getSelectedItem().toString());
+                match.put("matchId", matchId);
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, match, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -183,7 +180,6 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                             context.onBackPressed();
                         } else {
                             Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
-                            context.onBackPressed();
                         }
                     } else if (isScorerForTeam2.equalsIgnoreCase("Yes")) {
                         if (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
@@ -196,7 +192,6 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                             context.onBackPressed();
                         } else {
                             Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
-                            context.onBackPressed();
                         }
                     }
                 } else {

@@ -148,7 +148,8 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     fragmentSoringMatchDetails.setArguments(b);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                 } else {
-                    Toast.makeText(context, "you are not a scorer for this match", Toast.LENGTH_SHORT).show();
+                    String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
+                    AppUtils.showDialogMessage(context, message);
                 }
             }
         }

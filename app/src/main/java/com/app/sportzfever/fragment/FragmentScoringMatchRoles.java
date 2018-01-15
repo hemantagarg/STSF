@@ -1,8 +1,6 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -219,33 +217,29 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     int size = scorers.length();
                     if (size > 0) {
                         JSONObject jo = scorers.getJSONObject(0);
-                        if (jo.has("scorerName")) {
-                            if (arrayListFirstScorer.contains(jo.getString("scorerName"))) {
-                                int po1 = arrayListFirstScorer.indexOf(jo.getString("scorerName"));
-                                spinner_first_scorer.setSelection(po1 - 1);
+                        if (jo.has("scorerId")) {
+                            if (arrayListUserId.contains(jo.getString("scorerId"))) {
+                                int po1 = arrayListUserId.indexOf(jo.getString("scorerId"));
+                                spinner_first_scorer.setSelection(po1);
                             }
                         }
                         if (size > 1) {
                             JSONObject jo1 = scorers.getJSONObject(1);
-                            if (jo1.has("scorerName")) {
-                                if (arrayListSecondScorer.contains(jo1.getString("scorerName"))) {
-                                    int po1 = arrayListSecondScorer.indexOf(jo1.getString("scorerName"));
+                            if (jo1.has("scorerId")) {
+                                if (arrayListUserId.contains(jo1.getString("scorerId"))) {
+                                    int po1 = arrayListUserId.indexOf(jo1.getString("scorerId"));
                                     Log.e("spinner_second_position", "**" + po1);
-                                    spinner_second_scorer.setSelection(po1 - 1);
+                                    spinner_second_scorer.setSelection(po1);
                                 }
-                            } else {
-                                spinner_second_scorer.setSelection(0);
                             }
                         }
                         if (size > 2) {
                             JSONObject jo2 = scorers.getJSONObject(2);
-                            if (jo2.has("scorerName")) {
-                                if (arrayListThirdScorer.contains(jo2.getString("scorerName"))) {
-                                    int po1 = arrayListThirdScorer.indexOf(jo2.getString("scorerName"));
-                                    spinner_third_scorer.setSelection(po1 - 1);
+                            if (jo2.has("scorerId")) {
+                                if (arrayListUserId.contains(jo2.getString("scorerId"))) {
+                                    int po1 = arrayListUserId.indexOf(jo2.getString("scorerId"));
+                                    spinner_third_scorer.setSelection(po1);
                                 }
-                            } else {
-                                spinner_third_scorer.setSelection(0);
                             }
                         }
 
@@ -362,8 +356,27 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (spinner_captain.getSelectedItem() != null && spinner_captain.getSelectedItemPosition() != 0) {
-                    makeJsonRequest();
+                if (spinner_captain.getSelectedItem().toString() != null && spinner_captain.getSelectedItemPosition() != 0) {
+                    if (spinner_select_scorer.getSelectedItemPosition() == 0 && selectedUserList != null) {
+                        makeJsonRequest();
+                    } else {
+                        if (spinner_select_scorer.getSelectedItemPosition() == 0) {
+                            Toast.makeText(context, "Please select atleast one scorer", Toast.LENGTH_SHORT).show();
+                        } else if (spinner_first_scorer.getSelectedItemPosition() == 0 && spinner_second_scorer.getSelectedItemPosition() == 0
+                                && spinner_third_scorer.getSelectedItemPosition() == 0) {
+                            Toast.makeText(context, "Please select atleast one scorer", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (spinner_first_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_second_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else if (spinner_first_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_third_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else if (spinner_second_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_third_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else {
+                                makeJsonRequest();
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(context, "Please select captain", Toast.LENGTH_SHORT).show();
                 }
@@ -482,12 +495,12 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         spinner_first_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (selectedFirstScorer.equalsIgnoreCase("")) {
+              /*  if (selectedFirstScorer.equalsIgnoreCase("")) {
                     removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
                 } else {
                     addItemInArrayList(selectedFirstScorer, "1");
                     removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
-                }
+                }*/
                 selectedFirstScorer = spinner_first_scorer.getSelectedItem().toString();
                 text_first_scorer.setText(spinner_first_scorer.getSelectedItem().toString());
             }
@@ -501,16 +514,16 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 Log.e("spinner_second_position", "****" + position + "**" + arrayListSecondScorer.size());
-                if (spinner_second_scorer.getSelectedItem() != null) {
+              /*  if (spinner_second_scorer.getSelectedItem().toString() != null) {
                     if (selectedSecondScorer.equalsIgnoreCase("")) {
                         removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
                     } else {
                         addItemInArrayList(selectedSecondScorer, "2");
                         removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
-                    }
-                    selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
-                    text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
-                }
+                    }*/
+                selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
+                text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
+
             }
 
             @Override
@@ -522,14 +535,16 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 Log.e("spinner_third_position", "****" + position + "**" + arrayListThirdScorer.size());
-                if (selectedThirdScorer.equalsIgnoreCase("")) {
-                    removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
-                } else {
-                    addItemInArrayList(selectedThirdScorer, "3");
-                    removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
-                }
+               /* if (spinner_third_scorer.getSelectedItem().toString() != null) {
+                    if (selectedThirdScorer.equalsIgnoreCase("")) {
+                        removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
+                    } else {
+                        addItemInArrayList(selectedThirdScorer, "3");
+                        removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
+                    }*/
                 selectedThirdScorer = spinner_third_scorer.getSelectedItem().toString();
                 text_third_scorer.setText(spinner_third_scorer.getSelectedItem().toString());
+
             }
 
             @Override
@@ -602,21 +617,21 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     }
                 }
             } else {
-                if (spinner_first_scorer.getSelectedItem() != null && spinner_first_scorer.getSelectedItemPosition() != 0) {
+                if (spinner_first_scorer.getSelectedItem().toString() != null && spinner_first_scorer.getSelectedItemPosition() != 0) {
                     String id = gteUserIdFromList(spinner_first_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
                     userId.put("order", "1");
                     scorers.put(userId);
                 }
-                if (spinner_second_scorer.getSelectedItem() != null && spinner_second_scorer.getSelectedItemPosition() != 0) {
+                if (spinner_second_scorer.getSelectedItem().toString() != null && spinner_second_scorer.getSelectedItemPosition() != 0) {
                     String id = gteUserIdFromList(spinner_second_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
                     userId.put("order", "2");
                     scorers.put(userId);
                 }
-                if (spinner_third_scorer.getSelectedItem() != null && spinner_third_scorer.getSelectedItemPosition() != 0) {
+                if (spinner_third_scorer.getSelectedItem().toString() != null && spinner_third_scorer.getSelectedItemPosition() != 0) {
                     String id = gteUserIdFromList(spinner_third_scorer.getSelectedItem().toString());
                     JSONObject userId = new JSONObject();
                     userId.put("userId", id);
@@ -624,7 +639,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     scorers.put(userId);
                 }
             }
-            if (spinner_captain.getSelectedItem() != null && spinner_captain.getSelectedItemPosition() != 0) {
+            if (spinner_captain.getSelectedItem().toString() != null && spinner_captain.getSelectedItemPosition() != 0) {
                 String id = gteAvtarIdFromList(spinner_captain.getSelectedItem().toString());
                 JSONObject captain = new JSONObject();
                 captain.put("avatar", id);
@@ -794,9 +809,10 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     JSONObject data = response.getJSONObject("data");
                     String isLineUpCompleteForBothTeams = data.getString("isLineUpCompleteForBothTeams");
                     if (isLineUpCompleteForBothTeams.equals("1")) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-                        context.onBackPressed();
-                        if (isScorerForTeam1.equalsIgnoreCase("Yes") || isScorerForTeam2.equalsIgnoreCase("Yes")) {
+
+                        JSONObject scoringData = response.getJSONObject("scoringData");
+                        if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
+                            context.onBackPressed();
                             FragmentSaveTossResult fragmentupcomingdetals = new FragmentSaveTossResult();
                             Bundle b = new Bundle();
                             b.putString("eventId", eventId);
@@ -812,7 +828,14 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                             fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
                             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
                         } else {
-                            showDialogMessage();
+                            if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
+                                String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
+                                        + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
+                                AppUtils.showDialogMessage(context, message);
+                            } else {
+                                JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
+                                showMessage(otherMatchDetails);
+                            }
                         }
                     } else {
                         Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
@@ -825,22 +848,22 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
     }
 
-    private void showDialogMessage() {
+    private void showMessage(JSONObject otherMatchDetails) {
+        try {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                context);
-        String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
-                + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
-        alertDialog.setMessage(message);
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        context.onBackPressed();
-                    }
+            JSONObject team1 = otherMatchDetails.getJSONObject("team1");
+            JSONObject team2 = otherMatchDetails.getJSONObject("team2");
+            JSONObject dateTime = otherMatchDetails.getJSONObject("dateTime");
+            String time = dateTime.getString("date") + " " + dateTime.getString("ShortMonthName") + " " + dateTime.getString("year");
 
-                });
-        alertDialog.show();
+            String message = "You are active score for a match on " + "\n" + time + "\nbetween\n" +
+                    team1.getString("name") + "\nvs\n" + team2.getString("name") + "\n" + "Please complete that match then you can start this match scoring";
+            AppUtils.showDialogMessage(context, message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

@@ -76,6 +76,7 @@
     <string name="five">5</string>
     <string name="seven">7</string>
     <string name="eight">8</string>
+    <string name="another_scorer_start_scoring_message">One of the designated match scorers, %s, has already started scoring. Either score on his device or ask him to log out for you to be able to score in your device.</string>
     <string name="please_select_run_on_legbye">PLEASE SELECT RUN SCORED ON LEGBYE.</string>
     <string name="please_select_run">PLEASE SELECT RUN SCORED.</string>
     <string name="please_select_run_on_bye">PLEASE SELECT RUN SCORED ON BYE.</string>
