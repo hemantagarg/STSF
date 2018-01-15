@@ -468,13 +468,15 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (team1Squad != null && team1Squad.length() > 0) {
                         for (int i = 0; i < team1Squad.length(); i++) {
                             JSONObject jo = team1Squad.getJSONObject(i);
-                            if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
-                                String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
-                                listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
-                            } else {
-                                listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                            if (!modelInnings.getPreviousBowlerId().equals(jo.getString("playerAvatarId"))) {
+                                if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
+                                    String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
+                                    listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
+                                } else {
+                                    listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                                }
+                                listNewBowlerId.add(jo.getString("playerAvatarId"));
                             }
-                            listNewBowlerId.add(jo.getString("playerAvatarId"));
 
                         }
                     }
@@ -482,13 +484,15 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (team2Squad != null && team2Squad.length() > 0) {
                         for (int i = 0; i < team2Squad.length(); i++) {
                             JSONObject jo = team2Squad.getJSONObject(i);
-                            if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
-                                String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
-                                listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
-                            } else {
-                                listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                            if (!modelInnings.getPreviousBowlerId().equals(jo.getString("playerAvatarId"))) {
+                                if (bowlerStatsList.contains(jo.getString("playerAvatarId"))) {
+                                    String overnew = bowlerOversList.get(bowlerStatsList.indexOf(jo.getString("playerAvatarId")));
+                                    listNewBowlerName.add(jo.getString("name") + " (" + overnew + " bowled)");
+                                } else {
+                                    listNewBowlerName.add(jo.getString("name") + " (0 bowled)");
+                                }
+                                listNewBowlerId.add(jo.getString("playerAvatarId"));
                             }
-                            listNewBowlerId.add(jo.getString("playerAvatarId"));
                         }
                     }
                 }
