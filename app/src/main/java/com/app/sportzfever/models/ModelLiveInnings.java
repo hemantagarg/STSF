@@ -12,11 +12,11 @@ public class ModelLiveInnings {
 
     private String[] fow;
 
-    private String totalOvers;
+    private String totalOvers,inningScoreString;
 
     private String bowlingTeamName;
 
-    private String isDeclared;
+    private String isDeclared,drinksBreak;
 
     private String state;
 
@@ -354,5 +354,21 @@ public class ModelLiveInnings {
 
     public void setCurrentOverId(String currentOverId) {
         this.currentOverId = currentOverId;
+    }
+
+    public String getInningScoreString() {
+        return inningScoreString;
+    }
+
+    public void setInningScoreString(String inningScoreString) {
+        this.inningScoreString = inningScoreString;
+    }
+
+    public String getDrinksBreak() {
+        return drinksBreak;
+    }
+
+    public void setDrinksBreak(String drinksBreak) {
+        this.drinksBreak = drinksBreak;
     }
 }

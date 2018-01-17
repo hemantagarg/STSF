@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,11 +57,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private JSONArray arrayListExistingPlayers = new JSONArray();
     private int skipCount = 0, intAddedPlayers = 0;
     private View view_about;
-    private Button btn_send_invite, btn_next;
+    private Button btn_send_invite, btn_next, btn_proceed;
     private TextView text_nodata, textSelectAll, text_selected_players, text_create_lineup;
     private ArrayList<String> listAvtarId = new ArrayList<>();
     private ArrayList<String> emailIdlIst = new ArrayList<>();
-    private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7, text_name8, text_name9, text_name10, text_name11;
+    private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7,
+            text_name8, text_name9, text_name10, text_name11;
     private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
     private ImageView image_cross;
     private RelativeLayout rl_preview, rl_previewopen;
@@ -67,9 +71,11 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private String team2Id = "", eventId = "", team1Id = "", team1Name = "", team2Name = "";
     private JSONObject jsonLinupArray;
     private String playersCount = "";
-    private String teamCheckAvailibility = "", title = "";
+    private CheckBox checkbox_scoring;
+    private String teamCheckAvailibility = "", title = "", overs = "";
     private String matchId = "";
     private boolean isTeam1 = true;
+    private RelativeLayout rl_main;
     private String isScorerForTeam1 = "", isScorerForTeam2 = "";
 
     public static FragmentScoringPrepareLineup getInstance() {
@@ -130,9 +136,9 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init(view);
+        setlistener();
         getBundle();
         manageHeaderView();
-        setlistener();
     }
 
     private void init(View view) {
@@ -160,6 +166,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         ll11 = (LinearLayout) view.findViewById(R.id.ll11);
         image_cross = (ImageView) view.findViewById(R.id.image_cross);
         rl_preview = (RelativeLayout) view.findViewById(R.id.rl_preview);
+        rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
         rl_previewopen = (RelativeLayout) view.findViewById(R.id.rl_previewopen);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         list_added_players = (RecyclerView) view.findViewById(R.id.list_added_players);
@@ -169,11 +176,13 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         text_selected_players = (TextView) view.findViewById(R.id.text_selected_players);
         text_create_lineup = (TextView) view.findViewById(R.id.text_create_lineup);
         btn_next = (Button) view.findViewById(R.id.btn_next);
+        btn_proceed = (Button) view.findViewById(R.id.btn_proceed);
         btn_send_invite = (Button) view.findViewById(R.id.btn_send_invite);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         list_request.setLayoutManager(layoutManager);
         list_request.setNestedScrollingEnabled(false);
+        checkbox_scoring = (CheckBox) view.findViewById(R.id.checkbox_scoring);
         list_added_players.setLayoutManager(new LinearLayoutManager(context));
         arrayList = new ArrayList<>();
         arrayListaddedPlayers = new ArrayList<>();
@@ -189,6 +198,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             team2Id = b.getString("team2Id");
             eventId = b.getString("eventId");
             matchId = b.getString("matchId");
+            overs = b.getString("overs");
+            Log.e("overs", "**" + overs);
             team1Name = b.getString("team1Name");
             team2Name = b.getString("team2Name");
             isScorerForTeam1 = b.getString("isScorerForTeam1");
@@ -214,6 +225,53 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     }
 
     private void setlistener() {
+        checkbox_scoring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    rl_main.setVisibility(View.VISIBLE);
+                    btn_proceed.setVisibility(View.GONE);
+                    text_nodata.setVisibility(View.GONE);
+                } else {
+                    rl_main.setVisibility(View.GONE);
+                    btn_proceed.setVisibility(View.VISIBLE);
+                    text_nodata.setVisibility(View.VISIBLE);
+                    text_nodata.setText(R.string.final_score_message);
+                }
+            }
+        });
+
+        btn_proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject jo = makeBlankJsonRequest();
+                sentInvite(jo);
+                if (isTeam1) {
+                    FragmentScoringPrepareLineup fragmentupcomingdetals = new FragmentScoringPrepareLineup();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("eventId", eventId);
+                    bundle.putString("matchId", matchId);
+                    bundle.putString("team1Id", team2Id);
+                    bundle.putString("team2Id", team1Id);
+                    bundle.putString("isScorerForTeam1", isScorerForTeam1);
+                    bundle.putString("isScorerForTeam2", isScorerForTeam2);
+                    bundle.putString("team1ScorerName", b.getString("team1ScorerName"));
+                    bundle.putString("team2ScorerName", b.getString("team2ScorerName"));
+                    bundle.putString("overs", overs);
+                    bundle.putBoolean("isTeam1", false);
+                    bundle.putString("playersCount", playersCount);
+                    bundle.putString("title", team2Name);
+                    bundle.putString("team1Name", team2Name);
+                    bundle.putString("team2Name", team1Name);
+                    fragmentupcomingdetals.setArguments(bundle);
+                    fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                } else {
+                    checkLineupComplete();
+                }
+            }
+        });
+
         rl_previewopen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,6 +314,22 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             }
         });
     }
+
+    private void checkLineupComplete() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                // http://sfscoring.sf.com/CheckForLineUpComplete/87
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.CHECK_FOR_LNEUP_COMPLETE + matchId;
+                new CommonAsyncTaskHashmap(5, context, this).getqueryJsonbject(url, null, Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void moveNext() {
         if (intAddedPlayers > 0) {
@@ -468,6 +542,41 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         }
     }
 
+
+    private JSONObject makeBlankJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("teamId", team1Id);
+            jsonObject.put("matchId", matchId);
+            jsonObject.put("isTeamScoringOnSf", "0");
+            jsonObject.put("teamCheckAvailibility", "0");
+            jsonObject.put("newMatchlineUp", new JSONArray());
+            jsonObject.put("existingPlayersToAdd", new JSONArray());
+            jsonObject.put("newPlayersToAddInTeam", new JSONArray());
+
+            JSONObject user = new JSONObject();
+            user.put("user", "");
+            user.put("avatar", "");
+            user.put("email", "");
+            jsonObject.put("captain", user);
+            jsonObject.put("viceCaptain", user);
+            jsonObject.put("wicketKeeper", user);
+
+            JSONArray scorers = new JSONArray();
+            for (int i = 0; i < 3; i++) {
+                JSONObject jo = new JSONObject();
+                jo.put("order", i + 1);
+                jo.put("userId", "-1");
+                scorers.put(jo);
+            }
+            jsonObject.put("scorers", scorers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+
     private JSONObject makeJsonRequest() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -561,19 +670,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     }
                     adapterSportTeamList = new AdapterTeamLineupRoster(getActivity(), this, arrayList);
                     list_request.setAdapter(adapterSportTeamList);
-
-                    if (arrayList.size() > 0) {
-                        text_nodata.setVisibility(View.GONE);
-                    } else {
-                        text_nodata.setVisibility(View.VISIBLE);
-                        text_nodata.setText("No Roster found");
-                    }
-                } else {
-                    text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText("No Roster found");
-
                 }
-
             } else if (position == 2) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
@@ -610,10 +707,40 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     text_selected_players.setText(intAddedPlayers + "/" + playersCount + "\nPlayers");
                     checkPlayerCount();
                     adapterTeamAddedPlayersLineup.notifyDataSetChanged();
+                    if (jObject.getString("isTeamScoringOnSf").equals("0")) {
+                        checkbox_scoring.setChecked(false);
+                    }
+
                 } else {
                 }
             } else if (position == 3) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 5) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    if (data.getString("isTeam1ScoringOnSf").equals("0") && data.getString("isTeam2ScoringOnSf").equals("0")) {
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+                        context.onBackPressed();
+                        FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", eventId);
+                        bundle.putString("matchId", matchId);
+                        bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                        bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                        bundle.putString("playersCount", playersCount);
+                        bundle.putString("overs", overs);
+                        bundle.putString("team1Id", team2Id);
+                        bundle.putString("team2Id", team1Id);
+                        bundle.putString("title", "");
+                        bundle.putString("team1Name", team2Name);
+                        bundle.putString("team2Name", team1Name);
+                        fragmentupcomingdetals.setArguments(bundle);
+                        fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

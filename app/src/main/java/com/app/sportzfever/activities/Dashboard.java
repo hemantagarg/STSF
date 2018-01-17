@@ -933,6 +933,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         if (currentFragment instanceof FragmentPersonalProfileEdit) {
             ((FragmentPersonalProfileEdit) currentFragment).onResume();
         }
+        if (currentFragment instanceof Fragment_Scoring) {
+            ((Fragment_Scoring) currentFragment).onResume();
+        }
 
     }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,6 +33,7 @@ import com.app.sportzfever.adapter.AdapterRecentBalls;
 import com.app.sportzfever.adapter.AdapterTeamBowlingMatch;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
@@ -55,7 +55,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private RecyclerView list_team1batting, list_team1bowling, list_team2batting, list_team2bowling, recycler_recent_balls;
     private Bundle b;
-    private TextView text_recentball;
+    private TextView text_recentball, textRunsScored;
     private Activity context;
     private Spinner spinnerouttype, spinneroutbyfieldername, spinneroutplayername;
     private AdapterLiveScoringTeamBattingMatch adapterTeam1BattingMatch;
@@ -77,7 +77,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling, lin_out_action, lin_out_batsanspinner;
     public static Fragment_LiveScoring fragment_teamJoin_request;
     private final String TAG = Fragment_LiveScoring.class.getSimpleName();
-    private String avtarid = "", strikerBatsmanId = "", nonStrikerBatsmanId = "", bowlerId = "", inningId = "";
+    private String avtarid = "", strikerBatsmanId = "", nonStrikerBatsmanId = "", IsScorerForTeam2 = "", bowlerId = "", inningId = "";
     private TextView text_extras, text_run, textOk, text0, text1, text2, text3, text4, text5, text6, textMoreOptions, textUndo;
     private CheckBox checkbox_no_ball, checkbox_wide_ball, checkbox_bye, checkbox_leg_bye, checkbox_out;
     private boolean isTeam1BattingVisible = true;
@@ -85,7 +85,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private boolean isTeam2BattingVisible = true;
     private boolean isTeam2BowlingVisible = true, isStriker = false;
     View view;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private AdapterRecentBalls adapterRecentBalls;
     private ArrayList<ModelRecentBall> recentBallArrayList = new ArrayList<>();
     JSONObject data;
@@ -127,7 +126,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         list_team2bowling = (RecyclerView) view.findViewById(R.id.list_team2bowling);
         recycler_recent_balls = (RecyclerView) view.findViewById(R.id.recycler_recent_balls);
         text_recentball = (TextView) view.findViewById(R.id.text_recentball);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        textRunsScored = (TextView) view.findViewById(R.id.textRunsScored);
         list_team1batting.setLayoutManager(new LinearLayoutManager(context));
         list_team1bowling.setLayoutManager(new LinearLayoutManager(context));
         list_team2batting.setLayoutManager(new LinearLayoutManager(context));
@@ -173,9 +172,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         checkbox_leg_bye = (CheckBox) view.findViewById(R.id.checkbox_leg_bye);
         checkbox_out = (CheckBox) view.findViewById(R.id.checkbox_out);
 
-        adapterouttype = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, lisOutType);
-        spinnerouttype.setAdapter(adapterouttype);
-
         text0.setOnClickListener(this);
         text1.setOnClickListener(this);
         text2.setOnClickListener(this);
@@ -199,13 +195,15 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             Bundle bundle = getArguments();
             if (bundle != null) {
                 avtarid = bundle.getString("eventId");
+                IsScorerForTeam2 = bundle.getString("IsScorerForTeam2");
                 String maindata = bundle.getString("data");
                 JSONObject data = new JSONObject(maindata);
                 JSONObject match = data.getJSONObject("match");
                 matchId = match.getString("id");
                 team1Id = match.getString("team1Id");
                 team2Id = match.getString("team2Id");
-                JSONArray team1Squad = data.getJSONArray("team1Squad");
+                getLiveScores();
+             /*   JSONArray team1Squad = data.getJSONArray("team1Squad");
                 JSONArray team2Squad = data.getJSONArray("team2Squad");
                 JSONArray innings = data.getJSONArray("innings");
                 for (int i = 0; i < innings.length(); i++) {
@@ -213,7 +211,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (jo.getString("playing").equals("1")) {
                         setTeam1Data(jo, team1Squad, team2Squad);
                     }
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -224,6 +222,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private void setTeam1Data(JSONObject jo, JSONArray team1Squad, JSONArray team2Squad) {
         try {
             if (jo != null) {
+                adapterouttype = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, lisOutType);
+                spinnerouttype.setAdapter(adapterouttype);
                 recentBallArrayList.clear();
                 clearTextSelection();
                 checkbox_out.setChecked(false);
@@ -270,9 +270,42 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     } else {
                         currentOverId = modelInnings.getCurrentOverId();
                     }
+                    textRunsScored.setText(modelInnings.getInningScoreString());
+
                     text_run.setText(modelInnings.getExtras());
                     if (modelInnings.getExtraRuns() != null) {
-                        text_extras.setText("Extras ( wd " + modelInnings.getExtraRuns().getWd() + ", nb " + modelInnings.getExtraRuns().getNb() + " )");
+
+                        StringBuilder runs = new StringBuilder();
+                        if (modelInnings.getExtraRuns().getWd() != null && !modelInnings.getExtraRuns().getWd().equalsIgnoreCase("0")) {
+                            runs.append("wd " + modelInnings.getExtraRuns().getWd() + ", ");
+                        }
+                        if (modelInnings.getExtraRuns().getNb() != null && !modelInnings.getExtraRuns().getNb().equalsIgnoreCase("0")) {
+                            runs.append("nb " + modelInnings.getExtraRuns().getNb() + ", ");
+                        }
+                        if (modelInnings.getExtraRuns().getB() != null && !modelInnings.getExtraRuns().getB().equalsIgnoreCase("0")) {
+                            runs.append("b " + modelInnings.getExtraRuns().getB() + ", ");
+                        }
+                        if (modelInnings.getExtraRuns().getLb() != null && !modelInnings.getExtraRuns().getLb().equalsIgnoreCase("0")) {
+                            runs.append("lb " + modelInnings.getExtraRuns().getLb() + ", ");
+                        }
+                        if (runs.length() > 0) {
+                            runs.deleteCharAt(runs.lastIndexOf(","));
+                        }
+                        text_extras.setText("Extras ( " + runs + " )");
+                    }
+
+                    if (modelInnings.getDrinksBreak().equals("1")) {
+                        AppUtils.customAlertDialogWithoutTitle(context, getString(R.string.drink_break), "RESUME", new ChoiceDialogClickListener() {
+                            @Override
+                            public void onClickOfPositive() {
+                                drinkBreak(AppConstant.END);
+                            }
+
+                            @Override
+                            public void onClickOfNegative() {
+
+                            }
+                        });
                     }
 
                 }
@@ -314,8 +347,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     }
                 }
                 if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
-
-                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad);
+                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, true);
+                } else if ((modelInnings.getBatsmanOnStrike().equals("-1") || modelInnings.getBatsmanOnNonStrike().equals("-1")) && modelInnings.getCurrentBowlerId().equals("-1")) {
+                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, false);
                 } else if (modelInnings.getBatsmanOnStrike().equals("-1")) {
                     selectBatsmanList(modelInnings, team1Squad, team2Squad);
                     isStriker = true;
@@ -325,13 +359,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else if (modelInnings.getCurrentBowlerId().equals("-1")) {
                     setBowlerList(modelInnings, team1Squad, team2Squad);
                 }
-
-
                 adapterTeam1BattingMatch = new AdapterLiveScoringTeamBattingMatch(getActivity(), this, arrayteam1Batting);
                 list_team1batting.setAdapter(adapterTeam1BattingMatch);
 
-                text_team1batting.setText(modelInnings.getBattingTeamName() + " - Batting");
-                text_team1bowling.setText(modelInnings.getBowlingTeamName() + " - Bowling");
+                text_team1batting.setText("Batting - " + modelInnings.getBattingTeamName());
+                text_team1bowling.setText("Bowling - " + modelInnings.getBowlingTeamName());
 
                 adapterTeam1BowlingMatch = new AdapterTeamBowlingMatch(getActivity(), this, arrayteam1Bowling);
                 list_team1bowling.setAdapter(adapterTeam1BowlingMatch);
@@ -355,7 +387,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     }
 
-    private void selectBowlerBatsmanList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
+    private void selectBowlerBatsmanList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad, boolean isAllOut) {
         try {
             listNewBatsmanId.clear();
             listNewBatsmanName.clear();
@@ -366,16 +398,31 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (team1Squad != null && team1Squad.length() > 0) {
                         for (int i = 0; i < team1Squad.length(); i++) {
                             JSONObject jo = team1Squad.getJSONObject(i);
-                            listNewBatsmanId.add(jo.getString("playerAvatarId"));
-                            listNewBatsmanName.add(jo.getString("name"));
+                            if (isAllOut) {
+                                listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                listNewBatsmanName.add(jo.getString("name"));
+                            } else {
+                                if (!battingStatsPlayerList.contains(jo.getString("playerAvatarId"))) {
+                                    listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                    listNewBatsmanName.add(jo.getString("name"));
+                                }
+                            }
+
                         }
                     }
                 } else if (modelInnings.getBattingTeamId().equals(team2Id)) {
                     if (team2Squad != null && team2Squad.length() > 0) {
                         for (int i = 0; i < team2Squad.length(); i++) {
                             JSONObject jo = team2Squad.getJSONObject(i);
-                            listNewBatsmanId.add(jo.getString("playerAvatarId"));
-                            listNewBatsmanName.add(jo.getString("name"));
+                            if (isAllOut) {
+                                listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                listNewBatsmanName.add(jo.getString("name"));
+                            } else {
+                                if (!battingStatsPlayerList.contains(jo.getString("playerAvatarId"))) {
+                                    listNewBatsmanId.add(jo.getString("playerAvatarId"));
+                                    listNewBatsmanName.add(jo.getString("name"));
+                                }
+                            }
                         }
                     }
                 }
@@ -391,22 +438,35 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         if (team1Squad != null && team1Squad.length() > 0) {
                             for (int i = 0; i < team1Squad.length(); i++) {
                                 JSONObject jo = team1Squad.getJSONObject(i);
-                                listNewBowlerName.add(jo.getString("name"));
-                                listNewBowlerId.add(jo.getString("playerAvatarId"));
-
+                                if (isAllOut) {
+                                    listNewBowlerName.add(jo.getString("name"));
+                                    listNewBowlerId.add(jo.getString("playerAvatarId"));
+                                } else {
+                                    if (!modelInnings.getPreviousBowlerId().equals(jo.getString("playerAvatarId"))) {
+                                        listNewBowlerName.add(jo.getString("name"));
+                                        listNewBowlerId.add(jo.getString("playerAvatarId"));
+                                    }
+                                }
                             }
                         }
                     } else if (modelInnings.getBowlingTeamId().equals(team2Id)) {
                         if (team2Squad != null && team2Squad.length() > 0) {
                             for (int i = 0; i < team2Squad.length(); i++) {
                                 JSONObject jo = team2Squad.getJSONObject(i);
-                                listNewBowlerName.add(jo.getString("name"));
-                                listNewBowlerId.add(jo.getString("playerAvatarId"));
+                                if (isAllOut) {
+                                    listNewBowlerName.add(jo.getString("name"));
+                                    listNewBowlerId.add(jo.getString("playerAvatarId"));
+                                } else {
+                                    if (!modelInnings.getPreviousBowlerId().equals(jo.getString("playerAvatarId"))) {
+                                        listNewBowlerName.add(jo.getString("name"));
+                                        listNewBowlerId.add(jo.getString("playerAvatarId"));
+                                    }
+                                }
                             }
                         }
                     }
                     adapterSelctNewBowler = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, listNewBowlerName);
-                    selectNewBatsmanBowlerDialog();
+                    selectNewBatsmanBowlerDialog(isAllOut);
                 }
             }
         } catch (Exception e) {
@@ -538,7 +598,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
 
-    private void selectNewBatsmanBowlerDialog() {
+    private void selectNewBatsmanBowlerDialog(final boolean isAllOut) {
         try {
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -552,13 +612,18 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             dialog.setContentView(view);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             RelativeLayout cross_img_rel = (RelativeLayout) view.findViewById(R.id.cross_img_rel);
-            final EditText edt_comment = (EditText) view.findViewById(R.id.edt_comment);
-            TextView name_requirement_txt = (TextView) view.findViewById(R.id.name_requirement_txt);
+            TextView text_batsman2 = (TextView) view.findViewById(R.id.text_batsman2);
+            TextView text_batsman1 = (TextView) view.findViewById(R.id.text_batsman1);
             cross_img_rel.setVisibility(View.GONE);
             Button btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
             final Spinner spinnerBowler = (Spinner) view.findViewById(R.id.spinnerBowler);
             final Spinner spinnerBatsmanTwo = (Spinner) view.findViewById(R.id.spinnerBatsmanTwo);
             final Spinner spinnerBatsmanOne = (Spinner) view.findViewById(R.id.spinnerBatsmanOne);
+            if (!isAllOut) {
+                spinnerBatsmanTwo.setVisibility(View.GONE);
+                text_batsman2.setVisibility(View.GONE);
+                text_batsman1.setText("Select Batsman");
+            }
 
             if (adapterSelctNewBowler != null)
                 spinnerBowler.setAdapter(adapterSelctNewBowler);
@@ -568,16 +633,26 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (spinnerBatsmanTwo.getSelectedItemPosition() != 0 && spinnerBatsmanOne.getSelectedItemPosition() != 0
-                            && spinnerBowler.getSelectedItemPosition() != 0) {
-                        if (spinnerBatsmanOne.getSelectedItemPosition() != spinnerBatsmanTwo.getSelectedItemPosition()) {
-                            addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition());
-                            dialog.dismiss();
+                    if (isAllOut) {
+                        if (spinnerBatsmanTwo.getSelectedItemPosition() != 0 && spinnerBatsmanOne.getSelectedItemPosition() != 0
+                                && spinnerBowler.getSelectedItemPosition() != 0) {
+                            if (spinnerBatsmanOne.getSelectedItemPosition() != spinnerBatsmanTwo.getSelectedItemPosition()) {
+                                addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                                dialog.dismiss();
+                            } else {
+                                Toast.makeText(context, "Please select different Batsman", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(context, "Please select different Batsman", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Please select Bowler and Batsman", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(context, "Please select Bowler and Batsman", Toast.LENGTH_SHORT).show();
+                        if (spinnerBatsmanOne.getSelectedItemPosition() != 0
+                                && spinnerBowler.getSelectedItemPosition() != 0) {
+                            addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(context, "Please select Bowler and Batsman", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                 }
@@ -711,7 +786,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
-    private void addNewBowlerBatsman(int selectedBatsmanPosition, int selectedBatsmanPosition2, int selectedBowler) {
+    private void addNewBowlerBatsman(int selectedBatsmanPosition, int selectedBatsmanPosition2, int selectedBowler, boolean isAllOut) {
 
         arrayteam1Bowling.clear();
         BowlingStats bowlingStats = new BowlingStats();
@@ -740,7 +815,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         battingStats.setFours("0");
         battingStats.setSixes("0");
         battingStats.setStrikeRate("0");
-        battingStats.setBattingStriker(true);
+        if (isAllOut) {
+            battingStats.setBattingStriker(true);
+        }
         battingStats.setOutString("");
         battingStats.setOnStrike("0");
         battingStats.setPlayOrder("0");
@@ -748,22 +825,24 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         listBatsman.add(battingStats.getBatsmanAvatarName());
         arrayteam1Batting.add(battingStats);
 
-        BattingStats battingStats1 = new BattingStats();
-        battingStats1.setBatsmanId(listNewBatsmanId.get(selectedBatsmanPosition2));
-        battingStats1.setBatsmanAvatarName(listNewBatsmanName.get(selectedBatsmanPosition2));
-        battingStats1.setStatus("");
-        battingStats1.setRuns("0");
-        battingStats1.setDotball("0");
-        battingStats1.setBalls("0");
-        battingStats1.setFours("0");
-        battingStats1.setSixes("0");
-        battingStats1.setStrikeRate("0");
-        battingStats1.setOutString("");
-        battingStats1.setOnStrike("0");
-        battingStats1.setPlayOrder("0");
-        listBatsmanId.add(battingStats1.getBatsmanId());
-        listBatsman.add(battingStats1.getBatsmanAvatarName());
-        arrayteam1Batting.add(battingStats1);
+        if (isAllOut) {
+            BattingStats battingStats1 = new BattingStats();
+            battingStats1.setBatsmanId(listNewBatsmanId.get(selectedBatsmanPosition2));
+            battingStats1.setBatsmanAvatarName(listNewBatsmanName.get(selectedBatsmanPosition2));
+            battingStats1.setStatus("");
+            battingStats1.setRuns("0");
+            battingStats1.setDotball("0");
+            battingStats1.setBalls("0");
+            battingStats1.setFours("0");
+            battingStats1.setSixes("0");
+            battingStats1.setStrikeRate("0");
+            battingStats1.setOutString("");
+            battingStats1.setOnStrike("0");
+            battingStats1.setPlayOrder("0");
+            listBatsmanId.add(battingStats1.getBatsmanId());
+            listBatsman.add(battingStats1.getBatsmanAvatarName());
+            arrayteam1Batting.add(battingStats1);
+        }
 
         adapterTeam1BattingMatch.notifyDataSetChanged();
         selectStriker(true);
@@ -819,6 +898,20 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         listBatsman.add(battingStats.getBatsmanAvatarName());
         selectStriker(false);
     }
+
+    private void switchStriker() {
+        for (int i = 0; i < arrayteam1Batting.size(); i++) {
+            if (arrayteam1Batting.get(i).isBattingStriker()) {
+                arrayteam1Batting.get(i).setBattingStriker(false);
+                nonStrikerBatsmanId = arrayteam1Batting.get(i).getBatsmanId();
+            } else {
+                arrayteam1Batting.get(i).setBattingStriker(true);
+                strikerBatsmanId = arrayteam1Batting.get(i).getBatsmanId();
+            }
+        }
+        adapterTeam1BattingMatch.notifyDataSetChanged();
+    }
+
 
     private void selectStriker(boolean isBowler) {
         try {
@@ -924,7 +1017,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         textMoreOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final Dialog dialog = new Dialog(getActivity());
                 // Include dialog.xml file
                 dialog.setContentView(R.layout.moreoptiondialog);
@@ -934,12 +1026,32 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 text_title.setText("SELECT YOUR OPTION");
                 Button btn_switchstrike = (Button) dialog.findViewById(R.id.btn_switchstrike);
                 btn_switchstrike.setText(getContext().getString(R.string.switchstriker));
+
+                btn_switchstrike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switchStriker();
+                        dialog.dismiss();
+                    }
+                });
                 Button btn_drinkbreak = (Button) dialog.findViewById(R.id.btn_drinkbreak);
                 btn_drinkbreak.setText(getContext().getString(R.string.drinkbreak));
-
+                btn_drinkbreak.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        drinkBreak(AppConstant.START);
+                        dialog.dismiss();
+                    }
+                });
                 Button btn_endinning = (Button) dialog.findViewById(R.id.btn_endinning);
                 btn_endinning.setText(getContext().getString(R.string.endenning));
+                btn_endinning.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         text5.setOnClickListener(new View.OnClickListener() {
@@ -996,13 +1108,15 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         checkbox_out.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                changeOutTypeArray();
                 if (isChecked) {
                     lin_out_action.setVisibility(View.VISIBLE);
+                    spinnerouttype.setVisibility(View.VISIBLE);
+                    spinneroutbyfieldername.setVisibility(View.GONE);
                 } else {
                     lin_out_action.setVisibility(View.GONE);
                     lin_out_batsanspinner.setVisibility(View.GONE);
                 }
-                changeOutTypeArray();
             }
 
 
@@ -1039,6 +1153,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         checkbox_bye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                changeOutTypeArray();
                 if (isChecked) {
                     if (checkbox_leg_bye.isChecked()) {
                         checkbox_leg_bye.setChecked(false);
@@ -1047,12 +1162,12 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         checkbox_wide_ball.setChecked(false);
                     }
                 }
-                changeOutTypeArray();
             }
         });
         checkbox_leg_bye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                changeOutTypeArray();
                 if (isChecked) {
                     if (checkbox_bye.isChecked()) {
                         checkbox_bye.setChecked(false);
@@ -1061,14 +1176,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         checkbox_wide_ball.setChecked(false);
                     }
                 }
-                changeOutTypeArray();
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getLiveScoresRefresh();
             }
         });
 
@@ -1193,6 +1300,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             text6.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
             textUndo.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
         }
+        if (checkbox_bye.isChecked() || checkbox_leg_bye.isChecked()) {
+            text0.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+            text0.setEnabled(false);
+        }
     }
 
     private void clearTextSelection() {
@@ -1204,6 +1315,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         text5.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
         text6.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
         textUndo.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_selected_bg));
+        if (checkbox_bye.isChecked() || checkbox_leg_bye.isChecked()) {
+            text0.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.button_unselected_bg));
+            text0.setEnabled(false);
+        }
     }
 
     private void changeOutTypeArray() {
@@ -1296,13 +1411,31 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
 
-    private void getLiveScores() {
-        Dashboard.getInstance().setProgressLoader(true);
+    private void drinkBreak(String type) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
-                //https://sfscoring.betasportzfever.com/getLiveScore/EVENT/101/479a44a634f82b0394f78352d302ec36
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_LIVE_SCORE + avtarid + "/" + AppUtils.getAuthToken(context);
+                //https://sfscoring.betasportzfever.com/drinksBreak/100/START/a019834e-8f16-11e7-9931-008cfa5afa52
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.DRINK_BREAK + matchId + "/" + type + "/" + AppUtils.getAuthToken(context);
+                int code = 0;
+                if (type.equals(AppConstant.START))
+                    code = 4;
+                else
+                    code = 5;
+
+                new CommonAsyncTaskHashmap(code, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getLiveScores() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
 
             } else {
@@ -1314,7 +1447,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
     private void getLiveScoresRefresh() {
-        Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
@@ -1341,6 +1473,39 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
+
+    private void undoBall() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("matchId", matchId);
+                jsonObject.put("inningId", inningId);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UNDO_BALL;
+                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startSecondInning() {
+        try {
+            if (AppUtils.isNetworkAvailable(context)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("matchId", matchId);
+                //   http://sfscoring.sf.com/startSecondInning
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.STARTSECONDINNING;
+                new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private JSONObject makeJsonRequest() {
         JSONObject jsonObject = new JSONObject();
@@ -1399,7 +1564,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     }
                     if (checkbox_wide_ball.isChecked()) {
                         jsonObject.put("isWideBall", true);
-                        jsonObject.put("runScoredOnWideBall", runScored);
+                        jsonObject.put("runScoredOnWideBall", "0");
                     }
                 }
 
@@ -1453,26 +1618,86 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     JSONArray team1Squad = data.getJSONArray("team1Squad");
                     JSONArray team2Squad = data.getJSONArray("team2Squad");
                     JSONArray innings = data.getJSONArray("innings");
-                    for (int i = 0; i < innings.length(); i++) {
-                        JSONObject jo = innings.getJSONObject(i);
-                        if (jo.getString("playing").equals("1")) {
-                            setTeam1Data(jo, team1Squad, team2Squad);
-                        }
-                    }
 
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                } else {
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
+                    if (innings.length() == 1) {
+                        if (innings.getJSONObject(0).getString("playing").equals("1")) {
+                            setTeam1Data(innings.getJSONObject(0), team1Squad, team2Squad);
+                        } else {
+                            if (IsScorerForTeam2.equals(AppConstant.YES)) {
+                                AppUtils.customAlertDialogWithoutTitle(context, getString(R.string.start_second_inning), "Start Second Inning", new ChoiceDialogClickListener() {
+                                    @Override
+                                    public void onClickOfPositive() {
+                                        startSecondInning();
+                                    }
+
+                                    @Override
+                                    public void onClickOfNegative() {
+
+                                    }
+                                });
+
+                            } else {
+                                AppUtils.customAlertDialogWithoutTitle(context, getString(R.string.cannot_start_inning), "OK", new ChoiceDialogClickListener() {
+                                    @Override
+                                    public void onClickOfPositive() {
+                                        context.onBackPressed();
+                                    }
+
+                                    @Override
+                                    public void onClickOfNegative() {
+
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        boolean IsInninEnd = true;
+                        for (int i = 0; i < innings.length(); i++) {
+                            JSONObject jsonObject = innings.getJSONObject(i);
+                            if (jsonObject.getString("playing").equals("1")) {
+                                IsInninEnd = false;
+                                setTeam1Data(innings.getJSONObject(i), team1Squad, team2Squad);
+                            }
+                        }
+                        if (IsInninEnd) {
+                            FragmentSoringMatchDetails.getInstance().moveFragment();
+                        }
                     }
                 }
             } else if (position == 2) {
-                //    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                getLiveScoresRefresh();
-            } else {
-                Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getLiveScoresRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 3) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getLiveScoresRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 4) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    AppUtils.customAlertDialogWithoutTitle(context, getString(R.string.drink_break), "RESUME", new ChoiceDialogClickListener() {
+                        @Override
+                        public void onClickOfPositive() {
+                            drinkBreak(AppConstant.END);
+                        }
+
+                        @Override
+                        public void onClickOfNegative() {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } else if (position == 5) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1520,6 +1745,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 break;
             case R.id.textUndo:
                 clearTextSelection();
+                undoBall();
                 break;
             case R.id.textOk:
                 if (isValidate()) {

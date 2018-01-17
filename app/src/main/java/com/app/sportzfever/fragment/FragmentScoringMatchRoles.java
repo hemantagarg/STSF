@@ -106,7 +106,6 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         super.onViewCreated(view, savedInstanceState);
         init();
         getBundle();
-
         manageHeaderView();
     }
 
@@ -220,7 +219,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         if (jo.has("scorerId")) {
                             if (arrayListUserId.contains(jo.getString("scorerId"))) {
                                 int po1 = arrayListUserId.indexOf(jo.getString("scorerId"));
-                                spinner_first_scorer.setSelection(po1);
+                                spinner_first_scorer.setSelection(po1 + 1);
                             }
                         }
                         if (size > 1) {
@@ -229,7 +228,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                                 if (arrayListUserId.contains(jo1.getString("scorerId"))) {
                                     int po1 = arrayListUserId.indexOf(jo1.getString("scorerId"));
                                     Log.e("spinner_second_position", "**" + po1);
-                                    spinner_second_scorer.setSelection(po1);
+                                    spinner_second_scorer.setSelection(po1 + 1);
                                 }
                             }
                         }
@@ -238,7 +237,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                             if (jo2.has("scorerId")) {
                                 if (arrayListUserId.contains(jo2.getString("scorerId"))) {
                                     int po1 = arrayListUserId.indexOf(jo2.getString("scorerId"));
-                                    spinner_third_scorer.setSelection(po1);
+                                    spinner_third_scorer.setSelection(po1 + 1);
                                 }
                             }
                         }
@@ -812,13 +811,14 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
                         JSONObject scoringData = response.getJSONObject("scoringData");
                         if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
                             context.onBackPressed();
                             FragmentSaveTossResult fragmentupcomingdetals = new FragmentSaveTossResult();
                             Bundle b = new Bundle();
                             b.putString("eventId", eventId);
                             b.putString("matchId", matchId);
-                            b.putString("isScorerForTeam1", isScorerForTeam1);
-                            b.putString("isScorerForTeam2", isScorerForTeam2);
+                            b.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                            b.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
                             b.putString("team1Id", team2Id);
                             b.putString("team2Id", teamId);
                             b.putString("title", "");

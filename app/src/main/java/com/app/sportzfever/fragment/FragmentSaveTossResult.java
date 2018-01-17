@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -113,6 +114,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
         spinnerWinningTeam = (Spinner) view.findViewById(R.id.spinnerWinningTeam);
         spinnerSelectionType = (Spinner) view.findViewById(R.id.spinnerSelectionType);
         btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+        btnSubmit.setVisibility(View.GONE);
         text_title = (TextView) view.findViewById(R.id.text_title);
         getBundle();
         setlistener();
@@ -129,6 +131,37 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                 } else {
                     saveResult();
                 }
+            }
+        });
+
+        spinnerSelectionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinnerWinningTeam.getSelectedItemPosition() != 0 && spinnerSelectionType.getSelectedItemPosition() != 0) {
+                    checkScoringTeam();
+                } else {
+                    btnSubmit.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinnerWinningTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinnerWinningTeam.getSelectedItemPosition() != 0 && spinnerSelectionType.getSelectedItemPosition() != 0) {
+                    checkScoringTeam();
+                } else {
+                    btnSubmit.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }
@@ -162,38 +195,12 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    if (isScorerForTeam1.equalsIgnoreCase("Yes") && isScorerForTeam2.equalsIgnoreCase("Yes")) {
-                        FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", eventId);
-                        fragmentSoringMatchDetails.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
-                        context.onBackPressed();
-                    } else if (isScorerForTeam1.equalsIgnoreCase("Yes")) {
-                        if (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id) &&
-                                spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) {
-                            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
-                            Bundle b = new Bundle();
-                            b.putString("eventId", eventId);
-                            fragmentSoringMatchDetails.setArguments(b);
-                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
-                            context.onBackPressed();
-                        } else {
-                            Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else if (isScorerForTeam2.equalsIgnoreCase("Yes")) {
-                        if (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
-                                spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) {
-                            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
-                            Bundle b = new Bundle();
-                            b.putString("eventId", eventId);
-                            fragmentSoringMatchDetails.setArguments(b);
-                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
-                            context.onBackPressed();
-                        } else {
-                            Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                    context.onBackPressed();
+                    FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", eventId);
+                    fragmentSoringMatchDetails.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
@@ -202,6 +209,33 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             e.printStackTrace();
         }
     }
+
+    private void checkScoringTeam() {
+        if (isScorerForTeam1.equalsIgnoreCase("Yes") && isScorerForTeam2.equalsIgnoreCase("Yes")) {
+            btnSubmit.setVisibility(View.VISIBLE);
+        } else if (isScorerForTeam1.equalsIgnoreCase("Yes")) {
+            if ((listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id) &&
+                    spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) ||
+                    (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
+                            spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Bowling"))) {
+                btnSubmit.setVisibility(View.VISIBLE);
+            } else {
+                btnSubmit.setVisibility(View.GONE);
+                Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
+            }
+        } else if (isScorerForTeam2.equalsIgnoreCase("Yes")) {
+            if ((listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
+                    spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) ||
+                    (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id) &&
+                            spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Bowling"))) {
+                btnSubmit.setVisibility(View.VISIBLE);
+            } else {
+                btnSubmit.setVisibility(View.GONE);
+                Toast.makeText(context, R.string.cannot_scorer_message, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     @Override
     public void onPostFail(int method, String response) {

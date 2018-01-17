@@ -14,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
+import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -338,6 +340,23 @@ public class AppUtils {
         alertDialog.show();
     }
 
+    public static void customAlertDialogWithoutTitle(Context context,
+                                                     String message, String btnMsg,
+                                                     final ChoiceDialogClickListener mChoiceDialogClickListener) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                context);
+        alertDialog.setMessage(message);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton(btnMsg,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mChoiceDialogClickListener != null)
+                            mChoiceDialogClickListener.onClickOfPositive();
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
     public static String getChatGroupId(Context context) {
 

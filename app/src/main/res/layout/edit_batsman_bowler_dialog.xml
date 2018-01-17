@@ -79,9 +79,9 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/text_batsman1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
                 android:layout_margin="@dimen/dp10"
                 android:text="Batsman One (On Strike)"
                 android:textColor="@color/textcolordark"
@@ -99,9 +99,9 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/text_batsman2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
                 android:layout_margin="@dimen/dp10"
                 android:text="Batsman Two"
                 android:textColor="@color/textcolordark"

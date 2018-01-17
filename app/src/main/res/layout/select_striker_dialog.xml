@@ -62,28 +62,28 @@
             <TextView
                 android:id="@+id/text_name1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginRight="@dimen/dp2"
                 android:layout_weight="1"
                 android:background="@color/button_bg"
                 android:gravity="center"
-                android:padding="@dimen/dp10"
                 android:text="Name"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_15" />
+                android:textSize="@dimen/text_size_13"
+                android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/text_name2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginLeft="@dimen/dp2"
                 android:layout_weight="1"
                 android:background="@color/button_bg"
                 android:gravity="center"
-                android:padding="@dimen/dp10"
                 android:text="Name"
+                android:maxLines="1"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_15" />
+                android:textSize="@dimen/text_size_13" />
 
         </LinearLayout>
 

@@ -84,5 +84,12 @@
     <string name="please_select_fielder">PLEASE SELECT FIELDER.</string>
     <string name="please_select_batsman">PLEASE SELECT OUT BATSMAN.</string>
     <string name="cannot_scorer_message">You can not start inning... please ask other team scorer to login and start inning</string>
+    <string name="cannot_start_inning">You can not start inning.. please ask other team scorer to login and start inning</string>
+    <string name="start_second_inning">Start Second Inning</string>
+    <string name="drink_break">Drinks Break</string>
+    <string name="not_authorized_scorer">You are not authorized scorer for this inning</string>
+    <string name="inning1">Inning 1</string>
+    <string name="inning2">Inning 2</string>
+    <string name="final_score_message">Final score will have to be manually added by active scorer at the end of inning.</string>
 
 </resources>

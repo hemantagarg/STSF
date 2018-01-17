@@ -88,7 +88,11 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         getServicelistRefresh();
     }
 
@@ -114,6 +118,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     b.putString("matchId", arrayList.get(position).getMatchId());
                     b.putString("team1Id", arrayList.get(position).getTeam1Id());
                     b.putString("team2Id", arrayList.get(position).getTeam2Id());
+                    b.putString("overs", arrayList.get(position).getNumberOfOvers());
                     b.putString("team1ScorerName", arrayList.get(position).getTeam1ScorerName());
                     b.putString("team2ScorerName", arrayList.get(position).getTeam2ScorerName());
                     b.putString("isScorerForTeam1", arrayList.get(position).getIsScorerForTeam1());
@@ -127,31 +132,46 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     fragmentupcomingdetals.setTargetFragment(FragmentScoringUpcomingMatches.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
                 } else {
-                    FragmentSaveTossResult fragmentupcomingdetals = new FragmentSaveTossResult();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", arrayList.get(position).getEventId());
-                    b.putString("matchId", arrayList.get(position).getMatchId());
-                    b.putString("team1Id", arrayList.get(position).getTeam1Id());
-                    b.putString("team2Id", arrayList.get(position).getTeam2Id());
-                    b.putString("title", arrayList.get(position).getTeam1Name());
-                    b.putString("team1Name", arrayList.get(position).getTeam1Name());
-                    b.putString("team2Name", arrayList.get(position).getTeam2Name());
-                    fragmentupcomingdetals.setArguments(b);
-                    fragmentupcomingdetals.setTargetFragment(FragmentScoringUpcomingMatches.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                }
-            } else {
-                if (arrayList.get(position).getIsActiveScorer().equals("1")) {
-                    FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", arrayList.get(position).getEventId());
-                    fragmentSoringMatchDetails.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
-                } else {
-                    String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
+                    String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + arrayList.get(position).getTeam1Name() + ":" + "\n" + arrayList.get(position).getTeam1ScorerName()
+                            + "\n" + "Scorer for " + arrayList.get(position).getTeam2Name() + ":" + "\n" + arrayList.get(position).getTeam2ScorerName() + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
                     AppUtils.showDialogMessage(context, message);
                 }
+            } else {
+                if (arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+                    checkActiveScorer(position);
+                } else {
+                    if (arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED) || arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                        if (arrayList.get(position).getIsScorerForTeam2().equalsIgnoreCase(AppConstant.NO) &&
+                                arrayList.get(position).getTeam2BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                            AppUtils.showDialogMessage(context, getString(R.string.not_authorized_scorer));
+                        } else if (arrayList.get(position).getIsScorerForTeam2().equalsIgnoreCase(AppConstant.YES) &&
+                                arrayList.get(position).getTeam2BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                            Bundle b = new Bundle();
+                            b.putString("eventId", arrayList.get(position).getEventId());
+                            b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam2());
+                            fragmentSoringMatchDetails.setArguments(b);
+                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                        } else if (arrayList.get(position).getTeam2BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+                            checkActiveScorer(position);
+                        }
+                    }
+                }
             }
+        }
+    }
+
+    private void checkActiveScorer(int position) {
+        if (arrayList.get(position).getIsActiveScorer().equals("1")) {
+            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+            Bundle b = new Bundle();
+            b.putString("eventId", arrayList.get(position).getEventId());
+            b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam2());
+            fragmentSoringMatchDetails.setArguments(b);
+            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+        } else {
+            String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
+            AppUtils.showDialogMessage(context, message);
         }
     }
 
@@ -198,9 +218,13 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         modelUpcomingMatches.setTeam1Id(jo.getString("team1Id"));
                         modelUpcomingMatches.setTeam2Id(jo.getString("team2Id"));
                         modelUpcomingMatches.setMatchStatus(jo.getString("matchStatus"));
+                        modelUpcomingMatches.setNumberOfOvers(jo.getString("noOfOvers"));
                         modelUpcomingMatches.setMatchId(jo.getString("matchId"));
+                        modelUpcomingMatches.setTeam2BattingStatus(jo.getString("team2BattingStatus"));
+                        modelUpcomingMatches.setTeam1BattingStatus(jo.getString("team1BattingStatus"));
                         modelUpcomingMatches.setTeam1Name(jo.getString("team1Name"));
                         modelUpcomingMatches.setIsScorerForTeam1(jo.getString("isScorerForTeam1"));
+                        modelUpcomingMatches.setIsCurrentInningScorer(jo.getString("isCurrentInningScorer"));
                         modelUpcomingMatches.setIsScorerForTeam2(jo.getString("isScorerForTeam2"));
                         modelUpcomingMatches.setTeam2Name(jo.getString("team2Name"));
                         modelUpcomingMatches.setNumberOfPlayers(jo.getString("numberOfPlayers"));
@@ -285,8 +309,12 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         modelUpcomingMatches.setTeam1Name(jo.getString("team1Name"));
                         modelUpcomingMatches.setTeam2Name(jo.getString("team2Name"));
                         modelUpcomingMatches.setMatchId(jo.getString("matchId"));
+                        modelUpcomingMatches.setNumberOfOvers(jo.getString("noOfOvers"));
                         modelUpcomingMatches.setNumberOfPlayers(jo.getString("numberOfPlayers"));
                         modelUpcomingMatches.setTeam1Id(jo.getString("team1Id"));
+                        modelUpcomingMatches.setIsCurrentInningScorer(jo.getString("isCurrentInningScorer"));
+                        modelUpcomingMatches.setTeam2BattingStatus(jo.getString("team2BattingStatus"));
+                        modelUpcomingMatches.setTeam1BattingStatus(jo.getString("team1BattingStatus"));
                         modelUpcomingMatches.setIsScorerForTeam1(jo.getString("isScorerForTeam1"));
                         modelUpcomingMatches.setIsScorerForTeam2(jo.getString("isScorerForTeam2"));
                         modelUpcomingMatches.setTeam2Id(jo.getString("team2Id"));

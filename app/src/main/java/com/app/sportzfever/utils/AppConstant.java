@@ -35,6 +35,10 @@ public class AppConstant {
     public static final String PUSHTYPE_TEAM = "TEAM";
     public static final String PUSHTYPE_CHAT = "CHAT";
     public static final String MATCHSTATUS_ENDED = "ENDED";
+    public static final String YES = "YES";
+    public static final String NO = "NO";
+    public static final String START = "START";
+    public static final String END = "END";
     public static final String MATCHSTATUS_NOTSTARTED = "NOT STARTED";
     public static final String MATCHSTATUS_STARTED = "STARTED";
     public static final String BATSMAN = "Batsman";
@@ -80,10 +84,12 @@ public class AppConstant {
     public static final String CAUGHT_BEHIND = "CAUGHT BEHIND";
     public static final String STUMPED = "STUMPED";
     public static final String LBW = "LBW";
-    public static final String RUNOUT = "RUNOUT";
-    public static final String HITWICKET = "HITWICKET";
+    public static final String RUNOUT = "RUN OUT";
+    public static final String HITWICKET = "HIT WICKET";
+    public static final String BATTING = "BATTING";
+    public static final String BOWLING = "BOWLING";
     public static final String RETIRED_HURT = "RETIRED HURT";
-    public static final String HIT_BALL_TWICE = "HIT BALL TWICE";
+    public static final String HIT_BALL_TWICE = "HITBALL TWICE";
     public static final String HANDLED_BALL = "HANDLED BALL";
     public static final String OBSTRUCTION_TO_FIELD = "OBSTRUCTION TO FIELD";
     public static final String TIME_OUT = "TIME OUT";

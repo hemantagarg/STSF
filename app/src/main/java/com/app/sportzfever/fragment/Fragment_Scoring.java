@@ -65,6 +65,7 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
         super.onResume();
         Dashboard.getInstance().manageFooterVisibitlity(false);
         Dashboard.getInstance().manageHeaderVisibitlity(false);
+        setFragment(new FragmentScoringUpcomingMatches());
     }
 
     /*******************************************************************
@@ -115,9 +116,10 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
 
         setupTabIcons();
         setListener();
-        setFragment(new FragmentScoringUpcomingMatches());
 
     }
+
+
 
     private void setListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

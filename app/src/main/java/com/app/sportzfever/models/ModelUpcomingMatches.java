@@ -6,6 +6,9 @@ package com.app.sportzfever.models;
 
 public class ModelUpcomingMatches {
 
+    public ModelUpcomingMatches() {
+    }
+
     public int getRowType() {
         return rowType;
     }
@@ -17,7 +20,7 @@ public class ModelUpcomingMatches {
     private int rowType;
     private String id;
 
-    private String team1Name, team1ScorerName, team2ScorerName, isScorerForTeam1, isScorerForTeam2;
+    private String team1Name, noOfOvers,team1ScorerName, team1BattingStatus,team2BattingStatus,team2ScorerName, isScorerForTeam1, isScorerForTeam2,isCurrentInningScorer;
 
     public String getShortMonthName() {
         return ShortMonthName;
@@ -287,5 +290,37 @@ public class ModelUpcomingMatches {
 
     public void setIsScorerForTeam2(String isScorerForTeam2) {
         this.isScorerForTeam2 = isScorerForTeam2;
+    }
+
+    public String getIsCurrentInningScorer() {
+        return isCurrentInningScorer;
+    }
+
+    public void setIsCurrentInningScorer(String isCurrentInningScorer) {
+        this.isCurrentInningScorer = isCurrentInningScorer;
+    }
+
+    public String getTeam1BattingStatus() {
+        return team1BattingStatus;
+    }
+
+    public void setTeam1BattingStatus(String team1BattingStatus) {
+        this.team1BattingStatus = team1BattingStatus;
+    }
+
+    public String getTeam2BattingStatus() {
+        return team2BattingStatus;
+    }
+
+    public void setTeam2BattingStatus(String team2BattingStatus) {
+        this.team2BattingStatus = team2BattingStatus;
+    }
+
+    public String getNoOfOvers() {
+        return noOfOvers;
+    }
+
+    public void setNoOfOvers(String noOfOvers) {
+        this.noOfOvers = noOfOvers;
     }
 }
