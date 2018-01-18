@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
@@ -329,7 +330,7 @@ public class AppUtils {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
                 context);
-        alertDialog.setMessage(message);
+        alertDialog.setMessage(Html.fromHtml(message));
         alertDialog.setCancelable(false);
         alertDialog.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {

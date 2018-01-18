@@ -132,9 +132,12 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     fragmentupcomingdetals.setTargetFragment(FragmentScoringUpcomingMatches.this, AppConstant.FRAGMENT_CODE);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
                 } else {
-                    String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + arrayList.get(position).getTeam1Name() + ":" + "\n" + arrayList.get(position).getTeam1ScorerName()
-                            + "\n" + "Scorer for " + arrayList.get(position).getTeam2Name() + ":" + "\n" + arrayList.get(position).getTeam2ScorerName() + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
-                    AppUtils.showDialogMessage(context, message);
+                    String scorer1 = "<font color='#3d85f3'>" + arrayList.get(position).getTeam1ScorerName() + "</font>";
+                    String scorer2 = "<font color='#3d85f3'>" + arrayList.get(position).getTeam2ScorerName() + "</font>";
+
+                    String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + arrayList.get(position).getTeam1Name() + ":" + "\n" + scorer1
+                            + "\n" + "Scorer for " + arrayList.get(position).getTeam2Name() + ":" + "\n" + scorer2 + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
+                    AppUtils.showDialogMessage(context, message.replace("\n","<br />"));
                 }
             } else {
                 if (arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
@@ -154,6 +157,17 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                         } else if (arrayList.get(position).getTeam2BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
                             checkActiveScorer(position);
+                        } else if (arrayList.get(position).getIsScorerForTeam1().equalsIgnoreCase(AppConstant.NO) &&
+                                arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                            AppUtils.showDialogMessage(context, getString(R.string.cannot_start_inning));
+                        } else if (arrayList.get(position).getIsScorerForTeam1().equalsIgnoreCase(AppConstant.YES) &&
+                                arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                            Bundle b = new Bundle();
+                            b.putString("eventId", arrayList.get(position).getEventId());
+                            b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam1());
+                            fragmentSoringMatchDetails.setArguments(b);
+                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                         }
                     }
                 }

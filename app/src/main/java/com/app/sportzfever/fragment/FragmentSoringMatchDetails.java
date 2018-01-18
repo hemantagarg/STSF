@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FragmentSoringMatchDetails extends BaseFragment implements ApiResponse, OnCustomItemClicListener {
@@ -95,6 +97,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         arrayteama = new ArrayList<>();
         getBundle();
+        setlistener();
         getServicelistRefresh();
     }
 
@@ -112,6 +115,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
             }
         });
 
+/*
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -158,8 +162,75 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
 
             }
         });
+*/
     }
 
+    private void setupTabIcons() {
+
+        tabLayout.getTabAt(0).setText("Live");
+        tabLayout.getTabAt(1).setText("Scorecard");
+        tabLayout.getTabAt(2).setText("Teams");
+
+        tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+
+        Fragment_LiveScoring tab21 = new Fragment_LiveScoring();
+        Bundle b21 = new Bundle();
+        b21.putString("eventId", avtarid);
+        b21.putString("data", data.toString());
+        b21.putString("IsScorerForTeam2", IsScorerForTeam2);
+        tab21.setArguments(b21);
+        adapter.addFrag(tab21, "services");
+
+
+        Fragment_Scoring_ScorecardLive_match tab2 = new Fragment_Scoring_ScorecardLive_match();
+        Bundle b = new Bundle();
+        b.putString("eventId", avtarid);
+        b.putString("data", data.toString());
+        tab2.setArguments(b);
+        adapter.addFrag(tab2, "services");
+
+        Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
+        Bundle b112 = new Bundle();
+        b112.putString("avtarid", avtarid);
+        b112.putString("data", data.toString());
+        fragmentMatchTeamDetail.setArguments(b112);
+        adapter.addFrag(fragmentMatchTeamDetail, "Team");
+
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
     public void moveFragment() {
         Fragment_Scoring_ScorecardLive_match tab2 = new Fragment_Scoring_ScorecardLive_match();
         Bundle b = new Bundle();
@@ -177,14 +248,14 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         ft.commit();
     }
 
-    private void setupTabIcons() {
+ /*   private void setupTabIcons() {
         tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("Scorecard"));
         tabLayout.addTab(tabLayout.newTab().setText("Teams"));
 
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
     }
-
+*/
     @Override
     public void onItemClickListener(int position, int flag) {
 
@@ -244,7 +315,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     modelUpcomingTeamName.setName(team2.getString("name"));
                     modelUpcomingTeamName.setProfilePicture(team2.getString("profilePicture"));
 
-                    setupTabIcons();
+                 /*   setupTabIcons();
                     setlistener();
                     Fragment_LiveScoring tab21 = new Fragment_LiveScoring();
                     Bundle b21 = new Bundle();
@@ -252,7 +323,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     b21.putString("IsScorerForTeam2", IsScorerForTeam2);
                     b21.putString("data", data.toString());
                     tab21.setArguments(b21);
-                    setFragment(tab21);
+                    setFragment(tab21);*/
 
                 }
             }

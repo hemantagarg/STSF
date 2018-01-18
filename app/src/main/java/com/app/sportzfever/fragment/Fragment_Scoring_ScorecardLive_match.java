@@ -154,8 +154,8 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
                 btn_teama.setText(team1.getString("name"));*/
                 btn_teama.setText(R.string.inning1);
                 btn_teamb.setText(R.string.inning2);
-                getServicelistRefresh();
-
+                // getServicelistRefresh();
+                setTeam1Data(data);
             }
         } catch (Exception e) {
             e.printStackTrace();

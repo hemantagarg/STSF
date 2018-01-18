@@ -202,8 +202,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 matchId = match.getString("id");
                 team1Id = match.getString("team1Id");
                 team2Id = match.getString("team2Id");
-                getLiveScores();
-             /*   JSONArray team1Squad = data.getJSONArray("team1Squad");
+                //  getLiveScores();
+                JSONArray team1Squad = data.getJSONArray("team1Squad");
                 JSONArray team2Squad = data.getJSONArray("team2Squad");
                 JSONArray innings = data.getJSONArray("innings");
                 for (int i = 0; i < innings.length(); i++) {
@@ -211,7 +211,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (jo.getString("playing").equals("1")) {
                         setTeam1Data(jo, team1Squad, team2Squad);
                     }
-                }*/
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

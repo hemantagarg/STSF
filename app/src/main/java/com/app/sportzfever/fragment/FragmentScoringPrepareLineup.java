@@ -232,10 +232,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     rl_main.setVisibility(View.VISIBLE);
                     btn_proceed.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.GONE);
+                    HeaderViewManager.getInstance().setRightSideHeaderView(true, R.drawable.right_arrow_white);
                 } else {
                     rl_main.setVisibility(View.GONE);
                     btn_proceed.setVisibility(View.VISIBLE);
                     text_nodata.setVisibility(View.VISIBLE);
+                    HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.right_arrow_white);
                     text_nodata.setText(R.string.final_score_message);
                 }
             }

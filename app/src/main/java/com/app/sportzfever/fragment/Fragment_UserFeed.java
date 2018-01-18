@@ -572,10 +572,11 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                         modelFeed.setIsLiked(jo.getString("isUserLiked"));
                         if (jo.getString("statusType").equals(AppConstant.EVENT)) {
                             JSONObject event = jo.getJSONObject("event");
-                            modelFeed.setEventTitle(event.getString("title"));
-
-                            JSONObject startDate = event.getJSONObject("startDate");
-                            modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            if (event.has("title")) {
+                                modelFeed.setEventTitle(event.getString("title"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            }
                         }
 
                         if (jo.getJSONArray("images") != null) {

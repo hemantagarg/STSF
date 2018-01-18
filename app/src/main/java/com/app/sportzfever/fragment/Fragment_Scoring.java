@@ -79,7 +79,7 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
         Dashboard.getInstance().manageFooterVisibitlity(false);
 
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Scorer Mode");
+        HeaderViewManager.getInstance().setHeading(true, "Match List");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -120,7 +120,6 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
     }
 
 
-
     private void setListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -159,7 +158,7 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
     private void setupTabIcons() {
 
         tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
-        tabLayout.addTab(tabLayout.newTab().setText("Create Match"));
+        //  tabLayout.addTab(tabLayout.newTab().setText("Create Match"));
 
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
