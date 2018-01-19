@@ -17,6 +17,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
@@ -167,8 +168,8 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
             Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
             isValid = false;
-        } else if (Integer.parseInt(playedOversOne.getText().toString()) > Integer.parseInt(overs) ||
-                Integer.parseInt(playedOversTwo.getText().toString()) > Integer.parseInt(overs)) {
+        } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs) ||
+                Float.parseFloat(playedOversTwo.getText().toString()) > Float.parseFloat(overs)) {
             Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
@@ -260,6 +261,12 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     context.onBackPressed();
+                    FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", eventId);
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

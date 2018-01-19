@@ -216,8 +216,6 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-
-                    //  data = jObject.getString("total");
                     arrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
 

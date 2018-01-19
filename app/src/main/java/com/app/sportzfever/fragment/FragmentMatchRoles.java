@@ -339,7 +339,30 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         btn_create_team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject jsonObject = makeJsonRequest();
+                if (spinner_captain.getSelectedItem().toString() != null && spinner_captain.getSelectedItemPosition() != 0) {
+                    if (spinner_select_scorer.getSelectedItemPosition() == 0 && selectedUserList != null) {
+                        makeJsonRequest();
+                    } else {
+                        if (spinner_select_scorer.getSelectedItemPosition() == 0) {
+                            Toast.makeText(context, "Please select atleast one scorer", Toast.LENGTH_SHORT).show();
+                        } else if (spinner_first_scorer.getSelectedItemPosition() == 0 && spinner_second_scorer.getSelectedItemPosition() == 0
+                                && spinner_third_scorer.getSelectedItemPosition() == 0) {
+                            Toast.makeText(context, "Please select atleast one scorer", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (spinner_first_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_second_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else if (spinner_first_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_third_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else if (spinner_second_scorer.getSelectedItem().toString().equalsIgnoreCase(spinner_third_scorer.getSelectedItem().toString())) {
+                                Toast.makeText(context, "Please select different scorers", Toast.LENGTH_SHORT).show();
+                            } else {
+                                makeJsonRequest();
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, "Please select captain", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         text_userscorer.setOnClickListener(new View.OnClickListener() {
@@ -455,12 +478,12 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         spinner_first_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (selectedFirstScorer.equalsIgnoreCase("")) {
+                /*if (selectedFirstScorer.equalsIgnoreCase("")) {
                     removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
                 } else {
                     addItemInArrayList(selectedFirstScorer, "1");
                     removeItemFromArrayList(spinner_first_scorer.getSelectedItem().toString(), "1");
-                }
+                }*/
                 selectedFirstScorer = spinner_first_scorer.getSelectedItem().toString();
                 text_first_scorer.setText(spinner_first_scorer.getSelectedItem().toString());
             }
@@ -473,12 +496,12 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         spinner_second_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (selectedSecondScorer.equalsIgnoreCase("")) {
+                /*if (selectedSecondScorer.equalsIgnoreCase("")) {
                     removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
                 } else {
                     addItemInArrayList(selectedSecondScorer, "2");
                     removeItemFromArrayList(spinner_second_scorer.getSelectedItem().toString(), "2");
-                }
+                }*/
                 selectedSecondScorer = spinner_second_scorer.getSelectedItem().toString();
                 text_second_scorer.setText(spinner_second_scorer.getSelectedItem().toString());
             }
@@ -491,12 +514,12 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
         spinner_third_scorer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (selectedThirdScorer.equalsIgnoreCase("")) {
+               /* if (selectedThirdScorer.equalsIgnoreCase("")) {
                     removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
                 } else {
                     addItemInArrayList(selectedThirdScorer, "3");
                     removeItemFromArrayList(spinner_third_scorer.getSelectedItem().toString(), "3");
-                }
+                }*/
                 selectedThirdScorer = spinner_third_scorer.getSelectedItem().toString();
                 text_third_scorer.setText(spinner_third_scorer.getSelectedItem().toString());
             }
