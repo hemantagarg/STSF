@@ -83,7 +83,7 @@ public class AdapterUpcomingMatches extends RecyclerView.Adapter<RecyclerView.Vi
             ((CustomViewHolder) holder).text_teamname.setText(m1.getTeam2Name());
             ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
             ((CustomViewHolder) holder).text_event_type.setText(m1.getTournamentName());
-            ((CustomViewHolder) holder).textdateofmatch.setText(" Match Started At " + m1.getTime() + " On " + m1.getDate() + "  " + m1.getShortMonthName() + "  " + m1.getYear());
+            ((CustomViewHolder) holder).textdateofmatch.setText(" Match starts At " + m1.getTime() + " On " + m1.getDate() + "  " + m1.getShortMonthName() + "  " + m1.getYear());
           /* ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
            ((CustomViewHolder) holder).text_date.setText(m1.getDate());
            ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());

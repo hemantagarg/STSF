@@ -45,8 +45,10 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
     private final String TAG = FragmentSoringMatchDetails.class.getSimpleName();
     private String avtarid = "";
     View view_about;
-    private String IsScorerForTeam2 = "";
+    private String IsScorerForTeam2 = "", updatedData = "";
     private boolean isMatchEnd = false;
+    ViewPagerAdapter adapter;
+    Fragment_Scoring_ScorecardLive_match tab2;
 
     public static FragmentSoringMatchDetails getInstance() {
         if (fragment_teamJoin_request == null)
@@ -99,8 +101,12 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         arrayteama = new ArrayList<>();
         getBundle();
-        setlistener();
+
         getServicelistRefresh();
+    }
+
+    public void updatedData(String data) {
+        updatedData = data;
     }
 
     private void setlistener() {
@@ -116,7 +122,22 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                 getServicelistRefresh();
             }
         });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 /*
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -177,7 +198,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         Fragment_LiveScoring tab21 = new Fragment_LiveScoring();
         Bundle b21 = new Bundle();
@@ -187,7 +208,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         tab21.setArguments(b21);
         adapter.addFrag(tab21, "services");
 
-        Fragment_Scoring_ScorecardLive_match tab2 = new Fragment_Scoring_ScorecardLive_match();
+        tab2 = new Fragment_Scoring_ScorecardLive_match();
         Bundle b = new Bundle();
         b.putString("eventId", avtarid);
         b.putString("data", data.toString());
@@ -310,7 +331,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     setupViewPager(viewPager);
                     tabLayout.setupWithViewPager(viewPager);
                     setupTabIcons();
-
+                    setlistener();
                 }
             }
         } catch (JSONException e) {

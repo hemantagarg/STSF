@@ -33,6 +33,7 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,7 +65,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private TextView text_name5, text_name1, text_name2, text_name3, text_name4, text_name6, text_name7,
             text_name8, text_name9, text_name10, text_name11;
     private LinearLayout ll1, ll2, ll3, ll4, ll5, ll6, ll7, ll8, ll9, ll10, ll11;
-    private ImageView image_cross;
+    private ImageView image_cross, image_player1, image_player2, image_player3, image_player4, image_player5,
+            image_player6, image_player7, image_player8, image_player9, image_player10, image_player11;
     private RelativeLayout rl_preview, rl_previewopen;
     public static FragmentScoringPrepareLineup fragment_teamJoin_request;
     private final String TAG = FragmentScoringPrepareLineup.class.getSimpleName();
@@ -92,6 +94,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         context = getActivity();
         b = getArguments();
         return view_about;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        setTargetFragment(null, -1);
     }
 
     /*******************************************************************
@@ -165,6 +173,18 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         ll10 = (LinearLayout) view.findViewById(R.id.ll10);
         ll11 = (LinearLayout) view.findViewById(R.id.ll11);
         image_cross = (ImageView) view.findViewById(R.id.image_cross);
+        image_player1 = (ImageView) view.findViewById(R.id.image_player1);
+        image_player2 = (ImageView) view.findViewById(R.id.image_player2);
+        image_player3 = (ImageView) view.findViewById(R.id.image_player3);
+        image_player4 = (ImageView) view.findViewById(R.id.image_player4);
+        image_player5 = (ImageView) view.findViewById(R.id.image_player5);
+        image_player6 = (ImageView) view.findViewById(R.id.image_player6);
+        image_player7 = (ImageView) view.findViewById(R.id.image_player7);
+        image_player8 = (ImageView) view.findViewById(R.id.image_player8);
+        image_player9 = (ImageView) view.findViewById(R.id.image_player9);
+        image_player10 = (ImageView) view.findViewById(R.id.image_player10);
+        image_player11 = (ImageView) view.findViewById(R.id.image_player11);
+
         rl_preview = (RelativeLayout) view.findViewById(R.id.rl_preview);
         rl_main = (RelativeLayout) view.findViewById(R.id.rl_main);
         rl_previewopen = (RelativeLayout) view.findViewById(R.id.rl_previewopen);
@@ -292,13 +312,17 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         textSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentSearchNewPlayer fragmentPrepareLineup = new FragmentSearchNewPlayer();
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("emailList", emailIdlIst);
-                fragmentPrepareLineup.setArguments(bundle);
-                fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.SEARCH_FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                if (intAddedPlayers < Integer.parseInt(playersCount)) {
+                    FragmentSearchNewPlayer fragmentPrepareLineup = new FragmentSearchNewPlayer();
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("emailList", emailIdlIst);
+                    fragmentPrepareLineup.setArguments(bundle);
+                    fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.SEARCH_FRAGMENT_CODE);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
 
+                } else {
+                    Toast.makeText(context, "Team playing lineup is complete. Lets add scorer and captain.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         btn_send_invite.setOnClickListener(new View.OnClickListener() {
@@ -406,6 +430,12 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         if (resultCode == AppConstant.RESULTCODE_FINISH) {
             if (getTargetFragment() != null)
                 getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+            context.onBackPressed();
+        }
+        if (resultCode == AppConstant.RESULTCODE_NEW) {
+            if (getTargetFragment() != null)
+                getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_NEW, new Intent());
 
             context.onBackPressed();
         }
@@ -728,72 +758,96 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             } else if (position == 5) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    if (data.getString("isLineUpCompleteForBothTeams").equals("1")) {
-                        if (data.getString("isTeam1ScoringOnSf").equals("0") && data.getString("isTeam2ScoringOnSf").equals("0")) {
-                            if (getTargetFragment() != null)
-                                getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-
-                            context.onBackPressed();
-                            FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("eventId", eventId);
-                            bundle.putString("matchId", matchId);
-                            bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
-                            bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
-                            bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
-                            bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
-                            bundle.putString("playersCount", playersCount);
-                            bundle.putString("overs", overs);
-                            bundle.putString("team1Id", team2Id);
-                            bundle.putString("team2Id", team1Id);
-                            bundle.putString("title", "");
-                            bundle.putString("team1Name", team2Name);
-                            bundle.putString("team2Name", team1Name);
-                            fragmentupcomingdetals.setArguments(bundle);
-                            fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                        } else {
-                            JSONObject scoringData = jObject.getJSONObject("scoringData");
-                            if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
-                                if (getTargetFragment() != null)
-                                    getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-
-                                context.onBackPressed();
-
-                                FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("eventId", eventId);
-                                bundle.putString("matchId", matchId);
-                                bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
-                                bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
-                                bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
-                                bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
-                                bundle.putString("playersCount", playersCount);
-                                bundle.putString("overs", overs);
-                                bundle.putString("team1Id", team2Id);
-                                bundle.putString("team2Id", team1Id);
-                                bundle.putString("title", "");
-                                bundle.putString("team1Name", team2Name);
-                                bundle.putString("team2Name", team1Name);
-                                fragmentupcomingdetals.setArguments(bundle);
-                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                            } else {
-                                if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
-                                    String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
-                                            + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
-                                    AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
-                                } else {
-                                    JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
-                                    showMessage(otherMatchDetails);
-                                }
-                            }
-                        }
-                    } else {
-                        Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
+                    checkLineupCompleteAndMove(data, jObject);
                 }
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void checkLineupCompleteAndMove(JSONObject data, JSONObject jObject) {
+        try {
+            if (data.getString("isLineUpCompleteForBothTeams").equals("1")) {
+                if (data.getString("isTeam1ScoringOnSf").equals("0") && data.getString("isTeam2ScoringOnSf").equals("0")) {
+                    if (getTargetFragment() != null)
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+                    context.onBackPressed();
+                    FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("eventId", eventId);
+                    bundle.putString("matchId", matchId);
+                    bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                    bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                    bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                    bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                    bundle.putString("playersCount", playersCount);
+                    bundle.putString("overs", overs);
+                    bundle.putString("team1Id", team2Id);
+                    bundle.putString("team2Id", team1Id);
+                    bundle.putString("title", "");
+                    bundle.putString("team1Name", team2Name);
+                    bundle.putString("team2Name", team1Name);
+                    fragmentupcomingdetals.setArguments(bundle);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                } else {
+                    JSONObject scoringData = jObject.getJSONObject("scoringData");
+                    if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
+                        if (getTargetFragment() != null)
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+                        context.onBackPressed();
+
+                        FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", eventId);
+                        bundle.putString("matchId", matchId);
+                        bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                        bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                        bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                        bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                        bundle.putString("playersCount", playersCount);
+                        bundle.putString("overs", overs);
+                        bundle.putString("team1Id", team2Id);
+                        bundle.putString("team2Id", team1Id);
+                        bundle.putString("title", "");
+                        bundle.putString("team1Name", team2Name);
+                        bundle.putString("team2Name", team1Name);
+                        fragmentupcomingdetals.setArguments(bundle);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else {
+                        if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
+                            String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
+                                    + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
+                            AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
+                        } else {
+                            JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
+                            showMessage(otherMatchDetails);
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                JSONArray NotCompleteData = data.getJSONArray("NotCompleteData");
+                for (int i = 0; i < NotCompleteData.length(); i++) {
+                    JSONObject jsonObject = NotCompleteData.getJSONObject(i);
+                    if (jsonObject.getString("isLineupCompleteTeam").equals("0")) {
+                        String teamIdNotCompleted = jsonObject.getString("teamId");
+                        if (teamIdNotCompleted.equals(team2Id)) {
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_NEW, new Intent());
+                            context.onBackPressed();
+                            return;
+                        } else {
+                            context.onBackPressed();
+                            return;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -835,48 +889,58 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
         ll11.setVisibility(View.VISIBLE);
         if (addedPlayes.size() > 0) {
             text_name1.setText(addedPlayes.get(0).getPlayerName());
-            if (addedPlayes.size() > 1)
+            Picasso.with(context).load(addedPlayes.get(0).getProfilePicture()).into(image_player1);
+
+            if (addedPlayes.size() > 1) {
                 text_name2.setText(addedPlayes.get(1).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(1).getProfilePicture()).into(image_player2);
+            } else
                 ll2.setVisibility(View.GONE);
-            if (addedPlayes.size() > 2)
+            if (addedPlayes.size() > 2) {
                 text_name3.setText(addedPlayes.get(2).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(2).getProfilePicture()).into(image_player3);
+            } else
                 ll3.setVisibility(View.GONE);
-            if (addedPlayes.size() > 3)
+            if (addedPlayes.size() > 3) {
                 text_name4.setText(addedPlayes.get(3).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(3).getProfilePicture()).into(image_player4);
+            } else
                 ll4.setVisibility(View.GONE);
-            if (addedPlayes.size() > 4)
+            if (addedPlayes.size() > 4) {
                 text_name5.setText(addedPlayes.get(4).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(4).getProfilePicture()).into(image_player5);
+            } else
                 ll5.setVisibility(View.GONE);
-            if (addedPlayes.size() > 5)
+            if (addedPlayes.size() > 5) {
                 text_name6.setText(addedPlayes.get(5).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(5).getProfilePicture()).into(image_player6);
+            } else
                 ll6.setVisibility(View.GONE);
-            if (addedPlayes.size() > 6)
+            if (addedPlayes.size() > 6) {
                 text_name7.setText(addedPlayes.get(6).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(6).getProfilePicture()).into(image_player7);
+            } else
                 ll7.setVisibility(View.GONE);
-            if (addedPlayes.size() > 7)
+            if (addedPlayes.size() > 7) {
                 text_name8.setText(addedPlayes.get(7).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(7).getProfilePicture()).into(image_player8);
+            } else
                 ll8.setVisibility(View.GONE);
-            if (addedPlayes.size() > 8)
+            if (addedPlayes.size() > 8) {
                 text_name9.setText(addedPlayes.get(8).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(8).getProfilePicture()).into(image_player9);
+            } else
                 ll9.setVisibility(View.GONE);
-            if (addedPlayes.size() > 9)
+            if (addedPlayes.size() > 9) {
                 text_name10.setText(addedPlayes.get(9).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(9).getProfilePicture()).into(image_player10);
+            } else
                 ll10.setVisibility(View.GONE);
-            if (addedPlayes.size() > 10)
+            if (addedPlayes.size() > 10) {
                 text_name11.setText(addedPlayes.get(10).getPlayerName());
-            else
+                Picasso.with(context).load(addedPlayes.get(10).getProfilePicture()).into(image_player11);
+            } else
                 ll11.setVisibility(View.GONE);
-
-
         } else {
             ll1.setVisibility(View.GONE);
             ll2.setVisibility(View.GONE);
@@ -890,6 +954,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             ll10.setVisibility(View.GONE);
             ll11.setVisibility(View.GONE);
         }
+
     }
 
 

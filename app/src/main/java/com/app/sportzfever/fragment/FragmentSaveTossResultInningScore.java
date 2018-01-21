@@ -71,6 +71,13 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        setTargetFragment(null, -1);
+    }
+
+
+    @Override
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(false);
@@ -96,6 +103,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
             setData();
             if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
                 linear_second_inning.setVisibility(View.VISIBLE);
+                linear_first_inning.setVisibility(View.VISIBLE);
             } else {
                 linear_second_inning.setVisibility(View.GONE);
                 linear_first_inning.setVisibility(View.GONE);
@@ -226,56 +234,64 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
 
     private boolean isValidateOneTeam() {
         boolean isValid = true;
-        if (spinnerWinningTeam.getSelectedItemPosition() == 0) {
-            isValid = false;
-            Toast.makeText(context, "Please select toss winner", Toast.LENGTH_SHORT).show();
-        } else if (spinnerSelectionType.getSelectedItemPosition() == 0) {
-            Toast.makeText(context, "Please select toss selection.", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (runScoredOne.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Run Scored field cannot be empty", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (wicketsOne.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (playedOversOne.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
-            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs)) {
-            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
+        try {
+            if (spinnerWinningTeam.getSelectedItemPosition() == 0) {
+                isValid = false;
+                Toast.makeText(context, "Please select toss winner", Toast.LENGTH_SHORT).show();
+            } else if (spinnerSelectionType.getSelectedItemPosition() == 0) {
+                Toast.makeText(context, "Please select toss selection.", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (runScoredOne.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Run Scored field cannot be empty", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (wicketsOne.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (playedOversOne.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
+                Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs)) {
+                Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return isValid;
     }
 
     private boolean isValidate() {
         boolean isValid = true;
-        if (spinnerWinningTeam.getSelectedItemPosition() == 0) {
-            isValid = false;
-            Toast.makeText(context, "Please select toss winner", Toast.LENGTH_SHORT).show();
-        } else if (spinnerSelectionType.getSelectedItemPosition() == 0) {
-            Toast.makeText(context, "Please select toss selection.", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (runScoredOne.getText().toString().equalsIgnoreCase("") || runScoredTwo.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Run Scored field cannot be empty", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (wicketsTwo.getText().toString().equalsIgnoreCase("") || wicketsOne.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (playedOversOne.getText().toString().equalsIgnoreCase("") || playedOversTwo.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (Integer.parseInt(wicketsTwo.getText().toString()) > Integer.parseInt(playersCount) ||
-                Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
-            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs) ||
-                Float.parseFloat(playedOversTwo.getText().toString()) > Float.parseFloat(overs)) {
-            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
-            isValid = false;
+        try {
+            if (spinnerWinningTeam.getSelectedItemPosition() == 0) {
+                isValid = false;
+                Toast.makeText(context, "Please select toss winner", Toast.LENGTH_SHORT).show();
+            } else if (spinnerSelectionType.getSelectedItemPosition() == 0) {
+                Toast.makeText(context, "Please select toss selection.", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (runScoredOne.getText().toString().equalsIgnoreCase("") || runScoredTwo.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Run Scored field cannot be empty", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (wicketsTwo.getText().toString().equalsIgnoreCase("") || wicketsOne.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (playedOversOne.getText().toString().equalsIgnoreCase("") || playedOversTwo.getText().toString().equalsIgnoreCase("")) {
+                Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (Integer.parseInt(wicketsTwo.getText().toString()) > Integer.parseInt(playersCount) ||
+                    Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
+                Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs) ||
+                    Float.parseFloat(playedOversTwo.getText().toString()) > Float.parseFloat(overs)) {
+                Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return isValid;
     }

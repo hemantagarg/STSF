@@ -110,6 +110,12 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        setTargetFragment(null,-1);
+    }
+
     private void init() {
         btn_create_team = (Button) mView.findViewById(R.id.btn_create_team);
         text_captain = (TextView) mView.findViewById(R.id.text_captain);
@@ -753,6 +759,9 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 setUserData(userData);
             }
         }
+        if (resultCode == AppConstant.RESULTCODE_NEW) {
+            context.onBackPressed();
+        }
         if (resultCode == AppConstant.RESULTCODE_FINISH) {
             if (getTargetFragment() != null)
                 getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
@@ -829,74 +838,97 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             } else if (method == 5) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = response.getJSONObject("data");
-                    String isLineUpCompleteForBothTeams = data.getString("isLineUpCompleteForBothTeams");
-                    if (isLineUpCompleteForBothTeams.equals("1")) {
-
-                        JSONObject scoringData = response.getJSONObject("scoringData");
-                        if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
-                            if (getTargetFragment() != null)
-                                getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-
-                            context.onBackPressed();
-
-                            if (data.getString("isTeam1ScoringOnSf").equals("1") && data.getString("isTeam2ScoringOnSf").equals("1")) {
-
-                                FragmentSaveTossResult fragmentupcomingdetals = new FragmentSaveTossResult();
-                                Bundle b = new Bundle();
-                                b.putString("eventId", eventId);
-                                b.putString("matchId", matchId);
-                                b.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
-                                b.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
-                                b.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
-                                b.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
-                                b.putString("team1Id", team2Id);
-                                b.putString("playersCount", playersCount);
-                                b.putString("overs", overs);
-                                b.putString("team2Id", teamId);
-                                b.putString("title", "");
-                                b.putString("team1Name", team2Name);
-                                b.putString("team2Name", team1Name);
-                                fragmentupcomingdetals.setArguments(b);
-                                // fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                            } else {
-                                FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("eventId", eventId);
-                                bundle.putString("matchId", matchId);
-                                bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
-                                bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
-                                bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
-                                bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
-                                bundle.putString("playersCount", playersCount);
-                                bundle.putString("overs", overs);
-                                bundle.putString("team1Id", team2Id);
-                                bundle.putString("team2Id", teamId);
-                                bundle.putString("title", "");
-                                bundle.putString("team1Name", team2Name);
-                                bundle.putString("team2Name", team1Name);
-                                fragmentupcomingdetals.setArguments(bundle);
-                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-                            }
-                        } else {
-                            if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
-                                String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
-                                        + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
-                                AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
-                            } else {
-                                JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
-                                showMessage(otherMatchDetails);
-                            }
-                        }
-                    } else {
-                        Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
+                    checkLineupCompleteAndMove(data, response);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void checkLineupCompleteAndMove(JSONObject data, JSONObject response) {
+        try {
+            String isLineUpCompleteForBothTeams = data.getString("isLineUpCompleteForBothTeams");
+            if (isLineUpCompleteForBothTeams.equals("1")) {
+
+                JSONObject scoringData = response.getJSONObject("scoringData");
+                if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
+                    if (getTargetFragment() != null)
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+                    context.onBackPressed();
+
+                    if (data.getString("isTeam1ScoringOnSf").equals("1") && data.getString("isTeam2ScoringOnSf").equals("1")) {
+
+                        FragmentSaveTossResult fragmentupcomingdetals = new FragmentSaveTossResult();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        b.putString("matchId", matchId);
+                        b.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                        b.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                        b.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                        b.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                        b.putString("team1Id", team2Id);
+                        b.putString("playersCount", playersCount);
+                        b.putString("overs", overs);
+                        b.putString("team2Id", teamId);
+                        b.putString("title", "");
+                        b.putString("team1Name", team2Name);
+                        b.putString("team2Name", team1Name);
+                        fragmentupcomingdetals.setArguments(b);
+                        // fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else {
+                        FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", eventId);
+                        bundle.putString("matchId", matchId);
+                        bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                        bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                        bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                        bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                        bundle.putString("playersCount", playersCount);
+                        bundle.putString("overs", overs);
+                        bundle.putString("team1Id", team2Id);
+                        bundle.putString("team2Id", teamId);
+                        bundle.putString("title", "");
+                        bundle.putString("team1Name", team2Name);
+                        bundle.putString("team2Name", team1Name);
+                        fragmentupcomingdetals.setArguments(bundle);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    }
+                } else {
+                    if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
+                        String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
+                                + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
+                        AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
+                    } else {
+                        JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
+                        showMessage(otherMatchDetails);
+                    }
+                }
+            } else {
+                Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+                JSONArray NotCompleteData = data.getJSONArray("NotCompleteData");
+                for (int i = 0; i < NotCompleteData.length(); i++) {
+                    JSONObject jsonObject = NotCompleteData.getJSONObject(i);
+                    if (jsonObject.getString("isLineupCompleteTeam").equals("0")) {
+                        String teamIdNotCompleted = jsonObject.getString("teamId");
+                        if (teamIdNotCompleted.equals(team2Id)) {
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_NEW, new Intent());
+                            context.onBackPressed();
+                            return;
+                        } else {
+                            context.onBackPressed();
+                            return;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showMessage(JSONObject otherMatchDetails) {

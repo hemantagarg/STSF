@@ -95,12 +95,12 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
                 for (int i = 0; i < team1squasd.length(); i++) {
                     JSONObject jsonObject = team1squasd.getJSONObject(i);
                     ModelUpcomingTeamName modelteama = new ModelUpcomingTeamName();
-                    modelteama.setPlayerRole(jsonObject.getString("playerRole"));
+                    if (jsonObject.has("playerRole")) {
+                        modelteama.setPlayerRole(jsonObject.getString("playerRole"));
+                    }
                     modelteama.setName(jsonObject.getString("name"));
                     modelteama.setProfilePicture(jsonObject.getString("profilePicture"));
                     modelteama.setPlayerAvatarId(jsonObject.getString("playerAvatarId"));
-                  /*  modelteama.setPlayerTeamId(jsonObject.getString("playerTeamId"));
-                    modelteama.setPlaySquadId(jsonObject.getString("playSquadId"));*/
 
                     modelteama.setRowType(1);
                     arrayteama.add(modelteama);

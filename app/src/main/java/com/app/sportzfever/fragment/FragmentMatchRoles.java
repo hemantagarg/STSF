@@ -208,6 +208,12 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                             if (arrayListUserId.contains(jo.getString("scorerId"))) {
                                 int po1 = arrayListUserId.indexOf(jo.getString("scorerId"));
                                 spinner_first_scorer.setSelection(po1 + 1);
+                            } else {
+                                arrayListUserId.add(jo.getString("scorerId"));
+                                arrayListFirstScorer.add(jo.getString("scorerName"));
+                                arrayListNames.add(jo.getString("scorerName"));
+                                adapterFirstScorer.notifyDataSetChanged();
+                                spinner_first_scorer.setSelection(adapterFirstScorer.getCount());
                             }
                         }
                         if (size > 1) {
@@ -216,6 +222,12 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                                 if (arrayListUserId.contains(jo1.getString("scorerId"))) {
                                     int po1 = arrayListUserId.indexOf(jo1.getString("scorerId"));
                                     spinner_second_scorer.setSelection(po1 + 1);
+                                } else {
+                                    arrayListUserId.add(jo1.getString("scorerId"));
+                                    arrayListSecondScorer.add(jo1.getString("scorerName"));
+                                    arrayListNames.add(jo1.getString("scorerName"));
+                                    adapterSecondScorer.notifyDataSetChanged();
+                                    spinner_second_scorer.setSelection(adapterSecondScorer.getCount());
                                 }
                             }
                         }
@@ -225,6 +237,13 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                                 if (arrayListUserId.contains(jo2.getString("scorerId"))) {
                                     int po1 = arrayListUserId.indexOf(jo2.getString("scorerId"));
                                     spinner_third_scorer.setSelection(po1 + 1);
+                                } else {
+                                    arrayListUserId.add(jo2.getString("scorerId"));
+                                    arrayListThirdScorer.add(jo2.getString("scorerName"));
+                                    arrayListNames.add(jo2.getString("scorerName"));
+                                    adapterThirdScorer.notifyDataSetChanged();
+                                    spinner_third_scorer.setSelection(adapterThirdScorer.getCount());
+
                                 }
                             }
                         }

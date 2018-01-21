@@ -465,6 +465,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player1"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -492,6 +493,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player2"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -519,6 +521,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player3"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -546,6 +549,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player4"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -574,6 +578,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player5"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -602,6 +607,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player6"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -631,6 +637,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player7"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -658,6 +665,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player8"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -685,6 +693,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player9"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -712,6 +721,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player10"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -739,6 +749,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/image_player11"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="center_horizontal"
@@ -755,8 +766,6 @@
                     android:textSize="@dimen/text_size_12" />
 
             </LinearLayout>
-
-
         </RelativeLayout>
 
     </RelativeLayout>

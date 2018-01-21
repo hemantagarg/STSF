@@ -162,17 +162,11 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         }
     }
 
-    public void refreshScorecard(String maindata) {
-        try {
-            data = new JSONObject(maindata);
-            setTeam1Data(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setTeam1Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
+            String isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0) {
                 Gson gson = new Gson();
@@ -391,7 +385,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
     }
 
 
-    private void getServicelistRefresh() {
+    public void getServicelistRefresh() {
         Dashboard.getInstance().setProgressLoader(true);
         try {
             if (AppUtils.isNetworkAvailable(context)) {
@@ -429,6 +423,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         if (context != null && isAdded())
             Toast.makeText(getActivity(), getResources().getString(R.string.problem_server), Toast.LENGTH_SHORT).show();
     }
+
 }
 
 
