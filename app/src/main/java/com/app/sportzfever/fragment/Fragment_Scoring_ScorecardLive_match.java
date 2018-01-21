@@ -162,6 +162,14 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         }
     }
 
+    public void refreshScorecard(String maindata) {
+        try {
+            data = new JSONObject(maindata);
+            setTeam1Data(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void setTeam1Data(JSONObject data) {
         try {

@@ -85,6 +85,7 @@ public interface JsonApiHelper {
     String COMMENTARY = "commentary/";
     String GET_LIVE_SCORE = "getLiveScore/EVENT/";
     String DRINK_BREAK = "drinksBreak/";
+    String SAVE_DUMMY_BOWLER = "saveDummyBowlerNameForMatch";
     String UPCOMINGMATCHDETAILS = "getMatchStatisticsDetails/EVENT/";
     String SAVE_TOSS = "saveToss";
     String SAVE_SCORERS_FOR_MATCH = "saveScoreForMatches";

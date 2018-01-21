@@ -185,7 +185,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
         } else {
             String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
-            AppUtils.showDialogMessage(context, message);
+            AppUtils.showDialogMessage(context, message.replace("\n","<br />"));
         }
     }
 

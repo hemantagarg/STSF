@@ -26,6 +26,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.sportzfever.R.id.tablayout;
+
 /**
  * Created by admin on 06-01-2016.
  */
@@ -79,7 +81,7 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
         Dashboard.getInstance().manageFooterVisibitlity(false);
 
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
-        HeaderViewManager.getInstance().setHeading(true, "Match List");
+        HeaderViewManager.getInstance().setHeading(true, "Upcoming Matches");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
         HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
         HeaderViewManager.getInstance().setLogoView(false);
@@ -111,9 +113,9 @@ public class Fragment_Scoring extends BaseFragment implements ApiResponse {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
+        tabLayout = (TabLayout) view.findViewById(tablayout);
         frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
-
+        tabLayout.setVisibility(View.GONE);
         setupTabIcons();
         setListener();
 

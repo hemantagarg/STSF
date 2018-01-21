@@ -71,123 +71,139 @@
                     android:layout_alignParentTop="true" />
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
-                android:layout_margin="@dimen/dp10"
-                android:text="First Innings Score"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15"
-                android:textStyle="bold" />
-
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
+                android:id="@+id/linear_first_inning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Run Scored">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/runScoredOne"
+                <TextView android:id="@+id/text_inning_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view1"
+                    android:layout_margin="@dimen/dp10"
+                    android:text="First Innings Score"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15"
+                    android:textStyle="bold" />
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
+                    android:hint="Run Scored">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/runScoredOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Wickets">
+
+                    <EditText
+                        android:id="@+id/wicketsOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Played Overs">
+
+                    <EditText
+                        android:id="@+id/playedOversOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_second_inning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Wickets">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/wicketsOne"
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view1"
+                    android:layout_margin="@dimen/dp10"
+                    android:text="Second Innings Score"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_15"
+                    android:textStyle="bold" />
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
+                    android:hint="Run Scored">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/runScoredTwo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Played Overs">
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/playedOversOne"
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
+                    android:hint="Wickets">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/wicketsTwo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
-                android:layout_margin="@dimen/dp10"
-                android:text="Second Innings Score"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/text_size_15"
-                android:textStyle="bold" />
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Run Scored">
-
-                <EditText
-                    android:id="@+id/runScoredTwo"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
+                    android:hint="Played Overs">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/playedOversTwo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
 
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Wickets">
-
-                <EditText
-                    android:id="@+id/wicketsTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Played Overs">
-
-                <EditText
-                    android:id="@+id/playedOversTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:padding="@dimen/dp10"
-                    android:textColor="@color/textcolordark"
-                    android:textSize="@dimen/text_size_15" />
-
-            </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnSubmit"

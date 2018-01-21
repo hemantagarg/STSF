@@ -199,6 +199,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                     FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
                     Bundle b = new Bundle();
                     b.putString("eventId", eventId);
+                    b.putString("IsScorerForTeam2", isScorerForTeam2);
                     fragmentSoringMatchDetails.setArguments(b);
                     Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
                 } else {

@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,14 +42,15 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
     private Spinner spinnerWinningTeam, spinnerSelectionType;
     private Button btnSubmit;
     View view_about;
-    private TextView text_title;
-    private String team2Id = "", eventId = "", team1Id = "", team1Name = "", team2Name = "";
+    private TextView text_title, text_inning_score;
+    private String team2Id = "", eventId = "", team1Id = "", team1Name = "", team2Name = "", isTeam1ScoringOnSf = "", isTeam2ScoringOnSf = "";
     private ArrayAdapter<String> adapterWinningTeam, adapterSelectionType;
     private ArrayList<String> listTeam = new ArrayList<>();
     private ArrayList<String> listTeamId = new ArrayList<>();
     private ArrayList<String> listSelectonType = new ArrayList<>();
     private String isScorerForTeam1 = "", isScorerForTeam2 = "", overs = "", playersCount = "";
     private EditText runScoredOne, wicketsOne, playedOversOne, runScoredTwo, wicketsTwo, playedOversTwo;
+    private LinearLayout linear_second_inning, linear_first_inning;
 
     public static FragmentSaveTossResultInningScore getInstance() {
         if (fragment_teamJoin_request == null)
@@ -84,11 +87,19 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
             team1Name = b.getString("team1Name");
             playersCount = b.getString("playersCount");
             overs = b.getString("overs");
+            isTeam1ScoringOnSf = b.getString("isTeam1ScoringOnSf");
+            isTeam2ScoringOnSf = b.getString("isTeam2ScoringOnSf");
             team2Name = b.getString("team2Name");
             isScorerForTeam1 = b.getString("isScorerForTeam1");
             isScorerForTeam2 = b.getString("isScorerForTeam2");
             text_title.setText(team1Name + " vs " + team2Name);
             setData();
+            if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                linear_second_inning.setVisibility(View.VISIBLE);
+            } else {
+                linear_second_inning.setVisibility(View.GONE);
+                linear_first_inning.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -126,25 +137,118 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
         spinnerSelectionType = (Spinner) view.findViewById(R.id.spinnerSelectionType);
         btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
         text_title = (TextView) view.findViewById(R.id.text_title);
+        text_inning_score = (TextView) view.findViewById(R.id.text_inning_score);
         runScoredOne = (EditText) view.findViewById(R.id.runScoredOne);
         wicketsOne = (EditText) view.findViewById(R.id.wicketsOne);
         playedOversOne = (EditText) view.findViewById(R.id.playedOversOne);
         runScoredTwo = (EditText) view.findViewById(R.id.runScoredTwo);
         wicketsTwo = (EditText) view.findViewById(R.id.wicketsTwo);
         playedOversTwo = (EditText) view.findViewById(R.id.playedOversTwo);
-
+        linear_first_inning = (LinearLayout) view.findViewById(R.id.linear_first_inning);
+        linear_second_inning = (LinearLayout) view.findViewById(R.id.linear_second_inning);
     }
 
     private void setlistener() {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isValidate()) {
-                    saveResult();
+                if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                    if (isValidate()) {
+                        saveResult();
+                    }
+                } else {
+                    if (linear_first_inning.getVisibility() == View.VISIBLE) {
+                        if (isValidateOneTeam()) {
+                            saveResult();
+                        }
+                    } else {
+                        saveResult();
+                    }
                 }
             }
         });
 
+        spinnerSelectionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinnerWinningTeam.getSelectedItemPosition() != 0 && spinnerSelectionType.getSelectedItemPosition() != 0) {
+                    checkScoringTeam();
+                } else {
+                    btnSubmit.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinnerWinningTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinnerWinningTeam.getSelectedItemPosition() != 0 && spinnerSelectionType.getSelectedItemPosition() != 0) {
+                    checkScoringTeam();
+                } else {
+                    btnSubmit.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void checkScoringTeam() {
+        btnSubmit.setVisibility(View.VISIBLE);
+        if (isTeam1ScoringOnSf.equalsIgnoreCase("1")) {
+            if ((listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id) &&
+                    spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) ||
+                    (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
+                            spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Bowling"))) {
+                linear_first_inning.setVisibility(View.GONE);
+            } else {
+                linear_first_inning.setVisibility(View.VISIBLE);
+            }
+        } else if (isTeam2ScoringOnSf.equalsIgnoreCase("1")) {
+            if ((listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team2Id) &&
+                    spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Batting")) ||
+                    (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id) &&
+                            spinnerSelectionType.getSelectedItem().toString().equalsIgnoreCase("Bowling"))) {
+                linear_first_inning.setVisibility(View.GONE);
+            } else {
+                linear_first_inning.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private boolean isValidateOneTeam() {
+        boolean isValid = true;
+        if (spinnerWinningTeam.getSelectedItemPosition() == 0) {
+            isValid = false;
+            Toast.makeText(context, "Please select toss winner", Toast.LENGTH_SHORT).show();
+        } else if (spinnerSelectionType.getSelectedItemPosition() == 0) {
+            Toast.makeText(context, "Please select toss selection.", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        } else if (runScoredOne.getText().toString().equalsIgnoreCase("")) {
+            Toast.makeText(context, "Run Scored field cannot be empty", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        } else if (wicketsOne.getText().toString().equalsIgnoreCase("")) {
+            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        } else if (playedOversOne.getText().toString().equalsIgnoreCase("")) {
+            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        } else if (Integer.parseInt(wicketsOne.getText().toString()) > Integer.parseInt(playersCount)) {
+            Toast.makeText(context, "Number of wickets are less then or equal to " + playersCount + ".", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        } else if (Float.parseFloat(playedOversOne.getText().toString()) > Float.parseFloat(overs)) {
+            Toast.makeText(context, "Number of overs are less then or equal to " + overs + ".", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        return isValid;
     }
 
     private boolean isValidate() {
@@ -204,6 +308,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
             match.put("tossSelection", spinnerSelectionType.getSelectedItem().toString());
             match.put("matchId", matchId);
 
+
             JSONArray innings = new JSONArray();
 
             JSONObject inning1 = new JSONObject();
@@ -215,11 +320,13 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
 
 
             JSONObject inning2 = new JSONObject();
-            inning2.put("inningNumber", "2");
-            inning2.put("totalRunsScored", runScoredTwo.getText().toString());
-            inning2.put("wicketsInOver", wicketsTwo.getText().toString());
-            inning2.put("playedOvers", playedOversTwo.getText().toString());
-            inning2.put("totalOvers", overs);
+            if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                inning2.put("inningNumber", "2");
+                inning2.put("totalRunsScored", runScoredTwo.getText().toString());
+                inning2.put("wicketsInOver", wicketsTwo.getText().toString());
+                inning2.put("playedOvers", playedOversTwo.getText().toString());
+                inning2.put("totalOvers", overs);
+            }
 
             String team1 = "", team2 = "";
             if (listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()).equals(team1Id)) {
@@ -242,9 +349,14 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
 
             }
 
-            innings.put(inning1);
-            innings.put(inning2);
-            match.put("innings", innings);
+            if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                innings.put(inning2);
+            }
+
+            if (linear_first_inning.getVisibility() == View.VISIBLE) {
+                innings.put(inning1);
+                match.put("innings", innings);
+            }
             jsonObject.put("match", match);
 
         } catch (Exception e) {
@@ -261,12 +373,20 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     context.onBackPressed();
-                    FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", eventId);
-                    fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
-
+                    if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    } else {
+                        FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        b.putString("IsScorerForTeam2", isScorerForTeam2);
+                        fragmentSoringMatchDetails.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                    }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

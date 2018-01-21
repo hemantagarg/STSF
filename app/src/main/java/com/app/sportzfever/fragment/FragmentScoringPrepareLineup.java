@@ -72,7 +72,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     private JSONObject jsonLinupArray;
     private String playersCount = "";
     private CheckBox checkbox_scoring;
-    private String teamCheckAvailibility = "", title = "", overs = "";
+    private String teamCheckAvailibility = "", title = "", overs = "", team1ScorerName = "", team2ScorerName = "";
     private String matchId = "";
     private boolean isTeam1 = true;
     private RelativeLayout rl_main;
@@ -198,6 +198,8 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             team2Id = b.getString("team2Id");
             eventId = b.getString("eventId");
             matchId = b.getString("matchId");
+            team1ScorerName = b.getString("team1ScorerName");
+            team2ScorerName = b.getString("team2ScorerName");
             overs = b.getString("overs");
             Log.e("overs", "**" + overs);
             team1Name = b.getString("team1Name");
@@ -343,6 +345,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             bundle.putString("teamId", team1Id);
             bundle.putString("team1Id", team1Id);
             bundle.putString("team2Id", team2Id);
+            bundle.putString("overs", overs);
             bundle.putString("isScorerForTeam1", isScorerForTeam1);
             bundle.putString("isScorerForTeam2", isScorerForTeam2);
             bundle.putString("team1ScorerName", b.getString("team1ScorerName"));
@@ -401,7 +404,9 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == AppConstant.RESULTCODE_FINISH) {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+            if (getTargetFragment() != null)
+                getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
             context.onBackPressed();
         }
         if (requestCode == AppConstant.SEARCH_FRAGMENT_CODE) {
@@ -723,34 +728,94 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
             } else if (position == 5) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    if (data.getString("isTeam1ScoringOnSf").equals("0") && data.getString("isTeam2ScoringOnSf").equals("0")) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
-                        context.onBackPressed();
-                        FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("eventId", eventId);
-                        bundle.putString("matchId", matchId);
-                        bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
-                        bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
-                        bundle.putString("playersCount", playersCount);
-                        bundle.putString("overs", overs);
-                        bundle.putString("team1Id", team2Id);
-                        bundle.putString("team2Id", team1Id);
-                        bundle.putString("title", "");
-                        bundle.putString("team1Name", team2Name);
-                        bundle.putString("team2Name", team1Name);
-                        fragmentupcomingdetals.setArguments(bundle);
-                        fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    if (data.getString("isLineUpCompleteForBothTeams").equals("1")) {
+                        if (data.getString("isTeam1ScoringOnSf").equals("0") && data.getString("isTeam2ScoringOnSf").equals("0")) {
+                            if (getTargetFragment() != null)
+                                getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+                            context.onBackPressed();
+                            FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("eventId", eventId);
+                            bundle.putString("matchId", matchId);
+                            bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                            bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                            bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                            bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                            bundle.putString("playersCount", playersCount);
+                            bundle.putString("overs", overs);
+                            bundle.putString("team1Id", team2Id);
+                            bundle.putString("team2Id", team1Id);
+                            bundle.putString("title", "");
+                            bundle.putString("team1Name", team2Name);
+                            bundle.putString("team2Name", team1Name);
+                            fragmentupcomingdetals.setArguments(bundle);
+                            fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
+                            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        } else {
+                            JSONObject scoringData = jObject.getJSONObject("scoringData");
+                            if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
+                                if (getTargetFragment() != null)
+                                    getTargetFragment().onActivityResult(getTargetRequestCode(), AppConstant.RESULTCODE_FINISH, new Intent());
+
+                                context.onBackPressed();
+
+                                FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("eventId", eventId);
+                                bundle.putString("matchId", matchId);
+                                bundle.putString("isTeam1ScoringOnSf", data.getString("isTeam1ScoringOnSf"));
+                                bundle.putString("isTeam2ScoringOnSf", data.getString("isTeam2ScoringOnSf"));
+                                bundle.putString("isScorerForTeam1", data.getString("isScorerForTeam1"));
+                                bundle.putString("isScorerForTeam2", data.getString("isScorerForTeam2"));
+                                bundle.putString("playersCount", playersCount);
+                                bundle.putString("overs", overs);
+                                bundle.putString("team1Id", team2Id);
+                                bundle.putString("team2Id", team1Id);
+                                bundle.putString("title", "");
+                                bundle.putString("team1Name", team2Name);
+                                bundle.putString("team2Name", team1Name);
+                                fragmentupcomingdetals.setArguments(bundle);
+                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                            } else {
+                                if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
+                                    String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName
+                                            + "\n" + "Scorer for " + team1Name + ":" + "\n" + team2ScorerName + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
+                                    AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
+                                } else {
+                                    JSONObject otherMatchDetails = scoringData.getJSONObject("otherMatchDetails");
+                                    showMessage(otherMatchDetails);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    private void showMessage(JSONObject otherMatchDetails) {
+        try {
+
+            JSONObject team1 = otherMatchDetails.getJSONObject("team1");
+            JSONObject team2 = otherMatchDetails.getJSONObject("team2");
+            JSONObject dateTime = otherMatchDetails.getJSONObject("dateTime");
+            String time = dateTime.getString("date") + " " + dateTime.getString("ShortMonthName") + " " + dateTime.getString("year");
+
+            String message = "You are active score for a match on " + "\n" + time + "\nbetween\n" +
+                    team1.getString("name") + "\nvs\n" + team2.getString("name") + "\n" + "Please complete that match then you can start this match scoring";
+            AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void setPreviewData() {
         ArrayList<ModelSportTeamList> addedPlayes = new ArrayList<>();
