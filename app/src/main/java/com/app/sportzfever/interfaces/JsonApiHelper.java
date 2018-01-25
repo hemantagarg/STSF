@@ -117,4 +117,5 @@ public interface JsonApiHelper {
     String MANAGE_LINEUP_MATCH = "manageLineUpForMatch";
     String CREATEEVENT = "createEvent";
     String CREATEVENTMATCH = "createMatch";
+    String GET_OffLineDATA = "getCompleteDatabase/";
 }
