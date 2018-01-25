@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
+import com.app.sportzfever.adapter.SmartFragmentStatePagerAdapter;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.JsonApiHelper;
@@ -49,6 +50,8 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
     private boolean isMatchEnd = false;
     ViewPagerAdapter adapter;
     Fragment_Scoring_ScorecardLive_match tab2;
+    boolean isThirdFragmentSelected = false;
+    private SmartFragmentStatePagerAdapter adapterViewPager;
 
     public static FragmentSoringMatchDetails getInstance() {
         if (fragment_teamJoin_request == null)
@@ -130,7 +133,19 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
 
             @Override
             public void onPageSelected(int position) {
-
+                Log.e("isThirdFragmentSelected", "**" + isThirdFragmentSelected);
+                if (position == 0) {
+                    if (isThirdFragmentSelected) {
+                        Fragment_LiveScoring fragment = (Fragment_LiveScoring) adapterViewPager.getRegisteredFragment(0);
+                        fragment.refreshData();
+                        isThirdFragmentSelected = false;
+                    }
+                } else if (position == 1) {
+                    Fragment_Scoring_ScorecardLive_match fragment = (Fragment_Scoring_ScorecardLive_match) adapterViewPager.getRegisteredFragment(1);
+                    fragment.getServicelistRefresh();
+                } else if (position == 2) {
+                    isThirdFragmentSelected = true;
+                }
             }
 
             @Override
@@ -197,6 +212,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         tabLayout.setTabTextColors(getResources().getColor(R.color.textcolordark), getResources().getColor(R.color.logocolor));
     }
 
+/*
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
 
@@ -224,8 +240,11 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
 
         viewPager.setAdapter(adapter);
     }
+*/
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends SmartFragmentStatePagerAdapter {
+
+
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -235,23 +254,41 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
 
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            switch (position) {
+                case 0: // Fragment # 0 - This will show FirstFragment
+                    Fragment_LiveScoring tab21 = new Fragment_LiveScoring();
+                    Bundle b21 = new Bundle();
+                    b21.putString("eventId", avtarid);
+                    b21.putString("data", data.toString());
+                    b21.putString("IsScorerForTeam2", IsScorerForTeam2);
+                    tab21.setArguments(b21);
+                    return tab21;
+                case 1: // Fragment # 0 - This will show FirstFragment different title
+
+                    Fragment_Scoring_ScorecardLive_match tab2 = new Fragment_Scoring_ScorecardLive_match();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", avtarid);
+                    b.putString("data", data.toString());
+                    tab2.setArguments(b);
+
+                    return tab2;
+                case 2: // Fragment # 1 - This will show SecondFragment
+                    Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
+                    Bundle b112 = new Bundle();
+                    b112.putString("avtarid", avtarid);
+                    b112.putString("data", data.toString());
+                    fragmentMatchTeamDetail.setArguments(b112);
+                    return fragmentMatchTeamDetail;
+                default:
+                    return null;
+            }
         }
 
         @Override
         public int getCount() {
-            return mFragmentList.size();
+            return 3;
         }
 
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
     private void setFragment(Fragment fragment) {
@@ -301,7 +338,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
-
+                    AppUtils.setScoringData(context, data.toString());
                     //  maxlistLength = jObject.getString("total");
                     JSONObject jbatsman = data.getJSONObject("match");
                     JSONObject team1 = data.getJSONObject("team1");
@@ -328,7 +365,9 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     modelUpcomingTeamName.setName(team2.getString("name"));
                     modelUpcomingTeamName.setProfilePicture(team2.getString("profilePicture"));
 
-                    setupViewPager(viewPager);
+                    //  setupViewPager(viewPager);
+                    adapterViewPager = new ViewPagerAdapter(getChildFragmentManager());
+                    viewPager.setAdapter(adapterViewPager);
                     tabLayout.setupWithViewPager(viewPager);
                     setupTabIcons();
                     setlistener();

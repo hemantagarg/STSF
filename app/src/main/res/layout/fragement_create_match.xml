@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg"
+    android:clickable="true"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/rl_header"
+        layout="@layout/header_layout" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_save"
+        android:layout_below="@+id/rl_header"
+        android:layout_marginBottom="@dimen/dp5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp5"
+            android:layout_marginTop="@dimen/dp5"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/rl_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/linear_matchPublic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp40"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg">
+
+                        <Spinner android:id="@+id/spinnerSelectTeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <TextView
+                            android:id="@+id/text_selectTeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:hint="First Team"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_15"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp40"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg">
+
+
+                        <TextView
+                            android:id="@+id/text_selectTeam2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:hint="Seond Team"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textSize="@dimen/text_size_15" />
+
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/text_overs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear2"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:padding="@dimen/dp5"
+                        android:text="Enter No of Overs"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <EditText
+                        android:id="@+id/edt_no_overs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear_matchPublic"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp5"
+                        android:background="@drawable/edit_bg"
+                        android:inputType="number"
+                        android:maxHeight="@dimen/dp100"
+                        android:padding="@dimen/dp10"
+                        android:text="20"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:padding="@dimen/dp5"
+                        android:text="Enter No of Players"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <EditText
+                        android:id="@+id/edt_no_players"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp5"
+                        android:background="@drawable/edit_bg"
+                        android:inputType="number"
+                        android:maxHeight="@dimen/dp100"
+                        android:padding="@dimen/dp10"
+                        android:text="11"
+                        android:textColor="@color/textcolordark"
+                        android:textSize="@dimen/text_size_15" />
+
+
+                    <LinearLayout
+                        android:id="@+id/lin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <com.app.sportzfever.utils.CustomTextView
+                            android:id="@+id/mTvToDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/edt_text_post"
+                            android:layout_marginLeft="@dimen/dp10"
+                            android:layout_marginRight="@dimen/dp10"
+                            android:layout_marginTop="@dimen/dp15"
+                            android:layout_weight="1"
+                            android:background="@drawable/edit_bg"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/date"
+                            android:hint="Start Date"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textColorHint="@color/text_hint_color"
+                            android:textSize="@dimen/text_size_15" />
+
+                        <com.app.sportzfever.utils.CustomTextView
+                            android:id="@+id/mTvTime"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp10"
+                            android:layout_marginRight="@dimen/dp10"
+                            android:layout_marginTop="@dimen/dp15"
+                            android:layout_weight="1"
+                            android:background="@drawable/edit_bg"
+                            android:drawablePadding="@dimen/dp10"
+                            android:drawableRight="@drawable/clock"
+                            android:hint="Start Time"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textColorHint="@color/text_hint_color"
+                            android:textSize="@dimen/text_size_15" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear_enddatetime"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg">
+
+                        <TextView
+                            android:id="@+id/mEdtlocation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:hint="Location"
+                            android:maxLines="2"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/textcolordark"
+                            android:textColorHint="@color/text_hint_color"
+                            android:textSize="@dimen/text_size_15" />
+
+                        <ImageView
+                            android:id="@+id/image_map"
+                            android:layout_width="@dimen/dp25"
+                            android:layout_height="@dimen/dp25"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/dp5"
+                            android:background="@drawable/blumap"
+                            android:padding="@dimen/dp3" />
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:id="@+id/mEdtdetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp5"
+                        android:layout_marginLeft="@dimen/dp10"
+                        android:layout_marginRight="@dimen/dp10"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:background="@drawable/edit_bg"
+                        android:hint="Description"
+                        android:padding="@dimen/dp10"
+                        android:textColor="@color/textcolordark"
+                        android:textColorHint="@color/text_hint_color"
+                        android:textSize="@dimen/text_size_15" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/blue_button_selecor"
+        android:text="Create Match"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15" />
+
+</RelativeLayout>

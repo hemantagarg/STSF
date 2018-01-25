@@ -241,6 +241,35 @@ public class AppUtils {
         return "";
     }
 
+    public static void setScoringData(Context context, String image) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("scoring_data", image);
+
+            editor.commit();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static String getScoringData(Context context) {
+
+        try {
+            SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            return preferences.getString("scoring_data", "");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public static void setSelectedSportId(Context context, String image) {
 
         try {

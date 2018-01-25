@@ -56,7 +56,7 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
     private boolean isTeam2BowlingVisible = true;
     View view;
     JSONObject data;
-    private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate,text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
+    private TextView text_extrarun, text_total, text_totalrun, text_extrarunrate, text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
 
     public static Fragment_FullScorecardLive_match getInstance() {
         if (fragment_teamJoin_request == null)
@@ -159,6 +159,8 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
 
     private void setTeam1Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0) {
                 Gson gson = new Gson();
@@ -174,7 +176,7 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 text_extrarun.setText(modelInnings.getExtras());
                 text_total.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun.setText(modelInnings.getTotalRunsScored());
-                text_extrarunrate.setText("Run Rt: "+modelInnings.getOverRate());
+                text_extrarunrate.setText("Run Rt: " + modelInnings.getOverRate());
 
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {
@@ -198,12 +200,18 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 } else {
                     layout_team1.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam1ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team1.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam1ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,6 +221,8 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
 
     private void setTeam2Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0 && innings.length() > 1) {
                 Gson gson = new Gson();
@@ -227,7 +237,7 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 text_extrarun1.setText(modelInnings.getExtras());
                 text_total1.setText("Total (" + modelInnings.getWickets() + " wickets, " + modelInnings.getPlayedOvers() + " overs)");
                 text_totalrun1.setText(modelInnings.getTotalRunsScored());
-                text_extrarunrate1.setText("Run Rate: "+modelInnings.getOverRate());
+                text_extrarunrate1.setText("Run Rate: " + modelInnings.getOverRate());
 
                 if (modelInnings.getBattingStats() != null && modelInnings.getBattingStats().length > 0) {
                     for (int i = 0; i < modelInnings.getBattingStats().length; i++) {
@@ -250,12 +260,18 @@ public class Fragment_FullScorecardLive_match extends BaseFragment implements Ap
                 } else {
                     layout_team2.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam2ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team2.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam2ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();

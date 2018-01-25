@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-15dp"
             android:layout_marginTop="@dimen/dp10"
-            android:text="SELECT NEW BOWLER"
+            android:text="SELECT PLAYERS"
             android:textColor="@color/textcolordark"
             android:textSize="@dimen/text_size_16" />
 

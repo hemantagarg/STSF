@@ -99,7 +99,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private String team1Id = "", team2Id = "", matchId = "", currentOverId = "", blankBowlerId = "";
     private int runScored = -1;
     private String isTeam1ScoringOnSf = "", isTeam2ScoringOnSf = "", numberOfOvers = "", numberOfPlayers = "";
-
+    private ModelLiveInnings modelInnings;
+    private JSONArray team1Squad, team2Squad;
+    private boolean isDialogVisible = false;
 
     public static Fragment_LiveScoring getInstance() {
         if (fragment_teamJoin_request == null)
@@ -207,7 +209,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             if (bundle != null) {
                 eventId = bundle.getString("eventId");
                 IsScorerForTeam2 = bundle.getString("IsScorerForTeam2");
-                String maindata = bundle.getString("data");
+                String maindata = AppUtils.getScoringData(context);
                 JSONObject data = new JSONObject(maindata);
                 JSONObject match = data.getJSONObject("match");
                 matchId = match.getString("id");
@@ -218,11 +220,35 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 numberOfPlayers = match.getString("numberOfPlayers");
                 numberOfOvers = match.getString("numberOfOvers");
                 //  getLiveScores();
-                JSONArray team1Squad = data.getJSONArray("team1Squad");
-                JSONArray team2Squad = data.getJSONArray("team2Squad");
+                team1Squad = data.getJSONArray("team1Squad");
+                team2Squad = data.getJSONArray("team2Squad");
                 JSONArray innings = data.getJSONArray("innings");
                 checkInning(innings, team1Squad, team2Squad);
-                setDatabase();
+                //  setDatabase();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void refreshData() {
+        try {
+            if (modelInnings != null) {
+                if (getUserVisibleHint() && !isDialogVisible) {
+                    if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
+                        selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, true);
+                    } else if ((modelInnings.getBatsmanOnStrike().equals("-1") || modelInnings.getBatsmanOnNonStrike().equals("-1")) && modelInnings.getCurrentBowlerId().equals("-1")) {
+                        selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, false);
+                    } else if (modelInnings.getBatsmanOnStrike().equals("-1")) {
+                        selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                        isStriker = true;
+                    } else if (modelInnings.getBatsmanOnNonStrike().equals("-1")) {
+                        selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                        isStriker = false;
+                    } else if (modelInnings.getCurrentBowlerId().equals("-1")) {
+                        setBowlerList(modelInnings, team1Squad, team2Squad);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -233,8 +259,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private void setTeam1Data(JSONObject jo, JSONArray team1Squad, JSONArray team2Squad) {
         try {
             if (jo != null) {
-                adapterouttype = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, lisOutType);
-                spinnerouttype.setAdapter(adapterouttype);
+
                 recentBallArrayList.clear();
                 clearTextSelection();
                 checkbox_out.setChecked(false);
@@ -275,6 +300,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     e.printStackTrace();
                 }
                 if (modelInnings != null) {
+                    this.modelInnings = modelInnings;
                     inningId = modelInnings.getId();
                     if (recentBallArrayList.size() == 0) {
                         currentOverId = "-1";
@@ -357,18 +383,20 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         }
                     }
                 }
-                if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
-                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, true);
-                } else if ((modelInnings.getBatsmanOnStrike().equals("-1") || modelInnings.getBatsmanOnNonStrike().equals("-1")) && modelInnings.getCurrentBowlerId().equals("-1")) {
-                    selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, false);
-                } else if (modelInnings.getBatsmanOnStrike().equals("-1")) {
-                    selectBatsmanList(modelInnings, team1Squad, team2Squad);
-                    isStriker = true;
-                } else if (modelInnings.getBatsmanOnNonStrike().equals("-1")) {
-                    selectBatsmanList(modelInnings, team1Squad, team2Squad);
-                    isStriker = false;
-                } else if (modelInnings.getCurrentBowlerId().equals("-1")) {
-                    setBowlerList(modelInnings, team1Squad, team2Squad);
+                if (getUserVisibleHint()) {
+                    if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
+                        selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, true);
+                    } else if ((modelInnings.getBatsmanOnStrike().equals("-1") || modelInnings.getBatsmanOnNonStrike().equals("-1")) && modelInnings.getCurrentBowlerId().equals("-1")) {
+                        selectBowlerBatsmanList(modelInnings, team1Squad, team2Squad, false);
+                    } else if (modelInnings.getBatsmanOnStrike().equals("-1")) {
+                        selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                        isStriker = true;
+                    } else if (modelInnings.getBatsmanOnNonStrike().equals("-1")) {
+                        selectBatsmanList(modelInnings, team1Squad, team2Squad);
+                        isStriker = false;
+                    } else if (modelInnings.getCurrentBowlerId().equals("-1")) {
+                        setBowlerList(modelInnings, team1Squad, team2Squad);
+                    }
                 }
                 adapterTeam1BattingMatch = new AdapterLiveScoringTeamBattingMatch(getActivity(), this, arrayteam1Batting);
                 list_team1batting.setAdapter(adapterTeam1BattingMatch);
@@ -666,6 +694,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void selectNewBatsmanBowlerDialog(final boolean isAllOut, final String bowlingTeamId) {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -718,6 +747,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                                 && spinnerBowler.getSelectedItemPosition() != 0) {
                             if (spinnerBatsmanOne.getSelectedItemPosition() != spinnerBatsmanTwo.getSelectedItemPosition()) {
                                 addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                                isDialogVisible = false;
                                 dialog.dismiss();
                             } else {
                                 Toast.makeText(context, "Please select different Batsman", Toast.LENGTH_SHORT).show();
@@ -729,6 +759,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         if (spinnerBatsmanOne.getSelectedItemPosition() != 0
                                 && spinnerBowler.getSelectedItemPosition() != 0) {
                             addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                            isDialogVisible = false;
                             dialog.dismiss();
                         } else {
                             Toast.makeText(context, "Please select Bowler and Batsman", Toast.LENGTH_SHORT).show();
@@ -759,6 +790,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
      */
     private void selectNewBowlerDialog(final String bowlingTeamId) {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -801,6 +833,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         try {
                             addNewBowler(spinnerShareWith.getSelectedItemPosition());
                             dialog.dismiss();
+                            isDialogVisible = false;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -827,6 +860,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void saveInningScoreDialog() {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -874,6 +908,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                             e.printStackTrace();
                         }
                         dialog.dismiss();
+                        isDialogVisible = false;
                         saveResult(jsonObject);
                     }
 
@@ -908,6 +943,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void addNewBowlerDialog(final String bowlingTeamId) {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -931,6 +967,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 public void onClick(View view) {
                     if (!text_name1.getText().toString().equals("")) {
                         try {
+                            isDialogVisible = false;
                             saveDummyBowler(text_name1.getText().toString(), bowlingTeamId);
                             dialog.dismiss();
                         } catch (Exception e) {
@@ -963,6 +1000,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
      */
     private void selectNewBatsmanDialog() {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -991,6 +1029,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         try {
                             addNewBatsman(spinnerShareWith.getSelectedItemPosition());
                             dialog.dismiss();
+                            isDialogVisible = false;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1144,6 +1183,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void selectStriker(boolean isBowler) {
         try {
+            isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -1222,6 +1262,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         }
                         dialog.dismiss();
                         adapterTeam1BattingMatch.notifyDataSetChanged();
+                        isDialogVisible = false;
                     }
                 }
             });
@@ -1273,6 +1314,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     }
                 });
                 Button btn_endinning = (Button) dialog.findViewById(R.id.btn_endinning);
+                btn_endinning.setVisibility(View.GONE);
                 btn_endinning.setText(getContext().getString(R.string.endenning));
                 btn_endinning.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1587,7 +1629,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             }
         }
         manageTextClick(true);
-        adapterouttype.notifyDataSetChanged();
+        adapterouttype = new ArrayAdapter<String>(context, R.layout.row_spinner, R.id.textview, lisOutType);
+        spinnerouttype.setAdapter(adapterouttype);
+        spinnerouttype.setSelection(0);
     }
 
     private void manageOutTypeSelection() {
@@ -1815,13 +1859,16 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         jsonObject.put("runScoredOnNoBall", "");
                     }
                 } else {
+                    if (runScored == -1) {
+                        runScored = 0;
+                    }
                     if (checkbox_no_ball.isChecked()) {
                         jsonObject.put("isNoBall", true);
                         jsonObject.put("runScoredOnNoBall", runScored);
                     }
                     if (checkbox_wide_ball.isChecked()) {
                         jsonObject.put("isWideBall", true);
-                        jsonObject.put("runScoredOnWideBall", "0");
+                        jsonObject.put("runScoredOnWideBall", runScored);
                     }
                 }
 
@@ -1868,11 +1915,12 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
+                    AppUtils.setScoringData(context, data.toString());
                     JSONObject match = data.getJSONObject("match");
                     team1Id = match.getString("team1Id");
                     team2Id = match.getString("team2Id");
-                    JSONArray team1Squad = data.getJSONArray("team1Squad");
-                    JSONArray team2Squad = data.getJSONArray("team2Squad");
+                    team1Squad = data.getJSONArray("team1Squad");
+                    team2Squad = data.getJSONArray("team2Squad");
                     JSONArray innings = data.getJSONArray("innings");
                     numberOfPlayers = match.getString("numberOfPlayers");
                     numberOfOvers = match.getString("numberOfOvers");
@@ -2046,10 +2094,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             Toast.makeText(context, R.string.please_select_run, Toast.LENGTH_SHORT).show();
             isValid = false;
         } else {
-            if (checkbox_bye.isChecked() && runScored == -1) {
+            if (checkbox_bye.isChecked() && (runScored == -1 || runScored == 0)) {
                 Toast.makeText(context, R.string.please_select_run_on_bye, Toast.LENGTH_SHORT).show();
                 isValid = false;
-            } else if (checkbox_leg_bye.isChecked() && runScored == -1) {
+            } else if (checkbox_leg_bye.isChecked() && (runScored == -1 || runScored == 0)) {
                 Toast.makeText(context, R.string.please_select_run_on_legbye, Toast.LENGTH_SHORT).show();
                 isValid = false;
             } else {

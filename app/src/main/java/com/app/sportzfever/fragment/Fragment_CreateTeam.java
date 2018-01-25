@@ -80,6 +80,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
     public static final int REQUEST_TAKE_GALLERY_VIDEO = 7;
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
     private ImageView image_map;
+    private boolean isBack = false;
 
     public static Fragment_CreateTeam getInstance() {
         if (fragment_friend_request == null)
@@ -100,6 +101,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
             mFileTemp = new File(context.getFilesDir(), TEMP_PHOTO_FILE_NAME);
         }
         init();
+        getIntentData();
         GPSTracker gps = new GPSTracker(context);
         if (gps.isGPSEnabled) {
             latitude = gps.getLatitude() + "";
@@ -109,6 +111,15 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
         }
         setlistener();
         manageHeaderView();
+    }
+
+    private void getIntentData() {
+        Intent in = getIntent();
+        if (in != null) {
+            if (in.hasExtra("isBack")) {
+                isBack = in.getBooleanExtra("isBack", false);
+            }
+        }
     }
 
     private void init() {
@@ -440,18 +451,22 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
 
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     JSONObject data = jObject.getJSONObject("data");
-                   /* Intent intent = new Intent();
-                    intent.putExtra("id", data.getString("id"));
-                    intent.putExtra("name", data.getString("name"));
-                    setResult(22, intent);
-                   */
-                    Dashboard.getInstance().getMenuData();
-                    context.onBackPressed();
-                    Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
-                    Bundle b = new Bundle();
-                    b.putString("id", data.getString("teamId"));
-                    fragmentUser_details.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+
+                    if (isBack) {
+                        Intent intent = new Intent();
+                        intent.putExtra("id", data.getString("teamId"));
+                        intent.putExtra("name", edt_team_name.getText().toString());
+                        setResult(RESULT_OK, intent);
+                        context.onBackPressed();
+                    } else {
+                        Dashboard.getInstance().getMenuData();
+                        context.onBackPressed();
+                        Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+                        Bundle b = new Bundle();
+                        b.putString("id", data.getString("teamId"));
+                        fragmentUser_details.setArguments(b);
+                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                    }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

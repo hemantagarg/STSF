@@ -156,6 +156,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
 
     private void setTeam1Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
+
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0) {
                 Gson gson = new Gson();
@@ -194,12 +197,18 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 } else {
                     layout_team1.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam1ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team1.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam1ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,6 +218,9 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
 
     private void setTeam2Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
+
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0 && innings.length() > 1) {
                 Gson gson = new Gson();
@@ -246,12 +258,18 @@ public class Fragment_FullScorecard_match extends BaseFragment implements ApiRes
                 } else {
                     layout_team2.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam2ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team2.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
-                text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam2ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -103,7 +103,10 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
                     modelteama.setPlayerAvatarId(jsonObject.getString("playerAvatarId"));
 
                     modelteama.setRowType(1);
-                    arrayteama.add(modelteama);
+
+                    if (!jsonObject.getString("name").equals("")) {
+                        arrayteama.add(modelteama);
+                    }
 
                 }
                 adapterUpcomingTeamoneMatch = new AdapterUpcomingTeamoneMatch(getActivity(), this, arrayteama);
@@ -128,11 +131,11 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
                     modelteamb.setName(jsonObject1.getString("name"));
                     modelteamb.setProfilePicture(jsonObject1.getString("profilePicture"));
                     modelteamb.setPlayerAvatarId(jsonObject1.getString("playerAvatarId"));
-                  /*  modelteamb.setPlayerTeamId(jsonObject1.getString("playerTeamId"));
-                    modelteamb.setPlaySquadId(jsonObject1.getString("playSquadId"));*/
 
                     modelteamb.setRowType(1);
-                    arrayListBowling.add(modelteamb);
+                    if (!jsonObject1.getString("name").equals("")) {
+                        arrayListBowling.add(modelteamb);
+                    }
                 }
 
                 adapterUpcomingTeamtwoMatch = new AdapterUpcomingTeamtwoMatch(getActivity(), this, arrayListBowling);

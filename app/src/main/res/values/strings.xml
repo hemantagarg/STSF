@@ -91,5 +91,6 @@
     <string name="inning1">Inning 1</string>
     <string name="inning2">Inning 2</string>
     <string name="final_score_message">Final score will have to be manually added by active scorer at the end of inning.</string>
+    <string name="team_already_selected_message">Please select another team as this team is already selected as first team</string>
 
 </resources>

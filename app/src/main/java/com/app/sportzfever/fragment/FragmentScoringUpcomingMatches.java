@@ -2,6 +2,7 @@ package com.app.sportzfever.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +52,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
     private boolean loading = true;
     private TextView text_nodata;
     private String maxlistLength = "";
+    private FloatingActionButton floating_add;
 
     public static FragmentScoringUpcomingMatches fragment_teamJoin_request;
     private final String TAG = FragmentScoringUpcomingMatches.class.getSimpleName();
@@ -66,7 +68,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment_matches, container, false);
+        View view_about = inflater.inflate(R.layout.fragment__scoring_ucoming_matches, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
@@ -84,6 +86,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        floating_add = (FloatingActionButton) view.findViewById(R.id.floating_add);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -105,6 +108,15 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             }
         });
 
+        floating_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentCreateMatch fragment_postFeed = new FragmentCreateMatch();
+                Bundle bundle = new Bundle();
+                fragment_postFeed.setArguments(bundle);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+            }
+        });
     }
 
     @Override
@@ -137,7 +149,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
 
                     String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + arrayList.get(position).getTeam1Name() + ":" + "\n" + scorer1
                             + "\n" + "Scorer for " + arrayList.get(position).getTeam2Name() + ":" + "\n" + scorer2 + "\n\n" + "Please ask your captain to make you match scorer if you want to do scoring.";
-                    AppUtils.showDialogMessage(context, message.replace("\n","<br />"));
+                    AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
                 }
             } else {
                 if (arrayList.get(position).getTeam1BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
@@ -185,7 +197,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
         } else {
             String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
-            AppUtils.showDialogMessage(context, message.replace("\n","<br />"));
+            AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));
         }
     }
 

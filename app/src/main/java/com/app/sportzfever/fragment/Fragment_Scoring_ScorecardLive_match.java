@@ -44,9 +44,9 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
     private ArrayList<BattingStats> arrayteam1Batting, arrayteam2Batting;
     private ArrayList<BowlingStats> arrayteam1Bowling, arrayteam2Bowling;
-    private Button btn_teama, btn_teamb;
+    private Button btn_teama, btn_teamb, btn_match_info;
     private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
-    LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, llRunScored, layout_team2batting, layout_team2bowling;
+    LinearLayout layout_team2, layout_team1, layout_team1batting, llMatchInfo, layout_team1bowling, llRunScored, layout_team2batting, layout_team2bowling;
     public static Fragment_Scoring_ScorecardLive_match fragment_teamJoin_request;
     private final String TAG = Fragment_Scoring_ScorecardLive_match.class.getSimpleName();
     private String avtarid = "";
@@ -56,6 +56,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
     private boolean isTeam2BowlingVisible = true;
     View view;
     JSONObject data;
+    private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
     private TextView text_extrarun, textRunsScored, text_total, text_totalrun, text_extrarunrate, text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
 
     public static Fragment_Scoring_ScorecardLive_match getInstance() {
@@ -90,6 +91,16 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         arrayteam1Bowling = new ArrayList<>();
         arrayteam2Batting = new ArrayList<>();
         arrayteam2Bowling = new ArrayList<>();
+
+        text_username = (TextView) view.findViewById(R.id.text_name);
+        text_teamname = (TextView) view.findViewById(R.id.text_teamname);
+        text_startdate = (TextView) view.findViewById(R.id.text_startdate);
+        textmatchtype = (TextView) view.findViewById(R.id.textmatchtype);
+        text_maxover = (TextView) view.findViewById(R.id.text_maxover);
+        text_scorerfora = (TextView) view.findViewById(R.id.text_scorerfora);
+        text_scorerforb = (TextView) view.findViewById(R.id.text_scorerforb);
+        text_location = (TextView) view.findViewById(R.id.text_location);
+
         list_team1batting = (RecyclerView) view.findViewById(R.id.list_team1batting);
         list_team1bowling = (RecyclerView) view.findViewById(R.id.list_team1bowling);
         list_team2batting = (RecyclerView) view.findViewById(R.id.list_team2batting);
@@ -106,6 +117,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         layout_team1 = (LinearLayout) view.findViewById(R.id.layout_team1);
         layout_team2 = (LinearLayout) view.findViewById(R.id.layout_team2);
         layout_team1batting = (LinearLayout) view.findViewById(R.id.layout_team1batting);
+        llMatchInfo = (LinearLayout) view.findViewById(R.id.llMatchInfo);
         layout_team1bowling = (LinearLayout) view.findViewById(R.id.layout_team1bowling);
         llRunScored = (LinearLayout) view.findViewById(R.id.llRunScored);
         layout_team2batting = (LinearLayout) view.findViewById(R.id.layout_team2batting);
@@ -127,6 +139,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         text_extrarunrate1 = (TextView) view.findViewById(R.id.text_extrarunrate1);
 
         btn_teamb = (Button) view.findViewById(R.id.btn_teamb);
+        btn_match_info = (Button) view.findViewById(R.id.btn_match_info);
         btn_teama = (Button) view.findViewById(R.id.btn_teama);
 
     }
@@ -144,18 +157,24 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
             Bundle bundle = getArguments();
             if (bundle != null) {
                 avtarid = bundle.getString("eventId");
-                String maindata = bundle.getString("data");
+                String maindata = AppUtils.getScoringData(context);
 
                 data = new JSONObject(maindata);
                 JSONObject team1 = data.getJSONObject("team1");
                 JSONObject team2 = data.getJSONObject("team2");
-
+                JSONObject jbatsman = data.getJSONObject("match");
+                textmatchtype.setText(jbatsman.getString("inningsPlayStatusString"));
+                text_maxover.setText(jbatsman.getString("runInBall"));
+                text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+                text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+                text_location.setText(jbatsman.getString("runInOver"));
+                text_username.setText(team1.getString("name"));
+                text_teamname.setText(team2.getString("name"));
                /* btn_teamb.setText(team2.getString("name"));
                 btn_teama.setText(team1.getString("name"));*/
                 btn_teama.setText(R.string.inning1);
                 btn_teamb.setText(R.string.inning2);
                 // getServicelistRefresh();
-                setTeam1Data(data);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,7 +185,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         try {
             JSONObject match = data.getJSONObject("match");
             String isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
-            String isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
+
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0) {
                 Gson gson = new Gson();
@@ -209,13 +228,19 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
                     layout_team1.setVisibility(View.GONE);
                     llRunScored.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
-                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam1ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team1.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
                 llRunScored.setVisibility(View.GONE);
-                text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam1ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teama.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,6 +250,8 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
     private void setTeam2Data(JSONObject data) {
         try {
+            JSONObject match = data.getJSONObject("match");
+            String isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
             JSONArray innings = data.getJSONArray("innings");
             if (innings.length() > 0 && innings.length() > 1) {
                 Gson gson = new Gson();
@@ -264,13 +291,19 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
                     layout_team2.setVisibility(View.GONE);
                     text_nodata.setVisibility(View.VISIBLE);
                     llRunScored.setVisibility(View.GONE);
-                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                    if (isTeam2ScoringOnSf.equals("1"))
+                        text_nodata.setText("Inning not started yet");
+                    else
+                        text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
                 }
             } else {
                 layout_team2.setVisibility(View.GONE);
                 text_nodata.setVisibility(View.VISIBLE);
                 llRunScored.setVisibility(View.GONE);
-                text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
+                if (isTeam2ScoringOnSf.equals("1"))
+                    text_nodata.setText("Inning not started yet");
+                else
+                    text_nodata.setText(btn_teamb.getText().toString() + "  inning is not scored on Sportzfever.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,10 +318,13 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
                 btn_teama.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
                 btn_teamb.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_match_info.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_teama.setTextColor(ContextCompat.getColor(context, R.color.white));
                 btn_teamb.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_match_info.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 layout_team2.setVisibility(View.GONE);
                 layout_team1.setVisibility(View.VISIBLE);
+                llMatchInfo.setVisibility(View.GONE);
                 setTeam1Data(data);
             }
         });
@@ -298,11 +334,30 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
                 btn_teamb.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
                 btn_teama.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_match_info.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
                 btn_teamb.setTextColor(ContextCompat.getColor(context, R.color.white));
                 btn_teama.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_match_info.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 layout_team2.setVisibility(View.VISIBLE);
                 layout_team1.setVisibility(View.GONE);
+                llMatchInfo.setVisibility(View.GONE);
                 setTeam2Data(data);
+
+            }
+        });
+        btn_match_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                btn_match_info.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_selected));
+                btn_teama.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_teamb.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.button_bg_unselected));
+                btn_match_info.setTextColor(ContextCompat.getColor(context, R.color.white));
+                btn_teama.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                btn_teamb.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                layout_team2.setVisibility(View.GONE);
+                llMatchInfo.setVisibility(View.VISIBLE);
+                layout_team1.setVisibility(View.GONE);
 
             }
         });
@@ -409,8 +464,22 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
+                    JSONObject team1 = data.getJSONObject("team1");
+                    JSONObject team2 = data.getJSONObject("team2");
+                    JSONObject jbatsman = data.getJSONObject("match");
+                    textmatchtype.setText(jbatsman.getString("inningsPlayStatusString"));
+                    text_maxover.setText(jbatsman.getString("runInBall"));
+                    text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+                    text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+                    text_location.setText(jbatsman.getString("runInOver"));
+                    text_username.setText(team1.getString("name"));
+                    text_teamname.setText(team2.getString("name"));
 
-                    setTeam1Data(data);
+                    if (layout_team1.getVisibility() == View.VISIBLE) {
+                        setTeam1Data(data);
+                    } else if (layout_team2.getVisibility() == View.VISIBLE) {
+                        setTeam2Data(data);
+                    }
                 }
             }
         } catch (Exception e) {
