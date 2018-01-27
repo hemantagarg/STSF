@@ -7,6 +7,8 @@ package com.app.sportzfever.models;
 public class ModelSportTeamList {
 
 
+    private String date;
+
     public int getRowType() {
         return rowType;
     }
@@ -17,11 +19,11 @@ public class ModelSportTeamList {
 
     private int rowType;
 
-    private String teamName, userId,email;
+    private String teamName, userId, noOfGroup, noOfTeam, type;
 
     private String ownerName;
 
-    private String teamAvatarId;
+    private String teamAvatarId, wickets, best, economy, totalOvers, bowlingAvg;
 
     private String location, matchId, order, isInPlayingSquad = "0", isInPlayingBench = "0";
 
@@ -318,5 +320,202 @@ public class ModelSportTeamList {
 
     public void setNewPlayer(boolean newPlayer) {
         isNewPlayer = newPlayer;
+    }
+
+
+    private String batsmanAvatarPic;
+
+    private String battingAvg;
+
+    private String totalMatch;
+
+    private String totalInning;
+
+    private String sixes;
+
+    private String highestScore;
+
+    private String bastsmanAvatarName;
+
+    private String id;
+
+    private String balls;
+
+    private String strikeRate;
+
+    private String fours;
+
+    private String runs;
+
+    public String getBatsmanAvatarPic() {
+        return batsmanAvatarPic;
+    }
+
+    public void setBatsmanAvatarPic(String batsmanAvatarPic) {
+        this.batsmanAvatarPic = batsmanAvatarPic;
+    }
+
+    public String getBattingAvg() {
+        return battingAvg;
+    }
+
+    public void setBattingAvg(String battingAvg) {
+        this.battingAvg = battingAvg;
+    }
+
+    public String getTotalMatch() {
+        return totalMatch;
+    }
+
+    public void setTotalMatch(String totalMatch) {
+        this.totalMatch = totalMatch;
+    }
+
+    public String getTotalInning() {
+        return totalInning;
+    }
+
+    public void setTotalInning(String totalInning) {
+        this.totalInning = totalInning;
+    }
+
+    public String getSixes() {
+        return sixes;
+    }
+
+    public void setSixes(String sixes) {
+        this.sixes = sixes;
+    }
+
+    public String getHighestScore() {
+        return highestScore;
+    }
+
+    public void setHighestScore(String highestScore) {
+        this.highestScore = highestScore;
+    }
+
+    public String getBastsmanAvatarName() {
+        return bastsmanAvatarName;
+    }
+
+    public void setBastsmanAvatarName(String bastsmanAvatarName) {
+        this.bastsmanAvatarName = bastsmanAvatarName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getBalls() {
+        return balls;
+    }
+
+    public void setBalls(String balls) {
+        this.balls = balls;
+    }
+
+    public String getStrikeRate() {
+        return strikeRate;
+    }
+
+    public void setStrikeRate(String strikeRate) {
+        this.strikeRate = strikeRate;
+    }
+
+    public String getFours() {
+        return fours;
+    }
+
+    public void setFours(String fours) {
+        this.fours = fours;
+    }
+
+    public String getRuns() {
+        return runs;
+    }
+
+    public void setRuns(String runs) {
+        this.runs = runs;
+    }
+
+    public String getNoOfGroup() {
+        return noOfGroup;
+    }
+
+    public void setNoOfGroup(String noOfGroup) {
+        this.noOfGroup = noOfGroup;
+    }
+
+    public String getNoOfTeam() {
+        return noOfTeam;
+    }
+
+    public void setNoOfTeam(String noOfTeam) {
+        this.noOfTeam = noOfTeam;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setdate(String date) {
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getWickets() {
+        return wickets;
+    }
+
+    public void setWickets(String wickets) {
+        this.wickets = wickets;
+    }
+
+    public String getBest() {
+        return best;
+    }
+
+    public void setBest(String best) {
+        this.best = best;
+    }
+
+    public String getEconomy() {
+        return economy;
+    }
+
+    public void setEconomy(String economy) {
+        this.economy = economy;
+    }
+
+    public String getTotalOvers() {
+        return totalOvers;
+    }
+
+    public void setTotalOvers(String totalOvers) {
+        this.totalOvers = totalOvers;
+    }
+
+    public String getBowlingAvg() {
+        return bowlingAvg;
+    }
+
+    public void setBowlingAvg(String bowlingAvg) {
+        this.bowlingAvg = bowlingAvg;
     }
 }

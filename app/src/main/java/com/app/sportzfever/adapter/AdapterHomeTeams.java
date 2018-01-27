@@ -7,31 +7,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
-import com.app.sportzfever.models.TeamJoinRequest;
+import com.app.sportzfever.models.ModelSportTeamList;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by admin on 26-11-2015.
- */
-public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<TeamJoinRequest> detail;
+public class AdapterHomeTeams extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    ArrayList<ModelSportTeamList> detail;
     Context mContext;
     OnCustomItemClicListener listener;
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
 
-    public AdapterTeamJoinRequest(Context context, OnCustomItemClicListener lis, ArrayList<TeamJoinRequest> list) {
+    public AdapterHomeTeams(Context context, OnCustomItemClicListener lis, ArrayList<ModelSportTeamList> list) {
 
         this.detail = list;
         this.mContext = context;
@@ -46,7 +44,7 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_allmatchinvitation, parent, false);
+                    R.layout.row_home_team, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -76,40 +74,15 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (holder instanceof CustomViewHolder) {
 
-            TeamJoinRequest m1 = (TeamJoinRequest) detail.get(i);
+            ModelSportTeamList m1 = (ModelSportTeamList) detail.get(i);
 
-            ((CustomViewHolder) holder).text_name.setText(m1.getNotificationText());
-            ((CustomViewHolder) holder).text_event_type.setText(m1.getEventType());
-           /* ((CustomViewHolder) holder).text_teamname.setText(m1.getNotificationText());
-            ((CustomViewHolder) holder).text_matches.setText(m1.getLocation());*/
+            ((CustomViewHolder) holder).lblListItem.setText(m1.getTeamName());
+            ((CustomViewHolder) holder).text_location.setText("Location: "+m1.getLocation());
+            ((CustomViewHolder) holder).text_captain_name.setText("Captain: "+m1.getCaptainName());
 
-            /*((CustomViewHolder) holder).text_mess age.setText(m1.getNotificationText());*/
-            //((CustomViewHolder) holder).text_date.setText(m1.getMatchDate());
-
-
-            if (!m1.getTeamProfilePicture().equalsIgnoreCase("")) {
-                Picasso.with(mContext)
-                        .load(m1.getTeamProfilePicture())
-
-                        .placeholder(R.drawable.newsfeed)
-                        .into(((CustomViewHolder) holder).image_team);
+            if (!m1.getProfilePicture().equalsIgnoreCase("")) {
+                Picasso.with(mContext).load(m1.getProfilePicture()).into(((CustomViewHolder) holder).image_logo);
             }
-
-            ((CustomViewHolder) holder).btn_reject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 2);
-
-                }
-            });
-
-            ((CustomViewHolder) holder).btn_confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClickListener(i, 1);
-
-                }
-            });
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -123,39 +96,36 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, text_event_type, text_date, text_teamname, text_location;
-        ImageView image_team;
-        Button btn_confirm, btn_reject;
+        TextView lblListItem, text_location, text_captain_name;
+        ImageView image_logo;
+        RelativeLayout relmatchvs;
 
         public CustomViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            this.image_team = (ImageView) view.findViewById(R.id.image_team);
-            this.text_name = (TextView) view.findViewById(R.id.text_name);
-            this.text_event_type = (TextView) view.findViewById(R.id.text_event_type);
-            this.text_date = (TextView) view.findViewById(R.id.text_date);
-            this.text_teamname = (TextView) view.findViewById(R.id.text_teamname);
+            this.image_logo = (ImageView) view.findViewById(R.id.image_logo);
+            this.lblListItem = (TextView) view.findViewById(R.id.lblListItem);
+            this.text_captain_name = (TextView) view.findViewById(R.id.text_captain_name);
             this.text_location = (TextView) view.findViewById(R.id.text_location);
-            this.btn_reject = (Button) view.findViewById(R.id.btn_reject);
-            this.btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
-
         }
 
         @Override
         public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
+            listener.onItemClickListener(getPosition(), 2);
         }
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        TeamJoinRequest m1 = (TeamJoinRequest) detail.get(position);
+        ModelSportTeamList m1 = (ModelSportTeamList) detail.get(position);
         if (detail.get(position).getRowType() == 1) {
             return VIEW_ITEM;
         } else if (detail.get(position).getRowType() == 2) {
             return VIEW_PROG;
         }
         return -1;
+
     }
+
 }

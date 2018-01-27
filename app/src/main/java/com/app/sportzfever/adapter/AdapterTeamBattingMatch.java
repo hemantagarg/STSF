@@ -16,6 +16,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -94,11 +95,7 @@ public class AdapterTeamBattingMatch extends RecyclerView.Adapter<RecyclerView.V
             } else {
                 ((CustomViewHolder) holder).text_b.setText("");
             }
-            if (m1.getStrikeRate() != null) {
-                ((CustomViewHolder) holder).text_sr.setText(m1.getStrikeRate());
-            } else {
-                ((CustomViewHolder) holder).text_sr.setText("");
-            }
+
             if (m1.getStatus() != null) {
                 ((CustomViewHolder) holder).text_status.setText(m1.getOutString());
             } else {
@@ -109,7 +106,15 @@ public class AdapterTeamBattingMatch extends RecyclerView.Adapter<RecyclerView.V
             } else {
                 ((CustomViewHolder) holder).text_runs.setText("");
             }
-
+            try {
+                if (m1.getStrikeRate() != null) {
+                    ((CustomViewHolder) holder).text_sr.setText(new DecimalFormat("##.##").format(Double.parseDouble(m1.getStrikeRate())) + "");
+                } else {
+                    ((CustomViewHolder) holder).text_sr.setText("");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

@@ -390,7 +390,7 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
             jsonObject.put("description", mEdtdetails.getText().toString());
             jsonObject.put("location", mEdtlocation.getText().toString());
             jsonObject.put("isActive", "0");
-            jsonObject.put("eventType", EventType);
+            jsonObject.put("eventType", AppConstant.MATCH);
 
             createMatchEvent(jsonObject);
         } catch (Exception e) {

@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/layout_bg"
+        android:fitsSystemWindows="true">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/rl_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/blue_button"
+                    android:gravity="center"
+                    android:padding="@dimen/dp10"
+                    android:text="@string/matches_around_you"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_matches_around_you"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:background="@drawable/blue_button"
+                    android:gravity="center"
+                    android:padding="@dimen/dp10"
+                    android:text="@string/team_around_you"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_team_around_you"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:background="@drawable/blue_button"
+                    android:gravity="center"
+                    android:padding="@dimen/dp10"
+                    android:text="@string/players_around_you"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_players_around_you"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:background="@drawable/blue_button"
+                    android:gravity="center"
+                    android:padding="@dimen/dp10"
+                    android:text="@string/tournaments_around_you"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_tournaments_around_you"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:background="@drawable/blue_button"
+                    android:gravity="center"
+                    android:padding="@dimen/dp10"
+                    android:text="@string/friend_suggestion"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_friend_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/text_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/dp10"
+            android:text="No data found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

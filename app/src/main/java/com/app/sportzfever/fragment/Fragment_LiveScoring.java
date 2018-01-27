@@ -3,7 +3,6 @@ package com.app.sportzfever.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -43,7 +42,6 @@ import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.models.ModelRecentBall;
 import com.app.sportzfever.models.dbmodels.Avatar;
-import com.app.sportzfever.models.dbmodels.CricketBall;
 import com.app.sportzfever.models.dbmodels.CricketSelectedTeamPlayers;
 import com.app.sportzfever.models.dbmodels.Event;
 import com.app.sportzfever.models.dbmodels.GeneralProfile;
@@ -52,8 +50,6 @@ import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
 import com.app.sportzfever.models.dbmodels.Roster;
 import com.app.sportzfever.models.dbmodels.User;
-import com.app.sportzfever.models.dbmodels.apimodel.Match;
-import com.app.sportzfever.models.dbmodels.apimodel.Team;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.SportzDatabase;
@@ -888,10 +884,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
     private void saveInningScoreDialog() {
+        isDialogVisible = true;
         try {
-            isDialogVisible = true;
-        try
-        {
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -2004,121 +1998,109 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if (position == 10) {
+            } else if (position == 10) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     context.onBackPressed();
 
                     data = jObject.getJSONObject("data");
-                    JSONArray avatars=data.getJSONArray("avatar");
-                    JSONArray cricket_selected_team_players=data.getJSONArray("cricket_selected_team_players");
-                    JSONArray events=data.getJSONArray("events");
-                    JSONArray general_profiles=data.getJSONArray("general_profile");
-                    JSONArray matches=data.getJSONArray("matches");
-                    JSONArray match_scorers=data.getJSONArray("match_scorer");
-                    JSONArray match_team_roles=data.getJSONArray("match_team_roles");
-                    JSONArray rosters=data.getJSONArray("roster");
-                    JSONArray teams=data.getJSONArray("team");
-                    JSONArray users=data.getJSONArray("user");
+                    JSONArray avatars = data.getJSONArray("avatar");
+                    JSONArray cricket_selected_team_players = data.getJSONArray("cricket_selected_team_players");
+                    JSONArray events = data.getJSONArray("events");
+                    JSONArray general_profiles = data.getJSONArray("general_profile");
+                    JSONArray matches = data.getJSONArray("matches");
+                    JSONArray match_scorers = data.getJSONArray("match_scorer");
+                    JSONArray match_team_roles = data.getJSONArray("match_team_roles");
+                    JSONArray rosters = data.getJSONArray("roster");
+                    JSONArray teams = data.getJSONArray("team");
+                    JSONArray users = data.getJSONArray("user");
 
-                    List<User> userTableRecord= new ArrayList<>();
-                    List<Avatar> avatarTableRecord= new ArrayList<>();
-                    List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord= new ArrayList<>();
-                    List<Event> eventTableRecord= new ArrayList<>();
-                    List<GeneralProfile> generalProfileTableRecord= new ArrayList<>();
-                    List<Matches> matchesTableRecord= new ArrayList<>();
-                    List<MatchScorer> matchScorerTableRecord= new ArrayList<>();
-                    List<MatchTeamRoles> matchTeamRolesTableRecord= new ArrayList<>();
-                    List<Roster> rosterTableRecord= new ArrayList<>();
-                    List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord= new ArrayList<>();
+                    List<User> userTableRecord = new ArrayList<>();
+                    List<Avatar> avatarTableRecord = new ArrayList<>();
+                    List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord = new ArrayList<>();
+                    List<Event> eventTableRecord = new ArrayList<>();
+                    List<GeneralProfile> generalProfileTableRecord = new ArrayList<>();
+                    List<Matches> matchesTableRecord = new ArrayList<>();
+                    List<MatchScorer> matchScorerTableRecord = new ArrayList<>();
+                    List<MatchTeamRoles> matchTeamRolesTableRecord = new ArrayList<>();
+                    List<Roster> rosterTableRecord = new ArrayList<>();
+                    List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord = new ArrayList<>();
 
-                    for (int i =0; i<users.length();i++)
-                    {
-                        JSONObject user= users.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < users.length(); i++) {
+                        JSONObject user = users.getJSONObject(i);
+                        Gson gson = new Gson();
                         User userObj = gson.fromJson(user.toString(), User.class);
                         userTableRecord.add(userObj);
                         Log.e("response", userObj.toString());
 
                     }
-                    for (int i =0; i<teams.length();i++)
-                    {
-                        JSONObject team= teams.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < teams.length(); i++) {
+                        JSONObject team = teams.getJSONObject(i);
+                        Gson gson = new Gson();
                         com.app.sportzfever.models.dbmodels.Team teamObj = gson.fromJson(team.toString(), com.app.sportzfever.models.dbmodels.Team.class);
                         Log.e("response", teamObj.toString());
                         teamTableRecord.add(teamObj);
                     }
-                    for (int i =0; i<rosters.length();i++)
-                    {
-                        JSONObject roster= rosters.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < rosters.length(); i++) {
+                        JSONObject roster = rosters.getJSONObject(i);
+                        Gson gson = new Gson();
                         Roster rosterObj = gson.fromJson(roster.toString(), Roster.class);
                         Log.e("response", rosterObj.toString());
                         rosterTableRecord.add(rosterObj);
                     }
-                    for (int i =0; i<match_team_roles.length();i++)
-                    {
-                        JSONObject match_team_role= match_team_roles.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < match_team_roles.length(); i++) {
+                        JSONObject match_team_role = match_team_roles.getJSONObject(i);
+                        Gson gson = new Gson();
                         MatchTeamRoles match_team_rolesObj = gson.fromJson(match_team_role.toString(), MatchTeamRoles.class);
                         Log.e("response", match_team_rolesObj.toString());
                         matchTeamRolesTableRecord.add(match_team_rolesObj);
                     }
-                    for (int i =0; i<match_scorers.length();i++)
-                    {
-                        JSONObject match_scorer= match_scorers.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < match_scorers.length(); i++) {
+                        JSONObject match_scorer = match_scorers.getJSONObject(i);
+                        Gson gson = new Gson();
                         MatchScorer match_scorerObj = gson.fromJson(match_scorer.toString(), MatchScorer.class);
                         Log.e("response", match_scorerObj.toString());
                         matchScorerTableRecord.add(match_scorerObj);
                     }
-                    for (int i =0; i<matches.length();i++)
-                    {
-                        JSONObject match= matches.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < matches.length(); i++) {
+                        JSONObject match = matches.getJSONObject(i);
+                        Gson gson = new Gson();
                         Matches matchObj = gson.fromJson(match.toString(), Matches.class);
                         Log.e("response", matchObj.toString());
                         matchesTableRecord.add(matchObj);
                     }
-                    for (int i =0; i<avatars.length();i++)
-                    {
-                        JSONObject avatar= avatars.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < avatars.length(); i++) {
+                        JSONObject avatar = avatars.getJSONObject(i);
+                        Gson gson = new Gson();
                         Avatar avatarObj = gson.fromJson(avatar.toString(), Avatar.class);
                         Log.e("response", avatarObj.toString());
                         avatarTableRecord.add(avatarObj);
                     }
 
-                    for (int i =0; i<events.length();i++)
-                    {
-                        JSONObject event= events.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < events.length(); i++) {
+                        JSONObject event = events.getJSONObject(i);
+                        Gson gson = new Gson();
                         Event eventObj = gson.fromJson(event.toString(), Event.class);
                         Log.e("response", eventObj.toString());
                         eventTableRecord.add(eventObj);
                     }
 
-                    for (int i =0; i<general_profiles.length();i++)
-                    {
-                        JSONObject general_profile= general_profiles.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < general_profiles.length(); i++) {
+                        JSONObject general_profile = general_profiles.getJSONObject(i);
+                        Gson gson = new Gson();
                         GeneralProfile general_profileObj = gson.fromJson(general_profile.toString(), GeneralProfile.class);
                         Log.e("response", general_profileObj.toString());
                         generalProfileTableRecord.add(general_profileObj);
                     }
 
-                   for (int i =0; i<cricket_selected_team_players.length();i++)
-                    {
-                        JSONObject cricket_selected_team_player= cricket_selected_team_players.getJSONObject(i);
-                        Gson gson= new Gson();
+                    for (int i = 0; i < cricket_selected_team_players.length(); i++) {
+                        JSONObject cricket_selected_team_player = cricket_selected_team_players.getJSONObject(i);
+                        Gson gson = new Gson();
                         CricketSelectedTeamPlayers cricket_selected_team_playerObj = gson.fromJson(cricket_selected_team_player.toString(), CricketSelectedTeamPlayers.class);
                         Log.e("response", cricket_selected_team_playerObj.toString());
                         cricketSelectedTeamPlayerTableRecord.add(cricket_selected_team_playerObj);
                     }
 
-                    InsertDataInDb(userTableRecord , avatarTableRecord , cricketSelectedTeamPlayerTableRecord , eventTableRecord , generalProfileTableRecord , matchesTableRecord , matchScorerTableRecord , matchTeamRolesTableRecord , rosterTableRecord , teamTableRecord);
-
+                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord);
 
 
                     //JSONObject match = data.getJSONObject("match");
@@ -2134,11 +2116,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
-    private void InsertDataInDb(List<User> userTableRecord , List<Avatar> avatarTableRecord , List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord , List<Event> eventTableRecord , List<GeneralProfile> generalProfileTableRecord , List<Matches> matchesTableRecord , List<MatchScorer> matchScorerTableRecord , List<MatchTeamRoles> matchTeamRolesTableRecord , List<Roster> rosterTableRecord , List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord ) {
+    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord) {
 
-        try
-        {
-            if(db != null) {
+        try {
+            if (db != null) {
                 db.open();
                 for (int i = 0; i < userTableRecord.size(); i++) {
                     db.insertUser(userTableRecord.get(i));
@@ -2324,11 +2305,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         return isValid;
     }
 
-    private void setDatabase()
-    {
+    private void setDatabase() {
         db = null;
-        try
-        {
+        try {
             db = new SportzDatabase(context);
             db.open();
 
@@ -2348,12 +2327,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             }*/
 
 
-
         } catch (Exception e) {
             // TODO: handle exception
         } finally {
             db.close();
-         //   cursor.close();
+            //   cursor.close();
         }
     }
 

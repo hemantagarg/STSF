@@ -16,6 +16,7 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BowlingStats;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -106,18 +107,16 @@ public class AdapterTeamBowlingMatch extends RecyclerView.Adapter<RecyclerView.V
                 ((CustomViewHolder) holder).text_w.setText("");
             }
 
-            if (m1.getEconomy() != null) {
-                ((CustomViewHolder) holder).text_econ.setText(m1.getEconomy());
-            } else {
-                ((CustomViewHolder) holder).text_econ.setText("");
-            }
-          /*  if (m1.getStatus() != null) {
-                ((CustomViewHolder) holder).text_status.setText(m1.getStatus());
-            } else {
-                ((CustomViewHolder) holder).text_status.setText("");
-            }*/
             ((CustomViewHolder) holder).text_runs.setText("M: " + m1.getMaiden() + " | NB: " + m1.getTotalNoBall() + " | WD: " + m1.getTotalWideBall() + " | Dots: " + m1.getTotalDotBall());
-
+            try {
+                if (m1.getEconomy() != null) {
+                    ((CustomViewHolder) holder).text_econ.setText(new DecimalFormat("##.##").format(Double.parseDouble(m1.getEconomy())));
+                } else {
+                    ((CustomViewHolder) holder).text_econ.setText("");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }

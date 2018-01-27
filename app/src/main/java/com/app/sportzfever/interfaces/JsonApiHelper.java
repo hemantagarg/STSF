@@ -14,6 +14,7 @@ public interface JsonApiHelper {
     String LOGIN = "sflogin";
     String FORGOT = "forgetPassword";
     String GET_FEEDS = "getFeeds/";
+    String SFLANDING = "sflanding/";
     String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
     String GET_FEEDS_MATCH = "getFeedOfMatchTournament/match/";
     String GET_FEEDS_TOURNAMENT = "getFeedOfMatchTournament/TOURNAMENT/";

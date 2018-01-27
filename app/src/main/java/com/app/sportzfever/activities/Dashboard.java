@@ -44,6 +44,7 @@ import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.FragmentUpcomingMatchDetails;
 import com.app.sportzfever.fragment.Fragment_AvtarMyTeam;
 import com.app.sportzfever.fragment.Fragment_ChatMain;
+import com.app.sportzfever.fragment.Fragment_Home;
 import com.app.sportzfever.fragment.Fragment_LiveMatch_Details;
 import com.app.sportzfever.fragment.Fragment_MatchFeed;
 import com.app.sportzfever.fragment.Fragment_Matches;
@@ -80,7 +81,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private Toolbar toolbar;
     private View main_view;
     private static final String TAG = Dashboard.class.getSimpleName();
-    private FrameLayout feed_container,
+    private FrameLayout feed_container, home_container,
             freinds_container, event_container, notification_container, chat_container;
     private TabLayout tabLayout;
     private AppBarLayout appBar;
@@ -156,27 +157,24 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         mInstance = Dashboard.this;
         init();
         mStacks = new HashMap<>();
+        mStacks.put(GlobalConstants.TAB_HOME_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_FEED_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_FRIENDS_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_NOTIFCATION_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_CHAT_BAR, new Stack<Fragment>());
         mStacks.put(GlobalConstants.TAB_EVENT_BAR, new Stack<Fragment>());
 
-       /* pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
-        pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_Notification(), true);
-        pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
-        pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);*/
-        pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
+        pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Home(), true);
         setupTabIcons();
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("type")) {
                 String type = intent.getStringExtra("type");
                 if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_FRIEND) || type.equalsIgnoreCase(AppConstant.PUSHTYPE_TEAM)) {
-                    tabLayout.getTabAt(1).select();
+                    tabLayout.getTabAt(2).select();
                     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
                 } else if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_CHAT)) {
-                    tabLayout.getTabAt(4).select();
+                    tabLayout.getTabAt(5).select();
                     pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
                 }
             }
@@ -195,10 +193,10 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             if (intent.hasExtra("type")) {
                 String type = intent.getStringExtra("type");
                 if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_FRIEND) || type.equalsIgnoreCase(AppConstant.PUSHTYPE_TEAM)) {
-                    tabLayout.getTabAt(1).select();
+                    tabLayout.getTabAt(2).select();
                     pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
                 } else if (type.equalsIgnoreCase(AppConstant.PUSHTYPE_CHAT)) {
-                    tabLayout.getTabAt(4).select();
+                    tabLayout.getTabAt(5).select();
                     pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
                 }
             }
@@ -234,6 +232,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         api_loading_request = (ProgressBar) findViewById(R.id.api_loading_request);
         feed_container = (FrameLayout) findViewById(R.id.feed_container);
+        home_container = (FrameLayout) findViewById(R.id.home_container);
         freinds_container = (FrameLayout) findViewById(R.id.freinds_container);
         event_container = (FrameLayout) findViewById(R.id.event_container);
         chat_container = (FrameLayout) findViewById(R.id.chat_container);
@@ -273,7 +272,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     private void setupTabIcons() {
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.newsfeed_sel));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.home_orange));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.newsfeed));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.friends));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.calendar));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.bell));
@@ -288,6 +288,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
         if (mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
+                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
@@ -497,17 +498,28 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        tab.setIcon(R.drawable.newsfeed_sel);
+                        tab.setIcon(R.drawable.home_orange);
 
                         if (mStacks.get(GlobalConstants.TAB_FEED_BAR).size() > 0) {
+                            if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home))
+                                AppUtils.showErrorLog(TAG, "Feed clicked");
+                            activeHomeFragment();
+                        } else
+                            pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Home(), true);
+
+                        break;
+                    case 1:
+                        tab.setIcon(R.drawable.newsfeed_sel);
+
+                        if (mStacks.get(GlobalConstants.TAB_HOME_BAR).size() > 0) {
                             if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed))
                                 AppUtils.showErrorLog(TAG, "Feed clicked");
                             activeFeedFragment();
                         } else
-                            pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_UserFeed(), true);
+                            pushFragments(GlobalConstants.TAB_HOME_BAR, new Fragment_UserFeed(), true);
 
                         break;
-                    case 1:
+                    case 2:
                         tab.setIcon(R.drawable.friends_sel);
                         if (mStacks.get(GlobalConstants.TAB_FRIENDS_BAR).size() > 0) {
                             if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team))
@@ -517,7 +529,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                             pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
 
                         break;
-                    case 2:
+                    case 3:
                         tab.setIcon(R.drawable.calendar_sel);
                         if (mStacks.get(GlobalConstants.TAB_EVENT_BAR).size() > 0) {
                             if (!(mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent))
@@ -528,7 +540,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
 
                         break;
-                    case 3:
+                    case 4:
                         tab.setIcon(R.drawable.bell_sel);
                         if (mStacks.get(GlobalConstants.TAB_NOTIFCATION_BAR).size() > 0) {
                             if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails))
@@ -538,7 +550,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                             pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_NotificationDetails(), true);
 
                         break;
-                    case 4:
+                    case 5:
                         tab.setIcon(R.drawable.chat_sel);
                         if (mStacks.get(GlobalConstants.TAB_CHAT_BAR).size() > 0) {
                             if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain))
@@ -556,18 +568,21 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             public void onTabUnselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        tab.setIcon(R.drawable.newsfeed);
+                        tab.setIcon(R.drawable.home_grey);
                         break;
                     case 1:
-                        tab.setIcon(R.drawable.friends);
+                        tab.setIcon(R.drawable.newsfeed);
                         break;
                     case 2:
-                        tab.setIcon(R.drawable.calendar);
+                        tab.setIcon(R.drawable.friends);
                         break;
                     case 3:
-                        tab.setIcon(R.drawable.bell);
+                        tab.setIcon(R.drawable.calendar);
                         break;
                     case 4:
+                        tab.setIcon(R.drawable.bell);
+                        break;
+                    case 5:
                         tab.setIcon(R.drawable.chat);
                         break;
 
@@ -590,10 +605,29 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
      ********************************************************************************/
     private void activeFeedFragment() {
 
-        mCurrentTab = GlobalConstants.TAB_FEED_BAR;
+        mCurrentTab = GlobalConstants.TAB_HOME_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.VISIBLE);
         freinds_container.setVisibility(View.GONE);
+        home_container.setVisibility(View.GONE);
+        chat_container.setVisibility(View.GONE);
+        notification_container.setVisibility(View.GONE);
+        event_container.setVisibility(View.GONE);
+    }
+
+    /*********************************************************************************
+     * Function Name - activeFeedFragment
+     * <p/>
+     * Description - active the view of home tab manages the visibility of
+     * five frames in this view
+     ********************************************************************************/
+    private void activeHomeFragment() {
+
+        mCurrentTab = GlobalConstants.TAB_FEED_BAR;
+        currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
+        feed_container.setVisibility(View.GONE);
+        freinds_container.setVisibility(View.GONE);
+        home_container.setVisibility(View.VISIBLE);
         chat_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
@@ -748,6 +782,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
             if (tag.equals(GlobalConstants.TAB_FEED_BAR)) {
+                ft.add(R.id.home_container, fragment);
+                activeHomeFragment();
+            } else if (tag.equals(GlobalConstants.TAB_HOME_BAR)) {
                 ft.add(R.id.feed_container, fragment);
                 activeFeedFragment();
             } else if (tag.equals(GlobalConstants.TAB_FRIENDS_BAR)) {
@@ -868,6 +905,10 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                             AppUtils.showLog(TAG, " Current Fragment is Feed Fragment");
                             //  refreshHomeFragment();
                         }
+                        if (mStacks.get(mCurrentTab).size() > 0 && mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home) {
+                            AppUtils.showLog(TAG, " Current Fragment is Feed Fragment");
+                            //  refreshHomeFragment();
+                        }
                         if (mStacks.get(mCurrentTab).size() > 0 && mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
                             AppUtils.showLog(TAG, " Current Fragment is Notification Fragment");
                             //  refreshProfileFragment();
@@ -875,6 +916,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
                         if (mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
+                                mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent ||
                                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails) {
@@ -920,6 +962,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         }
         if (currentFragment instanceof Fragment_UserFeed) {
             ((Fragment_UserFeed) currentFragment).onResume();
+        }
+        if (currentFragment instanceof Fragment_Home) {
+            ((Fragment_Home) currentFragment).onResume();
         }
         if (currentFragment instanceof Fragment_PastMatch_Details) {
             ((Fragment_PastMatch_Details) currentFragment).onResume();
