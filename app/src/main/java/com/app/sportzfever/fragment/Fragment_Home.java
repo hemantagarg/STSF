@@ -340,13 +340,13 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
                     AdapterHomePlayers adapterHomePlayers = new AdapterHomePlayers(getActivity(), this, arrayListPlayers);
                     list_players_around_you.setAdapter(adapterHomePlayers);
 
-
                     if (mSwipeRefreshLayout != null) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
             } else if (position == 11) {
                 Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                getServicelistRefresh();
             }else {
                 Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
             }

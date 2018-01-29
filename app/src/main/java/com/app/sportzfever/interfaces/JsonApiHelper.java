@@ -53,6 +53,8 @@ public interface JsonApiHelper {
     String GET_SHARE = "getShares/";
     String GET_FRIENDLIST = "getFriendsList/";
     String GET_PASTMATCHES = "getAllPastMatches/";
+    String GET_EVENTBYID = "getEventById/";
+    String RESPONDTOMATCHINVITATION = "RespondToMatchAndPractiseInvitation/";
     String SEARCH = "search/";
     String GET_PLAYER_BYEMAIL = "getPlayerSportByEmail/";
     String SEARCHTEAM = "searchTeams/";

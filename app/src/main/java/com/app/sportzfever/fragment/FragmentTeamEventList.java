@@ -191,6 +191,12 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                         Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
                     }
                 }
+            }else {
+                Fragment_EvenDetail fragmentupcomingdetals = new Fragment_EvenDetail();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
             }
         }
     }

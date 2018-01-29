@@ -70,11 +70,12 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
         setupTabIcons();
         setListener();
         getBundle();
-        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
-        Bundle b = new Bundle();
-        b.putString("avtarid", avtarid);
-        fragmentAvtarIAdminTeam.setArguments(b);
-        setFragment(fragmentAvtarIAdminTeam);
+        FragmentAvtarIPlanOn fragmentAvtarIPlanOn = new FragmentAvtarIPlanOn();
+        Bundle b1 = new Bundle();
+        b1.putString("avtarid", avtarid);
+        fragmentAvtarIPlanOn.setArguments(b1);
+        setFragment(fragmentAvtarIPlanOn);
+        setFragment(fragmentAvtarIPlanOn);
 
     }
 
@@ -93,18 +94,19 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
-                        Bundle b = new Bundle();
-                        b.putString("avtarid", avtarid);
-                        fragmentAvtarIAdminTeam.setArguments(b);
-                        setFragment(fragmentAvtarIAdminTeam);
-                        break;
-                    case 1:
                         FragmentAvtarIPlanOn fragmentAvtarIPlanOn = new FragmentAvtarIPlanOn();
                         Bundle b1 = new Bundle();
                         b1.putString("avtarid", avtarid);
                         fragmentAvtarIPlanOn.setArguments(b1);
                         setFragment(fragmentAvtarIPlanOn);
+
+                        break;
+                    case 1:
+                        FragmentAvtarIAdminTeam fragmentAvtarIAdminTeam = new FragmentAvtarIAdminTeam();
+                        Bundle b = new Bundle();
+                        b.putString("avtarid", avtarid);
+                        fragmentAvtarIAdminTeam.setArguments(b);
+                        setFragment(fragmentAvtarIAdminTeam);
                         break;
                 }
             }
@@ -132,9 +134,8 @@ public class Fragment_AvtarMyTeam extends BaseFragment {
 
     private void setupTabIcons() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Teams That I Admin"));
         tabLayout.addTab(tabLayout.newTab().setText("Teams That I Play On"));
-        //  tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
+        tabLayout.addTab(tabLayout.newTab().setText("Teams That I Admin"));
 
       /*  tabLayout.getTabAt(0).setText("Chat");
         tabLayout.getTabAt(1).setText("Contacts");

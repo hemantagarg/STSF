@@ -39,6 +39,7 @@ import com.app.sportzfever.fragment.FragmentGallery;
 import com.app.sportzfever.fragment.FragmentMenuTeamList;
 import com.app.sportzfever.fragment.FragmentPersonalProfileEdit;
 import com.app.sportzfever.fragment.FragmentPersonal_User_Details;
+import com.app.sportzfever.fragment.FragmentScoringUpcomingMatches;
 import com.app.sportzfever.fragment.FragmentSportsTeamDetailList;
 import com.app.sportzfever.fragment.FragmentUpcomingEvent;
 import com.app.sportzfever.fragment.FragmentUpcomingMatchDetails;
@@ -242,19 +243,6 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-       /* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                main_view.setTranslationX(slideOffset * drawerView.getWidth());
-                drawer.bringChildToFront(drawerView);
-                drawer.requestLayout();
-                //below line used to remove shadow of drawer
-                drawer.setScrimColor(Color.TRANSPARENT);
-            }//this method helps you to aside menu drawer
-        };
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();*/
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -278,14 +266,11 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.calendar));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.bell));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.chat));
-
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
-
         if (mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team ||
                 mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home ||
@@ -359,7 +344,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Tournaments(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("6")) {
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Scoring(), true);
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentScoringUpcomingMatches(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("7")) {
                     FragmentPersonal_User_Details fragmentUser_details = new FragmentPersonal_User_Details();

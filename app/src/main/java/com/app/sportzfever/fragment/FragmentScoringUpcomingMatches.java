@@ -1,6 +1,6 @@
 package com.app.sportzfever.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,9 +17,11 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSoringUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
+import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.GlobalConstants;
+import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingMatches;
@@ -40,7 +42,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
 
     private RecyclerView list_request;
     private Bundle b;
-    private Context context;
+    private Activity context;
     private AdapterSoringUpcomingMatches adapterUpcomingMatches;
     private ModelUpcomingMatches modelUpcomingMatches;
     private ArrayList<ModelUpcomingMatches> arrayList;
@@ -53,7 +55,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
     private TextView text_nodata;
     private String maxlistLength = "";
     private FloatingActionButton floating_add;
-
+    View view_about;
     public static FragmentScoringUpcomingMatches fragment_teamJoin_request;
     private final String TAG = FragmentScoringUpcomingMatches.class.getSimpleName();
 
@@ -68,12 +70,50 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.app.justclap.fragment
 
-        View view_about = inflater.inflate(R.layout.fragment__scoring_ucoming_matches, container, false);
+        view_about = inflater.inflate(R.layout.fragment__scoring_ucoming_matches, container, false);
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
 
         return view_about;
+    }
+
+    /*******************************************************************
+     * Function name - manageHeaderView
+     * Description - manage the initialization, visibility and click
+     * listener of view fields on Header view
+     *******************************************************************/
+    private void manageHeaderView() {
+
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+
+        HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
+        HeaderViewManager.getInstance().setHeading(true, "Upcoming Matches");
+        HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
+        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setLogoView(false);
+        HeaderViewManager.getInstance().setProgressLoader(false, false);
+
+    }
+
+    /*****************************************************************************
+     * Function name - manageHeaderClick
+     * Description - manage the click on the left and right image view of header
+     *****************************************************************************/
+    private HeaderViewClickListener manageHeaderClick() {
+        return new HeaderViewClickListener() {
+            @Override
+            public void onClickOfHeaderLeftView() {
+                AppUtils.showLog(TAG, "onClickOfHeaderLeftView");
+                context.onBackPressed();
+            }
+
+            @Override
+            public void onClickOfHeaderRightView() {
+                //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
 
@@ -90,12 +130,15 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        manageHeaderView();
         setlistener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Dashboard.getInstance().manageFooterVisibitlity(false);
+        Dashboard.getInstance().manageHeaderVisibitlity(false);
         getServicelistRefresh();
     }
 

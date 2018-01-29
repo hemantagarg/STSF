@@ -1,0 +1,207 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true">
+
+    <include
+        android:id="@+id/rl_header"
+        layout="@layout/header_layout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header">
+
+        <LinearLayout
+            android:id="@+id/rl_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout android:id="@+id/teamDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp10">
+
+                <ImageView
+                    android:id="@+id/image_team"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/dp5" />
+
+                <TextView
+                    android:id="@+id/textTeamname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_toLeftOf="@+id/image_arrow"
+                    android:layout_toRightOf="@+id/image_team"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_14" />
+
+                <ImageView
+                    android:id="@+id/image_arrow"
+                    android:layout_width="@dimen/dp20"
+                    android:layout_height="@dimen/dp20"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:src="@drawable/arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp1"
+                    android:layout_below="@+id/image_team"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:background="@color/view_color" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/texttitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp5"
+                android:padding="@dimen/dp10"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
+            <RelativeLayout
+                android:id="@+id/rlAccepReject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp5">
+
+                <TextView
+                    android:id="@+id/textAreyouGoing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:padding="@dimen/dp5"
+                    android:text="Are you going?"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15" />
+
+
+                <ImageView
+                    android:id="@+id/image_reject"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_toLeftOf="@+id/image_accept"
+                    android:src="@drawable/cancel" />
+
+
+                <ImageView
+                    android:id="@+id/image_accept"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:src="@drawable/red_tick" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp1"
+                    android:layout_below="@+id/image_accept"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@color/view_color" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:drawableLeft="@drawable/calendar"
+                android:drawablePadding="@dimen/dp10"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp5"
+                android:text="Monday"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp40"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp5"
+                android:text="Monday"
+                android:textColor="@color/text_hint_color"
+                android:textSize="@dimen/text_size_13" />
+
+            <TextView
+                android:id="@+id/text_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:drawableLeft="@drawable/location"
+                android:drawablePadding="@dimen/dp10"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp5"
+                android:text="india"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
+            <TextView
+                android:id="@+id/text_createdby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:drawableLeft="@drawable/friends"
+                android:drawablePadding="@dimen/dp10"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp5"
+                android:text="india"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
+
+            <TextView
+                android:id="@+id/text_person_going"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp40"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp5"
+                android:text="india"
+                android:textColor="@color/blue_color"
+                android:textSize="@dimen/text_size_15" />
+
+            <TextView
+                android:id="@+id/textDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp5"
+                android:gravity="center"
+                android:padding="@dimen/dp10"
+                android:textColor="@color/textcolordark"
+                android:textSize="@dimen/text_size_14" />
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                class="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
