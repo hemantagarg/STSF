@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class OverBall {
 
-    private String id;
+    private int id;
     private String inningOverCount;
     private String isWicket;
     private String batsmanId;
@@ -14,11 +14,11 @@ public class OverBall {
     private String runScored;
     private String overString;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

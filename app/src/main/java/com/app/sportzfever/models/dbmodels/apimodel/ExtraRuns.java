@@ -9,40 +9,40 @@ import com.google.gson.annotations.SerializedName;
 
 public class ExtraRuns {
 
-    private Integer nb;
-    private Integer wd;
-    private Integer b;
-    private Integer lb;
+    private int nb;
+    private int wd;
+    private int b;
+    private int lb;
 
-    public Integer getNb() {
+    public int getNb() {
         return nb;
     }
 
-    public void setNb(Integer nb) {
+    public void setNb(int nb) {
         this.nb = nb;
     }
 
-    public Integer getWd() {
+    public int getWd() {
         return wd;
     }
 
-    public void setWd(Integer wd) {
+    public void setWd(int wd) {
         this.wd = wd;
     }
 
-    public Integer getB() {
+    public int getB() {
         return b;
     }
 
-    public void setB(Integer b) {
+    public void setB(int b) {
         this.b = b;
     }
 
-    public Integer getLb() {
+    public int getLb() {
         return lb;
     }
 
-    public void setLb(Integer lb) {
+    public void setLb(int lb) {
         this.lb = lb;
     }
 
