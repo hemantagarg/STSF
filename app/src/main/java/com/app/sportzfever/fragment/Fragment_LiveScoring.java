@@ -42,6 +42,10 @@ import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.models.ModelRecentBall;
 import com.app.sportzfever.models.dbmodels.Avatar;
+import com.app.sportzfever.models.dbmodels.CricketBall;
+import com.app.sportzfever.models.dbmodels.CricketInning;
+import com.app.sportzfever.models.dbmodels.CricketOver;
+import com.app.sportzfever.models.dbmodels.CricketScoreCard;
 import com.app.sportzfever.models.dbmodels.CricketSelectedTeamPlayers;
 import com.app.sportzfever.models.dbmodels.Event;
 import com.app.sportzfever.models.dbmodels.GeneralProfile;
@@ -62,6 +66,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.sportzfever.R.id.match_parent;
 import static com.app.sportzfever.R.id.playedOversTwo;
 import static com.app.sportzfever.R.id.runScoredTwo;
 import static com.app.sportzfever.R.id.wicketsTwo;
@@ -232,9 +237,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         try {
             Bundle bundle = getArguments();
             if (bundle != null) {
+
+                setDatabase();
                 eventId = bundle.getString("eventId");
                 IsScorerForTeam2 = bundle.getString("IsScorerForTeam2");
-                String maindata = AppUtils.getScoringData(context);
+
+                //hemanta code for online scoring
+                /*String maindata = AppUtils.getScoringData(context);
                 JSONObject data = new JSONObject(maindata);
                 JSONObject match = data.getJSONObject("match");
                 matchId = match.getString("id");
@@ -248,8 +257,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 team1Squad = data.getJSONArray("team1Squad");
                 team2Squad = data.getJSONArray("team2Squad");
                 JSONArray innings = data.getJSONArray("innings");
-                checkInning(innings, team1Squad, team2Squad);
-                //  setDatabase();
+                checkInning(innings, team1Squad, team2Squad);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1788,21 +1796,112 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void saveBall() {
         try {
-            if (AppUtils.isNetworkAvailable(context)) {
+            //lalit code for offline scoring
+            JSONObject jsonObject = makeJsonRequest();
+
+            if (db != null) {
+
+                try {
+
+                    db.open();
+                    int matchId1 = jsonObject.getInt("matchId");
+                    int inningId = jsonObject.getInt("inningId");
+                    int runScored = jsonObject.getInt("runScored");
+                    String isFour = (jsonObject.getString("isFour").equalsIgnoreCase("true")) ? "1" : "0";
+                    String isSix = (jsonObject.getString("isSix").equalsIgnoreCase("true")) ? "1" : "0";
+                    String isNoBall = (jsonObject.getString("isNoBall").equalsIgnoreCase("true")) ? "1" : "0";
+                    String isWideBall = (jsonObject.getString("isWideBall").equalsIgnoreCase("true")) ? "1" : "0";
+                    int runScoredOnWideBall = (jsonObject.getString("runScoredOnWideBall") == "") ? 0 : jsonObject.getInt("runScoredOnWideBall");
+                    int runScoredOnNoBall = (jsonObject.getString("runScoredOnNoBall") == "") ? 0 : jsonObject.getInt("runScoredOnNoBall");
+                    String isBye = (jsonObject.getString("isBye").equalsIgnoreCase("true")) ? "1" : "0";
+                    int runScoredOnBye = (jsonObject.getString("runScoredOnBye") == "") ? 0 : jsonObject.getInt("runScoredOnBye");
+                    String isLegBye = (jsonObject.getString("isLegBye").equalsIgnoreCase("true")) ? "1" : "0";
+                    int runScoredOnLegBye = (jsonObject.getString("runScoredOnLegBye") == "") ? 0 : jsonObject.getInt("runScoredOnLegBye");
+                    String isWicket = (jsonObject.getString("isWicket").equalsIgnoreCase("true")) ? "1" : "0";
+                    String wicketType = jsonObject.getString("wicketType");
+                    int stumpedById = (jsonObject.getString("stumpedById") == "") ? 0 : jsonObject.getInt("stumpedById");
+                    int caughtById = (jsonObject.getString("caughtById") == "") ? 0 : jsonObject.getInt("caughtById");
+                    int runOutById = (jsonObject.getString("runOutById") == "") ? 0 : jsonObject.getInt("runOutById");
+                    int batsmanId = jsonObject.getInt("batsmanId");
+                    int nonStrikerbatsmanId = jsonObject.getInt("NonStrikerbatsmanId");
+                    int bowlerId = jsonObject.getInt("bowlerId");
+                    int overId = jsonObject.getInt("overId");
+                    String comments = jsonObject.getString("comments");
+                    int outBatsmanId = (jsonObject.getString("outBatsmanId") == "") ? 0 : jsonObject.getInt("outBatsmanId");
+                    String isDeclared = (jsonObject.getString("isDeclared").equalsIgnoreCase("true")) ? "1" : "0";
+                    int by = (jsonObject.getString("by") == "") ? 0 : jsonObject.getInt("by");
+                    db.SaveBall(matchId1, inningId, runScored, isFour, isSix, isNoBall, isWideBall, runScoredOnWideBall, runScoredOnNoBall, isBye, runScoredOnBye, isLegBye, runScoredOnLegBye, isWicket, wicketType, stumpedById,
+                            caughtById, runOutById, batsmanId, nonStrikerbatsmanId, bowlerId, overId, comments, outBatsmanId, isDeclared, by);
+
+
+                    String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+
+
+                    getMatchDetailsAndCheckInning(str);
+                }catch (Exception e)
+                {
+                    Log.e("dvd",e.getMessage());
+                }
+                finally {
+                    db.close();
+                }
+
+            }
+
+
+            //Hemanta code for live scoring
+            /*if (AppUtils.isNetworkAvailable(context))
+            {
                 JSONObject jsonObject = makeJsonRequest();
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_BALL;
                 new CommonAsyncTaskHashmap(2, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void getMatchDetailsAndCheckInning(String str) throws JSONException {
+        JSONObject jObject = new JSONObject(str);
+        data = jObject.getJSONObject("data");
+        AppUtils.setScoringData(context, data.toString());
+        JSONObject match = data.getJSONObject("match");
+        team1Id = match.getString("team1Id");
+        team2Id = match.getString("team2Id");
+        team1Squad = data.getJSONArray("team1Squad");
+        team2Squad = data.getJSONArray("team2Squad");
+        JSONArray innings = data.getJSONArray("innings");
+        numberOfPlayers = match.getString("numberOfPlayers");
+        numberOfOvers = match.getString("numberOfOvers");
+        isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
+        isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
+        matchId = match.getString("id");
+        innings = data.getJSONArray("innings");
+        checkInning(innings, team1Squad, team2Squad);
+    }
+
     private void undoBall() {
-        try {
-            if (AppUtils.isNetworkAvailable(context)) {
+        try
+        {
+            try
+            {
+                db.open();
+                db.UndoBall( Integer.parseInt(matchId), Integer.parseInt(inningId));
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                getMatchDetailsAndCheckInning(str);
+
+            }
+            catch (Exception e)
+            {
+                Log.e("dd",e.getMessage());
+            }finally {
+                db.close();
+            }
+
+
+            /*if (AppUtils.isNetworkAvailable(context)) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("matchId", matchId);
                 jsonObject.put("inningId", inningId);
@@ -1810,7 +1909,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1998,10 +2097,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            } else if (position == 10) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    context.onBackPressed();
+            }
 
+            //lalit code for offline scoring
+            else if (position == 10) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
                     JSONArray avatars = data.getJSONArray("avatar");
                     JSONArray cricket_selected_team_players = data.getJSONArray("cricket_selected_team_players");
@@ -2014,6 +2114,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     JSONArray teams = data.getJSONArray("team");
                     JSONArray users = data.getJSONArray("user");
 
+                    JSONArray cricket_balls = data.getJSONArray("cricket_balls");
+                    JSONArray cricket_overs = data.getJSONArray("cricket_overs");
+                    JSONArray cricket_innings = data.getJSONArray("cricket_innings");
+                    JSONArray cricket_scorecard = data.getJSONArray("cricket_scorecard");
+
                     List<User> userTableRecord = new ArrayList<>();
                     List<Avatar> avatarTableRecord = new ArrayList<>();
                     List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord = new ArrayList<>();
@@ -2024,6 +2129,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     List<MatchTeamRoles> matchTeamRolesTableRecord = new ArrayList<>();
                     List<Roster> rosterTableRecord = new ArrayList<>();
                     List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord = new ArrayList<>();
+
+                    List<CricketBall> cricketBallTableRecord = new ArrayList<>();
+                    List<CricketInning> cricketInningTableRecord = new ArrayList<>();
+                    List<CricketOver> cricketOverTableRecord = new ArrayList<>();
+                    List<CricketScoreCard> cricketScoreCardTableRecord = new ArrayList<>();
 
                     for (int i = 0; i < users.length(); i++) {
                         JSONObject user = users.getJSONObject(i);
@@ -2100,7 +2210,36 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         cricketSelectedTeamPlayerTableRecord.add(cricket_selected_team_playerObj);
                     }
 
-                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord);
+                    for (int i = 0; i < cricket_balls.length(); i++) {
+                        JSONObject cricket_ball = cricket_balls.getJSONObject(i);
+                        Gson gson = new Gson();
+                        CricketBall cricketBallObj = gson.fromJson(cricket_ball.toString(), CricketBall.class);
+                        Log.e("response", cricketBallObj.toString());
+                        cricketBallTableRecord.add(cricketBallObj);
+                    }
+                    for (int i = 0; i < cricket_innings.length(); i++) {
+                        JSONObject cricket_inning = cricket_innings.getJSONObject(i);
+                        Gson gson = new Gson();
+                        CricketInning cricketInningObj = gson.fromJson(cricket_inning.toString(), CricketInning.class);
+                        Log.e("response", cricketInningObj.toString());
+                        cricketInningTableRecord.add(cricketInningObj);
+                    }
+                    for (int i = 0; i < cricket_overs.length(); i++) {
+                        JSONObject cricket_over = cricket_overs.getJSONObject(i);
+                        Gson gson = new Gson();
+                        CricketOver cricketOverObj = gson.fromJson(cricket_over.toString(), CricketOver.class);
+                        Log.e("response", cricketOverObj.toString());
+                        cricketOverTableRecord.add(cricketOverObj);
+                    }
+                    for (int i = 0; i < cricket_scorecard.length(); i++) {
+                        JSONObject cricket_scorecar = cricket_scorecard.getJSONObject(i);
+                        Gson gson = new Gson();
+                        CricketScoreCard cricketScoreCardObj = gson.fromJson(cricket_scorecar.toString(), CricketScoreCard.class);
+                        Log.e("response", cricketScoreCardObj.toString());
+                        cricketScoreCardTableRecord.add(cricketScoreCardObj);
+                    }
+
+                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord);
 
 
                     //JSONObject match = data.getJSONObject("match");
@@ -2116,11 +2255,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
-    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord) {
+    //lalit code for offline scoring
+    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord) {
 
         try {
             if (db != null) {
                 db.open();
+                db.cleanDataBase();
                 for (int i = 0; i < userTableRecord.size(); i++) {
                     db.insertUser(userTableRecord.get(i));
                 }
@@ -2154,8 +2295,23 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 for (int i = 0; i < cricketSelectedTeamPlayerTableRecord.size(); i++) {
                     db.insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayerTableRecord.get(i));
                 }
+                for (int i = 0; i < cricketBallTableRecord.size(); i++) {
+                    db.insertBallData(cricketBallTableRecord.get(i));
+                }
+                for (int i = 0; i < cricketInningTableRecord.size(); i++) {
+                    db.insertInningData(cricketInningTableRecord.get(i));
+                }
+                for (int i = 0; i < cricketOverTableRecord.size(); i++) {
+                    db.insertOverData(cricketOverTableRecord.get(i));
+                }
+                for (int i = 0; i < cricketScoreCardTableRecord.size(); i++) {
+                    db.insertScoreCardData(cricketScoreCardTableRecord.get(i));
+                }
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                getMatchDetailsAndCheckInning(str);
             }
         } catch (Exception e) {
+            Log.e("dcd", e.getMessage());
             // TODO: handle exception
         } finally {
             db.close();
@@ -2311,27 +2467,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             db = new SportzDatabase(context);
             db.open();
 
-            /*cursor = db.fetchAllBall();
-            if (cursor != null && cursor.getCount() > 0) {
-
-                //db.updateData(matchId, eventId, team2Id, team1Id);
-            } else
-            {
-                CricketBall cricketBall = new CricketBall("1", "0.1","1", "0", "0"
-                        , "0" , "0" ,  "0" ,  "0" , "0", "0",
-                        "0" , "0", "0", "0" ,
-                        null , null , "1" , "12" ,
-                        "3" ,"2", "33",  null,  null, null
-                        , null);
-                db.insertBallData(cricketBall);
-            }*/
-
-
         } catch (Exception e) {
             // TODO: handle exception
         } finally {
             db.close();
-            //   cursor.close();
         }
     }
 

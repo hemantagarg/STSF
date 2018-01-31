@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Match {
 
-    private String id;
+    private int id;
     private String description;
     private String location;
     private String matchDate;
@@ -54,11 +54,11 @@ public class Match {
     private String runsRequired;
     private String ballsRemaining;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
