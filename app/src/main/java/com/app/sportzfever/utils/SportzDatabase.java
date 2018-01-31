@@ -164,21 +164,20 @@ public class SportzDatabase {
         cv.put("overId", cricketBall.getOverId());
         cv.put("matchId", cricketBall.getMatchId());
         cv.put("id", cricketBall.getId());
-        if (cricketBall.getCaughtById() != null && !cricketBall.getCaughtById().isEmpty()) {
+        if (cricketBall.getCaughtById() != null && !cricketBall.getCaughtById().isEmpty() && !cricketBall.getCaughtById().equalsIgnoreCase("0")) {
             cv.put("caughtById", cricketBall.getCaughtById());
         }
-        if (cricketBall.getRunOutById() != null && !cricketBall.getRunOutById().isEmpty()) {
+        if (cricketBall.getRunOutById() != null && !cricketBall.getRunOutById().isEmpty()&& !cricketBall.getRunOutById().equalsIgnoreCase("0")) {
             cv.put("runOutById", cricketBall.getRunOutById());
         }
-        if (cricketBall.getStumpedById() != null && !cricketBall.getStumpedById().isEmpty()) {
+        if (cricketBall.getStumpedById() != null && !cricketBall.getStumpedById().isEmpty()&& !cricketBall.getStumpedById().equalsIgnoreCase("0")) {
             cv.put("stumpedById", cricketBall.getStumpedById());
         }
-        if (cricketBall.getOutBatsmanId() != null && !cricketBall.getOutBatsmanId().isEmpty()) {
+        if (cricketBall.getOutBatsmanId() != null && !cricketBall.getOutBatsmanId().isEmpty() && !cricketBall.getOutBatsmanId().equalsIgnoreCase("0")) {
             cv.put("outBatsmanId", cricketBall.getOutBatsmanId());
         }
         if(cricketBall.getId()> 0)
         {
-
             cv.put("syncStatus", "1");
         }
         db.insert("cricket_balls", null, cv);
@@ -190,10 +189,13 @@ public class SportzDatabase {
            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
         }
 
-        cricketBall.setId(lastId);
         if(cricketBall.getId()<= 0) {
-            updateBallData(cricketBall);
+            cricketBall.setId(lastId);
+            updateBallID(cricketBall);
         }
+
+        cricketBall.setId(lastId);
+
 
         return  lastId;
     }
@@ -226,10 +228,12 @@ public class SportzDatabase {
         if (c != null && c.moveToFirst()) {
             lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
         }
-        cricketInning.setId(lastId);
+
         if(cricketInning.getId()<= 0) {
-            updateInningData(cricketInning);
+            cricketInning.setId(lastId);
+            updateInningID(cricketInning);
         }
+        cricketInning.setId(lastId);
         return  lastId;
     }
     public int insertOverData(CricketOver cricketOver) {
@@ -256,10 +260,12 @@ public class SportzDatabase {
         if (c != null && c.moveToFirst()) {
             lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
         }
-        cricketOver.setId(lastId);
+
         if(cricketOver.getId()<= 0) {
-            updateOverData(cricketOver);
+            cricketOver.setId(lastId);
+            updateOverID(cricketOver);
         }
+        cricketOver.setId(lastId);
 
         return  lastId;
     }
@@ -288,11 +294,13 @@ public class SportzDatabase {
         if (c != null && c.moveToFirst()) {
             lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
         }
-        cricketScoreCard.setId(lastId);
+
         if(cricketScoreCard.getId()<= 0)
         {
-            updateScoreCardData(cricketScoreCard);
+            cricketScoreCard.setId(lastId);
+            updateScoreCardID(cricketScoreCard);
         }
+        cricketScoreCard.setId(lastId);
         return  lastId;
     }
 
@@ -710,7 +718,7 @@ public class SportzDatabase {
                 cursor.moveToFirst();
 
                 int ballId = cursor.getInt(cursor.getColumnIndex("id"));
-                String inningOverCount = cursor.getString(cursor.getColumnIndex("ballCountInOver"));
+                String inningOverCount = cursor.getString(cursor.getColumnIndex("inningOverCount"));
                 String ballCountInOver = cursor.getString(cursor.getColumnIndex("ballCountInOver"));
                 String runScored = cursor.getString(cursor.getColumnIndex("runScored"));
                 String extraRuns = cursor.getString(cursor.getColumnIndex("extraRuns"));
@@ -1101,6 +1109,43 @@ public class SportzDatabase {
         }
         return cricketScoreCards;
     }
+    public List<CricketScoreCard> fetchBatsmenScoreCardOFInning(int id){
+        List< CricketScoreCard> cricketScoreCards=new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from cricket_scorecard where inningId = '"
+                    + id + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        int scorecardId = cursor.getInt(cursor.getColumnIndex("id"));
+                        String status = cursor.getString(cursor.getColumnIndex("status"));
+                        String sixes = cursor.getString(cursor.getColumnIndex("sixes"));
+                        String runs = cursor.getString(cursor.getColumnIndex("runs"));
+                        String balls = cursor.getString(cursor.getColumnIndex("balls"));
+                        String fours = cursor.getString(cursor.getColumnIndex("fours"));
+                        String matchId = cursor.getString(cursor.getColumnIndex("matchId"));
+                        String strikeRate = cursor.getString(cursor.getColumnIndex("strikeRate"));
+                        String playOrder = cursor.getString(cursor.getColumnIndex("playOrder"));
+                        String inningId = cursor.getString(cursor.getColumnIndex("inningId"));
+                        String onStrike = cursor.getString(cursor.getColumnIndex("onStrike"));
+                        String batsmanId = cursor.getString(cursor.getColumnIndex("batsmanId"));
+                        CricketScoreCard cricketScoreCard = new CricketScoreCard(status, sixes, runs, balls, fours, matchId,
+                                strikeRate, playOrder, inningId, onStrike, batsmanId);
+                        cricketScoreCard.setId(scorecardId);
+                        cricketScoreCards.add(cricketScoreCard);
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            cricketScoreCards=new ArrayList<>();
+            e.printStackTrace();
+        }
+        return cricketScoreCards;
+    }
     public Team fetchTeam(int teamId, int userId){
 
 
@@ -1344,8 +1389,8 @@ public class SportzDatabase {
         Cursor cursor = null;
         try
         {
-            cursor = db.rawQuery("SELECT cs.playOrder,cs.status,cs.onStrike,cs.runs,cs.balls,cs.fours,cs.sixes,cs.strikeRate,cs.matchId,cs.inningId,cs.batsmanId,cb.bowlerId,cb.caughtById,cb.runOutById,cb.stumpedById,  (osbnu.firstName||' '||osbnu.lastName) as batsmanAvatarName,  ('/'||LOWER(osbn.avatarType)||'/Cricket'||'/'||osbn.id) as batsmanAvatarUrl,  (bbu.firstName||' '||bbu.lastName) as bowlerUserFullName, bba.name as bowlerAvatarName, bba.profilePicture as bowlerAvatarPic,  (obu.firstName||' '||obu.lastName) as outBatsmanUserFullName, oba.name as outBatsmanAvatarName, oba.profilePicture as outBatsmanAvatarPic,  (ctbu.firstName||' '||ctbu.lastName) as caughtByUserFullName, ctba.name as caughtByAvatarName, ctba.profilePicture as caughtByAvatarPic,  (robu.firstName||' '||robu.lastName) as runoutByUserFullName, roba.name as runoutByAvatarName, roba.profilePicture as runoutByAvatarPic,  (stbu.firstName||' '||stbu.lastName) as stumpedByUserFullName, stba.name as stumpedByAvatarName,stba.profilePicture as stumpedByAvatarPic  from cricket_scorecard cs LEFT JOIN cricket_balls cb ON cb.batsmanId=cs.batsmanId and cb.inningId ='"+inningId1+"' LEFT JOIN avatar bba ON cb.bowlerId=bba.id LEFT JOIN user bbu ON bba.userId=bbu.id  LEFT JOIN avatar oba ON cb.outBatsmanId=oba.id LEFT JOIN user obu ON oba.userId=obu.id LEFT JOIN avatar osbn ON cs.batsmanId=osbn.id LEFT JOIN user osbnu ON osbn.userId=osbnu.id LEFT JOIN avatar ctba ON cb.caughtById=ctba.id LEFT JOIN  user ctbu ON ctba.userId=ctbu.id LEFT JOIN avatar roba ON cb.runOutById=roba.id LEFT JOIN user robu ON roba.userId=robu.id LEFT JOIN avatar stba ON cb.stumpedById=stba.id LEFT JOIN user stbu ON stba.userId=stbu.id WHERE cs.inningId = '"+inningId1+"'", null);
-
+            cursor = db.rawQuery("SELECT distinct cs.playOrder,cs.status,cs.onStrike,cs.runs,cs.balls,cs.fours,cs.sixes,cs.strikeRate,cs.matchId,cs.inningId,cs.batsmanId,cb.bowlerId,cb.caughtById,cb.runOutById,cb.stumpedById,  (osbnu.firstName||' '||osbnu.lastName) as batsmanAvatarName,  ('/'||LOWER(osbn.avatarType)||'/Cricket'||'/'||osbn.id) as batsmanAvatarUrl,  (bbu.firstName||' '||bbu.lastName) as bowlerUserFullName, bba.name as bowlerAvatarName, bba.profilePicture as bowlerAvatarPic,  (obu.firstName||' '||obu.lastName) as outBatsmanUserFullName, oba.name as outBatsmanAvatarName, oba.profilePicture as outBatsmanAvatarPic,  (ctbu.firstName||' '||ctbu.lastName) as caughtByUserFullName, ctba.name as caughtByAvatarName, ctba.profilePicture as caughtByAvatarPic,  (robu.firstName||' '||robu.lastName) as runoutByUserFullName, roba.name as runoutByAvatarName, roba.profilePicture as runoutByAvatarPic,  (stbu.firstName||' '||stbu.lastName) as stumpedByUserFullName, stba.name as stumpedByAvatarName,stba.profilePicture as stumpedByAvatarPic  from cricket_scorecard cs LEFT JOIN cricket_balls cb ON cb.batsmanId=cs.batsmanId and cb.inningId ='"+inningId1+"' LEFT JOIN avatar bba ON cb.bowlerId=bba.id LEFT JOIN user bbu ON bba.userId=bbu.id  LEFT JOIN avatar oba ON cb.outBatsmanId=oba.id LEFT JOIN user obu ON oba.userId=obu.id LEFT JOIN avatar osbn ON cs.batsmanId=osbn.id LEFT JOIN user osbnu ON osbn.userId=osbnu.id LEFT JOIN avatar ctba ON cb.caughtById=ctba.id LEFT JOIN  user ctbu ON ctba.userId=ctbu.id LEFT JOIN avatar roba ON cb.runOutById=roba.id LEFT JOIN user robu ON roba.userId=robu.id LEFT JOIN avatar stba ON cb.stumpedById=stba.id LEFT JOIN user stbu ON stba.userId=stbu.id WHERE cs.inningId = '"+inningId1+"'", null);
+            battingStats = new ArrayList<>();
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast())
@@ -1362,15 +1407,48 @@ public class SportzDatabase {
                         battingStat.setSixes(cursor.getString(cursor.getColumnIndex("sixes")));
                         battingStat.setStrikeRate(cursor.getString(cursor.getColumnIndex("strikeRate")));
                         battingStat.setBatsmanId(cursor.getString(cursor.getColumnIndex("batsmanId")));
+
                         String bowlerId=cursor.getString(cursor.getColumnIndex("bowlerId"));
                         String stumpedById=cursor.getString(cursor.getColumnIndex("stumpedById"));
                         String caughtById=cursor.getString(cursor.getColumnIndex("caughtById"));
                         String runOutById=cursor.getString(cursor.getColumnIndex("runOutById"));
 
-                        battingStat.setBowlerId((bowlerId==null||bowlerId.isEmpty())?"0":bowlerId);
-                        battingStat.setStumpedById((stumpedById==null||bowlerId.isEmpty())?"0":stumpedById);
-                        battingStat.setCaughtById((caughtById==null||bowlerId.isEmpty())?"0":caughtById);
-                        battingStat.setRunOutById((runOutById==null||bowlerId.isEmpty())?"0":runOutById);
+                        if(bowlerId==null || bowlerId.equalsIgnoreCase(""))
+                        {
+                            battingStat.setBowlerId("0");
+                        }
+                        else
+                        {
+                            battingStat.setBowlerId(bowlerId);
+                        }
+
+                        if(stumpedById==null || stumpedById.equalsIgnoreCase(""))
+                        {
+                            battingStat.setStumpedById("0");
+                        }
+                        else
+                        {
+                            battingStat.setStumpedById(stumpedById);
+                        }
+
+                        if(caughtById==null || caughtById.equalsIgnoreCase(""))
+                        {
+                            battingStat.setCaughtById("0");
+                        }
+                        else
+                        {
+                            battingStat.setCaughtById(caughtById);
+                        }
+
+                        if(runOutById==null || runOutById.equalsIgnoreCase(""))
+                        {
+                            battingStat.setRunOutById("0");
+                        }
+                        else
+                        {
+                            battingStat.setRunOutById(runOutById);
+                        }
+
 
                         battingStat.setBowlerUserFullName(cursor.getString(cursor.getColumnIndex("bowlerUserFullName")));
                         battingStat.setBowlerAvatarName(cursor.getString(cursor.getColumnIndex("bowlerAvatarName")));
@@ -1390,8 +1468,44 @@ public class SportzDatabase {
                         battingStat.setStumpedByAvatarPic(cursor.getString(cursor.getColumnIndex("stumpedByAvatarPic")));
 
 
+                        boolean found = false;
+                        int p=0;
+                        for(int a= 0;a<battingStats.size();a++){
+                            if(battingStats.get(a).getBatsmanId().equalsIgnoreCase(battingStat.getBatsmanId()))
+                            {
+                                battingStats.get(a).setPlayOrder(battingStat.getPlayOrder());
+                                battingStats.get(a).setBatsmanAvatarName(battingStat.getBatsmanAvatarName());
+                                battingStats.get(a).setStatus(battingStat.getStatus());
+                                battingStats.get(a).setOnStrike(battingStat.getOnStrike());
+                                battingStats.get(a).setRuns(battingStat.getRuns());
+                                battingStats.get(a).setBalls(battingStat.getBalls());
+                                battingStats.get(a).setFours(battingStat.getFours());
+                                battingStats.get(a).setSixes(battingStat.getSixes());
+                                battingStats.get(a).setStrikeRate(battingStat.getStrikeRate());
+                                battingStats.get(a).setBatsmanId(battingStat.getBatsmanId());
+                                battingStats.get(a).setBowlerUserFullName(battingStat.getBowlerUserFullName());
+                                battingStats.get(a).setBowlerAvatarName(battingStat.getBowlerAvatarName());
+                                battingStats.get(a).setBowlerAvatarPic(battingStat.getBowlerAvatarPic());
+                                battingStats.get(a).setOutBatsmanUserFullName(battingStat.getOutBatsmanUserFullName());
+                                battingStats.get(a).setOutBatsmanAvatarName(battingStat.getOutBatsmanAvatarName());
+                                battingStats.get(a).setOutBatsmanAvatarPic(battingStat.getOutBatsmanAvatarPic());
+                                battingStats.get(a).setCaughtByUserFullName(battingStat.getCaughtByUserFullName());
+                                battingStats.get(a).setCaughtByAvatarName(battingStat.getCaughtByAvatarName());
+                                battingStats.get(a).setCaughtByAvatarPic(battingStat.getCaughtByAvatarPic());
+                                battingStats.get(a).setRunoutByUserFullName(battingStat.getRunoutByUserFullName());
+                                battingStats.get(a).setRunoutByAvatarName(battingStat.getRunoutByAvatarName());
+                                battingStats.get(a).setRunoutByAvatarPic(battingStat.getRunoutByAvatarPic());
+                                battingStats.get(a).setStumpedByUserFullName(battingStat.getStumpedByUserFullName());
+                                battingStats.get(a).setStumpedByAvatarName(battingStat.getStumpedByAvatarName());
+                                battingStats.get(a).setStumpedByAvatarPic(battingStat.getStumpedByAvatarPic());
+                                found=true;
+                            }
+                        }
 
-                        battingStats.add(battingStat);
+                        if(found==false) {
+
+                            battingStats.add(battingStat);
+                        }
                         cursor.moveToNext();
                     }
                 }
@@ -1541,7 +1655,7 @@ public class SportzDatabase {
         Cursor cursor = null;
         try
         {
-            cursor = db.rawQuery("SELECT sum(co.isMaiden) as maiden, min(co.overNumber) as overNumber, (SELECT ROUND( ( (count(*) / 6) +((count(*) % 6))/10.0),1) FROM cricket_balls WHERE bowlerId =co.bowlerId and inningId='"+id+"' and isNoBall = '0' and isWideBall='0') as numberOfOvers, co.bowlerId,(usr.firstName||' '||usr.lastName) as bowlerAvatarName,sum(co.runsScoredInOver) as runs, ((SELECT count(iswicket) from cricket_balls cb WHERE cb.bowlerId = co.bowlerId and wicketType != 'RUN OUT' and cb.matchId=co.matchId)) as wickets, sum(co.extraRunsInOver) as extras, (sum(co.runsScoredInOver) / count(co.bowlerId)) as economy FROM cricket_overs co LEFT JOIN avatar avtr ON avtr.id=co.bowlerId LEFT JOIN user usr ON avtr.userid=usr.id WHERE inningId='"+id+"' and bowlerId is not null GROUP BY co.bowlerId order by overNumber", null);
+            cursor = db.rawQuery("SELECT sum(co.isMaiden) as maiden, min(co.overNumber) as overNumber, (SELECT ROUND( ( (count(*) / 6) +((count(*) % 6))/10.0),1) FROM cricket_balls WHERE bowlerId =co.bowlerId and inningId='"+id+"' and isNoBall = '0' and isWideBall='0') as numberOfOvers, co.bowlerId,(usr.firstName||' '||usr.lastName) as bowlerAvatarName,sum(co.runsScoredInOver) as runs, ((SELECT sum(iswicket) from cricket_balls cb WHERE cb.bowlerId = co.bowlerId and wicketType != 'RUN OUT' and cb.matchId=co.matchId)) as wickets, sum(co.extraRunsInOver) as extras, (sum(co.runsScoredInOver) / count(co.bowlerId)) as economy FROM cricket_overs co LEFT JOIN avatar avtr ON avtr.id=co.bowlerId LEFT JOIN user usr ON avtr.userid=usr.id WHERE inningId='"+id+"' and bowlerId is not null GROUP BY co.bowlerId order by overNumber", null);
 
             if (cursor != null && cursor.getCount() > 0)
             {
@@ -1596,10 +1710,11 @@ public class SportzDatabase {
 
             if (cursor != null && cursor.getCount() > 0)
             {
-                while (!cursor.isAfterLast())
-                {
-                    wideBall+=(cursor.getInt(cursor.getColumnIndex("'runScoredOnWideball'")))+1;
-                    cursor.moveToFirst();
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+                        wideBall+=(cursor.getInt(cursor.getColumnIndex("runScoredOnWideball")))+1;
+                        cursor.moveToNext();
+                    }
                 }
             }
         }
@@ -1866,15 +1981,28 @@ public class SportzDatabase {
         cv.put("inningId",cricketScoreCard.getInningId());
         cv.put("onStrike", cricketScoreCard.isOnStrike());
         cv.put("batsmanId", cricketScoreCard.getBatsmanId());
+        db.update("cricket_scorecard", cv, "id =\"" +cricketScoreCard.getId() + "\"", null);
+    }
+    public void updateScoreCardID(CricketScoreCard cricketScoreCard) {
+        //SQLiteDatabase data = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("status", cricketScoreCard.getStatus());
+        cv.put("sixes", cricketScoreCard.getSixes());
+        cv.put("runs", cricketScoreCard.getRuns());
+        cv.put("balls", cricketScoreCard.getBalls());
+        cv.put("fours", cricketScoreCard.getFours());
+        cv.put("matchId", cricketScoreCard.getMatchId());
+        cv.put("strikeRate", cricketScoreCard.getStrikeRate());
+        cv.put("playOrder", cricketScoreCard.getPlayOrder());
+        cv.put("inningId",cricketScoreCard.getInningId());
+        cv.put("onStrike", cricketScoreCard.isOnStrike());
+        cv.put("batsmanId", cricketScoreCard.getBatsmanId());
         if(cricketScoreCard.getId()> 0)
         {
             cv.put("id", cricketScoreCard.getId());
-            cv.put("syncStatus", "1");
+            cv.put("syncStatus", "0");
         }
-        else
-        {
-            cv.put("id", "0");
-        }
+
         db.update("cricket_scorecard", cv, "localId =\"" +cricketScoreCard.getId() + "\"", null);
     }
     public void updateInningData(CricketInning cricketInning) {
@@ -1894,15 +2022,31 @@ public class SportzDatabase {
         cv.put("playedOvers", cricketInning.getPlayedOvers());
         cv.put("battingTeamId", cricketInning.getBattingTeamId());
         cv.put("day", cricketInning.getDay());
+        db.update("cricket_innings", cv, "id =\"" +cricketInning.getId() + "\"", null);
+    }
+    public void updateInningID(CricketInning cricketInning) {
+        ContentValues cv = new ContentValues();
+        cv.put("totalOvers", cricketInning.getTotalOvers());
+        cv.put("wickets", cricketInning.getWickets());
+        cv.put("isDeclared", cricketInning.isDeclared());
+        cv.put("bowlingTeamId", cricketInning.getBowlingTeamId());
+        cv.put("isScoredOnSF", cricketInning.isScoredOnSF());
+        cv.put("matchId", cricketInning.getMatchId());
+        cv.put("inningNumber", cricketInning.getInningNumber());
+        cv.put("playing", cricketInning.isPlaying());
+        cv.put("daySession", cricketInning.getDaySession());
+        cv.put("totalRunsScored", cricketInning.getTotalRunsScored());
+        cv.put("state", cricketInning.getState());
+        cv.put("extras", cricketInning.getExtras());
+        cv.put("playedOvers", cricketInning.getPlayedOvers());
+        cv.put("battingTeamId", cricketInning.getBattingTeamId());
+        cv.put("day", cricketInning.getDay());
         if(cricketInning.getId()> 0)
         {
             cv.put("id", cricketInning.getId());
-            cv.put("syncStatus", "1");
+            cv.put("syncStatus", "0");
         }
-        else
-        {
-            cv.put("id", "0");
-        }
+
         db.update("cricket_innings", cv, "localId =\"" +cricketInning.getId() + "\"", null);
     }
     public void updateOverData(CricketOver cricketOver) {
@@ -1916,15 +2060,26 @@ public class SportzDatabase {
         cv.put("runsScoredInOver", cricketOver.getRunsScoredInOver());
         cv.put("inningId", cricketOver.getInningId());
         cv.put("bowlerId",cricketOver.getBowlerId());
+
+        db.update("cricket_overs", cv, "id =\"" +cricketOver.getId() + "\"", null);
+    }
+    public void updateOverID(CricketOver cricketOver) {
+        ContentValues cv = new ContentValues();
+        cv.put("current", cricketOver.getCurrent());
+        cv.put("wicketsInOver", cricketOver.getWicketsInOver());
+        cv.put("overNumber", cricketOver.getOverNumber());
+        cv.put("matchId", cricketOver.getMatchId());
+        cv.put("extraRunsInOver", cricketOver.getExtraRunsInOver());
+        cv.put("isMaiden", cricketOver.getIsMaiden());
+        cv.put("runsScoredInOver", cricketOver.getRunsScoredInOver());
+        cv.put("inningId", cricketOver.getInningId());
+        cv.put("bowlerId",cricketOver.getBowlerId());
         if(cricketOver.getId()> 0)
         {
             cv.put("id", cricketOver.getId());
-            cv.put("syncStatus", "1");
+            cv.put("syncStatus", "0");
         }
-        else
-        {
-            cv.put("id", "0");
-        }
+
         db.update("cricket_overs", cv, "localId =\"" +cricketOver.getId() + "\"", null);
     }
     public void updateBallData(CricketBall cricketBall) {
@@ -1970,14 +2125,56 @@ public class SportzDatabase {
         if (cricketBall.getOutBatsmanId() != null && !cricketBall.getOutBatsmanId().isEmpty()) {
             cv.put("outBatsmanId", cricketBall.getOutBatsmanId());
         }
+
+        db.update("cricket_balls", cv, "id =\"" +cricketBall.getId() + "\"", null);
+    }
+    public void updateBallID(CricketBall cricketBall) {
+        //SQLiteDatabase data = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("ballCountInOver", cricketBall.getBallCountInOver());
+        cv.put("inningOverCount", cricketBall.getInningOverCount());
+        cv.put("runScored", cricketBall.getRunScored());
+        cv.put("extraRuns", cricketBall.getExtraRuns());
+
+        cv.put("isFour", cricketBall.isFour());
+        cv.put("isSix", cricketBall.isSix());
+        cv.put("runScoredOnNoBall", cricketBall.getRunScoredOnNoBall());
+        cv.put("isNoBall", cricketBall.isNoBall());
+
+        cv.put("isWideBall", cricketBall.isWideBall());
+        cv.put("runScoredOnWideball", cricketBall.getRunScoredOnWideball());
+        cv.put("isBye", cricketBall.isBye());
+        cv.put("runScoredOnBye", cricketBall.getRunScoredOnBye());
+
+        cv.put("isLegBye", cricketBall.isLegBye());
+        cv.put("runScoredOnLegBye", cricketBall.getRunScoredOnLegBye());
+        cv.put("isWicket", cricketBall.isWicket());
+        cv.put("wicketType", cricketBall.getWicketType());
+
+        cv.put("comments", cricketBall.getComments());
+        cv.put("batsmanId", cricketBall.getBatsmanId());
+        cv.put("bowlerId", cricketBall.getBowlerId());
+        cv.put("inningId", cricketBall.getInningId());
+
+        cv.put("overId", cricketBall.getOverId());
+        cv.put("matchId", cricketBall.getMatchId());
+
+        if (cricketBall.getCaughtById() != null && !cricketBall.getCaughtById().isEmpty()) {
+            cv.put("caughtById", cricketBall.getCaughtById());
+        }
+        if (cricketBall.getRunOutById() != null && !cricketBall.getRunOutById().isEmpty()) {
+            cv.put("runOutById", cricketBall.getRunOutById());
+        }
+        if (cricketBall.getStumpedById() != null && !cricketBall.getStumpedById().isEmpty()) {
+            cv.put("stumpedById", cricketBall.getStumpedById());
+        }
+        if (cricketBall.getOutBatsmanId() != null && !cricketBall.getOutBatsmanId().isEmpty()) {
+            cv.put("outBatsmanId", cricketBall.getOutBatsmanId());
+        }
         if(cricketBall.getId()> 0)
         {
             cv.put("id", cricketBall.getId());
-            cv.put("syncStatus", "1");
-        }
-        else
-        {
-            cv.put("id", "0");
+            cv.put("syncStatus", "0");
         }
         db.update("cricket_balls", cv, "localId =\"" +cricketBall.getId() + "\"", null);
     }
@@ -1998,6 +2195,7 @@ public class SportzDatabase {
 
     public void SaveBall(int matchId, int inningId, int runScored, String isFour, String isSix, String isNoBall, String isWideBall, int runScoredOnWideBall, int runScoredOnNoBall, String isBye, int runScoredOnBye, String isLegBye, int runScoredOnLegBye, String isWicket, String wicketType, int stumpedById,
                          int caughtById, int runOutById, final int batsmanId, int nonStrikerbatsmanId, int bowlerId, int overId, String comments, int outBatsmanId, String isDeclared, int by){
+
         CricketInning cricketInning = fetchInningById(inningId);
         if( overId < 0)
         {
@@ -2006,21 +2204,27 @@ public class SportzDatabase {
            overId= insertOverData(new CricketOver("1","0",String.valueOf(overNumber) ,String.valueOf(matchId),"0" ,"0" ,"0" ,String.valueOf(inningId) ,String.valueOf(bowlerId)));
         }
         CricketOver cricketOver= fetchOverById(overId);
+
         CricketScoreCard strikeBatsmanScoreCard = fetchScoreCardOfBatsmanInInning(matchId,inningId,batsmanId);
-        CricketScoreCard NonStrikerBatsmanScoreCard = fetchScoreCardOfBatsmanInInning(matchId,inningId,batsmanId);
+        CricketScoreCard NonStrikerBatsmanScoreCard = fetchScoreCardOfBatsmanInInning(matchId,inningId,nonStrikerbatsmanId);
         if(strikeBatsmanScoreCard == null)
         {
-          int sco =  insertScoreCardData(new CricketScoreCard("NOT OUT","0","0","0","0",String.valueOf( matchId) ,
-                    "0" ,"0",String.valueOf( inningId ),"0",String.valueOf( batsmanId)));
-          strikeBatsmanScoreCard =fetchScoreCardById(sco);
+            List<CricketScoreCard> inningBatsmen =   fetchBatsmenScoreCardOFInning(inningId);
+            int order = inningBatsmen.size()+1;
+            int sco =  insertScoreCardData(new CricketScoreCard("NOT OUT","0","0","0","0",String.valueOf( matchId) ,
+                    "0" ,String.valueOf(order),String.valueOf( inningId ),"0",String.valueOf( batsmanId)));
+            strikeBatsmanScoreCard =fetchScoreCardById(sco);
         }
         if(NonStrikerBatsmanScoreCard == null)
         {
+            List<CricketScoreCard> inningBatsmen =   fetchBatsmenScoreCardOFInning(inningId);
+            int order = inningBatsmen.size()+1;
             int sco =  insertScoreCardData(new CricketScoreCard("NOT OUT","0","0","0","0",String.valueOf( matchId) ,
-                    "0" ,"0",String.valueOf( inningId ),"0",String.valueOf(nonStrikerbatsmanId)));
+                    "0" ,String.valueOf(order),String.valueOf( inningId ),"0",String.valueOf(nonStrikerbatsmanId)));
             NonStrikerBatsmanScoreCard =fetchScoreCardById(sco);
         }
         int extraRuns = 0;
+        List<CricketScoreCard> inningBatsmen =   fetchBatsmenScoreCardOFInning(inningId);
         CricketBall previousBall = fetchLatestBallOfInning(matchId,inningId);
         if (isNoBall.equalsIgnoreCase("1"))
         {
@@ -2071,8 +2275,26 @@ public class SportzDatabase {
             inningOverCount=0.1f;
             ballCountOver=1;
         }
+        //inningOverCount= Mat
+
+      /*  double original = 1.3333;
+        double numFormat;
+
+        System.out.println("Original Number: " + original);*/
+
+        // % marks the beginning of the format specifier
+        //.1 says that the number will have one decimal point
+        // f denotes that the number is floating point
+        //System.out.printf("PrintF Method: %.1f\n", original);
+
+        inningOverCount = Float.parseFloat(String.format(
+                "%.1f", inningOverCount));
+       // System.out.println("Format Method: " + numFormat);
+
+
+
         String  iinningOverCount;
-        if(inningOverCount%1>0)
+        if(((inningOverCount*10)%10)>0)
         {
             iinningOverCount= String.valueOf(inningOverCount);
         }
@@ -2143,7 +2365,7 @@ public class SportzDatabase {
         }
         if(strikeBatsmanBalls>0)
         {
-            float v=strikeBatsmanRuns/strikeBatsmanBalls;
+            float v=Float.parseFloat(String.valueOf(strikeBatsmanRuns))/Float.parseFloat(String.valueOf(strikeBatsmanBalls));
             v=v*100;
             strikeBatsmanStrikeRate= String.valueOf(v);
         }
@@ -2174,7 +2396,7 @@ public class SportzDatabase {
             totalWickets=totalWickets+  1;
         }
         cricketOver.setExtraRunsInOver(String.valueOf(Integer.parseInt(cricketOver.getExtraRunsInOver())+extraRuns));
-        if(Integer.parseInt(cricketOver.getRunsScoredInOver())==0 && ((inningOverCount%1)==6))
+        if(Integer.parseInt(cricketOver.getRunsScoredInOver())==0 && (((inningOverCount*10)%10)==6))
         {
             cricketOver.setIsMaiden("1");
         }else
@@ -2193,7 +2415,7 @@ public class SportzDatabase {
         else
         {
 
-            if((inningOverCount%1)==6)
+            if(((inningOverCount*10)%10)==6)
             {
                 double j=Math.ceil(inningOverCount);
                 int h= (int)j;
