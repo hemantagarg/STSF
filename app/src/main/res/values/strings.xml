@@ -87,6 +87,7 @@
     <string name="cannot_start_inning">You can not start inning.. please ask other team scorer to login and start inning</string>
     <string name="start_second_inning">Start Second Inning</string>
     <string name="drink_break">Drinks Break</string>
+    <string name="match_not_accepted">Match Not Accepted by Opponent Team Yet!!</string>
     <string name="not_authorized_scorer">You are not authorized scorer for this inning</string>
     <string name="inning1">Inning 1</string>
     <string name="inning2">Inning 2</string>

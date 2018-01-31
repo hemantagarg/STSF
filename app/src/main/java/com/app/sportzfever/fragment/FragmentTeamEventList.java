@@ -195,6 +195,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                 Fragment_EvenDetail fragmentupcomingdetals = new Fragment_EvenDetail();
                 Bundle b = new Bundle();
                 b.putString("eventId", arrayList.get(position).getId());
+                b.putString("currentTab", GlobalConstants.TAB_FEED_BAR);
                 fragmentupcomingdetals.setArguments(b);
                 Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
             }

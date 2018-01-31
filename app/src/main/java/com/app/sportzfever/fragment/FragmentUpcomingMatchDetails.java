@@ -22,10 +22,12 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
 import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -237,7 +239,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset < 100) {
-                  //  text_startdate.setText(matchTitle);
+                    //  text_startdate.setText(matchTitle);
                     collapsingToolbarLayout.setTitle(matchTitle);
                     isShow = true;
                 } else if (isShow) {
@@ -261,6 +263,21 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
 
                     //  maxlistLength = jObject.getString("total");
                     JSONObject jbatsman = data.getJSONObject("match");
+                    String inviteStatus = jbatsman.getString("inviteStatus");
+                    if (inviteStatus.equalsIgnoreCase(AppConstant.PENDING)) {
+                        AppUtils.customAlertDialogWithoutTitle(context, getString(R.string.match_not_accepted), "OK", new ChoiceDialogClickListener() {
+                            @Override
+                            public void onClickOfPositive() {
+                                context.onBackPressed();
+                            }
+
+                            @Override
+                            public void onClickOfNegative() {
+
+                            }
+                        });
+                    }
+
                     JSONObject team1 = data.getJSONObject("team1");
                     JSONObject team2 = data.getJSONObject("team2");
                     tournamentId = jbatsman.getString("tournamentId");

@@ -110,6 +110,7 @@ public interface JsonApiHelper {
     String ACCEPTFRIENDREQUEST = "confirmFriend";
     String ADDASFRIEND = "friendUnfriend";
     String RESPONDTOMATCHANDPRACTICEINVITATION = "RespondToMatchAndPractiseInvitation/";
+    String EVENT_ACCEPT_REJECT = "eventAcceptAndReject/";
     String RESPONDTOTEAMJOININVITATIONFROMTEAM = "RespondToTeamJoinInvitationFromTeam/";
 
     String SEND_MESSAGE = "postUserChat";

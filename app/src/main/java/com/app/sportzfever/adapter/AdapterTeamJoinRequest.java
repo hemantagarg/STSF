@@ -143,7 +143,7 @@ public class AdapterTeamJoinRequest extends RecyclerView.Adapter<RecyclerView.Vi
 
         @Override
         public void onClick(View v) {
-            listener.onItemClickListener(getPosition(), 1);
+            listener.onItemClickListener(getPosition(), 11);
         }
 
     }

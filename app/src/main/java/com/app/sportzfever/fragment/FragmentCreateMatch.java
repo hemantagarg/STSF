@@ -178,6 +178,7 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
                         mTvToDate.setText(date);
                     }
                 }, yy, mm, dd);
+                datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 datePicker.show();
 
 
@@ -309,7 +310,6 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
 
     private boolean validateMatch() {
         boolean isValid = false;
-        String team2name = text_selectTeam2.getText().toString();
         String date = mTvToDate.getText().toString();
         String overs = edt_no_overs.getText().toString();
         String players = edt_no_players.getText().toString();
@@ -317,7 +317,7 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
         String location = mEdtlocation.getText().toString();
         String desc = mEdtdetails.getText().toString();
         if (!date.equalsIgnoreCase("") && !selectedTeam1Id.equalsIgnoreCase("") && !selectedTeam2Id.equalsIgnoreCase("") && !overs.equalsIgnoreCase("") && !players.equalsIgnoreCase("")
-                && !time.equalsIgnoreCase("") && !desc.equalsIgnoreCase("") && !location.equalsIgnoreCase("")
+                && !time.equalsIgnoreCase("") && !location.equalsIgnoreCase("")
                 ) {
             if (selectedTeam1Id.equals(selectedTeam2Id)) {
                 isValid = false;
@@ -340,8 +340,6 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
                 Toast.makeText(context, "Please select time", Toast.LENGTH_SHORT).show();
             } else if (location.equalsIgnoreCase("")) {
                 Toast.makeText(context, "Please select location", Toast.LENGTH_SHORT).show();
-            } else if (desc.equalsIgnoreCase("")) {
-                Toast.makeText(context, "Please enter Description", Toast.LENGTH_SHORT).show();
             }
         }
 

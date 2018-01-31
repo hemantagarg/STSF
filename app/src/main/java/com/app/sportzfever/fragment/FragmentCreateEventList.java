@@ -240,15 +240,13 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                         mTvToDate.setText(date);
                     }
                 }, yy, mm, dd);
+                datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 datePicker.show();
-
-
             }
         });
         mTvTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -399,6 +397,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
                         mTvToDateend.setText(date);
                     }
                 }, yy, mm, dd);
+                datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 datePicker.show();
             }
         });

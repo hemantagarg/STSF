@@ -16,7 +16,6 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.JsonApiHelper;
-import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONException;
@@ -108,11 +107,10 @@ public class ForgotActivity extends AppCompatActivity implements ApiResponse {
         try {
             if (method == 1) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
-
-
+                    Toast.makeText(mActivity, response.getString("data"), Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
-
-                     Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

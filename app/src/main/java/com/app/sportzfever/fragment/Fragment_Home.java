@@ -223,12 +223,17 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
                         modelPastMatches.setId(jo.getString("id"));
                         modelPastMatches.setEventId(jo.getString("eventId"));
                         modelPastMatches.setLocation(jo.getString("location"));
-                        modelPastMatches.setFirstBattingTeamName(jo.getString("firstBattingTeamName"));
-                        modelPastMatches.setSecondBattingTeamName(jo.getString("secondBattingTeamName"));
+                        if (jo.has("firstBattingTeamName"))
+                            modelPastMatches.setFirstBattingTeamName(jo.getString("firstBattingTeamName"));
+
+                        if (jo.has("secondBattingTeamName"))
+                            modelPastMatches.setSecondBattingTeamName(jo.getString("secondBattingTeamName"));
                         modelPastMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
                         modelPastMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
                         modelPastMatches.setTournamentName(jo.getString("tournamentName"));
-                        modelPastMatches.setMatchWinnerTeamName(jo.getString("tossWinnerTeamName"));
+
+                        if (jo.has("tossWinnerTeamName"))
+                            modelPastMatches.setMatchWinnerTeamName(jo.getString("tossWinnerTeamName"));
                         if (jo.has("winString"))
                             modelPastMatches.setWinString(jo.getString("winString"));
 
@@ -347,7 +352,7 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
             } else if (position == 11) {
                 Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 getServicelistRefresh();
-            }else {
+            } else {
                 Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {

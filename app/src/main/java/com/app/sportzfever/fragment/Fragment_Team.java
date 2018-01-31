@@ -23,7 +23,6 @@ import java.util.List;
  */
 public class Fragment_Team extends BaseFragment {
 
-
     private Bundle b;
     private Context context;
     private TabLayout tabLayout;

@@ -76,7 +76,7 @@ public class ModelUpcomingMatches {
 
     private String eventId, numberOfPlayers;
 
-    private String team2Name;
+    private String team2Name,inviteStatus;
 
     private String location, team2Id, team1Id;
 
@@ -322,5 +322,13 @@ public class ModelUpcomingMatches {
 
     public void setNoOfOvers(String noOfOvers) {
         this.noOfOvers = noOfOvers;
+    }
+
+    public String getInviteStatus() {
+        return inviteStatus;
+    }
+
+    public void setInviteStatus(String inviteStatus) {
+        this.inviteStatus = inviteStatus;
     }
 }

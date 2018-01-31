@@ -47,10 +47,10 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
     private ImageView image_team, image_reject, image_accept;
     private TextView textTeamname, textAreyouGoing, text_date, text_time, text_location,
             text_createdby, text_person_going, textDesc, texttitle;
-    private RelativeLayout rlAccepReject, teamDetail;
+    private RelativeLayout rlAccepReject, teamDetail, rl_map;
     public static Fragment_EvenDetail fragment_team;
     private final String TAG = Fragment_EvenDetail.class.getSimpleName();
-    private String eventId = "", teamId = "";
+    private String eventId = "", teamId = "", currentTab = "";
     private SupportMapFragment supportMapFragment = null;
     private GoogleMap googleMap;
     private JSONObject jsonData;
@@ -90,6 +90,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
         image_accept = (ImageView) view.findViewById(R.id.image_accept);
         rlAccepReject = (RelativeLayout) view.findViewById(R.id.rlAccepReject);
         teamDetail = (RelativeLayout) view.findViewById(R.id.teamDetail);
+        rl_map = (RelativeLayout) view.findViewById(R.id.rl_map);
         textTeamname = (TextView) view.findViewById(R.id.textTeamname);
         text_date = (TextView) view.findViewById(R.id.text_date);
         textAreyouGoing = (TextView) view.findViewById(R.id.textAreyouGoing);
@@ -105,6 +106,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
     private void getBundle() {
         if (b != null) {
             eventId = b.getString("eventId");
+            currentTab = b.getString("currentTab");
         }
     }
 
@@ -174,7 +176,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
             if (AppUtils.isNetworkAvailable(context)) {
                 //    https://sfscoring.betasportzfever.com/getEventById/152/fc0120111c7dc3d54bb477a7a89542a6
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_EVENTBYID + eventId + "/" + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonNoProgress(url, null, Request.Method.GET);
+                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -217,7 +219,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                 Bundle bundle = new Bundle();
                 bundle.putString("data", jsonData.toString());
                 fragmentEventRsvpDetail.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentEventRsvpDetail, true);
+                Dashboard.getInstance().pushFragments(currentTab, fragmentEventRsvpDetail, true);
             }
         });
 
@@ -248,7 +250,6 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                     JSONObject startDate = data.getJSONObject("startDate");
                     JSONObject endDate = data.getJSONObject("endDate");
 
-
                     String start = startDate.getString("date") + "-" + startDate.getString("month") + "-" + startDate.getString("year");
                     String end = endDate.getString("date") + "-" + endDate.getString("month") + "-" + endDate.getString("year");
 
@@ -258,7 +259,6 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                         text_date.setText(startDate.getString("dayName") + ", " + startDate.getString("date")
                                 + "" + startDate.getString("monthName") + " - " + endDate.getString("dayName") + ", " + endDate.getString("date")
                                 + "" + endDate.getString("monthName"));
-
                     }
 
                     text_time.setText(startDate.getString("time") + " - " + endDate.getString("time"));
@@ -272,6 +272,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                         text_person_going.setVisibility(View.GONE);
                         texttitle.setVisibility(View.GONE);
                         text_createdby.setVisibility(View.GONE);
+                        rl_map.setVisibility(View.GONE);
                         textDesc.setText("Details are only visible to members");
 
                     } else {

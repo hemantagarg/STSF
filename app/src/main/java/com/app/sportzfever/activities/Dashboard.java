@@ -675,6 +675,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         freinds_container.setVisibility(View.VISIBLE);
         chat_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.GONE);
+        home_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
     }
 
@@ -705,6 +706,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
         chat_container.setVisibility(View.GONE);
+        home_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.VISIBLE);
         event_container.setVisibility(View.GONE);
 
@@ -724,6 +726,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
         chat_container.setVisibility(View.VISIBLE);
+        home_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.GONE);
         refreshMessageFragment();
@@ -745,7 +748,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         chat_container.setVisibility(View.GONE);
         notification_container.setVisibility(View.GONE);
         event_container.setVisibility(View.VISIBLE);
-
+        home_container.setVisibility(View.GONE);
 
     }
 

@@ -176,11 +176,8 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
         try {
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
-                //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_UPCOMINGEVENTS + AppUtils.getUserId(context) + "/-1/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
