@@ -66,6 +66,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.sportzfever.R.id.match_parent;
 import static com.app.sportzfever.R.id.playedOversTwo;
 import static com.app.sportzfever.R.id.runScoredTwo;
 import static com.app.sportzfever.R.id.wicketsTwo;
@@ -238,10 +239,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             if (bundle != null) {
 
                 setDatabase();
-
                 eventId = bundle.getString("eventId");
-
-
                 IsScorerForTeam2 = bundle.getString("IsScorerForTeam2");
 
                 //hemanta code for online scoring
@@ -1835,30 +1833,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     db.SaveBall(matchId1, inningId, runScored, isFour, isSix, isNoBall, isWideBall, runScoredOnWideBall, runScoredOnNoBall, isBye, runScoredOnBye, isLegBye, runScoredOnLegBye, isWicket, wicketType, stumpedById,
                             caughtById, runOutById, batsmanId, nonStrikerbatsmanId, bowlerId, overId, comments, outBatsmanId, isDeclared, by);
 
-                    db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+
                     String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
 
-                    JSONObject jObject = new JSONObject(str);
-                    data = jObject.getJSONObject("data");
-                    AppUtils.setScoringData(context, data.toString());
-                    JSONObject match = data.getJSONObject("match");
-                    team1Id = match.getString("team1Id");
-                    team2Id = match.getString("team2Id");
-                    team1Squad = data.getJSONArray("team1Squad");
-                    team2Squad = data.getJSONArray("team2Squad");
-                    JSONArray innings = data.getJSONArray("innings");
-                    numberOfPlayers = match.getString("numberOfPlayers");
-                    numberOfOvers = match.getString("numberOfOvers");
-                    isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
-                    isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
-
-
-                    matchId = match.getString("id");
-
-
-                    innings = data.getJSONArray("innings");
-                    checkInning(innings, team1Squad, team2Squad);
+                    getMatchDetailsAndCheckInning(str);
                 }catch (Exception e)
                 {
                     Log.e("dvd",e.getMessage());
@@ -1884,9 +1863,45 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
+    private void getMatchDetailsAndCheckInning(String str) throws JSONException {
+        JSONObject jObject = new JSONObject(str);
+        data = jObject.getJSONObject("data");
+        AppUtils.setScoringData(context, data.toString());
+        JSONObject match = data.getJSONObject("match");
+        team1Id = match.getString("team1Id");
+        team2Id = match.getString("team2Id");
+        team1Squad = data.getJSONArray("team1Squad");
+        team2Squad = data.getJSONArray("team2Squad");
+        JSONArray innings = data.getJSONArray("innings");
+        numberOfPlayers = match.getString("numberOfPlayers");
+        numberOfOvers = match.getString("numberOfOvers");
+        isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
+        isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
+        matchId = match.getString("id");
+        innings = data.getJSONArray("innings");
+        checkInning(innings, team1Squad, team2Squad);
+    }
+
     private void undoBall() {
-        try {
-            if (AppUtils.isNetworkAvailable(context)) {
+        try
+        {
+            try
+            {
+                db.open();
+                db.UndoBall( Integer.parseInt(matchId), Integer.parseInt(inningId));
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                getMatchDetailsAndCheckInning(str);
+
+            }
+            catch (Exception e)
+            {
+                Log.e("dd",e.getMessage());
+            }finally {
+                db.close();
+            }
+
+
+            /*if (AppUtils.isNetworkAvailable(context)) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("matchId", matchId);
                 jsonObject.put("inningId", inningId);
@@ -1894,7 +1909,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 new CommonAsyncTaskHashmap(3, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2293,28 +2308,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     db.insertScoreCardData(cricketScoreCardTableRecord.get(i));
                 }
                 String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
-
-
-                JSONObject jObject = new JSONObject(str);
-                data = jObject.getJSONObject("data");
-                AppUtils.setScoringData(context, data.toString());
-                JSONObject match = data.getJSONObject("match");
-                team1Id = match.getString("team1Id");
-                team2Id = match.getString("team2Id");
-                team1Squad = data.getJSONArray("team1Squad");
-                team2Squad = data.getJSONArray("team2Squad");
-                JSONArray innings = data.getJSONArray("innings");
-                numberOfPlayers = match.getString("numberOfPlayers");
-                numberOfOvers = match.getString("numberOfOvers");
-                isTeam1ScoringOnSf = match.getString("isTeam1ScoringOnSf");
-                isTeam2ScoringOnSf = match.getString("isTeam2ScoringOnSf");
-
-
-                matchId = match.getString("id");
-
-
-                innings = data.getJSONArray("innings");
-                checkInning(innings, team1Squad, team2Squad);
+                getMatchDetailsAndCheckInning(str);
             }
         } catch (Exception e) {
             Log.e("dcd", e.getMessage());

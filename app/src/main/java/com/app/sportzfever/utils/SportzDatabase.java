@@ -38,6 +38,7 @@ import com.app.sportzfever.models.dbmodels.apimodel.Scorers;
 import com.app.sportzfever.models.dbmodels.apimodel.Team;
 import com.app.sportzfever.models.dbmodels.apimodel.TeamScorer;
 import com.app.sportzfever.models.dbmodels.apimodel.TeamSquad;
+import com.app.sportzfever.models.dbmodels.apimodel.UniverseResponseModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -760,7 +761,80 @@ public class SportzDatabase {
         }
         return cricketBall;
     }
+    public Match fetchMatchByMatchId (int id){
+        Match match=null;
+        Cursor cursor = null;
+        try
+        {
+            cursor = db.rawQuery("SELECT * from matches  where id="+ id + "", null);
 
+            if (cursor != null && cursor.getCount() > 0)
+            {
+                cursor.moveToFirst();
+                match= new Match();
+                int matchId = cursor.getInt( cursor.getColumnIndex("id"));
+                String description = cursor.getString( cursor.getColumnIndex("description"));
+                String location = cursor.getString( cursor.getColumnIndex("location"));
+                String matchDate = cursor.getString( cursor.getColumnIndex("matchDate"));
+
+                String tossResultId = cursor.getString( cursor.getColumnIndex("tossResultId"));
+                String tie = cursor.getString( cursor.getColumnIndex("tie"));
+                String tossSelection = cursor.getString( cursor.getColumnIndex("tossSelection"));
+                String matchType = cursor.getString( cursor.getColumnIndex("matchType"));
+                String matchStatus = cursor.getString( cursor.getColumnIndex("matchStatus"));
+                String numberOfInnings = cursor.getString( cursor.getColumnIndex("numberOfInnings"));
+                String inviteStatus = cursor.getString( cursor.getColumnIndex("inviteStatus"));
+                String team1Id = cursor.getString( cursor.getColumnIndex("team1Id"));
+
+                String team2Id = cursor.getString( cursor.getColumnIndex("team2Id"));
+
+                String tournamentId = cursor.getString( cursor.getColumnIndex("tournamentId"));
+                String matchResultId = cursor.getString( cursor.getColumnIndex("matchResultId"));
+                String eventId = cursor.getString( cursor.getColumnIndex("eventId"));
+                String activeScorerId = cursor.getString( cursor.getColumnIndex("activeScorerId"));
+                String numberOfPlayers = cursor.getString( cursor.getColumnIndex("numberOfPlayers"));
+                String numberOfOvers = cursor.getString( cursor.getColumnIndex("numberOfOvers"));
+                String isTeam1ScoringOnSf = cursor.getString( cursor.getColumnIndex("isTeam1ScoringOnSf"));
+                String isTeam2ScoringOnSf = cursor.getString( cursor.getColumnIndex("isTeam2ScoringOnSf"));
+
+
+
+
+                match.setId(matchId);
+                match.setDescription(description);
+                match.setLocation(location);
+                match.setMatchDate(matchDate);
+                match.setTie(tie);
+                match.setTossSelection(tossSelection);
+                match.setMatchType(matchType);
+                match.setMatchStatus((matchStatus== null)?"":matchStatus);
+                match.setNumberOfInnings(numberOfInnings);
+                match.setInviteStatus((inviteStatus== null)?"":inviteStatus);
+                match.setTeam1Id((team1Id== null)?"0":team1Id);
+
+                match.setTeam2Id((team2Id== null)?"0":team2Id);
+
+                match.setTournamentId((tournamentId== null)?"0":tournamentId);
+                match.setMatchResultId((matchResultId== null)?"0":matchResultId);
+                match.setEventId(eventId);
+                match.setActiveScorerId((activeScorerId== null)?"0":activeScorerId);
+                match.setNumberOfPlayers(numberOfPlayers);
+                match.setNumberOfOvers(numberOfOvers);
+                match.setIsTeam1ScoringOnSf(isTeam1ScoringOnSf);
+                match.setIsTeam2ScoringOnSf(isTeam2ScoringOnSf);
+
+                match.setTossResultId((tossResultId== null)?"0":tossResultId);
+
+
+                //match.setMatchDate1(matchDate1);
+
+            }
+        } catch (Exception e) {
+            match=null;
+            e.printStackTrace();
+        }
+        return match;
+    }
     public List<OverBall>fetchOverBallById(int inningId, int  matchId, int overId){
         List<OverBall> cricketBall =new ArrayList<>();
         Cursor cursor = null;
@@ -2178,9 +2252,45 @@ public class SportzDatabase {
         }
         db.update("cricket_balls", cv, "localId =\"" +cricketBall.getId() + "\"", null);
     }
+    public void deleteTableRecord(String tableName, String id)
+    {
+        //SQLiteDatabase data = this.getReadableDatabase();
+        db.delete(tableName, "id ='" + id + "'", null);
+        //this.close();
+    }
 
+    public CricketScoreCard fetchScoreCardOfMatchInning(int matchId1,int inningId1){
+        CricketScoreCard cricketScoreCard=null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from cricket_scorecard where matchId = '"+ matchId1+ "' and inningId = '"+ inningId1+ "' order by playOrder desc", null);
 
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
+                int scorecardId = cursor.getInt(cursor.getColumnIndex("id"));
+                String status = cursor.getString(cursor.getColumnIndex("status"));
+                String sixes = cursor.getString(cursor.getColumnIndex("sixes"));
+                String runs = cursor.getString(cursor.getColumnIndex("runs"));
+                String balls = cursor.getString(cursor.getColumnIndex("balls"));
+                String fours = cursor.getString(cursor.getColumnIndex("fours"));
+                String matchId= cursor.getString(cursor.getColumnIndex("matchId"));
+                String strikeRate = cursor.getString(cursor.getColumnIndex("strikeRate"));
+                String playOrder = cursor.getString(cursor.getColumnIndex("playOrder"));
+                String inningId = cursor.getString(cursor.getColumnIndex("inningId"));
+                String onStrike = cursor.getString(cursor.getColumnIndex("onStrike"));
+                String batsmanId = cursor.getString(cursor.getColumnIndex("batsmanId"));
+                cricketScoreCard = new CricketScoreCard(status ,sixes ,runs,balls ,fours ,matchId,
+                        strikeRate ,playOrder,inningId ,onStrike,batsmanId);
+                cricketScoreCard.setId(scorecardId);
+
+            }
+        } catch (Exception e) {
+            cricketScoreCard=null;
+            e.printStackTrace();
+        }
+        return cricketScoreCard;
+    }
     public void deleteData(String match_id) {
         //	SQLiteDatabase data = this.getReadableDatabase();
         db.delete("medData", "match_id ='" + match_id + "'", null);
@@ -2190,6 +2300,264 @@ public class SportzDatabase {
         //SQLiteDatabase data = this.getReadableDatabase();
         db.delete("medData", null, null);
         //this.close();
+    }
+    public String UndoBall(int matchId,int inningId)
+    {
+        UniverseResponseModel<String> result = new UniverseResponseModel<String>();
+        Match match = fetchMatchByMatchId(matchId);
+        if (match!=null)
+        {
+            CricketInning cricketInning = fetchInningById(inningId);
+            if (cricketInning!=null)
+            {
+                CricketBall cricketBall=fetchLatestBallOfInning(matchId,inningId);
+                if (cricketBall!=null)
+                {
+                    CricketOver cricketOver=fetchOverById(Integer.parseInt(cricketBall.getOverId()));
+                    if (cricketOver!=null)
+                    {
+                        int totalRunScored =Integer.parseInt(cricketBall.getRunScored());
+                        int ballId =cricketBall.getId();
+                        int extraRuns =Integer.parseInt(cricketBall.getExtraRuns());
+                        int isFour =Integer.parseInt(cricketBall.isFour());
+                        int isNoBall=Integer.parseInt(cricketBall.isNoBall());
+                        int isWideBall=Integer.parseInt(cricketBall.isWideBall());
+                        int isSix =Integer.parseInt(cricketBall.isSix());
+                        int isBye =Integer.parseInt(cricketBall.isBye());
+                        int isLegBye =Integer.parseInt(cricketBall.isLegBye());
+                        int isWicket =Integer.parseInt(cricketBall.isWicket());
+                        int wicketType =Integer.parseInt(cricketBall.isWicket());
+                        int bowlerId =Integer.parseInt(cricketBall.getBowlerId());
+                        int batsmanId =Integer.parseInt(cricketBall.getBatsmanId());
+                        int outBatsmanId =Integer.parseInt(cricketBall.getOutBatsmanId());
+                        int runScoredOnNoBall =Integer.parseInt(cricketBall.getRunScoredOnNoBall());
+                        int runScoredOnWideBall =Integer.parseInt(cricketBall.getRunScoredOnWideball());
+                        int runScoredOnBye =Integer.parseInt(cricketBall.getRunScoredOnBye());
+                        int runScoredOnLegBye =Integer.parseInt(cricketBall.getRunScoredOnLegBye());
+                        int totalRunsInInning=Integer.parseInt(cricketInning.getTotalRunsScored())-totalRunScored;
+                        int totalExtrasInInning= Integer.parseInt(cricketInning.getExtras())- extraRuns;
+                        int totalWickets=Integer.parseInt(cricketInning.getWickets());
+                        if (isWicket==1)
+                        {
+                            cricketOver.setWicketsInOver(String.valueOf(Integer.parseInt(cricketOver.getWicketsInOver())-1));
+                            cricketInning.getWickets();
+                            totalWickets=Integer.parseInt(cricketInning.getWickets())-1;
+                        }
+                        double playedOvers=0f;
+                        String pplayedOvers="0";
+
+                        if(isNoBall==1 || isWideBall==1)
+                        {
+                            playedOvers = Float.parseFloat(cricketInning.getPlayedOvers());
+                        }
+                        else
+                        {
+                            int overNo= (int)(Float.parseFloat(cricketInning.getPlayedOvers())/1);
+                            int overBallNo= (int)((Float.parseFloat(cricketInning.getPlayedOvers())*10)%10);
+                            if (overBallNo==0)
+                            {
+                                playedOvers= Float.parseFloat(cricketInning.getPlayedOvers())-0.5f;
+                                pplayedOvers= String.valueOf(playedOvers);
+                            }
+                            else
+                            {
+                                Float ll=Float.parseFloat(cricketInning.getPlayedOvers());
+                                Float plo = Float.parseFloat(String.format("%.1f",ll ));
+                                playedOvers= plo-0.1f;
+                                Float playedOvers1 = Float.parseFloat(String.format("%.1f",playedOvers ));
+                                int overNo1= (int)(playedOvers/1);
+                                int overBallNo1= (int)(((playedOvers1)*10f)%10f);
+                                if(overBallNo1==0)
+                                {
+                                    playedOvers=overNo1;
+                                    pplayedOvers= String.valueOf(overNo1);
+                                }
+                                else
+                                {
+                                    pplayedOvers= String.valueOf(playedOvers1);
+                                }
+
+                            }
+                        }
+                        cricketInning.setTotalRunsScored(String.valueOf(totalRunsInInning));
+                        cricketInning.setDeclared("0");
+                        cricketInning.setExtras(String.valueOf(totalExtrasInInning));
+                        cricketInning.setWickets(String.valueOf(totalWickets));
+                        cricketInning.setPlayedOvers(pplayedOvers);
+                        cricketInning.setId(cricketInning.getId());
+
+                        updateInningData(cricketInning);
+
+                        cricketOver.setRunsScoredInOver(String.valueOf(Integer.parseInt(cricketOver.getRunsScoredInOver())-totalRunScored));
+                        cricketOver.setExtraRunsInOver(String.valueOf(Integer.parseInt(cricketOver.getExtraRunsInOver())-extraRuns));
+                        cricketOver.setIsMaiden(String.valueOf(Integer.parseInt(cricketOver.getIsMaiden())>0?0:1));
+                        cricketOver.setId(cricketOver.getId());
+                        updateOverData(cricketOver);
+
+                        int runScored = totalRunScored;
+
+                        if (isNoBall==1)
+                        {
+                            extraRuns-=1;
+                            if (runScoredOnNoBall==1)
+                            {
+                                runScored-=runScoredOnNoBall;
+                            }
+                        }
+
+                        if (isWideBall==1)
+                        {
+                            extraRuns-=1;
+                            if (runScoredOnWideBall==1)
+                            {
+                                extraRuns-=runScoredOnWideBall;
+                            }
+                        }
+
+                        if (isBye==1)
+                        {
+                            if (runScoredOnBye==1)
+                            {
+                                extraRuns-=runScoredOnBye;
+                            }
+                        }
+
+                        if (isLegBye==1)
+                        {
+                            if (runScoredOnLegBye==1)
+                            {
+                                extraRuns-=runScoredOnLegBye;
+                            }
+                        }
+                        CricketScoreCard  strikeBatsmanScoreCard = fetchScoreCardOfBatsmanInInning(matchId,inningId,batsmanId);
+                        strikeBatsmanScoreCard.setRuns(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getRuns()) - runScored ));
+                        strikeBatsmanScoreCard.setBalls(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getBalls()) - 1));
+
+
+                        if (isNoBall==1 && runScored>=1)
+                        {
+                            strikeBatsmanScoreCard.setRuns(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getRuns())+1));
+                        }
+                        if (isWideBall==1)
+                        {
+                            int runtosub=0;
+                            if(cricketBall.isBye().equalsIgnoreCase("1"))
+                            {
+                                runtosub=( extraRuns - runScoredOnBye);
+                            }
+                            else
+                            {
+                                runtosub=extraRuns;
+                            }
+                            strikeBatsmanScoreCard.setRuns(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getRuns()) + runtosub ));
+                            strikeBatsmanScoreCard.setBalls(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getBalls()) +1));
+                        }
+
+                        if (isLegBye==1)
+                        {
+                            strikeBatsmanScoreCard.setRuns(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getRuns()) + runScoredOnLegBye));
+                        }
+
+                        if (isBye==1)
+                        {
+                            strikeBatsmanScoreCard.setRuns(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getRuns()) - runScoredOnBye));
+                        }
+
+                        if (isFour==1)
+                        {
+                            if(isWideBall==0 && isLegBye==0 && isBye==0)
+                            {
+                                strikeBatsmanScoreCard.setFours(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getFours()) -1));
+                            }
+                        }
+                        if (isSix==1)
+                        {
+                            strikeBatsmanScoreCard.setSixes(String.valueOf( Integer.parseInt(strikeBatsmanScoreCard.getSixes()) -1));
+                        }
+                        if (isWicket==1)
+                        {
+                            if (outBatsmanId>0 == batsmanId>0)
+                            {
+                                strikeBatsmanScoreCard.setStatus("NOT OUT");
+                            }
+                            else
+                            {
+                                CricketScoreCard cricketScoreCard2= fetchScoreCardOfBatsmanInInning(matchId,inningId,batsmanId);
+                                cricketScoreCard2.setStatus("NOT OUT");
+                                cricketScoreCard2.setBatsmanId(String.valueOf(outBatsmanId));
+                                cricketScoreCard2.setId(cricketScoreCard2.getId());
+                                updateScoreCardData(cricketScoreCard2);
+                            }
+                        }
+                        if(!strikeBatsmanScoreCard.getBalls().equalsIgnoreCase("0"))
+                        {
+                            strikeBatsmanScoreCard.setStrikeRate(String.valueOf(  Float.parseFloat(strikeBatsmanScoreCard.getRuns()) / Float.parseFloat(strikeBatsmanScoreCard.getBalls()) *100 ) );
+                        }
+                        else
+                        {
+                            strikeBatsmanScoreCard.setStrikeRate("0");
+                        }
+
+                        //update scorecard result
+                        updateScoreCardData(strikeBatsmanScoreCard);
+
+                        deleteTableRecord("cricket_balls",String.valueOf(ballId));
+                        if(cricketBall.getBallCountInOver().equalsIgnoreCase("1"))
+                        {
+                            deleteTableRecord("cricket_overs", String.valueOf(cricketBall.getOverId()));
+                        }
+
+                        cricketBall=fetchLatestBallOfInning(matchId,inningId);
+                        CricketScoreCard scoreCardToDelete=fetchScoreCardOfMatchInning(matchId,inningId);
+                        if(cricketBall != null)
+                        {
+                            if (cricketBall.isWicket().equalsIgnoreCase("1"))
+                            {
+                                deleteTableRecord("cricket_scorecard",String.valueOf(scoreCardToDelete.getId()));
+                            }
+                        }
+                        else
+                        {
+                            deleteTableRecord("cricket_scorecard",String.valueOf(scoreCardToDelete.getId()));
+                        }
+                        Gson gson = new Gson();
+                        String balls=gson.toJson(cricketBall);
+
+                        result.setResult("1");
+                        result.setData(balls);
+                        result.setMessage("Over not found.");
+
+                    }
+                    else
+                    {
+                        result.setResult("0");
+                        result.setData( "[]");
+                        result.setMessage("Over not found.");
+                    }
+                }
+                else
+                {
+                    result.setResult("0");
+                    result.setData( "[]");
+                    result.setMessage("Ball not found.");
+                }
+            }
+            else
+            {
+                result.setResult("0");
+                result.setData( "[]");
+                result.setMessage("Inning not found.");
+            }
+        }
+        else
+        {
+            result.setResult("0");
+            result.setData("[]");
+            result.setMessage("Match not found.");
+        }
+        Gson gson = new Gson();
+        String res=gson.toJson(result);
+        return res;
     }
 
 
