@@ -229,6 +229,7 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
                         if (jo.has("secondBattingTeamName"))
                             modelPastMatches.setSecondBattingTeamName(jo.getString("secondBattingTeamName"));
                         modelPastMatches.setTeam1profilePicture(jo.getString("team1profilePicture"));
+                        modelPastMatches.setMatchStatus(jo.getString("matchStatus"));
                         modelPastMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
                         modelPastMatches.setTournamentName(jo.getString("tournamentName"));
 

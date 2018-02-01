@@ -17,7 +17,7 @@ public class ModelPastMatches {
 
     private int rowType;
 
-    private String tossWinnerTeamName;
+    private String tossWinnerTeamName,matchStatus;
 
 
     private String firstBattingWickets;
@@ -361,4 +361,11 @@ public class ModelPastMatches {
     }
 
 
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
+    }
 }

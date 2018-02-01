@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelPastMatches;
+import com.app.sportzfever.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -102,6 +103,14 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
                 ((CustomViewHolder) holder).text_score1.setVisibility(View.GONE);
             }
 
+            if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                ((CustomViewHolder) holder).text_match_status.setText("UPCOMING");
+            } else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
+                ((CustomViewHolder) holder).text_match_status.setText("LIVE");
+            }else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                ((CustomViewHolder) holder).text_match_status.setText("PAST");
+            }
+
             if (m1.getTotalRunsScoredTeam1() != null && !m1.getTotalRunsScoredTeam1().equals("") && m1.getTotalRunsScoredTeam2() != null && m1.getTotalRunsScoredTeam2().equals("")) {
                 ((CustomViewHolder) holder).text_score1.setText("Bowling");
                 ((CustomViewHolder) holder).text_score1.setVisibility(View.VISIBLE);
@@ -133,7 +142,8 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView text_name, textwinnerteam, text_score, text_score1, text_event_matchdate, text_event_type, text_date, text_teamname, text_location, text_day, text_month, text_time, text_title;
+        TextView text_name, textwinnerteam, text_score, text_score1, text_event_matchdate,
+                text_event_type, text_date, text_match_status, text_teamname, text_location, text_day, text_month, text_time, text_title;
         ImageView teama, teamb;
 
         RelativeLayout relmatchvs;
@@ -145,6 +155,7 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.text_name = (TextView) view.findViewById(R.id.text_name);
             this.relmatchvs = (RelativeLayout) view.findViewById(R.id.relmatchvs);
             this.text_event_type = (TextView) view.findViewById(R.id.text_event_type);
+            this.text_match_status = (TextView) view.findViewById(R.id.text_match_status);
             this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.text_teamname = (TextView) view.findViewById(R.id.text_teamname);
             this.text_location = (TextView) view.findViewById(R.id.text_location);
