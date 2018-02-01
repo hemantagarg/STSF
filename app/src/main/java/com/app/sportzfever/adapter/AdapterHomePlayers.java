@@ -16,7 +16,6 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
 import com.app.sportzfever.utils.AppConstant;
-import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -101,7 +100,7 @@ public class AdapterHomePlayers extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             }
             if (!m1.getBatsmanAvatarPic().equalsIgnoreCase("")) {
-                Picasso.with(mContext).load(m1.getBatsmanAvatarPic()).transform(new CircleTransform()).into(((CustomViewHolder) holder).image_logo);
+                Picasso.with(mContext).load(m1.getBatsmanAvatarPic()).into(((CustomViewHolder) holder).image_logo);
             }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

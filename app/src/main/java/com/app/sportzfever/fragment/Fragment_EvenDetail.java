@@ -269,7 +269,6 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                     if (isUserInvite.equals("0")) {
                         text_location.setText("Location only visible to members");
                         rlAccepReject.setVisibility(View.GONE);
-                        text_person_going.setVisibility(View.GONE);
                         texttitle.setVisibility(View.GONE);
                         text_createdby.setVisibility(View.GONE);
                         rl_map.setVisibility(View.GONE);

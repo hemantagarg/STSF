@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelPastMatches;
-import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -89,20 +88,34 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((CustomViewHolder) holder).text_date.setText(m1.getDate());
             ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
             ((CustomViewHolder) holder).text_time.setText(m1.getTime());
-            ((CustomViewHolder) holder).text_score.setText(m1.getTotalRunsScoredTeam1() + "/" + m1.getFirstBattingWickets() + " " + "(" + m1.getPlayedOversTeam1() + ")");
-            ((CustomViewHolder) holder).text_score1.setText(m1.getTotalRunsScoredTeam2() + "/" + m1.getSecondBattingWickets() + " " + "(" + m1.getPlayedOversTeam2() + ")");
 
+            if (m1.getTotalRunsScoredTeam1() != null && !m1.getTotalRunsScoredTeam1().equals("")) {
+                ((CustomViewHolder) holder).text_score.setText(m1.getTotalRunsScoredTeam1() + "/" + m1.getFirstBattingWickets() + " " + "(" + m1.getPlayedOversTeam1() + ")");
+                ((CustomViewHolder) holder).text_score.setVisibility(View.VISIBLE);
+            } else {
+                ((CustomViewHolder) holder).text_score.setVisibility(View.GONE);
+            }
+            if (m1.getTotalRunsScoredTeam2() != null && !m1.getTotalRunsScoredTeam2().equals("")) {
+                ((CustomViewHolder) holder).text_score1.setText(m1.getTotalRunsScoredTeam2() + "/" + m1.getSecondBattingWickets() + " " + "(" + m1.getPlayedOversTeam2() + ")");
+                ((CustomViewHolder) holder).text_score1.setVisibility(View.VISIBLE);
+            } else {
+                ((CustomViewHolder) holder).text_score1.setVisibility(View.GONE);
+            }
+
+            if (m1.getTotalRunsScoredTeam1() != null && !m1.getTotalRunsScoredTeam1().equals("") && m1.getTotalRunsScoredTeam2() != null && m1.getTotalRunsScoredTeam2().equals("")) {
+                ((CustomViewHolder) holder).text_score1.setText("Bowling");
+                ((CustomViewHolder) holder).text_score1.setVisibility(View.VISIBLE);
+            }
 
             if (!m1.getTeam1profilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
                         .load(m1.getTeam1profilePicture())
-                        .transform(new CircleTransform())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).teama);
             }
             if (!m1.getTeam2profilePicture().equalsIgnoreCase("")) {
                 Picasso.with(mContext)
-                        .load(m1.getTeam2profilePicture()).transform(new CircleTransform())
+                        .load(m1.getTeam2profilePicture())
                         .placeholder(R.drawable.newsfeed)
                         .into(((CustomViewHolder) holder).teamb);
             }
