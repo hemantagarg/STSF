@@ -64,13 +64,17 @@
             android:textSize="@dimen/dp12" />
 
         <TextView
-            android:id="@+id/textwinnerteam"
+            android:id="@+id/text_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_event_matchdate"
             android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="@dimen/dp5"
             android:text="VS"
-            android:textColor="@color/logocolor"
+            android:textColor="@color/textcolordark"
             android:textSize="@dimen/dp12"
             android:textStyle="bold" />
 
@@ -80,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textwinnerteam">
+            android:layout_below="@+id/text_location">
 
             <RelativeLayout
                 android:id="@+id/rl_header"
@@ -258,16 +262,18 @@
                         android:textStyle="bold"
                         android:visibility="gone" />
 
+
                     <TextView
-                        android:id="@+id/text_location"
+                        android:id="@+id/textwinnerteam"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_below="@+id/text_title"
-                        android:layout_marginLeft="@dimen/dp10"
+                        android:background="@color/layout_bg"
                         android:ellipsize="end"
+                        android:gravity="center"
                         android:maxLines="1"
-                        android:text="location"
+                        android:padding="@dimen/dp10"
+                        android:text="tef"
                         android:textColor="@color/textcolordark"
                         android:textSize="@dimen/text_size_11" />
 

@@ -24,6 +24,7 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
@@ -50,14 +51,14 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private ImageView teamb, teama, image_back;
+    private ImageView teamb, teama, image_back, image_edit;
     private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private JSONObject data;
     public static FragmentUpcomingMatchDetails fragment_teamJoin_request;
     private final String TAG = FragmentUpcomingMatchDetails.class.getSimpleName();
-    private String avtarid = "";
+    private String eventId = "";
     View view_about;
     private String matchTitle = "";
     private String tournamentId = "";
@@ -95,7 +96,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            avtarid = bundle.getString("eventId");
+            eventId = bundle.getString("eventId");
         }
     }
 
@@ -110,6 +111,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
         text_teamname = (TextView) view.findViewById(R.id.text_teamname);
         text_startdate = (TextView) view.findViewById(R.id.text_startdate);
         image_back = (ImageView) view.findViewById(R.id.image_back);
+        image_edit = (ImageView) view.findViewById(R.id.image_edit);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         textmatchtype = (TextView) view.findViewById(R.id.textmatchtype);
@@ -132,6 +134,20 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                 context.onBackPressed();
             }
         });
+
+        image_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentEditMatch feed = new FragmentEditMatch();
+                Bundle b11 = new Bundle();
+                b11.putString("data", data.toString());
+                b11.putString("eventId", eventId);
+                feed.setArguments(b11);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, feed, true);
+
+            }
+        });
     }
 
 
@@ -149,21 +165,21 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
 
         Fragment_PastMatch_Info feed = new Fragment_PastMatch_Info();
         Bundle b11 = new Bundle();
-        b11.putString("avtarid", avtarid);
+        b11.putString("avtarid", eventId);
         b11.putString("data", data.toString());
         feed.setArguments(b11);
         adapter.addFrag(feed, "feed");
 
         Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
         Bundle b112 = new Bundle();
-        b112.putString("avtarid", avtarid);
+        b112.putString("avtarid", eventId);
         b112.putString("data", data.toString());
         fragmentMatchTeamDetail.setArguments(b112);
         adapter.addFrag(fragmentMatchTeamDetail, "Team");
 
         Fragment_MatchFeed matchFeed = new Fragment_MatchFeed();
         Bundle b111 = new Bundle();
-        b111.putString("avtarid", avtarid);
+        b111.putString("avtarid", eventId);
         b111.putString("tournamentId", tournamentId);
         matchFeed.setArguments(b111);
         adapter.addFrag(matchFeed, "feed");
@@ -214,7 +230,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + eventId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
 
             } else {

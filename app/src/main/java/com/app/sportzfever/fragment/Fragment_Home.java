@@ -122,11 +122,29 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
-            Bundle b = new Bundle();
-            b.putString("eventId", arrayListMatches.get(position).getEventId());
-            fragmentupcomingdetals.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+
+            if (arrayListMatches.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayListMatches.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+
+            } else if (arrayListMatches.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
+                Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayListMatches.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+
+            } else if (arrayListMatches.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayListMatches.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            }
+
         } else if (flag == 2) {
             Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
             Bundle bundle = new Bundle();
@@ -233,8 +251,8 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
                         modelPastMatches.setTeam2profilePicture(jo.getString("team2profilePicture"));
                         modelPastMatches.setTournamentName(jo.getString("tournamentName"));
 
-                        if (jo.has("tossWinnerTeamName"))
-                            modelPastMatches.setMatchWinnerTeamName(jo.getString("tossWinnerTeamName"));
+                        if (jo.has("MatchWinnerTeamName"))
+                            modelPastMatches.setMatchWinnerTeamName(jo.getString("MatchWinnerTeamName"));
                         if (jo.has("winString"))
                             modelPastMatches.setWinString(jo.getString("winString"));
 

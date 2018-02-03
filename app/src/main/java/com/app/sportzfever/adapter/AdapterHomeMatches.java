@@ -82,32 +82,30 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((CustomViewHolder) holder).text_name.setText(m1.getFirstBattingTeamName());
             ((CustomViewHolder) holder).text_teamname.setText(m1.getSecondBattingTeamName());
             ((CustomViewHolder) holder).text_event_matchdate.setText(m1.getDate() + " " + m1.getShortMonthName() + " " + m1.getYear() + " " + m1.getTime());
-            ((CustomViewHolder) holder).textwinnerteam.setText(m1.getMatchWinnerTeamName() + " " + m1.getWinString());
             ((CustomViewHolder) holder).text_location.setText(m1.getLocation());
             ((CustomViewHolder) holder).text_event_type.setText(m1.getTournamentName());
-            ((CustomViewHolder) holder).text_day.setText(m1.getDayName());
-            ((CustomViewHolder) holder).text_date.setText(m1.getDate());
-            ((CustomViewHolder) holder).text_month.setText(m1.getMonthName());
-            ((CustomViewHolder) holder).text_time.setText(m1.getTime());
 
             if (m1.getTotalRunsScoredTeam1() != null && !m1.getTotalRunsScoredTeam1().equals("")) {
                 ((CustomViewHolder) holder).text_score.setText(m1.getTotalRunsScoredTeam1() + "/" + m1.getFirstBattingWickets() + " " + "(" + m1.getPlayedOversTeam1() + ")");
                 ((CustomViewHolder) holder).text_score.setVisibility(View.VISIBLE);
             } else {
-                ((CustomViewHolder) holder).text_score.setVisibility(View.GONE);
+                ((CustomViewHolder) holder).text_score.setVisibility(View.INVISIBLE);
             }
             if (m1.getTotalRunsScoredTeam2() != null && !m1.getTotalRunsScoredTeam2().equals("")) {
                 ((CustomViewHolder) holder).text_score1.setText(m1.getTotalRunsScoredTeam2() + "/" + m1.getSecondBattingWickets() + " " + "(" + m1.getPlayedOversTeam2() + ")");
                 ((CustomViewHolder) holder).text_score1.setVisibility(View.VISIBLE);
             } else {
-                ((CustomViewHolder) holder).text_score1.setVisibility(View.GONE);
+                ((CustomViewHolder) holder).text_score1.setVisibility(View.INVISIBLE);
             }
 
             if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
                 ((CustomViewHolder) holder).text_match_status.setText("UPCOMING");
+                ((CustomViewHolder) holder).textwinnerteam.setText("Match start at " + m1.getTime() + " on " + m1.getDate() + " " + m1.getShortMonthName() + " " + m1.getYear());
             } else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
                 ((CustomViewHolder) holder).text_match_status.setText("LIVE");
-            }else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                ((CustomViewHolder) holder).textwinnerteam.setText("Match started at " + m1.getTime() + " on " + m1.getDate() + " " + m1.getShortMonthName() + " " + m1.getYear());
+            } else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                ((CustomViewHolder) holder).textwinnerteam.setText(m1.getMatchWinnerTeamName() + " " + m1.getWinString());
                 ((CustomViewHolder) holder).text_match_status.setText("PAST");
             }
 
@@ -143,7 +141,7 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView text_name, textwinnerteam, text_score, text_score1, text_event_matchdate,
-                text_event_type, text_date, text_match_status, text_teamname, text_location, text_day, text_month, text_time, text_title;
+                text_event_type, text_match_status, text_teamname, text_location, text_title;
         ImageView teama, teamb;
 
         RelativeLayout relmatchvs;
@@ -156,14 +154,10 @@ public class AdapterHomeMatches extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.relmatchvs = (RelativeLayout) view.findViewById(R.id.relmatchvs);
             this.text_event_type = (TextView) view.findViewById(R.id.text_event_type);
             this.text_match_status = (TextView) view.findViewById(R.id.text_match_status);
-            this.text_date = (TextView) view.findViewById(R.id.text_date);
             this.text_teamname = (TextView) view.findViewById(R.id.text_teamname);
             this.text_location = (TextView) view.findViewById(R.id.text_location);
             this.text_title = (TextView) view.findViewById(R.id.text_title);
             this.text_event_matchdate = (TextView) view.findViewById(R.id.text_event_matchdate);
-            this.text_day = (TextView) view.findViewById(R.id.text_day);
-            this.text_month = (TextView) view.findViewById(R.id.text_month);
-            this.text_time = (TextView) view.findViewById(R.id.text_time);
             this.textwinnerteam = (TextView) view.findViewById(R.id.textwinnerteam);
             this.text_score1 = (TextView) view.findViewById(R.id.text_score1);
             this.text_score = (TextView) view.findViewById(R.id.text_score);

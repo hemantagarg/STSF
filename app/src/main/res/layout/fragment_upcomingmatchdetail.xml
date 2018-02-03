@@ -249,6 +249,16 @@
                         android:textSize="@dimen/text_size_14"
                         android:textStyle="bold" />
 
+                    <ImageView
+                        android:id="@+id/image_edit"
+                        android:layout_width="20dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="right"
+                        android:layout_margin="@dimen/dp10"
+                        android:src="@drawable/edit_white"
+                        android:visibility="visible" />
+
+
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>

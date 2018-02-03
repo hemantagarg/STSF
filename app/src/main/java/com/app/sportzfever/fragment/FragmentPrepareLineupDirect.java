@@ -369,56 +369,68 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
         ll11.setVisibility(View.VISIBLE);
         if (addedPlayes.size() > 0) {
             text_name1.setText(addedPlayes.get(0).getPlayerName());
-            Picasso.with(context).load(addedPlayes.get(0).getProfilePicture()).transform(new CircleTransform()).into(image_player1);
+
+            if (addedPlayes.get(0).getProfilePicture() != null && !addedPlayes.get(0).getProfilePicture().equalsIgnoreCase(""))
+                Picasso.with(context).load(addedPlayes.get(0).getProfilePicture()).transform(new CircleTransform()).into(image_player1);
 
             if (addedPlayes.size() > 1) {
                 text_name2.setText(addedPlayes.get(1).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(1).getProfilePicture()).transform(new CircleTransform()).into(image_player2);
+                if (addedPlayes.get(1).getProfilePicture() != null && !addedPlayes.get(1).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(1).getProfilePicture()).transform(new CircleTransform()).into(image_player2);
             } else
                 ll2.setVisibility(View.GONE);
             if (addedPlayes.size() > 2) {
                 text_name3.setText(addedPlayes.get(2).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(2).getProfilePicture()).transform(new CircleTransform()).into(image_player3);
+                if (addedPlayes.get(2).getProfilePicture() != null && !addedPlayes.get(2).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(2).getProfilePicture()).transform(new CircleTransform()).into(image_player3);
             } else
                 ll3.setVisibility(View.GONE);
             if (addedPlayes.size() > 3) {
                 text_name4.setText(addedPlayes.get(3).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(3).getProfilePicture()).transform(new CircleTransform()).into(image_player4);
+                if (addedPlayes.get(3).getProfilePicture() != null && !addedPlayes.get(3).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(3).getProfilePicture()).transform(new CircleTransform()).into(image_player4);
             } else
                 ll4.setVisibility(View.GONE);
             if (addedPlayes.size() > 4) {
                 text_name5.setText(addedPlayes.get(4).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(4).getProfilePicture()).transform(new CircleTransform()).into(image_player5);
+                if (addedPlayes.get(4).getProfilePicture() != null && !addedPlayes.get(4).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(4).getProfilePicture()).transform(new CircleTransform()).into(image_player5);
             } else
                 ll5.setVisibility(View.GONE);
             if (addedPlayes.size() > 5) {
                 text_name6.setText(addedPlayes.get(5).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(5).getProfilePicture()).transform(new CircleTransform()).into(image_player6);
+                if (addedPlayes.get(5).getProfilePicture() != null && !addedPlayes.get(5).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(5).getProfilePicture()).transform(new CircleTransform()).into(image_player6);
             } else
                 ll6.setVisibility(View.GONE);
             if (addedPlayes.size() > 6) {
                 text_name7.setText(addedPlayes.get(6).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(6).getProfilePicture()).transform(new CircleTransform()).into(image_player7);
+                if (addedPlayes.get(6).getProfilePicture() != null && !addedPlayes.get(6).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(6).getProfilePicture()).transform(new CircleTransform()).into(image_player7);
             } else
                 ll7.setVisibility(View.GONE);
             if (addedPlayes.size() > 7) {
                 text_name8.setText(addedPlayes.get(7).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(7).getProfilePicture()).transform(new CircleTransform()).into(image_player8);
+                if (addedPlayes.get(7).getProfilePicture() != null && !addedPlayes.get(7).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(7).getProfilePicture()).transform(new CircleTransform()).into(image_player8);
             } else
                 ll8.setVisibility(View.GONE);
             if (addedPlayes.size() > 8) {
                 text_name9.setText(addedPlayes.get(8).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(8).getProfilePicture()).transform(new CircleTransform()).into(image_player9);
+                if (addedPlayes.get(8).getProfilePicture() != null && !addedPlayes.get(8).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(8).getProfilePicture()).transform(new CircleTransform()).into(image_player9);
             } else
                 ll9.setVisibility(View.GONE);
             if (addedPlayes.size() > 9) {
                 text_name10.setText(addedPlayes.get(9).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(9).getProfilePicture()).transform(new CircleTransform()).into(image_player10);
+                if (addedPlayes.get(9).getProfilePicture() != null && !addedPlayes.get(9).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(9).getProfilePicture()).transform(new CircleTransform()).into(image_player10);
             } else
                 ll10.setVisibility(View.GONE);
             if (addedPlayes.size() > 10) {
                 text_name11.setText(addedPlayes.get(10).getPlayerName());
-                Picasso.with(context).load(addedPlayes.get(10).getProfilePicture()).transform(new CircleTransform()).into(image_player11);
+                if (addedPlayes.get(10).getProfilePicture() != null && !addedPlayes.get(10).getProfilePicture().equalsIgnoreCase(""))
+                    Picasso.with(context).load(addedPlayes.get(10).getProfilePicture()).transform(new CircleTransform()).into(image_player11);
             } else
                 ll11.setVisibility(View.GONE);
         } else {
