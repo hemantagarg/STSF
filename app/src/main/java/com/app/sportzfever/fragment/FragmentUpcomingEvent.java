@@ -21,6 +21,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.UpcomingEvent;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -86,7 +87,6 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         setlistener();
-
         getServicelistRefresh();
     }
 
@@ -94,13 +94,13 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
     public void onResume() {
         super.onResume();
         Dashboard.getInstance().manageHeaderVisibitlity(true);
+        Dashboard.getInstance().setProgressLoader(false);
     }
 
     private void setlistener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 getServicelistRefresh();
             }
         });
@@ -162,11 +162,37 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
             if (arrayList.get(position).getEventType().equalsIgnoreCase("MATCH")) {
-                FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                if (arrayList.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                    FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    b.putString("currentTab", GlobalConstants.TAB_EVENT_BAR);
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_EVENT_BAR, fragmentupcomingdetals, true);
+
+                } else if (arrayList.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
+                    Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    b.putString("currentTab", GlobalConstants.TAB_EVENT_BAR);
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_EVENT_BAR, fragmentupcomingdetals, true);
+
+                } else if (arrayList.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                    Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", arrayList.get(position).getId());
+                    b.putString("currentTab", GlobalConstants.TAB_EVENT_BAR);
+                    fragmentupcomingdetals.setArguments(b);
+                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_EVENT_BAR, fragmentupcomingdetals, true);
+                }
+            } else {
+                Fragment_EvenDetail fragmentupcomingdetals = new Fragment_EvenDetail();
                 Bundle b = new Bundle();
                 b.putString("eventId", arrayList.get(position).getId());
+                b.putString("currentTab", GlobalConstants.TAB_EVENT_BAR);
                 fragmentupcomingdetals.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_EVENT_BAR, fragmentupcomingdetals, true);
             }
         }
     }
@@ -214,6 +240,7 @@ public class FragmentUpcomingEvent extends BaseFragment implements ApiResponse, 
                         upcomingEvent.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
                         upcomingEvent.setTeam1Name(jo.getString("team1Name"));
                         upcomingEvent.setTeam2Name(jo.getString("team2Name"));
+                        upcomingEvent.setMatchStatus(jo.getString("matchStatus"));
                         upcomingEvent.setTitle(jo.getString("title"));
                         JSONObject j1 = jo.getJSONObject("startDate");
 

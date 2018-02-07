@@ -584,7 +584,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
 
         alertDialog.setMessage("Are you sure you want to delete ? The team will be deleted but data will remain safe with us.");
 
-        alertDialog.setPositiveButton("CONFRM",
+        alertDialog.setPositiveButton("CONFIRM",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {

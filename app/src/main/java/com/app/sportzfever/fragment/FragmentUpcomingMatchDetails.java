@@ -58,7 +58,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
     private JSONObject data;
     public static FragmentUpcomingMatchDetails fragment_teamJoin_request;
     private final String TAG = FragmentUpcomingMatchDetails.class.getSimpleName();
-    private String eventId = "";
+    private String eventId = "", currentTab = GlobalConstants.TAB_FEED_BAR;
     View view_about;
     private String matchTitle = "";
     private String tournamentId = "";
@@ -97,6 +97,9 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
         Bundle bundle = getArguments();
         if (bundle != null) {
             eventId = bundle.getString("eventId");
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
         }
     }
 
@@ -144,7 +147,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                 b11.putString("data", data.toString());
                 b11.putString("eventId", eventId);
                 feed.setArguments(b11);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, feed, true);
+                Dashboard.getInstance().pushFragments(currentTab, feed, true);
 
             }
         });
