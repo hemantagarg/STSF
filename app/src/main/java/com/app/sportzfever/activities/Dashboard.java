@@ -591,6 +591,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeFeedFragment() {
 
         mCurrentTab = GlobalConstants.TAB_HOME_BAR;
+
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.VISIBLE);
         freinds_container.setVisibility(View.GONE);

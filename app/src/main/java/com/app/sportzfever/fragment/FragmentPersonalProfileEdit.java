@@ -23,6 +23,7 @@ import com.app.sportzfever.activities.PickLocation;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -59,6 +60,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     String latitude = "0.0", longitude = "0.0";
     ArrayList<String> listBattinghand = new ArrayList<>();
     ArrayAdapter<String> adapterBattinghand;
+    private String currentTab = GlobalConstants.TAB_FEED_BAR;
 
     public static FragmentPersonalProfileEdit getInstance() {
         if (fragment_teamJoin_request == null)
@@ -149,12 +151,14 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
     }
 
     private void getBundle() {
-
         try {
-
             Bundle bundle = getArguments();
             if (bundle != null) {
                 String data = bundle.getString("data");
+
+                if (bundle.containsKey("currentTab")) {
+                    currentTab = bundle.getString("currentTab");
+                }
                 JSONObject jo = new JSONObject(data);
 
                 JSONObject dateOfBirth = jo.getJSONObject("dateOfBirth");
@@ -191,7 +195,7 @@ public class FragmentPersonalProfileEdit extends BaseFragment implements ApiResp
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear+1)
+                        String date = String.valueOf(year) + "-" + String.valueOf(monthOfYear + 1)
                                 + "-" + String.valueOf(dayOfMonth);
                         avtar_dob.setText(date);
                     }

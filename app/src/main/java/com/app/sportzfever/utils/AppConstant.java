@@ -99,6 +99,7 @@ public class AppConstant {
     public static final String TIME_OUT = "TIME OUT";
     public static final String SELECT_OUT_TYPE = "Select Out Type";
     public static final String ADD_NEW_BOWLER = "Add New Bowler";
+    public static String CURRENT_SELECTED_TAB = "tab_feed_bar";
 
     public static final String UPDATENAME = "UPDATENAME";
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";

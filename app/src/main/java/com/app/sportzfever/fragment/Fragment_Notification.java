@@ -17,6 +17,7 @@ import com.app.sportzfever.adapter.AdapterNotification;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelNotification;
@@ -106,22 +107,24 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
         });
 
 
-
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
+        if (flag == 1) {
+            if (arrayList.get(position).getCategory().equals("USER")) {
+                FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getActionId());
+                b.putString("currentTab", GlobalConstants.TAB_NOTIFCATION_BAR);
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, fragmentUser_details, true);
+            }else {
 
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
+            }
+
         }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
+
     }
 
     private void getServicelist() {
@@ -129,7 +132,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             skipCount = 0;
             if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION +skipCount+ AppUtils.getUserId(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + skipCount + AppUtils.getUserId(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -146,7 +149,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context)+ "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
@@ -162,7 +165,7 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
@@ -183,6 +186,8 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
                         modelNotification.setReadStatus(jo.getString("readStatus"));
                         modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
                         modelNotification.setUserPorfile(jo.getString("userPorfile"));
+                        modelNotification.setCategory(jo.getString("category"));
+                        modelNotification.setActionId(jo.getString("actionId"));
                         modelNotification.setRowType(1);
 
                         arrayList.add(modelNotification);

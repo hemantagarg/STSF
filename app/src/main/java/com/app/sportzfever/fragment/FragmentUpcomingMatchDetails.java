@@ -115,6 +115,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
         text_startdate = (TextView) view.findViewById(R.id.text_startdate);
         image_back = (ImageView) view.findViewById(R.id.image_back);
         image_edit = (ImageView) view.findViewById(R.id.image_edit);
+        image_edit.setVisibility(View.GONE);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         textmatchtype = (TextView) view.findViewById(R.id.textmatchtype);
@@ -278,9 +279,14 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                 Dashboard.getInstance().setProgressLoader(false);
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    String allowedToEdit = jObject.getString("allowedToEdit");
+                    if (allowedToEdit.equals("0")) {
+                        image_edit.setVisibility(View.GONE);
+                    } else {
+                        image_edit.setVisibility(View.VISIBLE);
+                    }
                     data = jObject.getJSONObject("data");
 
-                    //  maxlistLength = jObject.getString("total");
                     JSONObject jbatsman = data.getJSONObject("match");
                     String inviteStatus = jbatsman.getString("inviteStatus");
                     if (inviteStatus.equalsIgnoreCase(AppConstant.PENDING)) {

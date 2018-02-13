@@ -55,6 +55,7 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
     public static Fragmentphotos fragment_teamJoin_request;
     private final String TAG = Fragmentphotos.class.getSimpleName();
     private String avtarid = "", teamavtarid = "";
+    private String currentTab = GlobalConstants.TAB_FEED_BAR;
 
     public static Fragmentphotos getInstance() {
         if (fragment_teamJoin_request == null)
@@ -79,6 +80,9 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
         }
     }
 
@@ -164,7 +168,7 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
         b.putString("galleryid", arrayList.get(position).getAlbumId());
         b.putString("title", arrayList.get(position).getAlbumName());
         fragmentGalleryDetails.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
+        Dashboard.getInstance().pushFragments(currentTab, fragmentGalleryDetails, true);
 
     }
 

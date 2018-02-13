@@ -175,6 +175,9 @@ public class FragmentEditMatch extends BaseFragment implements ApiResponse, OnCu
                 edt_no_players.setText(match.getString("numberOfPlayers"));
                 edt_no_overs.setText(match.getString("numberOfOvers"));
                 edt_eventtitle.setText(match.getString("matchTile"));
+                mTvToDate.setText(match.getString("matchDate"));
+                JSONObject matchDate1 = match.getJSONObject("matchDate1");
+                mTvTime.setText(matchDate1.getString("time"));
 
                 if (match.getString("matchType").equalsIgnoreCase("LIMITEDOVER")) {
                     spinner_matchtype.setSelection(0);
@@ -362,11 +365,8 @@ public class FragmentEditMatch extends BaseFragment implements ApiResponse, OnCu
                     "numberOfOvers":"4"
             }*/
             jsonObject.put("startDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
-            if (checkboxend_date.isChecked() && !mTvToDateend.getText().toString().equalsIgnoreCase("")) {
-                jsonObject.put("endDate", mTvToDateend.getText().toString() + " " + mTvTimeend.getText().toString());
-            } else {
-                jsonObject.put("endDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
-            }
+            jsonObject.put("endDate", mTvToDate.getText().toString() + " " + mTvTime.getText().toString());
+
             jsonObject.put("lat", latitude);
             jsonObject.put("title", edt_eventtitle.getText().toString());
             jsonObject.put("lng", longitude);
@@ -374,8 +374,15 @@ public class FragmentEditMatch extends BaseFragment implements ApiResponse, OnCu
             jsonObject.put("noOfPlayers", edt_no_players.getText().toString());
             jsonObject.put("noOfOvers", edt_no_overs.getText().toString());
             jsonObject.put("description", mEdtdetails.getText().toString());
-            jsonObject.put("location", mEdtlocation.getText().toString());
-            jsonObject.put("eventType", EventType);
+            jsonObject.put("location", mEdtlocation.getText().toString().trim());
+
+            String matchtype = "";
+            if (spinner_matchtype.getSelectedItemPosition() == 0) {
+                matchtype = "LIMITEDOVER";
+            } else {
+                matchtype = "UNLIMITEDOVER";
+            }
+            jsonObject.put("matchType", matchtype);
 
             createMatchEvent(jsonObject);
         } catch (Exception e) {

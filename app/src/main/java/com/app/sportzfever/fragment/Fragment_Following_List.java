@@ -54,6 +54,7 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
     public static Fragment_Following_List fragment_friend_request;
     private final String TAG = Fragment_Following_List.class.getSimpleName();
     private String avtarid = "";
+    private String currentTab = GlobalConstants.TAB_FEED_BAR;
 
     public static Fragment_Following_List getInstance() {
         if (fragment_friend_request == null)
@@ -79,6 +80,9 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
         }
     }
 
@@ -126,13 +130,13 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                 Bundle bundle = new Bundle();
                 bundle.putString("id", arrayList.get(position).getAvatar());
                 fragmentAvtar_details.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                Dashboard.getInstance().pushFragments(currentTab, fragmentAvtar_details, true);
             } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
                 Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", arrayList.get(position).getId());
                 fragmentAvtar_details.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                Dashboard.getInstance().pushFragments(currentTab, fragmentAvtar_details, true);
             }
         }
     }

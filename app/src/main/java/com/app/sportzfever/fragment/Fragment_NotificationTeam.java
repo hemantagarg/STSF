@@ -181,6 +181,8 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
                         modelNotification.setReadStatus(jo.getString("readStatus"));
                         modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
                         modelNotification.setUserPorfile(jo.getString("userPorfile"));
+                        modelNotification.setCategory(jo.getString("category"));
+                        modelNotification.setActionId(jo.getString("actionId"));
                         modelNotification.setRowType(1);
 
                         arrayList.add(modelNotification);

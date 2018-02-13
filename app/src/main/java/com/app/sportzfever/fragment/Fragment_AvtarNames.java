@@ -33,6 +33,7 @@ public class Fragment_AvtarNames extends BaseFragment {
     public static Fragment_AvtarNames fragment_team;
     private final String TAG = Fragment_AvtarNames.class.getSimpleName();
     private String avtarid = "", user_id = "";
+    private String currentTab = GlobalConstants.TAB_FEED_BAR;
 
     public static Fragment_AvtarNames getInstance() {
         if (fragment_team == null)
@@ -75,7 +76,9 @@ public class Fragment_AvtarNames extends BaseFragment {
         if (bundle != null) {
             user_id = bundle.getString("avtarid");
             String data = bundle.getString("data");
-
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
             try {
                 JSONObject mainData = new JSONObject(data);
                 JSONObject avatar = mainData.getJSONObject("avatar");
@@ -105,7 +108,7 @@ public class Fragment_AvtarNames extends BaseFragment {
                 Bundle b = new Bundle();
                 b.putString("id", avtarid);
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
 
             }
         });

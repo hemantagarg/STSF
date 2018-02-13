@@ -51,6 +51,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
     private String avtarid = "";
     public static Fragment_UserFriend_List fragment_friend_request;
     private final String TAG = Fragment_UserFriend_List.class.getSimpleName();
+    private String currentTab= GlobalConstants.TAB_FEED_BAR;
 
     public static Fragment_UserFriend_List getInstance() {
         if (fragment_friend_request == null)
@@ -93,6 +94,9 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
         Bundle bundle = getArguments();
         if (bundle != null) {
             avtarid = bundle.getString("avtarid");
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
         }
     }
 
@@ -125,7 +129,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
             Bundle b = new Bundle();
             b.putString("id", arrayList.get(position).getFriendId());
             fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
         }
     }
 

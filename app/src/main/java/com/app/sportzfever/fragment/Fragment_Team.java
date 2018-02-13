@@ -70,9 +70,8 @@ public class Fragment_Team extends BaseFragment {
     }
 
     private void setupTabIcons() {
-
-        tabLayout.getTabAt(0).setText("Friend Invites");
-        tabLayout.getTabAt(1).setText("Team Invites");
+        tabLayout.getTabAt(0).setText("Team Invites");
+        tabLayout.getTabAt(1).setText("Friend Invites");
         tabLayout.getTabAt(2).setText("Tournament Invites");
         tabLayout.setTabTextColors(context.getResources().getColor(R.color.textcolordark), context.getResources().getColor(R.color.red));
 
@@ -81,8 +80,8 @@ public class Fragment_Team extends BaseFragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
 
-        adapter.addFrag(new Fragment_Friend_Request());
         adapter.addFrag(new Fragment_TeamJoin_Request());
+        adapter.addFrag(new Fragment_Friend_Request());
         adapter.addFrag(new Fragment_TournamentJoin_Request());
         viewPager.setAdapter(adapter);
     }

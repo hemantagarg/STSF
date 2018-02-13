@@ -68,7 +68,7 @@ public class Fragment_NotificationDetails extends BaseFragment {
         frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
         setupTabIcons();
         setListener();
-        setFragment(new Fragment_Notification());
+        setFragment(new Fragment_NotificationTeam());
     }
 
     private void setFragment(Fragment fragment) {
@@ -80,8 +80,8 @@ public class Fragment_NotificationDetails extends BaseFragment {
 
 
     private void setupTabIcons() {
-        tabLayout.addTab(tabLayout.newTab().setText("User Notification"));
         tabLayout.addTab(tabLayout.newTab().setText("Team Notification"));
+        tabLayout.addTab(tabLayout.newTab().setText("User Notification"));
 
     /*    tabLayout.getTabAt(0).setText("User Notification");
         tabLayout.getTabAt(1).setText("Team Notification");
@@ -96,10 +96,11 @@ public class Fragment_NotificationDetails extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        setFragment(new Fragment_Notification());
+                        setFragment(new Fragment_NotificationTeam());
                         break;
                     case 1:
-                        setFragment(new Fragment_NotificationTeam());
+                        setFragment(new Fragment_Notification());
+
                         break;
                 }
             }

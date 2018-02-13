@@ -25,7 +25,7 @@ public class ModelNotification {
 
     private String notificationText;
 
-    private String actionId;
+    private String actionId,category;
 
 
     private String userPorfile;
@@ -198,5 +198,13 @@ public class ModelNotification {
     public void setDate (String date)
     {
         this.date = date;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -46,6 +46,7 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
     private ModelAboutMe modelAboutMe;
     ImageView img_profilepic, image_edit;
     JSONObject data;
+    private String currentTab = GlobalConstants.TAB_FEED_BAR;
 
     public static FragmentUserProfile getInstance() {
         if (fragment_teamJoin_request == null)
@@ -100,6 +101,9 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
             } else {
                 image_edit.setVisibility(View.GONE);
             }
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
             String data = bundle.getString("data");
             setData(data);
         }
@@ -150,9 +154,10 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                 FragmentPersonalProfileEdit tab2 = new FragmentPersonalProfileEdit();
                 Bundle b = new Bundle();
                 b.putString("data", data.toString());
+                b.putString("currentTab", currentTab);
                 tab2.setArguments(b);
                 tab2.setTargetFragment(FragmentUserProfile.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+                Dashboard.getInstance().pushFragments(currentTab, tab2, true);
             }
         });
 

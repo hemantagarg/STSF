@@ -74,7 +74,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
     JSONObject userDetailObject, AvtarDetail;
     private String id = "", isTeamfollower = "";
     private String isFriend = "";
-    private String userid = "", path = "";
+    private String currentTab = GlobalConstants.TAB_FEED_BAR, path = "";
     public static final int REQUEST_CODE_GALLERY = 0x1;
     public static final int REQUEST_CODE_TAKE_PICTURE = 0x2;
     public static final int REQUEST_CODE_CROP_IMAGE = 0x3;
@@ -191,11 +191,14 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         });
     }
 
-
     private void getBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString("id");
+
+            if (bundle.containsKey("currentTab")) {
+                currentTab = bundle.getString("currentTab");
+            }
         }
     }
 
@@ -250,6 +253,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         Bundle b = new Bundle();
         b.putString("avtarid", id);
         b.putString("data", userDetailObject.toString());
+        b.putString("currentTab",currentTab);
         tab2.setArguments(b);
         adapter.addFrag(tab2, "services");
 
@@ -257,6 +261,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         Bundle b111 = new Bundle();
         b111.putString("avtarid", id);
         b111.putString("data", userDetailObject.toString());
+        b111.putString("currentTab",currentTab);
         tab12.setArguments(b111);
         adapter.addFrag(tab12, "services");
 
@@ -264,6 +269,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
             Fragment_ParticularUserFeed feed = new Fragment_ParticularUserFeed();
             Bundle b11 = new Bundle();
             b11.putString("avtarid", id);
+            b11.putString("currentTab", currentTab);
             feed.setArguments(b11);
             adapter.addFrag(feed, "feed");
         }
@@ -271,18 +277,21 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         Fragment_UserFriend_List tab4 = new Fragment_UserFriend_List();
         Bundle b3 = new Bundle();
         b3.putString("avtarid", id);
+        b3.putString("currentTab", currentTab);
         tab4.setArguments(b3);
         adapter.addFrag(tab4, "Reviews");
 
         Fragment_Following_List fragmentFollowingList = new Fragment_Following_List();
         Bundle b1 = new Bundle();
         b1.putString("avtarid", id);
+        b1.putString("currentTab", currentTab);
         fragmentFollowingList.setArguments(b1);
         adapter.addFrag(fragmentFollowingList, "Reviews");
 
         Fragmentphotos tab3 = new Fragmentphotos();
         Bundle b2 = new Bundle();
         b2.putString("avtarid", id);
+        b2.putString("currentTab", currentTab);
         tab3.setArguments(b2);
         adapter.addFrag(tab3, "Portfolio");
 
@@ -410,7 +419,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
                 selectedFilePath = new File(path);
                 Log.e("filepath", "**" + selectedFilePath);
                 Picasso.with(mActivity).load(selectedFilePath).transform(new CircleTransform()).into(imge_user);
-                    uploadPhoto();
+                uploadPhoto();
                 //     profile_image.setImageBitmap(bitmap);
                 break;
         }
@@ -569,12 +578,6 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
             }
         };
     }
-
-
-    protected void setFragment(Fragment fragment) {
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_CHAT_BAR, fragment, true);
-    }
-
 
     @Override
     public void onClick(View view) {
