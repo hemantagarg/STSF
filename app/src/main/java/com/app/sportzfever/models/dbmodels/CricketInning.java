@@ -2,7 +2,8 @@ package com.app.sportzfever.models.dbmodels;
 
 import java.io.StringReader;
 
-public class CricketInning {
+public class CricketInning
+{
    private int id;
    private String totalOvers;
    private String wickets;

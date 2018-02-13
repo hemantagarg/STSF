@@ -10,6 +10,7 @@ public class Matches {
     private String  eventId;
     private String  team2CheckAvailibility;
     private String  team1Id;
+    private String  team2Id;
     private String  matchResultId;
     private String  location;
     private String  tie;
@@ -253,7 +254,7 @@ public class Matches {
         this.team2Id = team2Id;
     }
 
-    private String  team2Id;
+
 
 
     public Matches(String  inviteStatus,String  matchDate,String  numberOfOvers,String  matchStatus,String  tossSelection,String  eventId,String  team2CheckAvailibility,String  team1Id,String  matchResultId,String  location,String  tie,String  matchType,String  numberOfInnings,String  readStatus,String  dl,String  description,String  activeScorerId,String  isTeam2ScoringOnSf,String  tossResultId,String  calendarId,String  leagueId,String  isTeam1ScoringOnSf,String  team1CheckAvailibility,String  points,String  numberOfPlayers,String  tournamentId,String  team2Id)
