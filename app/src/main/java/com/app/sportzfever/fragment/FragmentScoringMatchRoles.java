@@ -417,7 +417,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     fragmentSearchUserList.setArguments(b);
                 }
                 fragmentSearchUserList.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSearchUserList, true);
             }
         });
         text_captain.setOnClickListener(new View.OnClickListener() {
@@ -828,7 +828,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         b.putString("team2Name", team1Name);
                         fragmentupcomingdetals.setArguments(b);
                         fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else {
                         checkLineupComplete();
                     }
@@ -878,7 +878,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         b.putString("team2Name", team1Name);
                         fragmentupcomingdetals.setArguments(b);
                         // fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else {
                         FragmentSaveTossResultInningScore fragmentupcomingdetals = new FragmentSaveTossResultInningScore();
                         Bundle bundle = new Bundle();
@@ -896,7 +896,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         bundle.putString("team1Name", team2Name);
                         bundle.putString("team2Name", team1Name);
                         fragmentupcomingdetals.setArguments(bundle);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     }
                 } else {
                     if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {

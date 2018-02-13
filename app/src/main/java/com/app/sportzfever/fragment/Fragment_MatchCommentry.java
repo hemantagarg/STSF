@@ -173,14 +173,14 @@ public class Fragment_MatchCommentry extends BaseFragment implements ApiResponse
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayteam1Batting.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         } else if (flag == 2) {
             FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayteam1Bowling.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         }*/
     }

@@ -18,7 +18,6 @@ import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.utils.AppConstant;
@@ -81,6 +80,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
         getBundle();
         getEventDetail();
         setListener();
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
     }
 
     private void init(View view) {
@@ -195,7 +195,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                 Bundle bundle = new Bundle();
                 bundle.putString("id", teamId);
                 fragmentAvtar_details.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
             }
         });
         image_accept.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +219,7 @@ public class Fragment_EvenDetail extends BaseFragment implements ApiResponse, On
                 Bundle bundle = new Bundle();
                 bundle.putString("data", jsonData.toString());
                 fragmentEventRsvpDetail.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentEventRsvpDetail, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentEventRsvpDetail, true);
             }
         });
 

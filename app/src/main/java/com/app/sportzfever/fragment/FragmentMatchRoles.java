@@ -394,7 +394,7 @@ public class FragmentMatchRoles extends BaseFragment implements OnCustomItemClic
                     fragmentSearchUserList.setArguments(b);
                 }
                 fragmentSearchUserList.setTargetFragment(FragmentMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSearchUserList, true);
             }
         });
         text_captain.setOnClickListener(new View.OnClickListener() {

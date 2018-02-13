@@ -465,7 +465,7 @@ public class Fragment_CreateTeam extends AppCompatActivity implements ApiRespons
                         Bundle b = new Bundle();
                         b.putString("id", data.getString("teamId"));
                         fragmentUser_details.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
                     }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

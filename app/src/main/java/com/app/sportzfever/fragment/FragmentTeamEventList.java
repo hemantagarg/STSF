@@ -139,7 +139,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                 bundle.putString("teamId", teamid);
                 fragment_postFeed.setArguments(bundle);
                 fragment_postFeed.setTargetFragment(FragmentTeamEventList.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
 
             }
 
@@ -169,26 +169,26 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                     bundle.putString("title", arrayList.get(position).getTitle());
                     bundle.putString("playersCount", arrayList.get(position).getPlayersCount());
                     fragment_postFeed.setArguments(bundle);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
                 } else {
                     if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_ENDED)) {
                         Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
                         Bundle b = new Bundle();
                         b.putString("eventId", arrayList.get(position).getId());
                         fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
                         FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
                         Bundle b = new Bundle();
                         b.putString("eventId", arrayList.get(position).getId());
                         fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
                         Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
                         Bundle b = new Bundle();
                         b.putString("eventId", arrayList.get(position).getId());
                         fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     }
                 }
             }else {
@@ -197,7 +197,7 @@ public class FragmentTeamEventList extends BaseFragment implements ApiResponse, 
                 b.putString("eventId", arrayList.get(position).getId());
                 b.putString("currentTab", GlobalConstants.TAB_FEED_BAR);
                 fragmentupcomingdetals.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
             }
         }
     }

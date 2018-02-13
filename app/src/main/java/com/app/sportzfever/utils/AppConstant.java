@@ -30,13 +30,19 @@ public class AppConstant {
     public static final String UNFRIEND = "UNFRIEND";
     public static final String REJECTED = "REJECTED";
     public static final String PUBLIC = "Public";
+    public static final String USER_TYPE = "USER";
     public static final String CRICKET = "Cricket";
     public static final String FRIENDS = "Friends";
     public static final String ONLYME = "Only Me";
     public static final String PUSHTYPE_FRIEND = "FRIEND";
     public static final String PUSHTYPE_TEAM = "TEAM";
+    public static final String TEAM = "TEAM";
     public static final String PUSHTYPE_CHAT = "CHAT";
     public static final String MATCHSTATUS_ENDED = "ENDED";
+
+    public static final String MATCH_PAST = "MATCH_PAST";
+    public static final String MATCH_LIVE = "MATCH_LIVE";
+    public static final String MATCH_UP = "MATCH_UP";
     public static final String YES = "YES";
     public static final String NO = "NO";
     public static final String START = "START";
@@ -83,6 +89,7 @@ public class AppConstant {
     public static final String PRACTISE = "PRACTISE";
     public static final String MEET_UP = "MEET UP";
     public static final String EVENT = "EVENT";
+    public static final String STATUS = "STATUS";
     public static final String BOWLED = "BOWLED";
     public static final String CATCH_OUT = "CATCH OUT";
     public static final String CAUGHT_BEHIND = "CAUGHT BEHIND";
@@ -100,6 +107,7 @@ public class AppConstant {
     public static final String SELECT_OUT_TYPE = "Select Out Type";
     public static final String ADD_NEW_BOWLER = "Add New Bowler";
     public static String CURRENT_SELECTED_TAB = "tab_feed_bar";
+    public static boolean ISFEEDNEEDTOREFRESH = false;
 
     public static final String UPDATENAME = "UPDATENAME";
     public static final String UPDATECAPTAIN = "UPDATECAPTAIN";

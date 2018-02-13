@@ -22,6 +22,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Likes;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -88,6 +89,7 @@ public class Fragment_Likes extends BaseFragment implements ApiResponse, OnCusto
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
         getBundle();
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         setlistener();
         manageHeaderView();
         getServicelistRefresh();

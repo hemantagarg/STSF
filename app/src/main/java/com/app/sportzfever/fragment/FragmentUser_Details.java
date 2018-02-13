@@ -37,6 +37,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -104,6 +105,7 @@ public class FragmentUser_Details extends BaseFragment implements View.OnClickLi
         vendorProfileFragment = this;
         initViews();
         getBundle();
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         getUserDetails();
         setCollapsingToolbar();
         setListener();

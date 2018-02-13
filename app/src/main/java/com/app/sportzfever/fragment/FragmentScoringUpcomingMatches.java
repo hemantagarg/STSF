@@ -158,7 +158,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 FragmentCreateMatch fragment_postFeed = new FragmentCreateMatch();
                 Bundle bundle = new Bundle();
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
             }
         });
     }
@@ -187,7 +187,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         b.putString("team2Name", arrayList.get(position).getTeam2Name());
                         fragmentupcomingdetals.setArguments(b);
                         fragmentupcomingdetals.setTargetFragment(FragmentScoringUpcomingMatches.this, AppConstant.FRAGMENT_CODE);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else {
                         String scorer1 = "<font color='#3d85f3'>" + arrayList.get(position).getTeam1ScorerName() + "</font>";
                         String scorer2 = "<font color='#3d85f3'>" + arrayList.get(position).getTeam2ScorerName() + "</font>";
@@ -211,7 +211,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                                 b.putString("eventId", arrayList.get(position).getEventId());
                                 b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam2());
                                 fragmentSoringMatchDetails.setArguments(b);
-                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
                             } else if (arrayList.get(position).getTeam2BattingStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
                                 checkActiveScorer(position);
                             } else if (arrayList.get(position).getIsScorerForTeam1().equalsIgnoreCase(AppConstant.NO) &&
@@ -224,7 +224,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                                 b.putString("eventId", arrayList.get(position).getEventId());
                                 b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam1());
                                 fragmentSoringMatchDetails.setArguments(b);
-                                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
                             }
                         }
                     }
@@ -251,7 +251,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             b.putString("eventId", arrayList.get(position).getEventId());
             b.putString("IsScorerForTeam2", arrayList.get(position).getIsScorerForTeam2());
             fragmentSoringMatchDetails.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
         } else {
             String message = String.format(context.getResources().getString(R.string.another_scorer_start_scoring_message), arrayList.get(position).getActiveScorerName());
             AppUtils.showDialogMessage(context, message.replace("\n", "<br />"));

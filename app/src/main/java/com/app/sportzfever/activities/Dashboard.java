@@ -25,7 +25,9 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,9 +108,12 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private TextView text_score, text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     public static volatile Fragment currentFragment;
     private HashMap<String, Stack<Fragment>> mStacks;
-    private ImageView image_user;
+    private ImageView image_user, image_chat, image_notification, image_event, image_friends, image_feed, image_home;
     private int lastExpandedPosition;
     private JSONArray menucategoriesArrayTeam;
+    private RelativeLayout rl_home, rl_feed, rl_friends, rl_events, rl_notification, rl_chat;
+    private TextView text_teamInvite_count, text_notification_count;
+    private LinearLayout ll_bottom;
 
     /***********************************************
      * Function Name : getInstance
@@ -144,9 +149,11 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     public void manageFooterVisibitlity(boolean isVisible) {
         if (isVisible) {
-            tabLayout.setVisibility(View.VISIBLE);
+            //  tabLayout.setVisibility(View.VISIBLE);
+            ll_bottom.setVisibility(View.VISIBLE);
         } else {
-            tabLayout.setVisibility(View.GONE);
+            //  tabLayout.setVisibility(View.GONE);
+            ll_bottom.setVisibility(View.GONE);
         }
     }
 
@@ -252,6 +259,23 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         text_username.setText(AppUtils.getUserName(context));
         text_email.setText(AppUtils.getUseremail(context));
         image_user = (ImageView) header.findViewById(R.id.image_user);
+        image_chat = (ImageView) findViewById(R.id.image_chat);
+        image_notification = (ImageView) findViewById(R.id.image_notification);
+        image_event = (ImageView) findViewById(R.id.image_event);
+        image_friends = (ImageView) findViewById(R.id.image_friends);
+        image_home = (ImageView) findViewById(R.id.image_home);
+        image_feed = (ImageView) findViewById(R.id.image_feed);
+
+        rl_home = (RelativeLayout) findViewById(R.id.rl_home);
+        rl_feed = (RelativeLayout) findViewById(R.id.rl_feed);
+        rl_friends = (RelativeLayout) findViewById(R.id.rl_friends);
+        rl_events = (RelativeLayout) findViewById(R.id.rl_events);
+        rl_notification = (RelativeLayout) findViewById(R.id.rl_notification);
+        rl_chat = (RelativeLayout) findViewById(R.id.rl_chat);
+
+        text_teamInvite_count = (TextView) findViewById(R.id.text_teamInvite_count);
+        text_notification_count = (TextView) findViewById(R.id.text_notification_count);
+        ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         if (!AppUtils.getUserImage(context).equalsIgnoreCase("")) {
             Picasso.with(context).load(AppUtils.getUserImage(context)).placeholder(R.drawable.user).transform(new CircleTransform()).into(image_user);
         }
@@ -335,23 +359,23 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     //  drawer.closeDrawer(GravityCompat.START);
                 } else*/
                 if (groupnamelistId.get(position).equalsIgnoreCase("3")) {
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentGallery(), true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, new FragmentGallery(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("4")) {
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Matches(), true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, new Fragment_Matches(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("5")) {
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Tournaments(), true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, new Fragment_Tournaments(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("6")) {
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentScoringUpcomingMatches(), true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, new FragmentScoringUpcomingMatches(), true);
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("7")) {
                     FragmentPersonal_User_Details fragmentUser_details = new FragmentPersonal_User_Details();
                     Bundle b = new Bundle();
                     b.putString("id", AppUtils.getUserId(context));
                     fragmentUser_details.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 
                     drawer.closeDrawer(GravityCompat.START);
                 } else if (groupnamelistId.get(position).equalsIgnoreCase("8")) {
@@ -366,7 +390,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             @Override
             public void onClick(View view) {
 
-                pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Search(), true);
+                pushFragments(AppConstant.CURRENT_SELECTED_TAB, new Fragment_Search(), true);
             }
         });
         expendableView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -379,7 +403,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     Bundle bundle = new Bundle();
                     bundle.putString("array", menucategoriesArrayTeam.toString());
                     fragmentMenuTeamList.setArguments(bundle);
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentMenuTeamList, true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentMenuTeamList, true);
                     parent.collapseGroup(groupPosition);
                     drawer.closeDrawer(GravityCompat.START);
                 } else {
@@ -391,7 +415,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                     Bundle bundle = new Bundle();
                     bundle.putString("id", avtarid);
                     fragmentAvtar_details.setArguments(bundle);
-                    pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+                    pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
                     parent.collapseGroup(groupPosition);
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -478,6 +502,100 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                 pushFragments(GlobalConstants.TAB_FEED_BAR, new FragmentSportsTeamDetailList(), true);
             }
         });
+
+        rl_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_home.setImageResource(R.drawable.home_orange);
+
+                if (mStacks.get(GlobalConstants.TAB_FEED_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Home))
+                        AppUtils.showErrorLog(TAG, "Feed clicked");
+                    activeHomeFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_Home(), true);
+
+            }
+        });
+        rl_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_feed.setImageResource(R.drawable.newsfeed_sel);
+
+                if (mStacks.get(GlobalConstants.TAB_HOME_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_UserFeed))
+                        AppUtils.showErrorLog(TAG, "Feed clicked");
+                    activeFeedFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_HOME_BAR, new Fragment_UserFeed(), true);
+
+            }
+        });
+        rl_friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_friends.setImageResource(R.drawable.friends_sel);
+
+                if (mStacks.get(GlobalConstants.TAB_FRIENDS_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_Team))
+                        AppUtils.showErrorLog(TAG, "Friens clicked");
+                    activeFreindsFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_FRIENDS_BAR, new Fragment_Team(), true);
+
+            }
+        });
+
+        rl_events.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_event.setImageResource(R.drawable.calendar_sel);
+
+                if (mStacks.get(GlobalConstants.TAB_EVENT_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof FragmentUpcomingEvent))
+                        AppUtils.showErrorLog(TAG, "Friens clicked");
+                    activeEventFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_EVENT_BAR, new FragmentUpcomingEvent(), true);
+
+            }
+        });
+
+        rl_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_notification.setImageResource(R.drawable.bell_sel);
+
+                if (mStacks.get(GlobalConstants.TAB_NOTIFCATION_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_NotificationDetails))
+                        AppUtils.showErrorLog(TAG, "Notification clicked");
+                    activeNotificationFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, new Fragment_NotificationDetails(), true);
+
+            }
+        });
+        rl_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                unSelectImages();
+                image_chat.setImageResource(R.drawable.chat_sel);
+
+                if (mStacks.get(GlobalConstants.TAB_CHAT_BAR).size() > 0) {
+                    if (!(mStacks.get(mCurrentTab).lastElement() instanceof Fragment_ChatMain))
+                        AppUtils.showErrorLog(TAG, "Friens clicked");
+                    activeChatFragment();
+                } else
+                    pushFragments(GlobalConstants.TAB_CHAT_BAR, new Fragment_ChatMain(), true);
+
+            }
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -582,6 +700,15 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         });
     }
 
+    private void unSelectImages() {
+        image_chat.setImageResource(R.drawable.chat);
+        image_notification.setImageResource(R.drawable.bell);
+        image_event.setImageResource(R.drawable.calendar);
+        image_home.setImageResource(R.drawable.home_grey);
+        image_feed.setImageResource(R.drawable.newsfeed);
+        image_friends.setImageResource(R.drawable.friends);
+    }
+
     /*********************************************************************************
      * Function Name - activeFeedFragment
      * <p/>
@@ -591,6 +718,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeFeedFragment() {
 
         mCurrentTab = GlobalConstants.TAB_HOME_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_HOME_BAR;
 
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.VISIBLE);
@@ -610,6 +738,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeHomeFragment() {
 
         mCurrentTab = GlobalConstants.TAB_FEED_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_FEED_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
@@ -671,6 +800,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeFreindsFragment() {
 
         mCurrentTab = GlobalConstants.TAB_FRIENDS_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_FRIENDS_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.VISIBLE);
@@ -703,6 +833,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeNotificationFragment() {
 
         mCurrentTab = GlobalConstants.TAB_NOTIFCATION_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_NOTIFCATION_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
@@ -723,6 +854,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeChatFragment() {
 
         mCurrentTab = GlobalConstants.TAB_CHAT_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_CHAT_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
@@ -743,6 +875,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void activeEventFragment() {
 
         mCurrentTab = GlobalConstants.TAB_EVENT_BAR;
+        AppConstant.CURRENT_SELECTED_TAB = GlobalConstants.TAB_EVENT_BAR;
         currentFragment = (BaseFragment) mStacks.get(mCurrentTab).lastElement();
         feed_container.setVisibility(View.GONE);
         freinds_container.setVisibility(View.GONE);
@@ -973,11 +1106,45 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
     }
 
+    public void manageNotificationCount(String unreadTeamNot) {
+        if (unreadTeamNot != null && !unreadTeamNot.equals("") && !unreadTeamNot.equals("0")) {
+            if (Integer.parseInt(unreadTeamNot) > 9)
+                text_notification_count.setText("9+");
+            else
+                text_notification_count.setText(unreadTeamNot);
+
+            text_notification_count.setVisibility(View.VISIBLE);
+        } else {
+            text_notification_count.setVisibility(View.GONE);
+        }
+    }
+
+    public void manageTeamInviteCount(String UnreadTeamInvite) {
+        if (UnreadTeamInvite != null && !UnreadTeamInvite.equals("") && !UnreadTeamInvite.equals("0")) {
+            if (Integer.parseInt(UnreadTeamInvite) > 9)
+                text_teamInvite_count.setText("9+");
+            else
+                text_teamInvite_count.setText(UnreadTeamInvite);
+
+            text_teamInvite_count.setVisibility(View.VISIBLE);
+        } else {
+            text_teamInvite_count.setVisibility(View.GONE);
+        }
+    }
+
+
     @Override
     public void onPostSuccess(int method, JSONObject jObject) {
         try {
             if (method == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+
+                    if (jObject.has("UnreadTeamNotification")) {
+                        manageNotificationCount(jObject.getString("UnreadTeamNotification"));
+                    }
+                    if (jObject.has("UnreadTeamInvite")) {
+                        manageTeamInviteCount(jObject.getString("UnreadTeamInvite"));
+                    }
 
                     JSONObject data = jObject.getJSONObject("data");
                     JSONArray servicearr = data.getJSONArray("Menu");

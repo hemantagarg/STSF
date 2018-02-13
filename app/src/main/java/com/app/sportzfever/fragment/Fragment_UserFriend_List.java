@@ -129,7 +129,7 @@ public class Fragment_UserFriend_List extends BaseFragment implements ApiRespons
             Bundle b = new Bundle();
             b.putString("id", arrayList.get(position).getFriendId());
             fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
         }
     }
 

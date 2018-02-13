@@ -32,7 +32,6 @@ import com.app.sportzfever.aynctask.AsyncPostDataFileResponse;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Images;
@@ -101,7 +100,9 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         super.onResume();
         Dashboard.getInstance().manageFooterVisibitlity(true);
         Dashboard.getInstance().manageHeaderVisibitlity(true);
-        getServicelistRefresh();
+        if (AppConstant.ISFEEDNEEDTOREFRESH) {
+            getServicelistRefresh();
+        }
     }
 
     @Override
@@ -121,6 +122,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
         list_request.setLayoutManager(layoutManager);
         list_request.setNestedScrollingEnabled(true);
         arrayList = new ArrayList<>();
+        getServicelistRefresh();
         setlistener();
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -140,7 +142,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
 
             }
         });
@@ -152,7 +154,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
 
             }
         });
@@ -233,14 +235,14 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             b.putInt("likeCount", arrayList.get(position).getLikeCount());
             fragment_comments.setArguments(b);
 
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_comments, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_comments, true);
         } else if (flag == 2) {
 
             Fragment_Likes fragmentLikes = new Fragment_Likes();
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragmentLikes.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentLikes, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentLikes, true);
         } else if (flag == 3) {
             shareFeed(arrayList.get(position).getFeedId());
 
@@ -254,7 +256,7 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragment_share.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_share, true);
 
         } else if (flag == 4) {
             if (arrayList.get(position).getImages() != null && arrayList.get(position).getImages().size() > 0) {
@@ -267,31 +269,66 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
             }
         } else if (flag == 9) {
             showMenuDialog(position);
+        } else if (flag == 21) {
+            FragmentFeedDetails fragmentUser_details = new FragmentFeedDetails();
+            Bundle b = new Bundle();
+            b.putString("id", arrayList.get(position).getId());
+            fragmentUser_details.setArguments(b);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+
         } else if (flag == 11) {
-
-            if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
-                Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+            if (arrayList.get(position).getStatusType().equals(AppConstant.EVENT)) {
+                Fragment_EvenDetail fragmentUser_details = new Fragment_EvenDetail();
                 Bundle b = new Bundle();
-                b.putString("id", arrayList.get(position).getTeamId());
+                b.putString("id", arrayList.get(position).getEventId());
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 
-            } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("PLAYER")) {
-                FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
-                Bundle b = new Bundle();
-                if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
-                    b.putString("id", arrayList.get(position).getOriginalAvatar());
-                } else {
-                    b.putString("id", arrayList.get(position).getAvatar());
-                }
-                fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
             } else {
-                FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
+                    Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", arrayList.get(position).getTeamId());
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+
+                } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("PLAYER")) {
+                    FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
+                    Bundle b = new Bundle();
+                    if (!arrayList.get(position).getOriginalAvatarName().equalsIgnoreCase("")) {
+                        b.putString("id", arrayList.get(position).getOriginalAvatar());
+                    } else {
+                        b.putString("id", arrayList.get(position).getAvatar());
+                    }
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+                } else {
+                    FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                    Bundle b = new Bundle();
+                    b.putString("id", arrayList.get(position).getUser());
+                    fragmentUser_details.setArguments(b);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+                }
+            }
+        } else if (flag == 13) {
+            if (arrayList.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
                 Bundle b = new Bundle();
-                b.putString("id", arrayList.get(position).getUser());
-                fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                b.putString("eventId", arrayList.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
+                Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getEventId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
             }
         }
 
@@ -576,6 +613,21 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
                                 JSONObject startDate = event.getJSONObject("startDate");
                                 modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
                             }
+                            modelFeed.setEventType(event.getString("eventType"));
+                            modelFeed.setEventId(event.getString("id"));
+                            if (event.getString("eventType").equals(AppConstant.MATCH)) {
+                                modelFeed.setMatchStatus(event.getString("matchStatus"));
+                                modelFeed.setTeam1Name(event.getString("team1Name"));
+                                modelFeed.setTeam2Name(event.getString("team2Name"));
+                                modelFeed.setTeam1ProfilePicture(event.getString("team1ProfilePicture"));
+                                modelFeed.setTeam2ProfilePicture(event.getString("team2ProfilePicture"));
+                                modelFeed.setLocation(event.getString("location"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                if (modelFeed.getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                                    modelFeed.setDateTime(" Match starts At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+                                } else {
+                                    modelFeed.setDateTime(" Match started At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+                                }                            }
                         }
 
                         if (jo.getJSONArray("images") != null) {
@@ -719,10 +771,27 @@ public class Fragment_UserFeed extends BaseFragment implements ApiResponse, OnCu
 
                         if (jo.getString("statusType").equals(AppConstant.EVENT)) {
                             JSONObject event = jo.getJSONObject("event");
-                            modelFeed.setEventTitle(event.getString("title"));
-
-                            JSONObject startDate = event.getJSONObject("startDate");
-                            modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            if (event.has("title")) {
+                                modelFeed.setEventTitle(event.getString("title"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            }
+                            modelFeed.setEventType(event.getString("eventType"));
+                            modelFeed.setEventId(event.getString("id"));
+                            if (event.getString("eventType").equals(AppConstant.MATCH)) {
+                                modelFeed.setMatchStatus(event.getString("matchStatus"));
+                                modelFeed.setTeam1Name(event.getString("team1Name"));
+                                modelFeed.setTeam2Name(event.getString("team2Name"));
+                                modelFeed.setTeam1ProfilePicture(event.getString("team1ProfilePicture"));
+                                modelFeed.setTeam2ProfilePicture(event.getString("team2ProfilePicture"));
+                                modelFeed.setLocation(event.getString("location"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                if (modelFeed.getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                                    modelFeed.setDateTime(" Match starts At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+                                } else {
+                                    modelFeed.setDateTime(" Match started At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+                                }
+                            }
                         }
 
                         if (jo.getJSONArray("images") != null) {

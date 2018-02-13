@@ -125,6 +125,7 @@ public class Fragment_Team_Details extends BaseFragment implements ApiResponse {
         }
         initViews();
         getBundle();
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         getServicelistRefresh();
         setCollapsingToolbar();
         setListener();

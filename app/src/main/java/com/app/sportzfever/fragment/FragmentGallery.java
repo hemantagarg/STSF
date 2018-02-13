@@ -19,11 +19,11 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelGallery;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -156,7 +156,7 @@ public class FragmentGallery extends BaseFragment implements ApiResponse, OnCust
         b.putString("galleryid", arrayList.get(position).getAlbumId());
         b.putString("title", arrayList.get(position).getAlbumName());
         fragmentGalleryDetails.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentGalleryDetails, true);
+        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentGalleryDetails, true);
 
     }
 

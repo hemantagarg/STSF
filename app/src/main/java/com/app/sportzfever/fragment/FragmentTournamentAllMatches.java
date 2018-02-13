@@ -18,7 +18,6 @@ import com.app.sportzfever.adapter.AdapterAllTournamentMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournamentMatches;
@@ -210,19 +209,19 @@ public class FragmentTournamentAllMatches extends BaseFragment implements ApiRes
             Bundle b = new Bundle();
             b.putString("eventId", arrayList.get(position).getEventId());
             fragmentupcomingdetals.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
         } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_NOTSTARTED)) {
             FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
             Bundle b = new Bundle();
             b.putString("eventId", arrayList.get(position).getEventId());
             fragmentupcomingdetals.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
         } else if (arrayList.get(position).getMatchStatus().equalsIgnoreCase(AppConstant.MATCHSTATUS_STARTED)) {
             Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
             Bundle b = new Bundle();
             b.putString("eventId", arrayList.get(position).getEventId());
             fragmentupcomingdetals.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
         }
 
 

@@ -17,8 +17,8 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONException;
@@ -201,7 +201,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                     b.putString("eventId", eventId);
                     b.putString("IsScorerForTeam2", isScorerForTeam2);
                     fragmentSoringMatchDetails.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

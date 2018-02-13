@@ -18,10 +18,10 @@ import com.app.sportzfever.adapter.AdapterTournamentTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelTournamentTeam;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -117,7 +117,7 @@ public class FragmentTournamentTeam extends BaseFragment implements ApiResponse,
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayList.get(position).getTeamId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         }
 
     }

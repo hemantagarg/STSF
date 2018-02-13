@@ -14,6 +14,7 @@ public interface JsonApiHelper {
     String LOGIN = "sflogin";
     String FORGOT = "forgetPassword";
     String GET_FEEDS = "getFeeds/";
+    String SINGLE_SATUS_DETAILS = "singleStatusDetails/";
     String SFLANDING = "sflanding/";
     String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
     String GET_FEEDS_MATCH = "getFeedOfMatchTournament/match/";
@@ -21,6 +22,7 @@ public interface JsonApiHelper {
     String GET_AVTARFEEDS = "getFeedByAvatar/";
     String GET_NOTIFICATION = "getUserNotifications/";
     String GET_NOTIFICATIONTEAM = "getTeamNotifications/";
+    String NOTIFICATION_READ = "notificationAsReadUnread";
     String GET_FRIENDREQUEST = "getFriendRequests/";
     String GET_USERFRIENDLIST = "getFriendsOfUser/";
     String GET_ALLTEAMTOURNAMENTFIXTEURES = "getAllUpComingTournamentOfTeamForFixtureAcceptance/";

@@ -157,7 +157,7 @@ public class FragmentUserProfile extends BaseFragment implements ApiResponse, On
                 b.putString("currentTab", currentTab);
                 tab2.setArguments(b);
                 tab2.setTargetFragment(FragmentUserProfile.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(currentTab, tab2, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, tab2, true);
             }
         });
 

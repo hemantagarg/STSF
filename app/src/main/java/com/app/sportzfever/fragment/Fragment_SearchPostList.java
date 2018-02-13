@@ -217,7 +217,7 @@ public class Fragment_SearchPostList extends BaseFragment implements ApiResponse
 //            Bundle b = new Bundle();
 //            b.putString("id", arrayList.get(position).getUserId());
 //            fragmentUser_details.setArguments(b);
-//            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+//            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 //
 }
     }

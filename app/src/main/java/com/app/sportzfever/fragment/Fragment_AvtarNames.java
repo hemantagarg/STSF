@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.interfaces.GlobalConstants;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -108,7 +109,7 @@ public class Fragment_AvtarNames extends BaseFragment {
                 Bundle b = new Bundle();
                 b.putString("id", avtarid);
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 
             }
         });

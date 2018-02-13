@@ -224,7 +224,7 @@ public class FragmentPrepareLineup extends BaseFragment implements ApiResponse, 
                 bundle.putString("playersAvailability", playerAvalablity.toString());
                 fragmentPrepareLineup.setArguments(bundle);
                 fragmentPrepareLineup.setTargetFragment(FragmentPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
 
             }
         });

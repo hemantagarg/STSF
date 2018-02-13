@@ -321,7 +321,9 @@ public class Fragment_TeamJoin_Request extends BaseFragment implements ApiRespon
             if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
-                    //  maxlistLength = jObject.getString("total");
+                    if (jObject.has("totalUnreadNotificationCount")) {
+                        Dashboard.getInstance().manageTeamInviteCount(jObject.getString("totalUnreadNotificationCount"));
+                    }
 
                     JSONArray match = data.getJSONArray("matchAndPrctiseInvitation");
                     JSONArray matchchallenged = data.getJSONArray("matchchallengeInvitation");

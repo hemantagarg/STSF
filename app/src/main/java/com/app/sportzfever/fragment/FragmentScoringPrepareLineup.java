@@ -290,7 +290,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     bundle.putString("team2Name", team1Name);
                     fragmentupcomingdetals.setArguments(bundle);
                     fragmentupcomingdetals.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                 } else {
                     checkLineupComplete();
                 }
@@ -319,7 +319,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     bundle.putStringArrayList("emailList", emailIdlIst);
                     fragmentPrepareLineup.setArguments(bundle);
                     fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.SEARCH_FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
 
                 } else {
                     Toast.makeText(context, "Team playing lineup is complete. Lets add scorer and captain.", Toast.LENGTH_SHORT).show();
@@ -389,7 +389,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
 
             fragmentPrepareLineup.setArguments(bundle);
             fragmentPrepareLineup.setTargetFragment(FragmentScoringPrepareLineup.this, AppConstant.FRAGMENT_CODE);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
         } else {
             Toast.makeText(context, "Please add players", Toast.LENGTH_SHORT).show();
         }
@@ -792,7 +792,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                     bundle.putString("team1Name", team2Name);
                     bundle.putString("team2Name", team1Name);
                     fragmentupcomingdetals.setArguments(bundle);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                 } else {
                     JSONObject scoringData = jObject.getJSONObject("scoringData");
                     if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("1") && scoringData.getString("isActiveScorerForAnotherMatch").equalsIgnoreCase("0")) {
@@ -817,7 +817,7 @@ public class FragmentScoringPrepareLineup extends BaseFragment implements ApiRes
                         bundle.putString("team1Name", team2Name);
                         bundle.putString("team2Name", team1Name);
                         fragmentupcomingdetals.setArguments(bundle);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else {
                         if (scoringData.getString("isAllowedToScore").equalsIgnoreCase("0")) {
                             String message = "You are not the designated scorer for this match" + "\n\n" + "Scorer for " + team2Name + ":" + "\n" + team1ScorerName

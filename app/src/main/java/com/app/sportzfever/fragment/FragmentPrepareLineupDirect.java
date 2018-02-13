@@ -327,7 +327,7 @@ public class FragmentPrepareLineupDirect extends BaseFragment implements ApiResp
                     bundle.putString("linepArray", linepArray);
                     fragmentPrepareLineup.setArguments(bundle);
                     fragmentPrepareLineup.setTargetFragment(FragmentPrepareLineupDirect.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
                 } else {
                     Toast.makeText(context, "Please add atlest one player", Toast.LENGTH_SHORT).show();
                 }

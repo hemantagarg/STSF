@@ -146,7 +146,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 bundle.putString("id", eventId);
                 bundle.putString("tournamentId", tournamentId);
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
             }
         });
         layout_post_feed.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +157,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 bundle.putString("id", eventId);
                 bundle.putString("tournamentId", tournamentId);
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
             }
         });
         text_post.setOnClickListener(new View.OnClickListener() {
@@ -237,14 +237,14 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
             b.putInt("likeCount", arrayList.get(position).getLikeCount());
             fragment_comments.setArguments(b);
 
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_comments, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_comments, true);
         } else if (flag == 2) {
 
             Fragment_Likes fragmentLikes = new Fragment_Likes();
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragmentLikes.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentLikes, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentLikes, true);
         } else if (flag == 3) {
             shareFeed(arrayList.get(position).getFeedId());
 
@@ -258,7 +258,7 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragment_share.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragment_share, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_share, true);
 
         } else if (flag == 4) {
 
@@ -280,14 +280,14 @@ public class Fragment_MatchFeed extends BaseFragment implements ApiResponse, OnC
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getAvatar());
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 
             } else {
                 FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getUser());
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
             }*/
         }
     }

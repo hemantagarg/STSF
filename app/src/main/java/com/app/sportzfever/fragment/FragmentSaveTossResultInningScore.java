@@ -394,14 +394,14 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                         Bundle b = new Bundle();
                         b.putString("eventId", eventId);
                         fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                     } else {
                         FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
                         Bundle b = new Bundle();
                         b.putString("eventId", eventId);
                         b.putString("IsScorerForTeam2", isScorerForTeam2);
                         fragmentSoringMatchDetails.setArguments(b);
-                        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSoringMatchDetails, true);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
                     }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();

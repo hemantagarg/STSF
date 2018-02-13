@@ -238,7 +238,7 @@ public class FragmentCreateMatch extends BaseFragment implements ApiResponse {
                 b.putString("selectedId", selectedTeam1Id);
                 fragmentSearchUserList.setArguments(b);
                 fragmentSearchUserList.setTargetFragment(FragmentCreateMatch.this, AppConstant.FRAGMENT_CODE2);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSearchUserList, true);
             }
         });
 

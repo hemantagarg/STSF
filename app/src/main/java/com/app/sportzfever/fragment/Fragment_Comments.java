@@ -30,11 +30,11 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.Comments;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -84,7 +84,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
         context = getActivity();
         arrayList = new ArrayList<>();
         b = getArguments();
-
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         return view_about;
     }
 
@@ -190,7 +190,7 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
                 Bundle b = new Bundle();
                 b.putString("FeedId", feedId);
                 fragmentLikes.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentLikes, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentLikes, true);
             }
         });
         send_message.setOnClickListener(new View.OnClickListener() {
@@ -459,14 +459,14 @@ public class Fragment_Comments extends BaseFragment implements ApiResponse, OnCu
             } else if (position == 5) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
-
+                    AppConstant.ISFEEDNEEDTOREFRESH = true;
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     getServicelistRefresh();
-
+                    AppConstant.ISFEEDNEEDTOREFRESH = true;
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

@@ -20,10 +20,10 @@ import com.app.sportzfever.adapter.AdapterUpcomingTeamtwoMatch;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -218,14 +218,14 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayteama.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         } else if (flag == 2) {
             FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayListBowling.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         }
     }

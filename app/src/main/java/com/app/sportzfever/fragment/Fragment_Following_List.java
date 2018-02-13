@@ -22,6 +22,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelFollowing;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -130,13 +131,13 @@ public class Fragment_Following_List extends BaseFragment implements ApiResponse
                 Bundle bundle = new Bundle();
                 bundle.putString("id", arrayList.get(position).getAvatar());
                 fragmentAvtar_details.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentAvtar_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
             } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("TEAM")) {
                 Fragment_Team_Details fragmentAvtar_details = new Fragment_Team_Details();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", arrayList.get(position).getId());
                 fragmentAvtar_details.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentAvtar_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
             }
         }
     }

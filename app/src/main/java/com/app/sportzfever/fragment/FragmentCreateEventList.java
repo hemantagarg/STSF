@@ -267,7 +267,7 @@ public class FragmentCreateEventList extends BaseFragment implements ApiResponse
             public void onClick(View view) {
                 FragmentSearchOpponentTeamList fragmentSearchUserList = new FragmentSearchOpponentTeamList();
                 fragmentSearchUserList.setTargetFragment(FragmentCreateEventList.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSearchUserList, true);
             }
         });
 

@@ -222,7 +222,7 @@ public class Fragment_SearchTeamList extends BaseFragment implements ApiResponse
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayList.get(position).getId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         }
     }
 

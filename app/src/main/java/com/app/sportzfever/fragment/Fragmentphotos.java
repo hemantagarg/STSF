@@ -24,6 +24,7 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelGallery;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -168,7 +169,7 @@ public class Fragmentphotos extends BaseFragment implements ApiResponse, OnCusto
         b.putString("galleryid", arrayList.get(position).getAlbumId());
         b.putString("title", arrayList.get(position).getAlbumName());
         fragmentGalleryDetails.setArguments(b);
-        Dashboard.getInstance().pushFragments(currentTab, fragmentGalleryDetails, true);
+        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentGalleryDetails, true);
 
     }
 

@@ -1704,14 +1704,14 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayteam1Batting.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         } else if (flag == 2) {
             FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayteam1Bowling.get(position).getPlayerAvatarId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
 
         }*/
     }
@@ -2092,7 +2092,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     Bundle b = new Bundle();
                     b.putString("eventId", eventId);
                     fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
 
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -2367,7 +2367,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     Bundle b = new Bundle();
                     b.putString("eventId", eventId);
                     fragmentupcomingdetals.setArguments(b);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
                 }
             }
         } catch (Exception e) {

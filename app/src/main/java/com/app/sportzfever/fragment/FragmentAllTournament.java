@@ -17,10 +17,10 @@ import com.app.sportzfever.adapter.AdapterAlltournament;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelAllTournament;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -119,7 +119,7 @@ public class FragmentAllTournament extends BaseFragment implements ApiResponse, 
         b.putString("date", arrayList.get(position).getDate());
         b.putString("image", arrayList.get(position).getProfilePicture());
         tab2.setArguments(b);
-        Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, tab2, true);
 
     }
 

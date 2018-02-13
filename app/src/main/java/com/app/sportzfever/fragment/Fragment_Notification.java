@@ -21,6 +21,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelNotification;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -112,34 +113,22 @@ public class Fragment_Notification extends BaseFragment implements ApiResponse, 
     @Override
     public void onItemClickListener(int position, int flag) {
         if (flag == 1) {
-            if (arrayList.get(position).getCategory().equals("USER")) {
+            if (arrayList.get(position).getCategory().equals(AppConstant.USER_TYPE)) {
                 FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getActionId());
                 b.putString("currentTab", GlobalConstants.TAB_NOTIFCATION_BAR);
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_NOTIFCATION_BAR, fragmentUser_details, true);
-            }else {
-
-            }
-
-        }
-
-    }
-
-    private void getServicelist() {
-        try {
-            skipCount = 0;
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATION + skipCount + AppUtils.getUserId(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
             } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                FragmentFeedDetails fragmentUser_details = new FragmentFeedDetails();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getActionId());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     private void getServicelistRefresh() {

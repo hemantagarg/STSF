@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ModelFeed implements Serializable {
 
     private int rowType;
-    private String message, date, feedId,teamId;
+    private String message, date, feedId, teamId;
 
     private String originalUserProfilePicture;
 
@@ -46,9 +46,9 @@ public class ModelFeed implements Serializable {
 
     private String dateTimeUpdated;
 
-    private String event,eventTitle;
+    private String event, eventType = "", matchStatus = "", eventTitle, location, team2ProfilePicture, team1ProfilePicture, team1Name, team2Name;
 
-    private String description;
+    private String description, eventId = "";
 
     private String userName;
     private int commentsCount = 0, likeCount = 0, shareCount = 0;
@@ -57,7 +57,7 @@ public class ModelFeed implements Serializable {
 
     private String originalAvatar;
 
-    private String originalUser, isLiked="0";
+    private String originalUser, isLiked = "0";
 
     private String userProfilePicture;
 
@@ -396,5 +396,69 @@ public class ModelFeed implements Serializable {
 
     public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getTeam2ProfilePicture() {
+        return team2ProfilePicture;
+    }
+
+    public void setTeam2ProfilePicture(String team2ProfilePicture) {
+        this.team2ProfilePicture = team2ProfilePicture;
+    }
+
+    public String getTeam1ProfilePicture() {
+        return team1ProfilePicture;
+    }
+
+    public void setTeam1ProfilePicture(String team1ProfilePicture) {
+        this.team1ProfilePicture = team1ProfilePicture;
+    }
+
+    public String getTeam1Name() {
+        return team1Name;
+    }
+
+    public void setTeam1Name(String team1Name) {
+        this.team1Name = team1Name;
+    }
+
+    public String getTeam2Name() {
+        return team2Name;
+    }
+
+    public void setTeam2Name(String team2Name) {
+        this.team2Name = team2Name;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
     }
 }

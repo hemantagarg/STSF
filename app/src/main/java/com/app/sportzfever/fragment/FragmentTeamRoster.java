@@ -168,7 +168,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
                 bundle.putString("FromScreen", "Roster");
                 fragmentSearchUserList.setArguments(bundle);
                 fragmentSearchUserList.setTargetFragment(FragmentTeamRoster.this, AppConstant.FRAGMENT_CODE);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentSearchUserList, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSearchUserList, true);
             }
         });
     }
@@ -222,7 +222,7 @@ public class FragmentTeamRoster extends BaseFragment implements ApiResponse, OnC
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayList.get(position).getAvatar());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         } else if (flag == 2) {
             deletedPosition = position;
             showConfirmationDialog(position);

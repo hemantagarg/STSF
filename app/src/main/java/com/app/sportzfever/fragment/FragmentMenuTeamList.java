@@ -166,7 +166,7 @@ public class FragmentMenuTeamList extends BaseFragment implements OnCustomItemCl
             bundle.putString("id", avtarid);
             fragmentAvtar_details.setArguments(bundle);
             fragmentAvtar_details.setTargetFragment(FragmentMenuTeamList.this, AppConstant.FRAGMENT_CODE);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         }
 
     }

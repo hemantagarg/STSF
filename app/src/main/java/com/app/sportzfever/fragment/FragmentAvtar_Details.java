@@ -37,6 +37,7 @@ import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.ModelAvtarMyTeam;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.MemoryPolicy;
@@ -104,7 +105,7 @@ public class FragmentAvtar_Details extends BaseFragment implements View.OnClickL
         vendorProfileFragment = this;
         initViews();
         getBundle();
-
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         setCollapsingToolbar();
         setListener();
         return view;

@@ -26,6 +26,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -75,7 +76,7 @@ public class Fragment_PastMatch_Details extends BaseFragment implements ApiRespo
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
         b = getArguments();
-
+        AppConstant.ISFEEDNEEDTOREFRESH=false;
         return view_about;
     }
 

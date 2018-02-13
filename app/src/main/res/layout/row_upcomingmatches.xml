@@ -31,6 +31,7 @@
                 android:textColor="@color/logocolor"
                 android:textSize="@dimen/text_size_12"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/text_event_match"
                 android:layout_width="wrap_content"
@@ -52,18 +53,19 @@
             android:layout_below="@+id/event_type"
             android:alpha=".3"
             android:background="@color/textcolordark" />
+
         <TextView
             android:id="@+id/textdateofmatch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp10"
-android:layout_below="@+id/view1"
+            android:layout_below="@+id/view1"
             android:textStyle="bold"
-android:layout_marginLeft="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp10"
             android:text="VS"
-
             android:textColor="@color/black"
             android:textSize="@dimen/dp12" />
+
         <RelativeLayout
             android:id="@+id/rl_main"
             android:layout_width="match_parent"
@@ -176,7 +178,7 @@ android:layout_marginLeft="@dimen/dp10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-android:textStyle="bold"
+                            android:textStyle="bold"
                             android:layout_below="@+id/teamb"
                             android:ellipsize="end"
                             android:layout_marginTop="@dimen/dp10"

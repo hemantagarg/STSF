@@ -371,8 +371,8 @@ public class FragmentEditMatch extends BaseFragment implements ApiResponse, OnCu
             jsonObject.put("title", edt_eventtitle.getText().toString());
             jsonObject.put("lng", longitude);
             jsonObject.put("eventId", eventId);
-            jsonObject.put("noOfPlayers", edt_no_players.getText().toString());
-            jsonObject.put("noOfOvers", edt_no_overs.getText().toString());
+            jsonObject.put("numberOfPlayers", edt_no_players.getText().toString());
+            jsonObject.put("numberOfOvers", edt_no_overs.getText().toString());
             jsonObject.put("description", mEdtdetails.getText().toString());
             jsonObject.put("location", mEdtlocation.getText().toString().trim());
 
@@ -532,8 +532,8 @@ public class FragmentEditMatch extends BaseFragment implements ApiResponse, OnCu
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    context.onBackPressed();
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }

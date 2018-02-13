@@ -134,7 +134,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(currentTab, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
             }
         });
 
@@ -145,7 +145,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                 Bundle bundle = new Bundle();
                 bundle.putString("id", AppUtils.getUserId(context));
                 fragment_postFeed.setArguments(bundle);
-                Dashboard.getInstance().pushFragments(currentTab, fragment_postFeed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_postFeed, true);
             }
         });
         text_post.setOnClickListener(new View.OnClickListener() {
@@ -224,14 +224,14 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
             b.putInt("likeCount", arrayList.get(position).getLikeCount());
             fragment_comments.setArguments(b);
 
-            Dashboard.getInstance().pushFragments(currentTab, fragment_comments, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_comments, true);
         } else if (flag == 2) {
 
             Fragment_Likes fragmentLikes = new Fragment_Likes();
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragmentLikes.setArguments(b);
-            Dashboard.getInstance().pushFragments(currentTab, fragmentLikes, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentLikes, true);
         } else if (flag == 3) {
             shareFeed(arrayList.get(position).getFeedId());
 
@@ -245,7 +245,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
             Bundle b = new Bundle();
             b.putString("FeedId", arrayList.get(position).getFeedId());
             fragment_share.setArguments(b);
-            Dashboard.getInstance().pushFragments(currentTab, fragment_share, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragment_share, true);
 
         } else if (flag == 4) {
 
@@ -267,7 +267,7 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getTeamId());
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
 
             } else if (arrayList.get(position).getAvatarType().equalsIgnoreCase("PLAYER")) {
                 FragmentAvtar_Details fragmentUser_details = new FragmentAvtar_Details();
@@ -278,13 +278,13 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                     b.putString("id", arrayList.get(position).getAvatar());
                 }
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
             } else {
                 FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
                 Bundle b = new Bundle();
                 b.putString("id", arrayList.get(position).getUser());
                 fragmentUser_details.setArguments(b);
-                Dashboard.getInstance().pushFragments(currentTab, fragmentUser_details, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
             }
         }
 
@@ -573,6 +573,24 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                         modelFeed.setOriginalStatusId(jo.getString("originalStatusId"));
                         modelFeed.setIsShared(jo.getString("isShared"));
                         modelFeed.setIsLiked(jo.getString("isUserLiked"));
+                        if (jo.getString("statusType").equals(AppConstant.EVENT)) {
+                            JSONObject event = jo.getJSONObject("event");
+                            if (event.has("title")) {
+                                modelFeed.setEventTitle(event.getString("title"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            }
+                        } else if (jo.getString("statusType").equals(AppConstant.MATCH)) {
+                            modelFeed.setTeam1Name(jo.getString("team1Name"));
+                            modelFeed.setTeam2Name(jo.getString("team2Name"));
+                            modelFeed.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                            modelFeed.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                            JSONObject event = jo.getJSONObject("event");
+                            modelFeed.setLocation(event.getString("location"));
+                            JSONObject startDate = event.getJSONObject("startDate");
+                            modelFeed.setDateTime(" Match starts At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+
+                        }
 
                         if (jo.getJSONArray("images") != null) {
                             ArrayList<Images> imagesArrayList = new ArrayList<>();
@@ -693,6 +711,24 @@ public class Fragment_ParticularUserFeed extends BaseFragment implements ApiResp
                         modelFeed.setCommentsCount(jo.getInt("comments"));
                         modelFeed.setLikeCount(jo.getInt("likes"));
                         modelFeed.setShareCount(jo.getInt("shares"));
+                        if (jo.getString("statusType").equals(AppConstant.EVENT)) {
+                            JSONObject event = jo.getJSONObject("event");
+                            if (event.has("title")) {
+                                modelFeed.setEventTitle(event.getString("title"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                modelFeed.setDateTime(startDate.getString("monthName") + " " + startDate.getString("month") + " " + event.getString("location"));
+                            }
+                            modelFeed.setEventType(event.getString("eventType"));
+                            if (event.getString("eventType").equals(AppConstant.MATCH)) {
+                                modelFeed.setTeam1Name(jo.getString("team1Name"));
+                                modelFeed.setTeam2Name(jo.getString("team2Name"));
+                                modelFeed.setTeam1ProfilePicture(jo.getString("team1ProfilePicture"));
+                                modelFeed.setTeam2ProfilePicture(jo.getString("team2ProfilePicture"));
+                                modelFeed.setLocation(event.getString("location"));
+                                JSONObject startDate = event.getJSONObject("startDate");
+                                modelFeed.setDateTime(" Match starts At " + startDate.getString("time") + " On " + startDate.getString("date") + "  " + startDate.getString("ShortMonthName") + "  " + startDate.getString("year"));
+                            }
+                        }
 
                         modelFeed.setOriginalAvatar(jo.getString("originalAvatar"));
                         modelFeed.setOriginalUser(jo.getString("originalUser"));

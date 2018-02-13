@@ -11,15 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterNotificationTeam;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.ConnectionDetector;
+import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelNotification;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -39,19 +41,15 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
     private Context context;
     private AdapterNotificationTeam adapterNotificationTeam;
     private ModelNotification modelNotification;
-
-    private TextView text_nodata;
+    private TextView text_nodata, text_markRead;
     private ArrayList<ModelNotification> arrayList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ConnectionDetector cd;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private int skipCount = 0;
     private boolean loading = true;
-    private String maxlistLength = "";
 
     public static Fragment_NotificationTeam fragment_notification;
-    private final String TAG = Fragment_NotificationTeam.class.getSimpleName();
+    private int clickedPosition = 0;
 
     public static Fragment_NotificationTeam getInstance() {
         if (fragment_notification == null)
@@ -88,6 +86,8 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
         layoutManager = new LinearLayoutManager(context);
         text_nodata = (TextView) view.findViewById(R.id.text_nodata);
+        text_markRead = (TextView) view.findViewById(R.id.text_markRead);
+        text_markRead.setVisibility(View.VISIBLE);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_request.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
@@ -103,37 +103,68 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
             }
         });
 
-
+        text_markRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                markNotificationRead(true);
+            }
+        });
 
     }
 
     @Override
     public void onItemClickListener(int position, int flag) {
 
-   /*     Intent in = new Intent(context, ActivityChat.class);
-        if (arrayList.get(position).getUserId().equalsIgnoreCase(AppUtils.getUserIdChat(context))) {
-            in.putExtra("reciever_id", arrayList.get(position).getSenderID());
-        } else {
-            in.putExtra("reciever_id", arrayList.get(position).getUserId());
-        }
-        in.putExtra("name", arrayList.get(position).getSenderName());
-        in.putExtra("image", arrayList.get(position).getReceiverImage());
-        in.putExtra("searchID", arrayList.get(position).getSearchId());
-        startActivity(in);*/
-    }
-
-    private void getServicelist() {
-        try {
-            skipCount = 0;
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.betasportzfever.com/getNotifications/155
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATIONTEAM +skipCount+ AppUtils.getUserId(context);
-                new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+        if (flag == 1) {
+            clickedPosition = position;
+            if (arrayList.get(position).getReadStatus().equals("0")) {
+                markNotificationRead(false);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (arrayList.get(position).getCategory().equals(AppConstant.TEAM)) {
+                Fragment_Team_Details fragmentUser_details = new Fragment_Team_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getActionId());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+            } else if (arrayList.get(position).getCategory().equals(AppConstant.MATCH_PAST)) {
+                Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getActionId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getCategory().equalsIgnoreCase(AppConstant.MATCH_UP)) {
+                FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getActionId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getCategory().equalsIgnoreCase(AppConstant.MATCH_LIVE)) {
+                Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getActionId());
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getCategory().equals(AppConstant.USER_TYPE)) {
+                FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getActionId());
+                b.putString("currentTab", GlobalConstants.TAB_NOTIFCATION_BAR);
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+            } else if (arrayList.get(position).getCategory().equals(AppConstant.EVENT)) {
+                Fragment_EvenDetail fragmentupcomingdetals = new Fragment_EvenDetail();
+                Bundle b = new Bundle();
+                b.putString("eventId", arrayList.get(position).getActionId());
+                b.putString("currentTab", AppConstant.CURRENT_SELECTED_TAB);
+                fragmentupcomingdetals.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+            } else if (arrayList.get(position).getCategory().equals(AppConstant.STATUS)) {
+                FragmentFeedDetails fragmentUser_details = new FragmentFeedDetails();
+                Bundle b = new Bundle();
+                b.putString("id", arrayList.get(position).getActionId());
+                fragmentUser_details.setArguments(b);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
+            }
         }
     }
 
@@ -144,8 +175,34 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
              /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATIONTEAM + AppUtils.getUserId(context)+ "/" + skipCount + "/" + AppUtils.getAuthToken(context);
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_NOTIFICATIONTEAM + AppUtils.getUserId(context) + "/" + skipCount + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
+
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void markNotificationRead(boolean isAllRead) {
+        try {
+            skipCount = 0;
+            if (AppUtils.isNetworkAvailable(context)) {
+
+                JSONObject jsonObject = new JSONObject();
+                int type = 2;
+                if (isAllRead) {
+                    jsonObject.put("isRead", "ALLREAD");
+                } else {
+                    type = 3;
+                    jsonObject.put("isRead", "READ");
+                    jsonObject.put("id", arrayList.get(clickedPosition).getId());
+                }
+
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.NOTIFICATION_READ;
+                new CommonAsyncTaskHashmap(type, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -160,13 +217,17 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
     public void onPostSuccess(int position, JSONObject jObject) {
         try {
             if (position == 1) {
-                if (context!=null && isAdded()) {
+                if (context != null && isAdded()) {
                     getView().findViewById(R.id.progressbar).setVisibility(View.GONE);
                 }
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONArray data = jObject.getJSONArray("data");
-                    //  maxlistLength = jObject.getString("total");
+                /*    "UnreadNotification":0,
+                            "totalTeamNotification":35,*/
+                    if (jObject.has("UnreadNotification")) {
+                        Dashboard.getInstance().manageNotificationCount(jObject.getString("UnreadNotification"));
+                    }
                     arrayList.clear();
 
                     for (int i = 0; i < data.length(); i++) {
@@ -181,8 +242,10 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
                         modelNotification.setReadStatus(jo.getString("readStatus"));
                         modelNotification.setIsTeamNotification(jo.getString("isTeamNotification"));
                         modelNotification.setUserPorfile(jo.getString("userPorfile"));
+                        modelNotification.setReadStatus(jo.getString("readStatus"));
                         modelNotification.setCategory(jo.getString("category"));
                         modelNotification.setActionId(jo.getString("actionId"));
+
                         modelNotification.setRowType(1);
 
                         arrayList.add(modelNotification);
@@ -208,6 +271,18 @@ public class Fragment_NotificationTeam extends BaseFragment implements ApiRespon
                     }
                 }
 
+            } else if (position == 2) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    getServicelistRefresh();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (position == 3) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    getServicelistRefresh();
+                }
             } else if (position == 4) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {

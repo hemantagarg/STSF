@@ -214,7 +214,7 @@ public class Fragment_SearchTournamentList extends BaseFragment implements ApiRe
             b.putString("date","");
             b.putString("image", arrayList.get(position).getProfilePicture());
             tab2.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, tab2, true);
         }
     }
 

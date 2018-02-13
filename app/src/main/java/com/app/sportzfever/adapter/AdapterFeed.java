@@ -53,7 +53,7 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.row_feed, parent, false);
+                    R.layout.row_user_feed, parent, false);
 
             vh = new CustomViewHolder(v);
         } else {
@@ -181,10 +181,52 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((CustomViewHolder) holder).text_message.setText(m1.getEventTitle());
                     ((CustomViewHolder) holder).text_location_time.setText(m1.getDateTime());
                     ((CustomViewHolder) holder).text_location_time.setVisibility(View.VISIBLE);
-                }else {
+                    if (m1.getEventType().equals(AppConstant.MATCH)) {
+
+                        ((CustomViewHolder) holder).text_location_time.setText(m1.getDateTime());
+                        ((CustomViewHolder) holder).text_teamname1.setText(m1.getTeam1Name());
+                        ((CustomViewHolder) holder).text_teamname2.setText(m1.getTeam2Name());
+                        ((CustomViewHolder) holder).text_message.setText(m1.getLocation());
+
+                        ((CustomViewHolder) holder).text_location_time.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).rl_top.setVisibility(View.GONE);
+                        ((CustomViewHolder) holder).rl_match.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).image_viewers.setVisibility(View.GONE);
+
+                        if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_NOTSTARTED)) {
+                            ((CustomViewHolder) holder).text_match_status.setText("UPCOMING");
+                        } else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
+                            ((CustomViewHolder) holder).text_match_status.setText("LIVE");
+                        } else if (m1.getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
+                            ((CustomViewHolder) holder).text_match_status.setText("PAST");
+                        }
+
+                        if (!m1.getTeam1ProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getTeam1ProfilePicture() + "&w=100&h=100")
+                                    .into(((CustomViewHolder) holder).teama);
+
+                        }
+                        if (!m1.getTeam2ProfilePicture().equalsIgnoreCase("")) {
+                            Picasso.with(mContext)
+                                    .load(m1.getTeam2ProfilePicture() + "&w=100&h=100")
+                                    .into(((CustomViewHolder) holder).teamb);
+
+                        }
+
+                    } else {
+                        ((CustomViewHolder) holder).rl_top.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).rl_match.setVisibility(View.GONE);
+                        ((CustomViewHolder) holder).image_viewers.setVisibility(View.VISIBLE);
+                        ((CustomViewHolder) holder).text_location_time.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    ((CustomViewHolder) holder).rl_top.setVisibility(View.VISIBLE);
+                    ((CustomViewHolder) holder).rl_match.setVisibility(View.GONE);
+                    ((CustomViewHolder) holder).image_viewers.setVisibility(View.VISIBLE);
                     ((CustomViewHolder) holder).text_location_time.setVisibility(View.GONE);
                 }
-
                 if (m1.getIsLiked().equalsIgnoreCase("0")) {
                     ((CustomViewHolder) holder).text_like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like_grey, 0, 0, 0);
                     ((CustomViewHolder) holder).text_like.setTextColor(ContextCompat.getColor(mContext, R.color.text_hint_color));
@@ -225,12 +267,6 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((CustomViewHolder) holder).image_menu.setVisibility(View.GONE);
                 }
 
-
-           /*     if (m1.getShareCount() > 0 || m1.getLikeCount() > 0 || m1.getCommentsCount() > 0) {
-                    ((CustomViewHolder) holder).view2.setVisibility(View.VISIBLE);
-                } else {
-                    ((CustomViewHolder) holder).view2.setVisibility(View.GONE);
-                }*/
 
                 ((CustomViewHolder) holder).text_comment_count.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -274,6 +310,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClickListener(i, 11);
                     }
                 });
+                ((CustomViewHolder) holder).rl_match.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 13);
+                    }
+                });
                 ((CustomViewHolder) holder).ll_feed_images.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -285,6 +327,12 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClickListener(i, 9);
+                    }
+                });
+                ((CustomViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClickListener(i, 21);
                     }
                 });
 
@@ -356,10 +404,11 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView text_name, text_message, text_time, text_like, text_comment, text_share,
-                text_imag_count, text_sharePost, text_like_count, text_comment_count, text_share_count, text_location_time;
-        ImageView image_viewers, image_feed1, image_feed2, image_feed3, image_menu;
+                text_imag_count, text_sharePost, text_like_count, text_comment_count, text_match_status,
+                text_share_count, text_location_time, text_teamname1, text_teamname2, text_match_location;
+        ImageView image_viewers, image_feed1, image_feed2, image_feed3, image_menu, teama, teamb;
         LinearLayout ll_feed_images, ll_multiple_images;
-        RelativeLayout rl_moreimages;
+        RelativeLayout rl_moreimages, card_view, rl_match, rl_top;
         View view2;
 
         public CustomViewHolder(View view) {
@@ -369,20 +418,29 @@ public class AdapterFeed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.view2 = view.findViewById(R.id.view2);
             this.image_feed1 = (ImageView) view.findViewById(R.id.image_feed1);
             this.image_feed2 = (ImageView) view.findViewById(R.id.image_feed2);
+            this.teama = (ImageView) view.findViewById(R.id.teama);
+            this.teamb = (ImageView) view.findViewById(R.id.teamb);
             this.image_menu = (ImageView) view.findViewById(R.id.image_menu);
             this.image_feed3 = (ImageView) view.findViewById(R.id.image_feed3);
             this.ll_feed_images = (LinearLayout) view.findViewById(R.id.ll_feed_images);
             this.rl_moreimages = (RelativeLayout) view.findViewById(R.id.rl_moreimages);
+            this.rl_match = (RelativeLayout) view.findViewById(R.id.rl_match);
+            this.rl_top = (RelativeLayout) view.findViewById(R.id.rl_top);
+            this.card_view = (RelativeLayout) view.findViewById(R.id.card_view);
             this.ll_multiple_images = (LinearLayout) view.findViewById(R.id.ll_multiple_images);
             this.text_name = (TextView) view.findViewById(R.id.text_name);
+            this.text_match_location = (TextView) view.findViewById(R.id.text_match_location);
             this.text_sharePost = (TextView) view.findViewById(R.id.text_sharePost);
             this.text_imag_count = (TextView) view.findViewById(R.id.text_imag_count);
+            this.text_match_status = (TextView) view.findViewById(R.id.text_match_status);
             this.text_like_count = (TextView) view.findViewById(R.id.text_like_count);
             this.text_comment_count = (TextView) view.findViewById(R.id.text_comment_count);
             this.text_share_count = (TextView) view.findViewById(R.id.text_share_count);
             this.text_message = (TextView) view.findViewById(R.id.text_message);
             this.text_like = (TextView) view.findViewById(R.id.text_like);
             this.text_time = (TextView) view.findViewById(R.id.text_time);
+            this.text_teamname2 = (TextView) view.findViewById(R.id.text_teamname2);
+            this.text_teamname1 = (TextView) view.findViewById(R.id.text_teamname1);
             this.text_location_time = (TextView) view.findViewById(R.id.text_location_time);
             this.text_share = (TextView) view.findViewById(R.id.text_share);
             this.text_comment = (TextView) view.findViewById(R.id.text_comment);

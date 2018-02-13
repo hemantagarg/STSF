@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/layout_bg"
     android:layout_height="match_parent"
+    android:background="@color/layout_bg"
     tools:context="com.app.sportzfever.activities.Dashboard"
     tools:showIn="@layout/app_bar_dashboard">
 
@@ -48,12 +48,144 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="@dimen/dp10"
-        app:tabGravity="fill"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dp10"
         android:background="@color/white"
+        android:visibility="gone"
+        app:tabGravity="fill"
         app:tabIndicatorColor="@color/tab_indicator_color"
         app:tabIndicatorHeight="@dimen/dp0"
         app:tabMode="fixed" />
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dp10"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="6">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/home_orange" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_feed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/newsfeed" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_friends"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/friends" />
+
+            <TextView
+                android:id="@+id/text_teamInvite_count"
+                android:layout_width="@dimen/dp15"
+                android:layout_height="@dimen/dp15"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/circle_orange"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_10"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_events"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/calendar" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_notification"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/bell" />
+
+            <TextView
+                android:id="@+id/text_notification_count"
+                android:layout_width="@dimen/dp15"
+                android:layout_height="@dimen/dp15"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/circle_orange"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_10"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_chat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/image_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/chat" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

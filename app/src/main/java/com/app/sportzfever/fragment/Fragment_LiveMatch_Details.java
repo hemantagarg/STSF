@@ -26,6 +26,7 @@ import com.app.sportzfever.interfaces.ConnectionDetector;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -103,7 +104,7 @@ public class Fragment_LiveMatch_Details extends BaseFragment implements ApiRespo
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        AppConstant.ISFEEDNEEDTOREFRESH = false;
         teama = (ImageView) view.findViewById(R.id.teama);
         teamb = (ImageView) view.findViewById(R.id.teamb);
         image_refresh = (ImageView) view.findViewById(R.id.image_refresh);

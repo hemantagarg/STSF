@@ -161,7 +161,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     bundle.putString("teamCheckAvailibility", "1");
                     fragmentPrepareLineup.setArguments(bundle);
                     fragmentPrepareLineup.setTargetFragment(FragmentCheckPlayerAvailability.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
                 } else {
                     FragmentPrepareLineupDirect fragmentPrepareLineup = new FragmentPrepareLineupDirect();
                     Bundle bundle = new Bundle();
@@ -177,7 +177,7 @@ public class FragmentCheckPlayerAvailability extends BaseFragment implements OnC
                     }
                     fragmentPrepareLineup.setArguments(bundle);
                     fragmentPrepareLineup.setTargetFragment(FragmentCheckPlayerAvailability.this, AppConstant.FRAGMENT_CODE);
-                    Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentPrepareLineup, true);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentPrepareLineup, true);
 
                 }
             }

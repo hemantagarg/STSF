@@ -423,7 +423,7 @@ public class Fragment_PostFeed extends BaseFragment implements ApiResponse, OnCu
 //                    JSONArray data = jObject.getJSONArray("data");
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     context.onBackPressed();
-
+                    AppConstant.ISFEEDNEEDTOREFRESH = true;
                 } else {
                 }
             } else if (position == 2) {

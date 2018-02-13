@@ -21,11 +21,11 @@ import com.app.sportzfever.adapter.AdapterPerformance;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelPerformance;
 import com.app.sportzfever.models.ModelStats;
+import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -201,7 +201,7 @@ public class FragmentStats extends BaseFragment implements ApiResponse, OnCustom
             Bundle b = new Bundle();
             b.putString("eventId", arrayListPerformance.get(position).getEventID());
             fragmentupcomingdetals.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
         }
     }
 

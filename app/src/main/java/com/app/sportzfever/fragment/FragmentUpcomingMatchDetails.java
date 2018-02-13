@@ -107,7 +107,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        AppConstant.ISFEEDNEEDTOREFRESH=false;
         teama = (ImageView) view.findViewById(R.id.teama);
         teamb = (ImageView) view.findViewById(R.id.teamb);
         text_username = (TextView) view.findViewById(R.id.text_name);
@@ -148,7 +148,7 @@ public class FragmentUpcomingMatchDetails extends BaseFragment implements ApiRes
                 b11.putString("data", data.toString());
                 b11.putString("eventId", eventId);
                 feed.setArguments(b11);
-                Dashboard.getInstance().pushFragments(currentTab, feed, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, feed, true);
 
             }
         });

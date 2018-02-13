@@ -57,7 +57,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
       /*  convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, new Fragment_AvtarMyTeam(), true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, new Fragment_AvtarMyTeam(), true);
             }
         });*/
 

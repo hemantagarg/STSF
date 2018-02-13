@@ -128,21 +128,21 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
                 Bundle b = new Bundle();
                 b.putString("eventId", arrayListMatches.get(position).getEventId());
                 fragmentupcomingdetals.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
 
             } else if (arrayListMatches.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_STARTED)) {
                 Fragment_LiveMatch_Details fragmentupcomingdetals = new Fragment_LiveMatch_Details();
                 Bundle b = new Bundle();
                 b.putString("eventId", arrayListMatches.get(position).getEventId());
                 fragmentupcomingdetals.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
 
             } else if (arrayListMatches.get(position).getMatchStatus().equals(AppConstant.MATCHSTATUS_ENDED)) {
                 Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
                 Bundle b = new Bundle();
                 b.putString("eventId", arrayListMatches.get(position).getEventId());
                 fragmentupcomingdetals.setArguments(b);
-                Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentupcomingdetals, true);
+                Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
             }
 
         } else if (flag == 2) {
@@ -150,13 +150,13 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayListTeams.get(position).getTeamId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         } else if (flag == 3) {
             FragmentAvtar_Details fragmentAvtar_details = new FragmentAvtar_Details();
             Bundle bundle = new Bundle();
             bundle.putString("id", arrayListPlayers.get(position).getId());
             fragmentAvtar_details.setArguments(bundle);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentAvtar_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentAvtar_details, true);
         } else if (flag == 4) {
             FragmentTournament_Details tab2 = new FragmentTournament_Details();
             Bundle b = new Bundle();
@@ -165,13 +165,13 @@ public class Fragment_Home extends BaseFragment implements ApiResponse, OnCustom
             b.putString("date", "");
             b.putString("image", arrayListTournaments.get(position).getProfilePicture());
             tab2.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, tab2, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, tab2, true);
         } else if (flag == 6) {
             FragmentUser_Details fragmentUser_details = new FragmentUser_Details();
             Bundle b = new Bundle();
             b.putString("id", arrayListFriendSuggestion.get(position).getId());
             fragmentUser_details.setArguments(b);
-            Dashboard.getInstance().pushFragments(GlobalConstants.TAB_FEED_BAR, fragmentUser_details, true);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentUser_details, true);
         } else if (flag == 5) {
             addFriend("ADDFRIEND", arrayListFriendSuggestion.get(position).getId());
         }
