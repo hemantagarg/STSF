@@ -801,23 +801,23 @@ public class SportzDatabase {
 
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast()) {
-                        int ballId = cursor.getInt(cursor.getColumnIndex("id"));
-                        String jsonData= cursor.getString(cursor.getColumnIndex("jsonData"));
-                        int serverID= cursor.getInt(cursor.getColumnIndex("serverID"));
 
                         CricketBallJson cricketBallJson= new CricketBallJson();
-                        cricketBallJson.setId(ballId);
-                        cricketBallJson.setServerId(serverID);
-                        cricketBallJson.setJsonData(jsonData);
+
+                        cricketBallJson.setId(cursor.getInt(cursor.getColumnIndex("Id")));
+                        cricketBallJson.setServerId(cursor.getInt(cursor.getColumnIndex("serverID")));
+                        cricketBallJson.setJsonData(cursor.getString(cursor.getColumnIndex("jsonData")));
+
                         cricketBall.add(cricketBallJson);
                         cursor.moveToNext();
                     }
                 }
-                cursor.moveToFirst();
+                //cursor.moveToFirst();
             }
         } catch (Exception e) {
             cricketBall = new ArrayList<>();
             e.printStackTrace();
+            Log.d("l",e.getMessage());
         }
         return cricketBall;
     }
@@ -2375,6 +2375,21 @@ public class SportzDatabase {
         }
         db.update("cricket_balls", cv, "localId =\"" + cricketBall.getId() + "\"", null);
     }
+    public void updateBallServerID(int id,int serverId)
+    {
+        //SQLiteDatabase data = this.getWritableDatabase();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("serverID", serverId);
+            db.update("cricket_balls_local", cv, "id =\"" + id + "\"", null);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d("error",e.getMessage());
+        }
+    }
 
     public void deleteTableRecord(String tableName, String id) {
         //SQLiteDatabase data = this.getReadableDatabase();
@@ -2446,6 +2461,7 @@ public class SportzDatabase {
                         int totalRunScored = Integer.parseInt(cricketBall.getRunScored());
                         int ballId = cricketBall.getId();
                         int extraRuns = Integer.parseInt(cricketBall.getExtraRuns());
+                        int initialextraRuns = Integer.parseInt(cricketBall.getExtraRuns());
                         int isFour = Integer.parseInt(cricketBall.isFour());
                         int isNoBall = Integer.parseInt(cricketBall.isNoBall());
                         int isWideBall = Integer.parseInt(cricketBall.isWideBall());
@@ -2473,7 +2489,7 @@ public class SportzDatabase {
                         String pplayedOvers = "0";
 
                         if (isNoBall == 1 || isWideBall == 1) {
-                            playedOvers = Float.parseFloat(cricketInning.getPlayedOvers());
+                            pplayedOvers = cricketInning.getPlayedOvers();
                         } else {
                             int overNo = (int) (Float.parseFloat(cricketInning.getPlayedOvers()) / 1);
                             int overBallNo = (int) ((Float.parseFloat(cricketInning.getPlayedOvers()) * 10) % 10);
@@ -2493,7 +2509,6 @@ public class SportzDatabase {
                                 } else {
                                     pplayedOvers = String.valueOf(playedOvers1);
                                 }
-
                             }
                         }
                         cricketInning.setTotalRunsScored(String.valueOf(totalRunsInInning));
@@ -2539,9 +2554,12 @@ public class SportzDatabase {
                             }
                         }
                         CricketScoreCard strikeBatsmanScoreCard = fetchScoreCardOfBatsmanInInning(matchId, inningId, batsmanId);
-                        strikeBatsmanScoreCard.setRuns(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getRuns()) - runScored));
-                        strikeBatsmanScoreCard.setBalls(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getBalls()) - 1));
-
+                       // if(Integer.parseInt( strikeBatsmanScoreCard.getRuns())>0) {
+                            strikeBatsmanScoreCard.setRuns(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getRuns()) - runScored));
+                       // }
+                       // if(Integer.parseInt( strikeBatsmanScoreCard.getBalls())>0) {
+                            strikeBatsmanScoreCard.setBalls(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getBalls()) - 1));
+                       // }
 
                         if (isNoBall == 1 && runScored >= 1) {
                             strikeBatsmanScoreCard.setRuns(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getRuns()) + 1));
@@ -2549,9 +2567,9 @@ public class SportzDatabase {
                         if (isWideBall == 1) {
                             int runtosub = 0;
                             if (cricketBall.isBye().equalsIgnoreCase("1")) {
-                                runtosub = (extraRuns - runScoredOnBye);
+                                runtosub = (initialextraRuns - runScoredOnBye);
                             } else {
-                                runtosub = extraRuns;
+                                runtosub = initialextraRuns;
                             }
                             strikeBatsmanScoreCard.setRuns(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getRuns()) + runtosub));
                             strikeBatsmanScoreCard.setBalls(String.valueOf(Integer.parseInt(strikeBatsmanScoreCard.getBalls()) + 1));
@@ -2592,7 +2610,6 @@ public class SportzDatabase {
 
                         //update scorecard result
                         updateScoreCardData(strikeBatsmanScoreCard);
-
                         deleteTableRecord("cricket_balls", String.valueOf(ballId));
                         deleteLocalBallOnUndo(String.valueOf(ballId));
                         if (cricketBall.getBallCountInOver().equalsIgnoreCase("1")) {

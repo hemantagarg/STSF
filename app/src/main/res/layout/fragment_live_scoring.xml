@@ -70,7 +70,6 @@
                     android:text="Extras"
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/text_size_15" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -272,7 +271,16 @@
                         android:text="@string/out"
                         android:textColor="@color/textcolordark"
                         android:textSize="@dimen/text_size_13" />
-
+                    <TextView
+                        android:id="@+id/sync"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp2"
+                        android:layout_weight="1"
+                        android:padding="@dimen/dp10"
+                        android:text="Sync"
+                        android:textColor="@color/text_color_black"
+                        android:textSize="@dimen/text_size_12" />
                 </LinearLayout>
 
                 <LinearLayout

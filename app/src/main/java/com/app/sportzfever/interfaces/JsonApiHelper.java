@@ -15,7 +15,7 @@ public interface JsonApiHelper {
     String FORGOT = "forgetPassword";
     String GET_FEEDS = "getFeeds/";
     String SINGLE_SATUS_DETAILS = "singleStatusDetails/";
-    String SFLANDING = "sflanding/";
+	String SFLANDING = "sflanding/";
     String GET_FEEDS_BY_AVTAR = "getFeedByAvatar/";
     String GET_FEEDS_MATCH = "getFeedOfMatchTournament/match/";
     String GET_FEEDS_TOURNAMENT = "getFeedOfMatchTournament/TOURNAMENT/";
@@ -100,6 +100,7 @@ public interface JsonApiHelper {
     String POSTCOMMENT = "comment";
     String SCORING = "scoring/";
     String SAVE_BALL = "saveBall";
+    String SYNC_BALL = "syncBall";
     String UNDO_BALL = "UndoBall";
     String STARTSECONDINNING = "startSecondInning";
     String VIEWALLMATCHESSCORE = "viewMatchScoreCard/";

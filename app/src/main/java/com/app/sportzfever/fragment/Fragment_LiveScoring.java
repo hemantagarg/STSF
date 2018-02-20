@@ -69,6 +69,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.sportzfever.R.id.date;
 import static com.app.sportzfever.R.id.match_parent;
 import static com.app.sportzfever.R.id.playedOversTwo;
 import static com.app.sportzfever.R.id.runScoredTwo;
@@ -98,7 +99,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private ArrayList<String> listFielderName = new ArrayList<>();
     private ArrayList<BowlingStats> arrayteam1Bowling;
     private Button btn_teama, btn_teamb;
-    private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling;
+    private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling,text_sync;
     private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling, lin_out_action, lin_out_batsanspinner;
     public static Fragment_LiveScoring fragment_teamJoin_request;
     private final String TAG = Fragment_LiveScoring.class.getSimpleName();
@@ -209,6 +210,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         text4 = (TextView) view.findViewById(R.id.text4);
         text5 = (TextView) view.findViewById(R.id.text5);
         text6 = (TextView) view.findViewById(R.id.text6);
+        text_sync = (TextView) view.findViewById(R.id.sync);
         textMoreOptions = (TextView) view.findViewById(R.id.textMoreOptions);
         textUndo = (TextView) view.findViewById(R.id.textUndo);
         checkbox_no_ball = (CheckBox) view.findViewById(R.id.checkbox_no_ball);
@@ -225,7 +227,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         text6.setOnClickListener(this);
         textUndo.setOnClickListener(this);
         textOk.setOnClickListener(this);
-
+        text_sync.setOnClickListener(this);
     }
 
 
@@ -290,7 +292,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
-
 
     private void setTeam1Data(JSONObject jo, JSONArray team1Squad, JSONArray team2Squad) {
         try {
@@ -694,7 +695,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
-
     private void setFielderList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad) {
         try {
             listFielderId.clear();
@@ -726,7 +726,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
-
 
     private void selectNewBatsmanBowlerDialog(final boolean isAllOut, final String bowlingTeamId) {
         try {
@@ -976,7 +975,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
     }
 
-
     private void addNewBowlerDialog(final String bowlingTeamId) {
         try {
             isDialogVisible = true;
@@ -1029,7 +1027,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             Log.e(TAG, " Exception error : " + e);
         }
     }
-
 
     /**
      * Open dialog for the change batsman
@@ -1153,7 +1150,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     }
 
-
     private void addNewBowler(int selectedBatsmanPosition) {
 
         arrayteam1Bowling.clear();
@@ -1215,7 +1211,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
         adapterTeam1BattingMatch.notifyDataSetChanged();
     }
-
 
     private void selectStriker(boolean isBowler) {
         try {
@@ -1316,7 +1311,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             Log.e(TAG, " Exception error : " + e);
         }
     }
-
 
     private void setlistener() {
 
@@ -1719,7 +1713,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }*/
     }
 
-
     private void saveDummyBowler(String name, String teamId) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
@@ -1746,7 +1739,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
-
 
     private void drinkBreak(String type) {
         try {
@@ -1837,8 +1829,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                             caughtById, runOutById, batsmanId, nonStrikerbatsmanId, bowlerId, overId, comments, outBatsmanId, isDeclared, by);
 */
 
-                   db.SaveBall(jsonObject);
-                   String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                    db.SaveBall(jsonObject);
+                    String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
 
                     getMatchDetailsAndCheckInning(str);
@@ -1883,23 +1875,23 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         JSONObject jsonObject = new JSONObject(cricketBallJsons.get(i).getJsonData());
                         if(i==0){
                             jsonObject.put("previousballid", "-1");
+                            jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
                         }
                         else
                         {
                             jsonObject.put("previousballid", cricketBallJsons.get(i-1).getServerId());
+                            jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
                         }
-
                         if (AppUtils.isNetworkAvailable(context))
                         {
-                            String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_BALL;
+                            String url = JsonApiHelper.BASEURL + JsonApiHelper.SYNC_BALL;
                             new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                         }
                         else
                         {
                             Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
-
-
+                        break;
                     }
                 }
             }
@@ -1913,8 +1905,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         }
 
     }
-
-
 
     private void getMatchDetailsAndCheckInning(String str) throws JSONException {
         JSONObject jObject = new JSONObject(str);
@@ -2004,7 +1994,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
-
 
     private JSONObject makeJsonRequest() {
         JSONObject jsonObject = new JSONObject();
@@ -2109,8 +2098,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     @Override
     public void onPostSuccess(int position, JSONObject jObject) {
+        db.open();
         try {
-            if (position == 1) {
+            if (position == 1)
+            {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
                     AppUtils.setScoringData(context, data.toString());
@@ -2167,6 +2158,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     Bundle b = new Bundle();
                     b.putString("eventId", eventId);
                     fragmentupcomingdetals.setArguments(b);
+
                     Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
 
                 } else {
@@ -2324,15 +2316,25 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
-            else
-                if(position ==11)
+            else if(position ==11)
+            {
+                if (jObject.getString("result").equalsIgnoreCase("1"))
                 {
-
-
+                    data = jObject.getJSONObject("data");
+                    db.updateBallServerID(Integer.parseInt(jObject.getString("localDbId")),Integer.parseInt(data.getString("id")));
+                    syncData();
                 }
+                else
+                {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("error",e.getMessage());
+        }finally {
+            db.close();
         }
     }
 
@@ -2500,9 +2502,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 undoBall();
                 break;
             case R.id.textOk:
-                if (isValidate()) {
+                if (isValidate())
+                {
                     saveBall();
                 }
+                break;
+            case R.id.sync:
+                syncData();
                 break;
 
         }
