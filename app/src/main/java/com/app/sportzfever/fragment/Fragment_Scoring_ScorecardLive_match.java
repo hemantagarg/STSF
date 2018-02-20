@@ -17,14 +17,12 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterTeamBattingMatch;
 import com.app.sportzfever.adapter.AdapterTeamBowlingMatch;
-import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
-import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.SportzDatabase;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -49,12 +47,13 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
     LinearLayout layout_team2, layout_team1, layout_team1batting, llMatchInfo, layout_team1bowling, llRunScored, layout_team2batting, layout_team2bowling;
     public static Fragment_Scoring_ScorecardLive_match fragment_teamJoin_request;
     private final String TAG = Fragment_Scoring_ScorecardLive_match.class.getSimpleName();
-    private String avtarid = "";
+    private String eventId = "";
     private boolean isTeam1BattingVisible = true;
     private boolean isTeam1BowlingVisible = true;
     private boolean isTeam2BattingVisible = true;
     private boolean isTeam2BowlingVisible = true;
     View view;
+    private SportzDatabase db;
     JSONObject data;
     private TextView text_username, text_startdate, text_teamname, textmatchtype, text_maxover, text_scorerfora, text_scorerforb, text_location;
     private TextView text_extrarun, textRunsScored, text_total, text_totalrun, text_extrarunrate, text_extrarun1, text_total1, text_totalrun1, text_extrarunrate1;
@@ -71,7 +70,7 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
         view = inflater.inflate(R.layout.fragment_scoring_full_scorecard_match, container, false);
         context = getActivity();
-
+        setDatabase();
         b = getArguments();
 
         return view;
@@ -156,10 +155,14 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
         try {
             Bundle bundle = getArguments();
             if (bundle != null) {
-                avtarid = bundle.getString("eventId");
-                String maindata = AppUtils.getScoringData(context);
+                eventId = bundle.getString("eventId");
+                //  String maindata = AppUtils.getScoringData(context);
+                db.open();
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
-                data = new JSONObject(maindata);
+                JSONObject data1 = new JSONObject(str);
+                data = data1.getJSONObject("data");
+
                 JSONObject team1 = data.getJSONObject("team1");
                 JSONObject team2 = data.getJSONObject("team2");
                 JSONObject jbatsman = data.getJSONObject("match");
@@ -441,19 +444,56 @@ public class Fragment_Scoring_ScorecardLive_match extends BaseFragment implement
 
 
     public void getServicelistRefresh() {
-        Dashboard.getInstance().setProgressLoader(true);
+        //  Dashboard.getInstance().setProgressLoader(true);
         try {
-            if (AppUtils.isNetworkAvailable(context)) {
+            db.open();
+            String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+
+            JSONObject data1 = new JSONObject(str);
+            data = data1.getJSONObject("data");
+            JSONObject team1 = data.getJSONObject("team1");
+            JSONObject team2 = data.getJSONObject("team2");
+            JSONObject jbatsman = data.getJSONObject("match");
+            textmatchtype.setText(jbatsman.getString("inningsPlayStatusString"));
+            text_maxover.setText(jbatsman.getString("runInBall"));
+            text_scorerfora.setText(jbatsman.getString("team1ScoreString"));
+            text_scorerforb.setText(jbatsman.getString("team2ScoreString"));
+            text_location.setText(jbatsman.getString("runInOver"));
+            text_username.setText(team1.getString("name"));
+            text_teamname.setText(team2.getString("name"));
+
+            if (layout_team1.getVisibility() == View.VISIBLE) {
+                setTeam1Data(data);
+            } else if (layout_team2.getVisibility() == View.VISIBLE) {
+                setTeam2Data(data);
+            }
+
+         /*   if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
+             *//*   HashMap<String, Object> hm = new HashMap<>();*//*
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + eventId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    private void setDatabase() {
+        db = null;
+        try {
+            db = new SportzDatabase(context);
+            db.open();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally {
+            db.close();
         }
     }
 

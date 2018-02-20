@@ -34,7 +34,6 @@ import com.app.sportzfever.adapter.AdapterTeamBowlingMatch;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.BattingStats;
@@ -69,8 +68,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.app.sportzfever.R.id.date;
-import static com.app.sportzfever.R.id.match_parent;
 import static com.app.sportzfever.R.id.playedOversTwo;
 import static com.app.sportzfever.R.id.runScoredTwo;
 import static com.app.sportzfever.R.id.wicketsTwo;
@@ -99,7 +96,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     private ArrayList<String> listFielderName = new ArrayList<>();
     private ArrayList<BowlingStats> arrayteam1Bowling;
     private Button btn_teama, btn_teamb;
-    private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling,text_sync;
+    private TextView text_nodata, text_team1batting, text_team1bowling, text_team2batting, text_team2bowling, text_sync;
     private LinearLayout layout_team2, layout_team1, layout_team1batting, layout_team1bowling, layout_team2batting, layout_team2bowling, lin_out_action, lin_out_batsanspinner;
     public static Fragment_LiveScoring fragment_teamJoin_request;
     private final String TAG = Fragment_LiveScoring.class.getSimpleName();
@@ -272,6 +269,14 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     public void refreshData() {
         try {
+            db.open();
+            if (modelInnings != null) {
+                if (getUserVisibleHint() && !isDialogVisible) {
+                    String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                    getMatchDetailsAndCheckInning(str);
+                }
+            }
+/*
             if (modelInnings != null) {
                 if (getUserVisibleHint() && !isDialogVisible) {
                     if (modelInnings.getBatsmanOnStrike().equals("-1") && modelInnings.getBatsmanOnNonStrike().equals("-1") && modelInnings.getCurrentBowlerId().equals("-1")) {
@@ -289,8 +294,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     }
                 }
             }
+*/
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            db.close();
         }
     }
 
@@ -1803,9 +1811,13 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     db.SaveBall(jsonObject);
                     String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
-
                     getMatchDetailsAndCheckInning(str);
-
+                    // call api on click of OK button if mobile is connected with internet
+                    if (AppUtils.isNetworkAvailable(context)) {
+                        syncData();
+                    } else {
+                        Toast.makeText(context, "Not Synced", Toast.LENGTH_SHORT).show();
+                    }
                     //Hemanta code for live scoring
                    /* if (AppUtils.isNetworkAvailable(context))
                     {
@@ -1814,65 +1826,51 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     } else {
                         Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                     }*/
-                }catch (Exception e)
-                {
-                    Log.e("dvd",e.getMessage());
-                }
-                finally {
+                } catch (Exception e) {
+                    Log.e("dvd", e.getMessage());
+                } finally {
                     db.close();
                 }
 
             }
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     // Function to sync data to server
     // TODO: 2/20/2018 Remove progress bar for this when calling api
     // TODO: 2/20/2018 Call this function on ok button and when mobile is connected with internet.
     // TODO: 2/20/2018 Remove manual calling(a sync button has been added on ui)
-    private void syncData()
-    {
-        if(db!=null)
-        {
-            try
-            {
+    private void syncData() {
+        if (db != null) {
+            try {
                 db.open();
                 List<CricketBallJson> cricketBallJsons = db.fetchBallDataJson();
-                for(int i=0;i<cricketBallJsons.size();i++)
-                {
-                    if(cricketBallJsons.get(i).getServerId() ==0)
-                    {
+                for (int i = 0; i < cricketBallJsons.size(); i++) {
+                    if (cricketBallJsons.get(i).getServerId() == 0) {
                         JSONObject jsonObject = new JSONObject(cricketBallJsons.get(i).getJsonData());
-                        if(i==0){
+                        if (i == 0) {
                             jsonObject.put("previousballid", "-1");
                             jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
-                        }
-                        else
-                        {
-                            jsonObject.put("previousballid", cricketBallJsons.get(i-1).getServerId());
+                        } else {
+                            jsonObject.put("previousballid", cricketBallJsons.get(i - 1).getServerId());
                             jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
                         }
-                        if (AppUtils.isNetworkAvailable(context))
-                        {
+                        if (AppUtils.isNetworkAvailable(context)) {
                             String url = JsonApiHelper.BASEURL + JsonApiHelper.SYNC_BALL;
                             new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
 
-            }finally {
+            } finally {
                 db.close();
             }
 
@@ -1899,22 +1897,19 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         innings = data.getJSONArray("innings");
         checkInning(innings, team1Squad, team2Squad);
     }
+
     // Undo ball
     private void undoBall() {
-        try
-        {
-            try
-            {
+        try {
+            try {
                 db.open();
-                db.UndoBall( Integer.parseInt(matchId), Integer.parseInt(inningId));
+                db.UndoBall(Integer.parseInt(matchId), Integer.parseInt(inningId));
                 String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
                 getMatchDetailsAndCheckInning(str);
 
-            }
-            catch (Exception e)
-            {
-                Log.e("dd",e.getMessage());
-            }finally {
+            } catch (Exception e) {
+                Log.e("dd", e.getMessage());
+            } finally {
                 db.close();
             }
 
@@ -1935,12 +1930,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void startSecondInning() {
         try {
-            try
-            {
+            try {
                 db.open();
-                UniverseResponseModel<StartSecondInningResponseModel> dd= db.StartSecondInning(Integer.parseInt(matchId),Integer.parseInt( AppUtils.getUserId(getActivity())));
-                if(dd.getResult().equalsIgnoreCase("1"))
-                {
+                UniverseResponseModel<StartSecondInningResponseModel> dd = db.StartSecondInning(Integer.parseInt(matchId), Integer.parseInt(AppUtils.getUserId(getActivity())));
+                if (dd.getResult().equalsIgnoreCase("1")) {
                     if (isTeam2ScoringOnSf.equals("0")) {
                         saveInningScoreDialog();
                     } else {
@@ -1948,11 +1941,9 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         getMatchDetailsAndCheckInning(str);
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Log.e("dd",e.getMessage());
-            }finally {
+            } catch (Exception e) {
+                Log.e("dd", e.getMessage());
+            } finally {
                 db.close();
             }
             //Hemanta code for live scoring
@@ -2076,8 +2067,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     public void onPostSuccess(int position, JSONObject jObject) {
         db.open();
         try {
-            if (position == 1)
-            {
+            if (position == 1) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
                     AppUtils.setScoringData(context, data.toString());
@@ -2097,7 +2087,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 }
             } else if (position == 2) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    getLiveScoresRefresh();
+                    // getLiveScoresRefresh();
+                    syncData();
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
@@ -2106,7 +2097,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (isTeam2ScoringOnSf.equals("0")) {
                         saveInningScoreDialog();
                     } else {
-                        getLiveScoresRefresh();
+                        syncData();
+                        // getLiveScoresRefresh();
                     }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -2291,25 +2283,20 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if(position ==11)
-            {
-                if (jObject.getString("result").equalsIgnoreCase("1"))
-                {
+            } else if (position == 11) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
-                    db.updateBallServerID(Integer.parseInt(jObject.getString("localDbId")),Integer.parseInt(data.getString("id")));
+                    db.updateBallServerID(Integer.parseInt(jObject.getString("localDbId")), Integer.parseInt(data.getString("id")));
                     syncData();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("error",e.getMessage());
-        }finally {
+            Log.d("error", e.getMessage());
+        } finally {
             db.close();
         }
     }
@@ -2479,8 +2466,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 undoBall();
                 break;
             case R.id.textOk:
-                if (isValidate())
-                {
+                if (isValidate()) {
                     saveBall();
                 }
                 break;
