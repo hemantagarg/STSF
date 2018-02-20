@@ -130,13 +130,14 @@ public class SportzDatabase {
         tables.add("general_profile");
         tables.add("matches");
         tables.add("cricket_selected_team_players");
-
-        tables.add("cricket_scorecard");
-        tables.add("cricket_overs");
-        tables.add("cricket_innings");
-        tables.add("cricket_balls");
-        tables.add("cricket_balls_local");
-
+        // TODO: 2/20/2018 Do not add these tables in list(just uncomment the if block), adding these tables will clear offline data for local match....(i tried but on uncommenting the code dialog box for selecting bowler and batsmen doesn't hide )
+       // if(resetCurrentLocalMatch) {
+            tables.add("cricket_scorecard");
+            tables.add("cricket_overs");
+            tables.add("cricket_innings");
+            tables.add("cricket_balls");
+            tables.add("cricket_balls_local");
+        //}
         for (String tableName : tables) {
             db.execSQL("Delete from " + tableName);
             db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE name='" + tableName + "';");
@@ -2448,6 +2449,9 @@ public class SportzDatabase {
         //this.close();
     }
 
+    // API FUNCTIONS
+
+    // Api function for Undo Ball
     public String UndoBall(int matchId, int inningId) {
         UniverseResponseModel<String> result = new UniverseResponseModel<String>();
         Match match = fetchMatchByMatchId(matchId);
@@ -2657,6 +2661,7 @@ public class SportzDatabase {
         return res;
     }
 
+    // Api function for StartSecond Inning
     public UniverseResponseModel<StartSecondInningResponseModel> StartSecondInning(int matchId, int userId) {
 
         UniverseResponseModel<StartSecondInningResponseModel> result = new UniverseResponseModel<StartSecondInningResponseModel>();
@@ -2729,7 +2734,7 @@ public class SportzDatabase {
         return result;
     }
 
-
+    // Api function for saving ball
     public void SaveBall(JSONObject jsonObject) {
 
         try {
@@ -3064,7 +3069,7 @@ public class SportzDatabase {
         }
     }
 
-
+    // Api function for getmatchstaticsDetails
     public String getMatchStatisticsDetails(int eventId) {
         ResponseModel result = new ResponseModel();
 

@@ -148,6 +148,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         getOffLineData();
     }
 
+    //Function to get all the data needed for offline scoring
     private void getOffLineData() {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
@@ -1799,36 +1800,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 try {
 
                     db.open();
-                    /*int matchId1 = jsonObject.getInt("matchId");
-                    int inningId = jsonObject.getInt("inningId");
-                    int runScored = jsonObject.getInt("runScored");
-                    String isFour = (jsonObject.getString("isFour").equalsIgnoreCase("true")) ? "1" : "0";
-                    String isSix = (jsonObject.getString("isSix").equalsIgnoreCase("true")) ? "1" : "0";
-                    String isNoBall = (jsonObject.getString("isNoBall").equalsIgnoreCase("true")) ? "1" : "0";
-                    String isWideBall = (jsonObject.getString("isWideBall").equalsIgnoreCase("true")) ? "1" : "0";
-                    int runScoredOnWideBall = (jsonObject.getString("runScoredOnWideBall") == "") ? 0 : jsonObject.getInt("runScoredOnWideBall");
-                    int runScoredOnNoBall = (jsonObject.getString("runScoredOnNoBall") == "") ? 0 : jsonObject.getInt("runScoredOnNoBall");
-                    String isBye = (jsonObject.getString("isBye").equalsIgnoreCase("true")) ? "1" : "0";
-                    int runScoredOnBye = (jsonObject.getString("runScoredOnBye") == "") ? 0 : jsonObject.getInt("runScoredOnBye");
-                    String isLegBye = (jsonObject.getString("isLegBye").equalsIgnoreCase("true")) ? "1" : "0";
-                    int runScoredOnLegBye = (jsonObject.getString("runScoredOnLegBye") == "") ? 0 : jsonObject.getInt("runScoredOnLegBye");
-                    String isWicket = (jsonObject.getString("isWicket").equalsIgnoreCase("true")) ? "1" : "0";
-                    String wicketType = jsonObject.getString("wicketType");
-                    int stumpedById = (jsonObject.getString("stumpedById") == "") ? 0 : jsonObject.getInt("stumpedById");
-                    int caughtById = (jsonObject.getString("caughtById") == "") ? 0 : jsonObject.getInt("caughtById");
-                    int runOutById = (jsonObject.getString("runOutById") == "") ? 0 : jsonObject.getInt("runOutById");
-                    int batsmanId = jsonObject.getInt("batsmanId");
-                    int nonStrikerbatsmanId = jsonObject.getInt("NonStrikerbatsmanId");
-                    int bowlerId = jsonObject.getInt("bowlerId");
-                    int overId = jsonObject.getInt("overId");
-                    String comments = jsonObject.getString("comments");
-                    int outBatsmanId = (jsonObject.getString("outBatsmanId") == "") ? 0 : jsonObject.getInt("outBatsmanId");
-                    String isDeclared = (jsonObject.getString("isDeclared").equalsIgnoreCase("true")) ? "1" : "0";
-                    int by = (jsonObject.getString("by") == "") ? 0 : jsonObject.getInt("by");*/
-                   /* db.SaveBall(matchId1, inningId, runScored, isFour, isSix, isNoBall, isWideBall, runScoredOnWideBall, runScoredOnNoBall, isBye, runScoredOnBye, isLegBye, runScoredOnLegBye, isWicket, wicketType, stumpedById,
-                            caughtById, runOutById, batsmanId, nonStrikerbatsmanId, bowlerId, overId, comments, outBatsmanId, isDeclared, by);
-*/
-
                     db.SaveBall(jsonObject);
                     String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
@@ -1859,7 +1830,10 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
-
+    // Function to sync data to server
+    // TODO: 2/20/2018 Remove progress bar for this when calling api
+    // TODO: 2/20/2018 Call this function on ok button and when mobile is connected with internet.
+    // TODO: 2/20/2018 Remove manual calling(a sync button has been added on ui)
     private void syncData()
     {
         if(db!=null)
@@ -1906,6 +1880,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     }
 
+    //Function to get match details and check inning(Hemanta's code used for check inning)
     private void getMatchDetailsAndCheckInning(String str) throws JSONException {
         JSONObject jObject = new JSONObject(str);
         data = jObject.getJSONObject("data");
@@ -1924,7 +1899,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         innings = data.getJSONArray("innings");
         checkInning(innings, team1Squad, team2Squad);
     }
-
+    // Undo ball
     private void undoBall() {
         try
         {
@@ -1943,7 +1918,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 db.close();
             }
 
-
+            //Hemanta code for live scoring
             /*if (AppUtils.isNetworkAvailable(context)) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("matchId", matchId);
@@ -1980,7 +1955,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             }finally {
                 db.close();
             }
-/*
+            //Hemanta code for live scoring
+            /*
             if (AppUtils.isNetworkAvailable(context)) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("matchId", matchId);
@@ -2339,6 +2315,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
     //lalit code for offline scoring
+    // Inserting the data fetched from server
     private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord) {
 
         try {
