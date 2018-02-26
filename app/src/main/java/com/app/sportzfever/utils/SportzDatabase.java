@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.app.sportzfever.models.dbmodels.Avatar;
@@ -23,6 +22,7 @@ import com.app.sportzfever.models.dbmodels.MatchSfPlayerName;
 import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
 import com.app.sportzfever.models.dbmodels.Roster;
+import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.models.dbmodels.User;
 import com.app.sportzfever.models.dbmodels.apimodel.BattingStat;
 import com.app.sportzfever.models.dbmodels.apimodel.BattingStatViewModel;
@@ -44,11 +44,11 @@ import com.app.sportzfever.models.dbmodels.apimodel.TeamSquad;
 import com.app.sportzfever.models.dbmodels.apimodel.UniverseResponseModel;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class SportzDatabase {
     private static final String TAG = "SportzDatabase";
@@ -75,7 +75,9 @@ public class SportzDatabase {
         public void onCreate(SQLiteDatabase db) {
             try
             {
+
                 // db.execSQL("create table medData(match_id text primary key,id text,team1Id text, team2Id text)");
+                db.execSQL("create TABLE Toss_local(Id INTEGER primary key AUTOINCREMENT NOT NULL, cricket_inning_id INTEGER NOT NULL DEFAULT 0,jsonData TEXT,serverinningId INTEGER NOT NULL DEFAULT 0  )");
                 db.execSQL("create TABLE cricket_balls_local(Id INTEGER primary key AUTOINCREMENT NOT NULL, cricket_balls_id INTEGER NOT NULL DEFAULT 0,jsonData TEXT,serverID INTEGER NOT NULL DEFAULT 0  )");
                 db.execSQL("create TABLE cricket_balls(localId INTEGER primary key AUTOINCREMENT NOT NULL, id INTEGER NOT NULL DEFAULT 0,syncStatus INTEGER NOT NULL DEFAULT 0, ballCountInOver TEXT NOT NULL,inningOverCount TEXT NOT NULL,runScored TEXT NOT NULL,extraRuns TEXT NOT NULL,isFour TEXT NOT NULL,isSix TEXT NOT NULL,runScoredOnNoBall TEXT ,isNoBall TEXT NOT NULL,isWideBall TEXT NOT NULL,runScoredOnWideball TEXT DEFAULT NULL,isBye TEXT NOT NULL,runScoredOnBye TEXT DEFAULT NULL,isLegBye TEXT NOT NULL,runScoredOnLegBye TEXT DEFAULT NULL,isWicket TEXT NOT NULL,wicketType TEXT DEFAULT NULL,comments TEXT DEFAULT NULL,batsmanId TEXT DEFAULT NULL,bowlerId TEXT DEFAULT NULL,inningId TEXT DEFAULT NULL,overId TEXT DEFAULT NULL,matchId TEXT DEFAULT NULL,caughtById TEXT DEFAULT NULL,runOutById TEXT DEFAULT NULL,stumpedById TEXT DEFAULT NULL,outBatsmanId TEXT DEFAULT NULL)");
                 db.execSQL("CREATE TABLE cricket_innings (totalOvers TEXT NOT NULL, id INTEGER NOT NULL DEFAULT 0,syncStatus INTEGER NOT NULL DEFAULT 0 ,wickets TEXT NOT NULL  ,isDeclared TEXT  ,bowlingTeamId TEXT  ,isScoredOnSF TEXT NOT NULL  ,matchId TEXT  ,inningNumber TEXT NOT NULL ,playing TEXT  ,daySession TEXT  ,totalRunsScored TEXT NOT NULL ,state TEXT NOT NULL  ,extras TEXT  ,playedOvers TEXT NOT NULL ,battingTeamId TEXT  ,localId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,day TEXT );");
@@ -137,6 +139,7 @@ public class SportzDatabase {
             tables.add("cricket_innings");
             tables.add("cricket_balls");
             tables.add("cricket_balls_local");
+            tables.add("Toss_local");
         //}
         for (String tableName : tables) {
             db.execSQL("Delete from " + tableName);
@@ -216,6 +219,22 @@ public class SportzDatabase {
 
         db.insert("cricket_balls_local", null, cv);
         String query = "SELECT ROWID from cricket_balls_local order by ROWID DESC limit 1";
+        Cursor c = db.rawQuery(query, null);
+        int lastId = 0;
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+        }
+        return lastId;
+    }
+
+    public int insertTossDataLocal(String jsonData,int inningId)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("jsonData", jsonData);
+        cv.put("cricket_inning_id", inningId);
+
+        db.insert("Toss_local", null, cv);
+        String query = "SELECT ROWID from Toss_local order by ROWID DESC limit 1";
         Cursor c = db.rawQuery(query, null);
         int lastId = 0;
         if (c != null && c.moveToFirst()) {
@@ -821,6 +840,36 @@ public class SportzDatabase {
             Log.d("l",e.getMessage());
         }
         return cricketBall;
+    }
+    public List<TossJson> fetchTossDataJson() {
+        List<TossJson> tossJsons = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from Toss_local", null);
+            if (cursor != null && cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        TossJson tossJson= new TossJson();
+
+                        tossJson.setId(cursor.getInt(cursor.getColumnIndex("Id")));
+                        tossJson.setServerinningId(cursor.getInt(cursor.getColumnIndex("serverinningId")));
+                        tossJson.setCricket_inning_id(cursor.getInt(cursor.getColumnIndex("cricket_inning_id")));
+                        tossJson.setJsonData(cursor.getString(cursor.getColumnIndex("jsonData")));
+
+                        tossJsons.add(tossJson);
+                        cursor.moveToNext();
+                    }
+                }
+                //cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            tossJsons = new ArrayList<>();
+            e.printStackTrace();
+            Log.d("l",e.getMessage());
+        }
+        return tossJsons;
     }
 
     public Match fetchMatchByMatchId(int id) {
@@ -2391,6 +2440,60 @@ public class SportzDatabase {
             Log.d("error",e.getMessage());
         }
     }
+    public void updateBallJson(int id,String jsonData)
+    {
+        //SQLiteDatabase data = this.getWritableDatabase();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("jsonData", jsonData);
+            db.update("cricket_balls_local", cv, "id =\"" + id + "\"", null);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d("error",e.getMessage());
+        }
+    }
+    public void updateTossServerID(int id,int serverId)
+    {
+        //SQLiteDatabase data = this.getWritableDatabase();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("serverinningId", serverId);
+            db.update("Toss_local", cv, "id =\"" + id + "\"", null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d("error",e.getMessage());
+        }
+    }
+
+    public void updateInningIdForMatch(int oldInningId, int newInningId)
+    {
+        try {
+
+
+            db.execSQL("update cricket_balls set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+            db.execSQL("update cricket_innings set id = " + newInningId + " where id = " + oldInningId + "");
+            db.execSQL("update cricket_overs set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+            db.execSQL("update cricket_scorecard set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+            List<CricketBallJson> ballJsons = fetchBallDataJson();
+
+            for (int i = 0; i < ballJsons.size(); i++) {
+                JSONObject ballJson = new JSONObject(ballJsons.get(i).getJsonData());
+                ballJson.put("inningId", newInningId);
+                updateBallJson(ballJsons.get(i).getId(),ballJson.toString());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d("error",e.getMessage());
+        }
+    }
+
 
     public void deleteTableRecord(String tableName, String id) {
         //SQLiteDatabase data = this.getReadableDatabase();
@@ -2453,8 +2556,7 @@ public class SportzDatabase {
 
     // Api function for Undo Ball
     public String UndoBall(int matchId, int inningId) {
-        UniverseResponseModel<String> result = new UniverseResponseModel<String>();
-        Match match = fetchMatchByMatchId(matchId);
+        UniverseResponseModel<String> result = new UniverseResponseModel<String>();Match match = fetchMatchByMatchId(matchId);
         if (match != null) {
             CricketInning cricketInning = fetchInningById(inningId);
             if (cricketInning != null) {
@@ -2476,7 +2578,7 @@ public class SportzDatabase {
                         int wicketType = Integer.parseInt(cricketBall.isWicket());
                         int bowlerId = Integer.parseInt(cricketBall.getBowlerId());
                         int batsmanId = Integer.parseInt(cricketBall.getBatsmanId());
-                        int outBatsmanId = Integer.parseInt(cricketBall.getOutBatsmanId());
+                        int outBatsmanId = Integer.parseInt((cricketBall.getOutBatsmanId()==null)?"0":cricketBall.getOutBatsmanId());
                         int runScoredOnNoBall = Integer.parseInt(cricketBall.getRunScoredOnNoBall());
                         int runScoredOnWideBall = Integer.parseInt(cricketBall.getRunScoredOnWideball());
                         int runScoredOnBye = Integer.parseInt(cricketBall.getRunScoredOnBye());
@@ -2732,6 +2834,73 @@ public class SportzDatabase {
             result.setMessage("Match not found");
         }
         return result;
+    }
+
+    public String SaveToss(JSONObject jsonObject)
+    {
+        UniverseResponseModel<StartSecondInningResponseModel> tossResultData= new UniverseResponseModel<>();
+        try {
+            int matchId = jsonObject.getInt("matchId");
+            int tossWinnerTeamId = jsonObject.getInt("tossWinnerTeamId");
+            String tossSelection = jsonObject.getString("tossSelection");
+
+             Matches match = fetchDBMatchByMatchId(matchId);
+             if(match != null)
+             {
+                int battingTeamId=0;
+                 int bowlingTeamId=0;
+                 if(tossSelection.equalsIgnoreCase("BATTING"))
+                 {
+                     battingTeamId=tossWinnerTeamId;
+                     bowlingTeamId= Integer.parseInt((match.getTeam1Id().equalsIgnoreCase(String.valueOf(battingTeamId)))?match.getTeam2Id():match.getTeam1Id());
+                 }
+                 else
+                 {
+                     battingTeamId=Integer.parseInt((match.getTeam1Id().equalsIgnoreCase(String.valueOf(tossWinnerTeamId)))?match.getTeam2Id():match.getTeam1Id());
+                     bowlingTeamId=Integer.parseInt((match.getTeam1Id().equalsIgnoreCase(String.valueOf(battingTeamId)))?match.getTeam2Id():match.getTeam1Id());
+                 }
+                 if(battingTeamId>0 && bowlingTeamId>0)
+                 {
+                    match.setTossResultId(String.valueOf(tossWinnerTeamId));
+                    match.setTossSelection(tossSelection);
+                    match.setMatchStatus("STARTED");
+                    match.setActiveScorerId(AppUtils.getUserId(context));
+                    updateMatchData(match);
+
+                     CricketInning secondInning = new CricketInning(match.getNumberOfOvers(), "0", "0", String.valueOf(bowlingTeamId), "1", String.valueOf(matchId),
+                             "1", "1", null, "0",
+                             "0", "0", "0", String.valueOf(battingTeamId), null);
+                     int inningId = insertInningData(secondInning);
+
+                     tossResultData.setResult("1");
+                     tossResultData.setMessage("Successfully");
+                     StartSecondInningResponseModel n= new StartSecondInningResponseModel();
+                     n.setActiveScorerId(AppUtils.getUserId(context));
+                     n.setBowlingTeamId(String.valueOf(bowlingTeamId));
+                     n.setBattingTeamId(String.valueOf(battingTeamId));
+                     n.setInningId(String.valueOf(inningId));
+                     tossResultData.setData(n);
+                 }
+                 else
+                 {
+                     tossResultData.setResult("0");
+                     tossResultData.setMessage("Unable to get Batting and Bowling team id");
+                 }
+             }
+             else
+             {
+                 tossResultData.setResult("0");
+                 tossResultData.setMessage("Match Not Found");
+             }
+
+             Gson gson= new Gson();
+             String d = gson.toJson(tossResultData);
+            return  d;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
     }
 
     // Api function for saving ball

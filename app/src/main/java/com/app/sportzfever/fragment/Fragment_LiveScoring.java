@@ -53,6 +53,7 @@ import com.app.sportzfever.models.dbmodels.MatchScorer;
 import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
 import com.app.sportzfever.models.dbmodels.Roster;
+import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.models.dbmodels.User;
 import com.app.sportzfever.models.dbmodels.apimodel.StartSecondInningResponseModel;
 import com.app.sportzfever.models.dbmodels.apimodel.UniverseResponseModel;
@@ -142,21 +143,32 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         init();
         getBundle();
         setlistener();
-        getOffLineData();
+
+        if (AppUtils.isNetworkAvailable(context)) {
+            syncToss();
+        } else {
+            Toast.makeText(context, "Toss Not Synced", Toast.LENGTH_SHORT).show();
+
+        }
+
+        startScoring();
+
     }
 
-    //Function to get all the data needed for offline scoring
-    private void getOffLineData() {
-        try {
-            if (AppUtils.isNetworkAvailable(context)) {
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_OffLineDATA + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbjectNoProgress(url, new JSONObject(), Request.Method.GET);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+    private void startScoring() {
+        try
+        {
+            if(db!=null) {
+                db.open();
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
+                getMatchDetailsAndCheckInning(str);
             }
-        } catch (Exception e) {
+
+        } catch (JSONException e) {
             e.printStackTrace();
+        }
+        finally {
+            db.close();
         }
     }
 
@@ -264,6 +276,18 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void setDatabase() {
+        db = null;
+        try {
+            db = new SportzDatabase(context);
+            db.open();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally {
+            db.close();
         }
     }
 
@@ -1844,38 +1868,40 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     // TODO: 2/20/2018 Remove progress bar for this when calling api
     // TODO: 2/20/2018 Call this function on ok button and when mobile is connected with internet.
     // TODO: 2/20/2018 Remove manual calling(a sync button has been added on ui)
-    private void syncData() {
-        if (db != null) {
-            try {
-                db.open();
-                List<CricketBallJson> cricketBallJsons = db.fetchBallDataJson();
-                for (int i = 0; i < cricketBallJsons.size(); i++) {
-                    if (cricketBallJsons.get(i).getServerId() == 0) {
-                        JSONObject jsonObject = new JSONObject(cricketBallJsons.get(i).getJsonData());
-                        if (i == 0) {
-                            jsonObject.put("previousballid", "-1");
-                            jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
-                        } else {
-                            jsonObject.put("previousballid", cricketBallJsons.get(i - 1).getServerId());
-                            jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
+    private void syncData()
+    {
+        if(syncToss())
+        {
+            if (db != null) {
+                try {
+                    db.open();
+                    List<CricketBallJson> cricketBallJsons = db.fetchBallDataJson();
+                    for (int i = 0; i < cricketBallJsons.size(); i++) {
+                        if (cricketBallJsons.get(i).getServerId() == 0) {
+                            JSONObject jsonObject = new JSONObject(cricketBallJsons.get(i).getJsonData());
+                            if (i == 0) {
+                                jsonObject.put("previousballid", "-1");
+                                jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
+                            } else {
+                                jsonObject.put("previousballid", cricketBallJsons.get(i - 1).getServerId());
+                                jsonObject.put("localDbId", cricketBallJsons.get(i).getId());
+                            }
+                            if (AppUtils.isNetworkAvailable(context)) {
+                                String url = JsonApiHelper.BASEURL + JsonApiHelper.SYNC_BALL;
+                                new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            } else {
+                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            }
+                            break;
                         }
-                        if (AppUtils.isNetworkAvailable(context)) {
-                            String url = JsonApiHelper.BASEURL + JsonApiHelper.SYNC_BALL;
-                            new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
-                        } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-                        }
-                        break;
                     }
+                } catch (Exception e) {
+
+                } finally {
+                    db.close();
                 }
-            } catch (Exception e) {
-
-            } finally {
-                db.close();
             }
-
         }
-
     }
 
     //Function to get match details and check inning(Hemanta's code used for check inning)
@@ -2136,158 +2162,28 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
             //lalit code for offline scoring
             else if (position == 10) {
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    data = jObject.getJSONObject("data");
-                    JSONArray avatars = data.getJSONArray("avatar");
-                    JSONArray cricket_selected_team_players = data.getJSONArray("cricket_selected_team_players");
-                    JSONArray events = data.getJSONArray("events");
-                    JSONArray general_profiles = data.getJSONArray("general_profile");
-                    JSONArray matches = data.getJSONArray("matches");
-                    JSONArray match_scorers = data.getJSONArray("match_scorer");
-                    JSONArray match_team_roles = data.getJSONArray("match_team_roles");
-                    JSONArray rosters = data.getJSONArray("roster");
-                    JSONArray teams = data.getJSONArray("team");
-                    JSONArray users = data.getJSONArray("user");
 
-                    JSONArray cricket_balls = data.getJSONArray("cricket_balls");
-                    JSONArray cricket_overs = data.getJSONArray("cricket_overs");
-                    JSONArray cricket_innings = data.getJSONArray("cricket_innings");
-                    JSONArray cricket_scorecard = data.getJSONArray("cricket_scorecard");
-
-                    List<User> userTableRecord = new ArrayList<>();
-                    List<Avatar> avatarTableRecord = new ArrayList<>();
-                    List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord = new ArrayList<>();
-                    List<Event> eventTableRecord = new ArrayList<>();
-                    List<GeneralProfile> generalProfileTableRecord = new ArrayList<>();
-                    List<Matches> matchesTableRecord = new ArrayList<>();
-                    List<MatchScorer> matchScorerTableRecord = new ArrayList<>();
-                    List<MatchTeamRoles> matchTeamRolesTableRecord = new ArrayList<>();
-                    List<Roster> rosterTableRecord = new ArrayList<>();
-                    List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord = new ArrayList<>();
-
-                    List<CricketBall> cricketBallTableRecord = new ArrayList<>();
-                    List<CricketInning> cricketInningTableRecord = new ArrayList<>();
-                    List<CricketOver> cricketOverTableRecord = new ArrayList<>();
-                    List<CricketScoreCard> cricketScoreCardTableRecord = new ArrayList<>();
-
-                    for (int i = 0; i < users.length(); i++) {
-                        JSONObject user = users.getJSONObject(i);
-                        Gson gson = new Gson();
-                        User userObj = gson.fromJson(user.toString(), User.class);
-                        userTableRecord.add(userObj);
-                        Log.e("response", userObj.toString());
-
-                    }
-                    for (int i = 0; i < teams.length(); i++) {
-                        JSONObject team = teams.getJSONObject(i);
-                        Gson gson = new Gson();
-                        com.app.sportzfever.models.dbmodels.Team teamObj = gson.fromJson(team.toString(), com.app.sportzfever.models.dbmodels.Team.class);
-                        Log.e("response", teamObj.toString());
-                        teamTableRecord.add(teamObj);
-                    }
-                    for (int i = 0; i < rosters.length(); i++) {
-                        JSONObject roster = rosters.getJSONObject(i);
-                        Gson gson = new Gson();
-                        Roster rosterObj = gson.fromJson(roster.toString(), Roster.class);
-                        Log.e("response", rosterObj.toString());
-                        rosterTableRecord.add(rosterObj);
-                    }
-                    for (int i = 0; i < match_team_roles.length(); i++) {
-                        JSONObject match_team_role = match_team_roles.getJSONObject(i);
-                        Gson gson = new Gson();
-                        MatchTeamRoles match_team_rolesObj = gson.fromJson(match_team_role.toString(), MatchTeamRoles.class);
-                        Log.e("response", match_team_rolesObj.toString());
-                        matchTeamRolesTableRecord.add(match_team_rolesObj);
-                    }
-                    for (int i = 0; i < match_scorers.length(); i++) {
-                        JSONObject match_scorer = match_scorers.getJSONObject(i);
-                        Gson gson = new Gson();
-                        MatchScorer match_scorerObj = gson.fromJson(match_scorer.toString(), MatchScorer.class);
-                        Log.e("response", match_scorerObj.toString());
-                        matchScorerTableRecord.add(match_scorerObj);
-                    }
-                    for (int i = 0; i < matches.length(); i++) {
-                        JSONObject match = matches.getJSONObject(i);
-                        Gson gson = new Gson();
-                        Matches matchObj = gson.fromJson(match.toString(), Matches.class);
-                        Log.e("response", matchObj.toString());
-                        matchesTableRecord.add(matchObj);
-                    }
-                    for (int i = 0; i < avatars.length(); i++) {
-                        JSONObject avatar = avatars.getJSONObject(i);
-                        Gson gson = new Gson();
-                        Avatar avatarObj = gson.fromJson(avatar.toString(), Avatar.class);
-                        Log.e("response", avatarObj.toString());
-                        avatarTableRecord.add(avatarObj);
-                    }
-
-                    for (int i = 0; i < events.length(); i++) {
-                        JSONObject event = events.getJSONObject(i);
-                        Gson gson = new Gson();
-                        Event eventObj = gson.fromJson(event.toString(), Event.class);
-                        Log.e("response", eventObj.toString());
-                        eventTableRecord.add(eventObj);
-                    }
-
-                    for (int i = 0; i < general_profiles.length(); i++) {
-                        JSONObject general_profile = general_profiles.getJSONObject(i);
-                        Gson gson = new Gson();
-                        GeneralProfile general_profileObj = gson.fromJson(general_profile.toString(), GeneralProfile.class);
-                        Log.e("response", general_profileObj.toString());
-                        generalProfileTableRecord.add(general_profileObj);
-                    }
-
-                    for (int i = 0; i < cricket_selected_team_players.length(); i++) {
-                        JSONObject cricket_selected_team_player = cricket_selected_team_players.getJSONObject(i);
-                        Gson gson = new Gson();
-                        CricketSelectedTeamPlayers cricket_selected_team_playerObj = gson.fromJson(cricket_selected_team_player.toString(), CricketSelectedTeamPlayers.class);
-                        Log.e("response", cricket_selected_team_playerObj.toString());
-                        cricketSelectedTeamPlayerTableRecord.add(cricket_selected_team_playerObj);
-                    }
-
-                    for (int i = 0; i < cricket_balls.length(); i++) {
-                        JSONObject cricket_ball = cricket_balls.getJSONObject(i);
-                        Gson gson = new Gson();
-                        CricketBall cricketBallObj = gson.fromJson(cricket_ball.toString(), CricketBall.class);
-                        Log.e("response", cricketBallObj.toString());
-                        cricketBallTableRecord.add(cricketBallObj);
-                    }
-                    for (int i = 0; i < cricket_innings.length(); i++) {
-                        JSONObject cricket_inning = cricket_innings.getJSONObject(i);
-                        Gson gson = new Gson();
-                        CricketInning cricketInningObj = gson.fromJson(cricket_inning.toString(), CricketInning.class);
-                        Log.e("response", cricketInningObj.toString());
-                        cricketInningTableRecord.add(cricketInningObj);
-                    }
-                    for (int i = 0; i < cricket_overs.length(); i++) {
-                        JSONObject cricket_over = cricket_overs.getJSONObject(i);
-                        Gson gson = new Gson();
-                        CricketOver cricketOverObj = gson.fromJson(cricket_over.toString(), CricketOver.class);
-                        Log.e("response", cricketOverObj.toString());
-                        cricketOverTableRecord.add(cricketOverObj);
-                    }
-                    for (int i = 0; i < cricket_scorecard.length(); i++) {
-                        JSONObject cricket_scorecar = cricket_scorecard.getJSONObject(i);
-                        Gson gson = new Gson();
-                        CricketScoreCard cricketScoreCardObj = gson.fromJson(cricket_scorecar.toString(), CricketScoreCard.class);
-                        Log.e("response", cricketScoreCardObj.toString());
-                        cricketScoreCardTableRecord.add(cricketScoreCardObj);
-                    }
-
-                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord);
-
-
-                    //JSONObject match = data.getJSONObject("match");
-
-
-                } else {
-                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            } else if (position == 11) {
+            }
+            else if (position == 11)
+            {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
                     db.updateBallServerID(Integer.parseInt(jObject.getString("localDbId")), Integer.parseInt(data.getString("id")));
                     syncData();
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(position==12)
+            {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    data = jObject.getJSONObject("data");
+
+                        db.updateTossServerID(tossdata.getId(), Integer.parseInt(data.getString("inningId")));
+                        tossdata.setServerinningId(Integer.parseInt(data.getString("inningId")));
+                        db.updateInningIdForMatch(tossdata.getCricket_inning_id(), tossdata.getServerinningId());
+                        syncToss();
+
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
@@ -2300,71 +2196,41 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             db.close();
         }
     }
-
-    //lalit code for offline scoring
-    // Inserting the data fetched from server
-    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord) {
-
-        try {
-            if (db != null) {
+    TossJson tossdata=null;
+    private boolean syncToss()
+    {
+        boolean allTosSyced= true;
+        tossdata=null;
+        if (db != null) {
+            try {
                 db.open();
-                db.cleanDataBase(false);
-                for (int i = 0; i < userTableRecord.size(); i++) {
-                    db.insertUser(userTableRecord.get(i));
-                }
-                for (int i = 0; i < teamTableRecord.size(); i++) {
-                    db.insertTeam(teamTableRecord.get(i));
-                }
-                for (int i = 0; i < rosterTableRecord.size(); i++) {
-                    db.insertRoster(rosterTableRecord.get(i));
-                }
-                for (int i = 0; i < matchTeamRolesTableRecord.size(); i++) {
-                    db.insertMatchTeamRoles(matchTeamRolesTableRecord.get(i));
-                }
-                for (int i = 0; i < matchScorerTableRecord.size(); i++) {
-                    db.insertMatchScorer(matchScorerTableRecord.get(i));
-                }
-                for (int i = 0; i < matchesTableRecord.size(); i++) {
-                    db.insertMatchData(matchesTableRecord.get(i));
-                }
-                for (int i = 0; i < avatarTableRecord.size(); i++) {
-                    db.insertAvatar(avatarTableRecord.get(i));
+                List<TossJson> tossJsons = db.fetchTossDataJson();
+                for (int i = 0; i < tossJsons.size(); i++) {
+                    if (tossJsons.get(i).getServerinningId() == 0)
+                    {
+                        allTosSyced=false;
+                        JSONObject jsonObject = new JSONObject(tossJsons.get(i).getJsonData());
+                        if (AppUtils.isNetworkAvailable(context)) {
+                            tossdata=tossJsons.get(i);
+                            String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
+                            new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                        } else {
+                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    }
                 }
 
-                for (int i = 0; i < eventTableRecord.size(); i++) {
-                    db.insertEventData(eventTableRecord.get(i));
-                }
+            } catch (Exception e) {
 
-                for (int i = 0; i < generalProfileTableRecord.size(); i++) {
-                    db.insertGeneralProfileData(generalProfileTableRecord.get(i));
-                }
-
-                for (int i = 0; i < cricketSelectedTeamPlayerTableRecord.size(); i++) {
-                    db.insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayerTableRecord.get(i));
-                }
-                for (int i = 0; i < cricketBallTableRecord.size(); i++) {
-                    db.insertBallData(cricketBallTableRecord.get(i));
-                }
-                for (int i = 0; i < cricketInningTableRecord.size(); i++) {
-                    db.insertInningData(cricketInningTableRecord.get(i));
-                }
-                for (int i = 0; i < cricketOverTableRecord.size(); i++) {
-                    db.insertOverData(cricketOverTableRecord.get(i));
-                }
-                for (int i = 0; i < cricketScoreCardTableRecord.size(); i++) {
-                    db.insertScoreCardData(cricketScoreCardTableRecord.get(i));
-                }
-                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
-                getMatchDetailsAndCheckInning(str);
+            } finally {
+                db.close();
             }
-        } catch (Exception e) {
-            Log.e("dcd", e.getMessage());
-            // TODO: handle exception
-        } finally {
-            db.close();
-            //   cursor.close();
         }
+        return allTosSyced;
     }
+
+
 
     private void checkInning(JSONArray innings, JSONArray team1Squad, JSONArray team2Squad) {
         try {
@@ -2509,19 +2375,6 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             }
         }
         return isValid;
-    }
-
-    private void setDatabase() {
-        db = null;
-        try {
-            db = new SportzDatabase(context);
-            db.open();
-
-        } catch (Exception e) {
-            // TODO: handle exception
-        } finally {
-            db.close();
-        }
     }
 
 

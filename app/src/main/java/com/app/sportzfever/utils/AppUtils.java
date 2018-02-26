@@ -50,6 +50,7 @@ public class AppUtils {
         return isValid;
     }
 
+
     public static Integer getBadgeCount(Context context) {
 
         try {
