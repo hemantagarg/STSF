@@ -663,7 +663,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             if (db != null)
             {
                 db.open();
-                db.cleanDataBase(false);
+                List<String> locallyStartedMatchId =  db.cleanDataBase(false);
                 for (int i = 0; i < userTableRecord.size(); i++) {
                     db.insertUser(userTableRecord.get(i));
                 }
@@ -674,20 +674,36 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     db.insertRoster(rosterTableRecord.get(i));
                 }
                 for (int i = 0; i < matchTeamRolesTableRecord.size(); i++) {
-                    db.insertMatchTeamRoles(matchTeamRolesTableRecord.get(i));
+                    if( !locallyStartedMatchId.contains(matchTeamRolesTableRecord.get(i).getMatchId())) {
+                        db.insertMatchTeamRoles(matchTeamRolesTableRecord.get(i));
+                    }
                 }
-                for (int i = 0; i < matchScorerTableRecord.size(); i++) {
-                    db.insertMatchScorer(matchScorerTableRecord.get(i));
+                for (int i = 0; i < matchScorerTableRecord.size(); i++)
+                {
+                   if( !locallyStartedMatchId.contains(matchScorerTableRecord.get(i).getMatchId())) {
+                       db.insertMatchScorer(matchScorerTableRecord.get(i));
+                   }
                 }
-                for (int i = 0; i < matchesTableRecord.size(); i++) {
-                    db.insertMatchData(matchesTableRecord.get(i));
+                List<String> eventIds =new ArrayList<>();
+                for (int i = 0; i < matchesTableRecord.size(); i++)
+                {
+                    if( !locallyStartedMatchId.contains(matchesTableRecord.get(i).getId())) {
+                        db.insertMatchData(matchesTableRecord.get(i));
+                    }
+                    else
+                    {
+                        eventIds.add(matchesTableRecord.get(i).getEventId());
+                    }
                 }
                 for (int i = 0; i < avatarTableRecord.size(); i++) {
                     db.insertAvatar(avatarTableRecord.get(i));
                 }
 
                 for (int i = 0; i < eventTableRecord.size(); i++) {
-                    db.insertEventData(eventTableRecord.get(i));
+                    if (!eventIds.contains(eventTableRecord.get(i).getId()))
+                    {
+                        db.insertEventData(eventTableRecord.get(i));
+                    }
                 }
 
                 for (int i = 0; i < generalProfileTableRecord.size(); i++) {
@@ -695,7 +711,9 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 }
 
                 for (int i = 0; i < cricketSelectedTeamPlayerTableRecord.size(); i++) {
-                    db.insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayerTableRecord.get(i));
+                    if(!locallyStartedMatchId.contains(cricketSelectedTeamPlayerTableRecord.get(i).getMatchId())) {
+                        db.insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayerTableRecord.get(i));
+                    }
                 }
 
                 /*String str1 = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
