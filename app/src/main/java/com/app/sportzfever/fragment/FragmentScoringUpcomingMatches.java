@@ -40,6 +40,8 @@ import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
 import com.app.sportzfever.models.dbmodels.Roster;
 import com.app.sportzfever.models.dbmodels.User;
+import com.app.sportzfever.models.dbmodels.apimodel.CricketProfile;
+import com.app.sportzfever.models.dbmodels.apimodel.Sport;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.SportzDatabase;
@@ -515,13 +517,16 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     JSONArray rosters = data.getJSONArray("roster");
                     JSONArray teams = data.getJSONArray("team");
                     JSONArray users = data.getJSONArray("user");
-
+                    JSONArray sports = data.getJSONArray("sport");
+                    JSONArray cricketprofiles = data.getJSONArray("cricket_profile");
                     JSONArray cricket_balls = data.getJSONArray("cricket_balls");
                     JSONArray cricket_overs = data.getJSONArray("cricket_overs");
                     JSONArray cricket_innings = data.getJSONArray("cricket_innings");
                     JSONArray cricket_scorecard = data.getJSONArray("cricket_scorecard");
 
                     List<User> userTableRecord = new ArrayList<>();
+                    List<CricketProfile> cricketprofileTableRecord = new ArrayList<>();
+                    List<Sport> sportTableRecord = new ArrayList<>();
                     List<Avatar> avatarTableRecord = new ArrayList<>();
                     List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord = new ArrayList<>();
                     List<Event> eventTableRecord = new ArrayList<>();
@@ -580,6 +585,21 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         Log.e("response", matchObj.toString());
                         matchesTableRecord.add(matchObj);
                     }
+                    for (int i = 0; i < sports.length(); i++) {
+                        JSONObject sport = sports.getJSONObject(i);
+                        Gson gson = new Gson();
+                        Sport matchObj = gson.fromJson(sport.toString(), Sport.class);
+                        Log.e("response", matchObj.toString());
+                        sportTableRecord.add(matchObj);
+                    }
+                    for (int i = 0; i < cricketprofiles.length(); i++) {
+                        JSONObject cricketprofile= cricketprofiles.getJSONObject(i);
+                        Gson gson = new Gson();
+                        CricketProfile cricketprofileObj = gson.fromJson(cricketprofile.toString(), CricketProfile.class);
+                        Log.e("response", cricketprofileObj.toString());
+                        cricketprofileTableRecord.add(cricketprofileObj);
+                    }
+
                     for (int i = 0; i < avatars.length(); i++) {
                         JSONObject avatar = avatars.getJSONObject(i);
                         Gson gson = new Gson();
@@ -641,7 +661,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         cricketScoreCardTableRecord.add(cricketScoreCardObj);
                     }
 
-                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord);
+                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord,sportTableRecord,cricketprofileTableRecord);
 
 
                     //JSONObject match = data.getJSONObject("match");
@@ -657,7 +677,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
     }
     //lalit code for offline scoring
     // Inserting the data fetched from server
-    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord) {
+    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord ,List<Sport> sports,List<CricketProfile> cricketProfile) {
 
         try {
             if (db != null)
@@ -669,6 +689,9 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 }
                 for (int i = 0; i < teamTableRecord.size(); i++) {
                     db.insertTeam(teamTableRecord.get(i));
+                }
+                for (int i = 0; i < sports.size(); i++) {
+                    db.insertSports(sports.get(i));
                 }
                 for (int i = 0; i < rosterTableRecord.size(); i++) {
                     db.insertRoster(rosterTableRecord.get(i));
@@ -698,6 +721,10 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 for (int i = 0; i < avatarTableRecord.size(); i++) {
                     db.insertAvatar(avatarTableRecord.get(i));
                 }
+                for (int i = 0; i < cricketProfile.size(); i++) {
+                    db.insertCricketprofile(cricketProfile.get(i));
+                }
+
 
                 for (int i = 0; i < eventTableRecord.size(); i++) {
                     if (!eventIds.contains(eventTableRecord.get(i).getId()))

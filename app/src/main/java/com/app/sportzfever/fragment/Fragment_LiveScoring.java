@@ -49,6 +49,7 @@ import com.app.sportzfever.models.dbmodels.CricketScoreCard;
 import com.app.sportzfever.models.dbmodels.CricketSelectedTeamPlayers;
 import com.app.sportzfever.models.dbmodels.Event;
 import com.app.sportzfever.models.dbmodels.GeneralProfile;
+import com.app.sportzfever.models.dbmodels.MatchScoreJson;
 import com.app.sportzfever.models.dbmodels.MatchScorer;
 import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
@@ -1855,10 +1856,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } finally {
                     db.close();
                 }
-
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2209,6 +2207,40 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
+            else if(position==15)
+            {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+
+                    JSONObject data = jObject.getJSONObject("data");
+                    int firstinningId = Integer.parseInt((data.getString("firstInningId") == null) ? "0" : data.getString("firstInningId"));
+                    int secondinningId = Integer.parseInt((data.getString("secondInningId") == null) ? "0" : data.getString("secondInningId"));
+
+                    if (db != null) {
+                        db.open();
+                        db.updateSyncStatusForMatchScore(matchScoreJsonToUpdate.getId());
+                        db.updateBothInningIdForMatch(firstinningId,secondinningId, Integer.parseInt(matchId));
+
+                    }
+                    syncToss();
+
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(position==16) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    if (db != null) {
+                        db.open();
+                        db.updateSyncStatusForMatchLineup(matchlineuptoupdate);
+                        syncToss();
+                    }
+
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2219,6 +2251,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
     TossJson tossdata=null;
     TossJson secondInningdata=null;
+    MatchScoreJson matchScoreJsonToUpdate = null;
+    int matchlineuptoupdate=0;
     private boolean syncToss()
     {
         boolean allTosSyced= true;
@@ -2226,20 +2260,56 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         if (db != null) {
             try {
                 db.open();
-                List<TossJson> tossJsons = db.fetchTossDataJson();
-                for (int i = 0; i < tossJsons.size(); i++) {
-                    if (tossJsons.get(i).getServerinningId() == 0)
-                    {
+
+                List<MatchScoreJson> matchlineUpJson= db.fetchMatchLineup_LocalJson();
+                for (int i = 0; i < matchlineUpJson.size(); i++) {
+                    if (matchlineUpJson.get(i).getSynced() == 0) {
                         allTosSyced=false;
-                        JSONObject jsonObject = new JSONObject(tossJsons.get(i).getJsonData());
+                        JSONObject jsonObject = new JSONObject(matchlineUpJson.get(i).getJsonData());
                         if (AppUtils.isNetworkAvailable(context)) {
-                            tossdata=tossJsons.get(i);
-                            String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
-                            new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            matchlineuptoupdate=matchlineUpJson.get(i).getId();
+                            String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
+                            new CommonAsyncTaskHashmap(16, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                         } else {
                             Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
                         break;
+                    }
+                }
+                if(allTosSyced) {
+                    List<TossJson> tossJsons = db.fetchTossDataJson();
+                    for (int i = 0; i < tossJsons.size(); i++) {
+                        if (tossJsons.get(i).getServerinningId() == 0) {
+                            allTosSyced = false;
+                            JSONObject jsonObject = new JSONObject(tossJsons.get(i).getJsonData());
+                            if (AppUtils.isNetworkAvailable(context)) {
+                                tossdata = tossJsons.get(i);
+                                String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
+                                new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            } else {
+                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        }
+                    }
+                }
+                if(allTosSyced)
+                {
+                    List<MatchScoreJson> matchScoreJsons = db.fetchMatchScore_LocalJson();
+                    for (int i = 0; i < matchScoreJsons.size(); i++) {
+                        if (matchScoreJsons.get(i).getSynced() == 0)
+                        {
+                            allTosSyced=false;
+                            JSONObject jsonObject = new JSONObject(matchScoreJsons.get(i).getJsonData());
+                            if (AppUtils.isNetworkAvailable(context)) {
+                                matchScoreJsonToUpdate=matchScoreJsons.get(i);
+                                String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
+                                new CommonAsyncTaskHashmap(15, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            } else {
+                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        }
                     }
                 }
                 if(allTosSyced)

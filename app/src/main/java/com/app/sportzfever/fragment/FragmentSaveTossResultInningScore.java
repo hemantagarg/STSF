@@ -21,14 +21,18 @@ import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
+import com.app.sportzfever.models.dbmodels.MatchScoreJson;
+import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.SportzDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FragmentSaveTossResultInningScore extends BaseFragment implements ApiResponse {
@@ -42,6 +46,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
     private Spinner spinnerWinningTeam, spinnerSelectionType;
     private Button btnSubmit;
     View view_about;
+    private SportzDatabase db;
     private TextView text_title, text_inning_score;
     private String team2Id = "", eventId = "", team1Id = "", team1Name = "", team2Name = "", isTeam1ScoringOnSf = "", isTeam2ScoringOnSf = "";
     private ArrayAdapter<String> adapterWinningTeam, adapterSelectionType;
@@ -76,6 +81,19 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
         setTargetFragment(null, -1);
     }
 
+    public void setDatabase() {
+        db = null;
+        try {
+            db = new SportzDatabase(context);
+            db.open();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally {
+            db.close();
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -87,6 +105,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
     private void getBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
+            setDatabase();
             team1Id = b.getString("team1Id");
             team2Id = b.getString("team2Id");
             eventId = b.getString("eventId");
@@ -164,13 +183,15 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                     if (isValidate()) {
                         saveResult();
                     }
-                } else {
+                }
+                else
+                {
                     if (linear_first_inning.getVisibility() == View.VISIBLE) {
                         if (isValidateOneTeam()) {
                             saveResult();
                         }
                     } else {
-                        saveResult();
+                        saveToss();
                     }
                 }
             }
@@ -296,22 +317,139 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
         return isValid;
     }
 
-
+    int matchScoreDataIdToUodate =0;
     private void saveResult() {
         try {
-            if (AppUtils.isNetworkAvailable(context)) {
-                // http://sfscoring.sf.com/saveScoreForMatches
-
-                JSONObject match = makeJsonObject();
-                //http://sfscoring.sf.com/saveScoreForMatches
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
-                new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, match, Request.Method.POST);
-
-            } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            JSONObject match = makeJsonObject();
+            if (db != null) {
+                db.open();
+                JSONObject jObject = db.saveScoreForMatch(match);
+                Dashboard.getInstance().setProgressLoader(false);
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    context.onBackPressed();
+                    if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
+                        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+                    } else {
+                        FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        b.putString("IsScorerForTeam2", isScorerForTeam2);
+                        fragmentSoringMatchDetails.setArguments(b);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
+                    }
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+                matchScoreDataIdToUodate = db.insertMatchScoreData(match.toString());
+                if (AppUtils.isNetworkAvailable(context)) {
+                    String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
+                    new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, match, Request.Method.POST);
+                } else {
+                    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                }
             }
+
+        } catch (Exception e) {
+            db.close();
+            e.printStackTrace();
+        }
+    }
+
+    private void saveToss()
+    {
+        try {
+            if (db != null) {
+                db.open();
+                JSONObject match = new JSONObject();
+
+                match.put("tossWinnerTeamId", listTeamId.get(spinnerWinningTeam.getSelectedItemPosition()));
+                match.put("tossSelection", spinnerSelectionType.getSelectedItem().toString());
+                match.put("matchId", matchId);
+
+                String str = db.SaveToss(match);
+                JSONObject jsonObject = new JSONObject(str);
+                JSONObject data = jsonObject.getJSONObject("data");
+                int inningId = data.getInt("inningId");
+                db.insertTossDataLocal(match.toString(), inningId);
+
+                syncToss();
+                TossResultAndStartScoring(jsonObject);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+    private void TossResultAndStartScoring(JSONObject jObject) throws JSONException {
+        if (jObject.getString("result").equalsIgnoreCase("1")) {
+            context.onBackPressed();
+            FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
+            Bundle b = new Bundle();
+            b.putString("eventId", eventId);
+            b.putString("IsScorerForTeam2", isScorerForTeam2);
+            fragmentSoringMatchDetails.setArguments(b);
+            Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
+        } else {
+            Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+        }
+    }
+    TossJson tossdata=null;
+    int matchlineuptoupdate=0;
+    private void syncToss()
+    {
+        boolean allTosSyced= true;
+        tossdata=null;
+        if (AppUtils.isNetworkAvailable(context))
+        {
+            if (db != null) {
+                try {
+                    db.open();
+                    List<MatchScoreJson> matchlineUpJson= db.fetchMatchLineup_LocalJson();
+                    for (int i = 0; i < matchlineUpJson.size(); i++) {
+                        if (matchlineUpJson.get(i).getSynced() == 0) {
+                            allTosSyced=false;
+                            JSONObject jsonObject = new JSONObject(matchlineUpJson.get(i).getJsonData());
+                            if (AppUtils.isNetworkAvailable(context)) {
+                                matchlineuptoupdate=matchlineUpJson.get(i).getId();
+                                String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
+                                new CommonAsyncTaskHashmap(16, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            } else {
+                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        }
+                    }
+                    if(allTosSyced) {
+                        List<TossJson> tossJsons = db.fetchTossDataJson();
+                        for (int i = 0; i < tossJsons.size(); i++) {
+                            if (tossJsons.get(i).getServerinningId() == 0) {
+                                JSONObject jsonObject = new JSONObject(tossJsons.get(i).getJsonData());
+                                if (AppUtils.isNetworkAvailable(context)) {
+                                    tossdata = tossJsons.get(i);
+                                    String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
+                                    new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                                } else {
+                                    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+
+                } finally {
+                    db.close();
+                }
+            }
+
+        } else {
+            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -362,7 +500,6 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 inning1.put("bowlingTeamId", team1);
                 inning2.put("battingTeamId", team1);
                 inning2.put("bowlingTeamId", team2);
-
             }
 
             if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
@@ -387,27 +524,48 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
         try {
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
-                if (jObject.getString("result").equalsIgnoreCase("1")) {
-                    context.onBackPressed();
-                    if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
-                        FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", eventId);
-                        fragmentupcomingdetals.setArguments(b);
-                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
-                    } else {
-                        FragmentSoringMatchDetails fragmentSoringMatchDetails = new FragmentSoringMatchDetails();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", eventId);
-                        b.putString("IsScorerForTeam2", isScorerForTeam2);
-                        fragmentSoringMatchDetails.setArguments(b);
-                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentSoringMatchDetails, true);
+                JSONObject data = jObject.getJSONObject("data");
+                int firstinningId = Integer.parseInt((data.getString("firstInningId") == null) ? "0" : data.getString("firstInningId"));
+                int secondinningId = Integer.parseInt((data.getString("secondInningId") == null) ? "0" : data.getString("secondInningId"));
+
+                if (db != null) {
+                    db.open();
+                    if (matchScoreDataIdToUodate > 0) {
+                        db.updateSyncStatusForMatchScore(matchScoreDataIdToUodate);
                     }
+                    db.updateBothInningIdForMatch(firstinningId,secondinningId, Integer.parseInt(matchId));
+
+                }
+            }
+            else if(position==11)
+            {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    data = jObject.getJSONObject("data");
+
+                    db.updateTossServerID(tossdata.getId(), Integer.parseInt(data.getString("inningId")));
+                    tossdata.setServerinningId(Integer.parseInt(data.getString("inningId")));
+                    db.updateInningIdForMatch(tossdata.getCricket_inning_id(), tossdata.getServerinningId());
+                    syncToss();
+
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
             }
-        } catch (JSONException e) {
+           else if(position==16) {
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    if (db != null) {
+                        db.open();
+                        db.updateSyncStatusForMatchLineup(matchlineuptoupdate);
+                        syncToss();
+                    }
+
+                } else {
+                    Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            db.close();
             e.printStackTrace();
         }
     }

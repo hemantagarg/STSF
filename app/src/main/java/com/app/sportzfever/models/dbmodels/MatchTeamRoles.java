@@ -1,11 +1,13 @@
 package com.app.sportzfever.models.dbmodels;
 
-public class MatchTeamRoles {
+public class MatchTeamRoles
+{
     private int  id;
     private String  ViceCaptain;
     private String  matchId;
     private String  CaptainAvatar;
     private String  teamId;
+    private String  WicketKeeperAvatar;
 
     public int getId() {
         return id;
@@ -55,7 +57,7 @@ public class MatchTeamRoles {
         WicketKeeperAvatar = wicketKeeperAvatar;
     }
 
-    private String  WicketKeeperAvatar;
+
 
 
     public MatchTeamRoles(String  ViceCaptain,String  matchId,String  CaptainAvatar,String  teamId,String  WicketKeeperAvatar)

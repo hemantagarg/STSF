@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.app.sportzfever.models.ModelSportTeamList;
 import com.app.sportzfever.models.dbmodels.Avatar;
+import com.app.sportzfever.models.dbmodels.CheckLineUpModel;
 import com.app.sportzfever.models.dbmodels.CricketBall;
 import com.app.sportzfever.models.dbmodels.CricketBallJson;
 import com.app.sportzfever.models.dbmodels.CricketInning;
@@ -17,10 +19,13 @@ import com.app.sportzfever.models.dbmodels.CricketScoreCard;
 import com.app.sportzfever.models.dbmodels.CricketSelectedTeamPlayers;
 import com.app.sportzfever.models.dbmodels.Event;
 import com.app.sportzfever.models.dbmodels.GeneralProfile;
+import com.app.sportzfever.models.dbmodels.MatchLineUpScorer;
+import com.app.sportzfever.models.dbmodels.MatchScoreJson;
 import com.app.sportzfever.models.dbmodels.MatchScorer;
 import com.app.sportzfever.models.dbmodels.MatchSfPlayerName;
 import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
 import com.app.sportzfever.models.dbmodels.Matches;
+import com.app.sportzfever.models.dbmodels.OtherMatchDetail;
 import com.app.sportzfever.models.dbmodels.Roster;
 import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.models.dbmodels.User;
@@ -28,22 +33,35 @@ import com.app.sportzfever.models.dbmodels.apimodel.BattingStat;
 import com.app.sportzfever.models.dbmodels.apimodel.BattingStatViewModel;
 import com.app.sportzfever.models.dbmodels.apimodel.BowlingStat;
 import com.app.sportzfever.models.dbmodels.apimodel.BowlingViewModal;
+import com.app.sportzfever.models.dbmodels.apimodel.CricketProfile;
+import com.app.sportzfever.models.dbmodels.apimodel.CricketSelectedTeamPlayersViewModel;
+import com.app.sportzfever.models.dbmodels.apimodel.ExistingPlayersToAddViewModel;
 import com.app.sportzfever.models.dbmodels.apimodel.ExtraAndFOW;
 import com.app.sportzfever.models.dbmodels.apimodel.ExtraRuns;
 import com.app.sportzfever.models.dbmodels.apimodel.Inning;
+import com.app.sportzfever.models.dbmodels.apimodel.Lineup;
 import com.app.sportzfever.models.dbmodels.apimodel.Match;
 import com.app.sportzfever.models.dbmodels.apimodel.MatchDate;
+import com.app.sportzfever.models.dbmodels.apimodel.MatchRolesViewModel;
+import com.app.sportzfever.models.dbmodels.apimodel.MatchScorerModel;
 import com.app.sportzfever.models.dbmodels.apimodel.MatchStaticsData;
+import com.app.sportzfever.models.dbmodels.apimodel.MatchTeamRolesModel;
+import com.app.sportzfever.models.dbmodels.apimodel.NewMatchLineUpViewModel;
+import com.app.sportzfever.models.dbmodels.apimodel.NewPlayersToAddInTeamViewModel;
 import com.app.sportzfever.models.dbmodels.apimodel.OverBall;
 import com.app.sportzfever.models.dbmodels.apimodel.ResponseModel;
 import com.app.sportzfever.models.dbmodels.apimodel.Scorers;
+import com.app.sportzfever.models.dbmodels.apimodel.Sport;
 import com.app.sportzfever.models.dbmodels.apimodel.StartSecondInningResponseModel;
 import com.app.sportzfever.models.dbmodels.apimodel.Team;
+import com.app.sportzfever.models.dbmodels.apimodel.TeamPlayerProfile;
 import com.app.sportzfever.models.dbmodels.apimodel.TeamScorer;
 import com.app.sportzfever.models.dbmodels.apimodel.TeamSquad;
 import com.app.sportzfever.models.dbmodels.apimodel.UniverseResponseModel;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,9 +69,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.text.TextUtils;
-
-import java.util.StringJoiner;
-import java.util.Arrays;
 
 public class SportzDatabase {
     private static final String TAG = "SportzDatabase";
@@ -81,6 +96,8 @@ public class SportzDatabase {
             try {
 
                 // db.execSQL("create table medData(match_id text primary key,id text,team1Id text, team2Id text)");
+                db.execSQL("create TABLE MatchScore_Local(Id INTEGER primary key AUTOINCREMENT NOT NULL, synced INTEGER NOT NULL DEFAULT 0,jsonData TEXT)");
+                db.execSQL("create TABLE MatchLineup_Local(Id INTEGER primary key AUTOINCREMENT NOT NULL, synced INTEGER NOT NULL DEFAULT 0,jsonData TEXT)");
                 db.execSQL("create TABLE Toss_local(Id INTEGER primary key AUTOINCREMENT NOT NULL, cricket_inning_id INTEGER NOT NULL DEFAULT 0,jsonData TEXT,serverinningId INTEGER NOT NULL DEFAULT 0  )");
                 db.execSQL("create TABLE SecondInning_local(Id INTEGER primary key AUTOINCREMENT NOT NULL, cricket_inning_id INTEGER NOT NULL DEFAULT 0,jsonData TEXT,serverinningId INTEGER NOT NULL DEFAULT 0  )");
                 db.execSQL("create TABLE cricket_balls_local(Id INTEGER primary key AUTOINCREMENT NOT NULL, cricket_balls_id INTEGER NOT NULL DEFAULT 0,jsonData TEXT,serverID INTEGER NOT NULL DEFAULT 0  )");
@@ -95,6 +112,8 @@ public class SportzDatabase {
                 db.execSQL("CREATE TABLE event (id INTEGER,status TEXT,startDate TEXT NOT NULL ,endDate TEXT,description TEXT NOT NULL ,title TEXT NOT NULL ,eventType TEXT DEFAULT NULL ,isDeleted TEXT NOT NULL ,userId TEXT NOT NULL ,team1 TEXT,team2 TEXT,eventImage TEXT,calendarId TEXT,longitude TEXT NOT NULL ,location TEXT,locationUrl TEXT,isActive TEXT NOT NULL ,lattitude TEXT NOT NULL )");
                 db.execSQL("CREATE TABLE match_scorer (id INTEGER,readStatus TEXT NOT NULL ,scorerOrder TEXT NOT NULL ,inviteStatus TEXT,scorerId TEXT,matchId TEXT NOT NULL ,inviteSentOn TEXT NOT NULL,team TEXT)");
                 db.execSQL("CREATE TABLE matchsfplayername (id INTEGER,avatarName TEXT NOT NULL ,teamId TEXT NOT NULL ,matchId TEXT NOT NULL ,avatarId TEXT NOT NULL )");
+                db.execSQL("CREATE TABLE sport (id INTEGER,sportName TEXT NOT NULL)");
+                db.execSQL("CREATE TABLE cricket_profile (id INTEGER,avatar TEXT NOT NULL,battingHand TEXT NOT NULL,battingStyle TEXT NOT NULL,bowlingHand TEXT NOT NULL,bowlingStyle TEXT NOT NULL,speciality TEXT NOT NULL,favouriteFieldPosition TEXT NOT NULL,jersyNumber TEXT NOT NULL)");
                 db.execSQL("CREATE TABLE roster (id INTEGER,readStatus TEXT NOT NULL ,requestRespondedAt TEXT DEFAULT NULL, requestSentAt TEXT DEFAULT NULL ,avatar TEXT ,playerOrder TEXT ,team TEXT ,requestStatus TEXT NOT NULL)");
                 db.execSQL("CREATE TABLE match_team_roles (id integer,ViceCaptain TEXT,matchId TEXT NOT NULL ,CaptainAvatar TEXT NOT NULL ,teamId TEXT NOT NULL ,WicketKeeperAvatar TEXT)");
                 db.execSQL("CREATE TABLE matches (id INTEGER NOT NULL,inviteStatus TEXT,matchDate date NOT NULL ,numberOfOvers TEXT ,matchStatus TEXT,tossSelection TEXT,eventId TEXT ,team2CheckAvailibility TEXT NOT NULL ,team1Id TEXT ,matchResultId TEXT ,location TEXT,tie TEXT,matchType TEXT,numberOfInnings TEXT ,readStatus TEXT NOT NULL ,dl TEXT NOT NULL ,description TEXT ,activeScorerId TEXT ,isTeam2ScoringOnSf TEXT NOT NULL ,tossResultId TEXT ,calendarId TEXT ,leagueId TEXT ,isTeam1ScoringOnSf TEXT NOT NULL ,team1CheckAvailibility TEXT NOT NULL ,points TEXT,numberOfPlayers TEXT ,tournamentId TEXT ,team2Id TEXT )");
@@ -118,6 +137,59 @@ public class SportzDatabase {
         return this;
     }
 
+    public JSONObject saveScoreForMatch(JSONObject jsonObject2) {
+        {
+            try {
+                JSONObject jsonObject = jsonObject2.getJSONObject("match");
+                int matchId = Integer.parseInt(jsonObject.getString("matchId"));
+                String tossSelection = jsonObject.getString("tossSelection");
+                String action = jsonObject.getString("action");
+                JSONArray inningsArr = jsonObject.getJSONArray("innings");
+                int tossResultId = Integer.parseInt(jsonObject.getString("tossResultId"));
+
+                Matches match = fetchDBMatchByMatchId(matchId);
+
+                match.setTossSelection(tossSelection);
+                match.setMatchStatus("STARTED");
+                match.setTossResultId(String.valueOf(tossResultId));
+                updateMatchData(match);
+                for (int i = 0; i < inningsArr.length(); i++) {
+                    JSONObject jsonObject1 = inningsArr.getJSONObject(i);
+                    int battingTeamId = Integer.parseInt(jsonObject1.getString("battingTeamId"));
+                    CricketInning cricketInning = fetchInningByIdAndBattingTeamId(matchId, battingTeamId);
+
+                    if (cricketInning != null) {
+                        cricketInning.setTotalRunsScored(jsonObject1.getString("totalRunsScored"));
+                        cricketInning.setWickets(jsonObject1.getString("wicketsInOver"));
+                        cricketInning.setPlayedOvers(jsonObject1.getString("playedOvers"));
+                        updateInningData(cricketInning);
+
+                    } else {
+                        String totalRunsScored = jsonObject1.getString("totalRunsScored");
+                        String inningNumber = jsonObject1.getString("inningNumber");
+                        String wickets = jsonObject1.getString("wicketsInOver");
+                        String totalOvers = jsonObject1.getString("totalOvers");
+                        String playedOvers = jsonObject1.getString("playedOvers");
+                        String battingTeamId1 = jsonObject1.getString("battingTeamId");
+                        String bowlingTeamId = jsonObject1.getString("bowlingTeamId");
+                        CricketInning cricketInning1 = new CricketInning(totalOvers, wickets, "0", bowlingTeamId, "0", String.valueOf(matchId), inningNumber, "0", null, totalRunsScored, null, "0", playedOvers, battingTeamId1, null);
+                        int insertedInningId = insertInningData(cricketInning1);
+                        Log.d(TAG, "saveScoreForMatch: " + insertedInningId);
+                    }
+                }
+                JSONObject result = new JSONObject();
+                result.put("result", 1);
+                result.put("data", new JSONObject());
+                result.put("message", "Successfully");
+                return result;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+
     // ---closes the database---
     public void close() {
         DBHelper.close();
@@ -131,14 +203,14 @@ public class SportzDatabase {
         tables.add("match_scorer");
         tables.add("tournament");
         tables.add("event");
+        tables.add("sport");
         tables.add("matchsfplayername");
         tables.add("roster");
         tables.add("match_team_roles");
         tables.add("general_profile");
         tables.add("matches");
         tables.add("cricket_selected_team_players");
-        // TODO: 2/20/2018 Do not add these tables in list(just uncomment the if block), adding these tables will clear offline data for local match....(i tried but on uncommenting the code dialog box for selecting bowler and batsmen doesn't hide )
-        // if(resetCurrentLocalMatch) {
+        tables.add("cricket_profile");
         tables.add("cricket_scorecard");
         tables.add("cricket_overs");
         tables.add("cricket_innings");
@@ -146,7 +218,7 @@ public class SportzDatabase {
         tables.add("cricket_balls_local");
         tables.add("Toss_local");
         tables.add("SecondInning_local");
-        //}
+
         List<String> matchIds = new ArrayList<>();
         List<String> eventIds = new ArrayList<>();
 
@@ -161,7 +233,6 @@ public class SportzDatabase {
                     eventIds.add(cursor.getString(cursor.getColumnIndex("eventId")));
                     cursor.moveToNext();
                 }
-
             }
         }
         if (matchIds.size() > 0) {
@@ -190,10 +261,9 @@ public class SportzDatabase {
 
             } else if (tableName.equalsIgnoreCase("matches")) {
                 db.execSQL("Delete from " + tableName + " where id NOT in (" + matchIdsStr + ");");
-            }else if (tableName.equalsIgnoreCase("event")) {
+            } else if (tableName.equalsIgnoreCase("event")) {
                 db.execSQL("Delete from " + tableName + " where id NOT in (" + eventIdsStr + ");");
-            }
-            else {
+            } else {
                 db.execSQL("Delete from " + tableName);
             }
             db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE name='" + tableName + "';");
@@ -295,6 +365,36 @@ public class SportzDatabase {
         }
         return lastId;
     }
+
+    public int insertMatchScoreData(String jsonData) {
+        ContentValues cv = new ContentValues();
+        cv.put("jsonData", jsonData);
+
+        db.insert("MatchScore_Local", null, cv);
+        String query = "SELECT ROWID from MatchScore_Local order by ROWID DESC limit 1";
+        Cursor c = db.rawQuery(query, null);
+        int lastId = 0;
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+        }
+        return lastId;
+    }
+    public int insertMatchLineupData(String jsonData) {
+        ContentValues cv = new ContentValues();
+        cv.put("jsonData", jsonData);
+
+        db.insert("MatchLineup_Local", null, cv);
+        String query = "SELECT ROWID from MatchLineup_Local order by ROWID DESC limit 1";
+        Cursor c = db.rawQuery(query, null);
+        int lastId = 0;
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+        }
+        return lastId;
+    }
+
+
+
     public int insertSecondInningDataLocal(String jsonData, int inningId) {
         ContentValues cv = new ContentValues();
         cv.put("jsonData", jsonData);
@@ -320,13 +420,29 @@ public class SportzDatabase {
         cv.put("matchId", cricketInning.getMatchId());
         cv.put("inningNumber", cricketInning.getInningNumber());
         cv.put("playing", cricketInning.isPlaying());
-        cv.put("daySession", cricketInning.getDaySession());
+        if (cricketInning.getDaySession() == null) {
+            cv.put("daySession", "");
+        } else {
+            cv.put("daySession", cricketInning.getDaySession());
+        }
+
         cv.put("totalRunsScored", cricketInning.getTotalRunsScored());
-        cv.put("state", cricketInning.getState());
+        if (cricketInning.getState() == null) {
+            cv.put("state", "");
+        } else {
+            cv.put("state", cricketInning.getState());
+        }
+
+
         cv.put("extras", cricketInning.getExtras());
         cv.put("playedOvers", cricketInning.getPlayedOvers());
         cv.put("battingTeamId", cricketInning.getBattingTeamId());
-        cv.put("day", cricketInning.getDay());
+        if (cricketInning.getDay() == null) {
+            cv.put("day", "");
+        } else {
+            cv.put("day", cricketInning.getDay());
+        }
+
         cv.put("id", cricketInning.getId());
         if (cricketInning.getId() > 0) {
             cv.put("syncStatus", "1");
@@ -673,6 +789,517 @@ public class SportzDatabase {
         return lastId;
     }
 
+    public int insertSports(Sport sport) {
+
+        ContentValues cv = new ContentValues();
+        cv.put("id", sport.getId());
+        cv.put("sportName", sport.getSportName());
+
+        db.insert("sport", null, cv);
+        String query = "SELECT ROWID from sport order by ROWID DESC limit 1";
+        Cursor c = db.rawQuery(query, null);
+        int lastId = 0;
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+        }
+        return lastId;
+    }
+
+    public MatchScorer fetchMatchScorerByOrder(int order, int matchId, int teamId) {
+        MatchScorer matchScorer = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery("SELECT * from match_scorer where scorerOrder='" + order + "'and matchId='" + matchId + "'and team='" + teamId + "'", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String readStatus = cursor.getString(cursor.getColumnIndex("readStatus"));
+                String scorerOrder = cursor.getString(cursor.getColumnIndex("scorerOrder"));
+                String inviteStatus = cursor.getString(cursor.getColumnIndex("inviteStatus"));
+                String scorerId = cursor.getString(cursor.getColumnIndex("scorerId"));
+                String matchId1 = cursor.getString(cursor.getColumnIndex("matchId"));
+                String inviteSentOn = cursor.getString(cursor.getColumnIndex("inviteSentOn"));
+                String team = cursor.getString(cursor.getColumnIndex("team"));
+
+                matchScorer = new MatchScorer(readStatus, scorerOrder, inviteStatus, scorerId, matchId1, inviteSentOn, team);
+
+                matchScorer.setId(id);
+
+            }
+        } catch (Exception e) {
+            matchScorer = null;
+            e.printStackTrace();
+        }
+        return matchScorer;
+    }
+
+    public int insertCricketprofile(CricketProfile cricketProfile) {
+
+        ContentValues cv = new ContentValues();
+        cv.put("id", cricketProfile.getId());
+        cv.put("avatar", cricketProfile.getAvatar());
+        cv.put("battingHand", cricketProfile.getBattingHand());
+        cv.put("battingStyle", cricketProfile.getBattingStyle());
+        cv.put("bowlingHand", cricketProfile.getBowlingHand());
+        cv.put("bowlingStyle", cricketProfile.getBowlingStyle());
+        cv.put("speciality", cricketProfile.getSpeciality());
+        cv.put("favouriteFieldPosition", cricketProfile.getFavouriteFieldPosition());
+        cv.put("jersyNumber", cricketProfile.getJersyNumber());
+
+        db.insert("cricket_profile", null, cv);
+        String query = "SELECT ROWID from cricket_profile order by ROWID DESC limit 1";
+        Cursor c = db.rawQuery(query, null);
+        int lastId = 0;
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+        }
+        return lastId;
+    }
+
+    public void manageScorersForTeams(MatchLineUpScorer scorer, int matchId, int teamId) {
+        if (!scorer.getUserId().equals("-1") && !scorer.getUserId().equals("") && scorer.getUserId() != null) {
+            MatchScorer matchScorer = fetchMatchScorerByOrder(Integer.parseInt(scorer.getOrder()), matchId, teamId);
+            if (matchScorer != null) {
+                matchScorer.setScorerId(scorer.getUserId());
+                updateMatchScorerData(matchScorer);
+            } else {
+                matchScorer = new MatchScorer("0", scorer.getOrder(), "ACCEPTED", scorer.getUserId(), String.valueOf(matchId), "", String.valueOf(teamId));
+                insertMatchScorer(matchScorer);
+            }
+        } else {
+            MatchScorer matchScorer = fetchMatchScorerByOrder(Integer.parseInt(scorer.getOrder()), matchId, teamId);
+            if( matchScorer !=null) {
+                deleteTableRecord("match_scorer", String.valueOf(matchScorer.getId()));
+            }
+        }
+    }
+
+    public List<CricketSelectedTeamPlayersViewModel> fetchCricketSelectedTeamPlayersViewModel(int matchId, int teamId) {
+        List<CricketSelectedTeamPlayersViewModel> cricketSelectedTeamPlayersViewModels = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT cs.* ,u.id as userId,  u.deviceToken as deviceToken from cricket_selected_team_players cs " +
+                    "left join avatar a on cs.avatarId=a.id " +
+                    "left join user u on a.userId=u.id " +
+                    "where teamId ='" + teamId + "' and matchId='" + matchId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        int id = cursor.getInt(cursor.getColumnIndex("id"));
+                        String readStatus = cursor.getString(cursor.getColumnIndex("readStatus"));
+                        String invitationSendOn = cursor.getString(cursor.getColumnIndex("invitationSendOn"));
+                        String inviteStatus = cursor.getString(cursor.getColumnIndex("inviteStatus"));
+                        String matchId1 = cursor.getString(cursor.getColumnIndex("matchId"));
+                        String isInPlayingBench = cursor.getString(cursor.getColumnIndex("isInPlayingBench"));
+                        String teamId1 = cursor.getString(cursor.getColumnIndex("teamId"));
+                        String role = cursor.getString(cursor.getColumnIndex("role"));
+                        String isInPlayingSquad = cursor.getString(cursor.getColumnIndex("isInPlayingSquad"));
+                        String position = cursor.getString(cursor.getColumnIndex("position"));
+                        String avatarId = cursor.getString(cursor.getColumnIndex("avatarId"));
+                        String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                        String deviceToken = cursor.getString(cursor.getColumnIndex("deviceToken"));
+                        String invitationAnsweredOn = cursor.getString(cursor.getColumnIndex("invitationAnsweredOn"));
+
+
+                        CricketSelectedTeamPlayersViewModel cricketSelectedTeamPlayersViewModel = new CricketSelectedTeamPlayersViewModel();
+                        cricketSelectedTeamPlayersViewModel.setId(id);
+                        cricketSelectedTeamPlayersViewModel.setReadStatus(readStatus);
+                        cricketSelectedTeamPlayersViewModel.setInvitationSendOn(invitationSendOn);
+                        cricketSelectedTeamPlayersViewModel.setInviteStatus(inviteStatus);
+                        cricketSelectedTeamPlayersViewModel.setMatchId(matchId1);
+                        cricketSelectedTeamPlayersViewModel.setIsInPlayingBench(isInPlayingBench);
+                        cricketSelectedTeamPlayersViewModel.setTeamId(teamId1);
+                        cricketSelectedTeamPlayersViewModel.setRole(role);
+                        cricketSelectedTeamPlayersViewModel.setIsInPlayingSquad(isInPlayingSquad);
+                        cricketSelectedTeamPlayersViewModel.setPosition(position);
+                        cricketSelectedTeamPlayersViewModel.setAvatarId(avatarId);
+                        cricketSelectedTeamPlayersViewModel.setUserId(userId);
+                        cricketSelectedTeamPlayersViewModel.setDeviceToken(deviceToken);
+                        cricketSelectedTeamPlayersViewModel.setInvitationAnsweredOn(invitationAnsweredOn);
+
+                        cricketSelectedTeamPlayersViewModels.add(cricketSelectedTeamPlayersViewModel);
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            cricketSelectedTeamPlayersViewModels = new ArrayList<>();
+            e.printStackTrace();
+        }
+        return cricketSelectedTeamPlayersViewModels;
+    }
+
+    public void CreateAvatarAddToTeamAddToLinup(ExistingPlayersToAddViewModel playerToAdd, int teamId, int matchId) {
+        //create avatar if not exists
+        if (playerToAdd.getAvatarId() == null || playerToAdd.getAvatarId() == "" || Integer.parseInt(playerToAdd.getAvatarId()) <= 0) {
+            Avatar avatar = new Avatar("", "", "PLAYER", "", playerToAdd.getUserId(), "", "", "1", "/assets/defaults/images/default_avatar.png", playerToAdd.getPlayerName());
+            int avatarIdnew = insertAvatar(avatar);
+            playerToAdd.setAvatarId(String.valueOf(avatarIdnew));
+            CricketProfile cricketProfile = new CricketProfile();
+            cricketProfile.setAvatar(String.valueOf(avatarIdnew));
+            cricketProfile.setBattingHand("");
+            cricketProfile.setBattingStyle("");
+            cricketProfile.setBowlingHand("");
+            cricketProfile.setFavouriteFieldPosition("");
+            cricketProfile.setBowlingStyle("");
+            cricketProfile.setJersyNumber("");
+            cricketProfile.setSpeciality("");
+            insertCricketprofile(cricketProfile);
+        }
+
+        if (playerToAdd.getShouldAddInRoster().equalsIgnoreCase("YES")) {
+            //add player in to team
+            Roster roster = new Roster("0", "", "", playerToAdd.getAvatarId(), "", String.valueOf(teamId), "ACCEPTED");
+            insertRoster(roster);
+        }
+        //add to lineup
+        String inviteStatus = playerToAdd.getInviteStatus();
+        String position = playerToAdd.getOrder();
+        String newRole = playerToAdd.getRole();
+        String isInPlayingSquad = playerToAdd.getIsInPlayingSquad();
+        String isInPlayingBench = playerToAdd.getIsInBench();
+        String avatarId = playerToAdd.getAvatarId();
+        CricketSelectedTeamPlayers cricketSelectedTeamPlayers = new CricketSelectedTeamPlayers("0", "", inviteStatus, String.valueOf(matchId), isInPlayingBench, String.valueOf(teamId), newRole, isInPlayingSquad, position, avatarId, "0", "");
+
+        insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayers);
+    }
+
+    public void manageLineUpForMatch(JSONObject jsonObject) {
+        try {
+
+            List<MatchLineUpScorer> scorers = null;
+            List<NewMatchLineUpViewModel> newMatchlineUp = null;
+            List<NewPlayersToAddInTeamViewModel> newPlayersToAddInTeam = null;
+            List<ExistingPlayersToAddViewModel> existingPlayersToAdd = null;
+            int matchId = jsonObject.getInt("matchId");
+            int teamId = jsonObject.getInt("teamId");
+
+            Gson gson = new Gson();
+            JSONObject captainJson=null,wicketKeeperJson=null,viceCaptainJson=null;
+            if(jsonObject.has("captain")) {
+                captainJson = jsonObject.getJSONObject("captain");
+            }
+            if(jsonObject.has("viceCaptain")) {
+                viceCaptainJson = jsonObject.getJSONObject("viceCaptain");
+            }
+            if(jsonObject.has("wicketKeeper")) {
+                wicketKeeperJson = jsonObject.getJSONObject("wicketKeeper");
+            }
+            MatchRolesViewModel captain = null, viceCaptain = null, wicketKeeper = null;
+            if (captainJson != null) {
+                captain = gson.fromJson(captainJson.toString(), MatchRolesViewModel.class);
+            }
+            if (viceCaptainJson != null) {
+                viceCaptain = gson.fromJson(captainJson.toString(), MatchRolesViewModel.class);
+            }
+            if (wicketKeeperJson != null) {
+                wicketKeeper = gson.fromJson(captainJson.toString(), MatchRolesViewModel.class);
+            }
+
+
+            int isTeamScoringOnSf = jsonObject.getInt("isTeamScoringOnSf");
+            int teamCheckAvailibility = jsonObject.getInt("teamCheckAvailibility");
+            if (jsonObject.has("scorers")) {
+                JSONArray scorerJson = jsonObject.getJSONArray("scorers");
+                if (scorerJson != null) {
+                    scorers = gson.fromJson(scorerJson.toString(), new TypeToken<List<MatchLineUpScorer>>() {
+                    }.getType());
+                }
+            }
+            JSONArray newLineupJson = jsonObject.getJSONArray("newMatchlineUp");
+            if (newLineupJson != null) {
+                newMatchlineUp = gson.fromJson(newLineupJson.toString(), new TypeToken<List<NewMatchLineUpViewModel>>() {
+                }.getType());
+            }
+            JSONArray newPlayersToAddInTeamJson = jsonObject.getJSONArray("newPlayersToAddInTeam");
+            if (newPlayersToAddInTeamJson != null) {
+                newPlayersToAddInTeam = gson.fromJson(newPlayersToAddInTeamJson.toString(), new TypeToken<List<NewPlayersToAddInTeamViewModel>>() {
+                }.getType());
+            }
+            JSONArray existingPlayersToAddJson = jsonObject.getJSONArray("existingPlayersToAdd");
+            if (existingPlayersToAddJson != null) {
+                existingPlayersToAdd = gson.fromJson(existingPlayersToAddJson.toString(), new TypeToken<List<ExistingPlayersToAddViewModel>>() {
+                }.getType());
+            }
+            Matches match = fetchDBMatchByMatchId(matchId);
+
+            if (match != null) {
+                if (scorers != null) {
+                    if(scorers.get(0).getUserId() == null)
+                    {
+                        scorers.get(0).setUserId("-1");
+                    }
+                    if(scorers.get(1).getUserId() == null)
+                    {
+                        scorers.get(1).setUserId("-1");
+                    }
+                    if(scorers.get(2).getUserId() == null)
+                    {
+                        scorers.get(2).setUserId("-1");
+                    }
+                    if (String.valueOf(teamId).equals(match.getTeam2Id())) {
+                        if (isTeamScoringOnSf == 0) {
+                            if (match.getIsTeam1ScoringOnSf().equals("0")) {
+                                scorers.get(0).setOrder("1");
+                                scorers.get(0).setUserId(AppUtils.getUserId(context));
+                                scorers.get(1).setOrder("1");
+                                scorers.get(1).setUserId("-1");
+                                scorers.get(2).setOrder("1");
+                                scorers.get(2).setUserId("-1");
+                                for (MatchLineUpScorer d : scorers) {
+                                    manageScorersForTeams(d, matchId, Integer.parseInt(match.getTeam1Id()));
+                                }
+                            } else {
+                                scorers.get(0).setOrder("1");
+                                scorers.get(0).setUserId("-1");
+                                scorers.get(1).setOrder("1");
+                                scorers.get(1).setUserId("-1");
+                                scorers.get(2).setOrder("1");
+                                scorers.get(2).setUserId("-1");
+                                List<MatchScorer> matchScorers = fetchMatchScorerDataByUser(matchId, Integer.parseInt(match.getTeam1Id()));
+                                if (matchScorers.size() > 0) {
+                                    for (int x = 0; x < matchScorers.size(); x++) {
+                                        scorers.get(x).setUserId(matchScorers.get(x).getScorerId());
+                                    }
+                                }
+                            }
+                        } else {
+
+
+                            if (match.getIsTeam1ScoringOnSf().equals("")) {
+                                for (MatchLineUpScorer d : scorers) {
+                                    manageScorersForTeams(d, matchId, Integer.parseInt(match.getTeam1Id()));
+                                }
+                            }
+                        }
+                    }
+                    for (MatchLineUpScorer d : scorers) {
+                        manageScorersForTeams(d, matchId, teamId);
+                    }
+                }
+                if (match.getTeam1Id().equals(String.valueOf(teamId))) {
+                    match.setIsTeam1ScoringOnSf(String.valueOf(isTeamScoringOnSf));
+                    match.setTeam1CheckAvailibility(String.valueOf(teamCheckAvailibility));
+                    updateMatchData(match);
+                } else if (match.getTeam2Id().equals(String.valueOf(teamId))) {
+                    match.setIsTeam2ScoringOnSf(String.valueOf(isTeamScoringOnSf));
+                    match.setTeam2CheckAvailibility(String.valueOf(teamCheckAvailibility));
+                    updateMatchData(match);
+                }
+
+
+                List<CricketSelectedTeamPlayersViewModel> previousLineUp = fetchCricketSelectedTeamPlayersViewModel(matchId, teamId);
+
+
+                for (NewMatchLineUpViewModel lineup : newMatchlineUp) {
+                    Boolean foundInPreviousLineUp = false;
+                    CricketSelectedTeamPlayersViewModel previousLineUpEntry = null;
+
+                    for (CricketSelectedTeamPlayersViewModel preLineUp : previousLineUp) {
+                        if (preLineUp.getAvatarId().equals(lineup.getAvatarId())) {
+                            foundInPreviousLineUp = true;
+                            previousLineUpEntry = preLineUp;
+                        }
+                    }
+
+
+                    if (foundInPreviousLineUp && previousLineUpEntry != null) {
+                        String newOrder = "";
+                        String newRole = "";
+                        String isInPlayingSquad = "0";
+                        String isInPlayingBench = "0";
+                        if (Integer.parseInt(lineup.getIsInPlayingSquad()) > 0) {
+                            newOrder = lineup.getOrder();
+                            newRole = lineup.getRole();
+                            isInPlayingSquad = lineup.getIsInPlayingSquad();
+                            isInPlayingBench = lineup.getIsInBench();
+                        }
+
+                        previousLineUpEntry.setPosition(newOrder);
+                        previousLineUpEntry.setRole(newRole);
+                        previousLineUpEntry.setIsInPlayingSquad(isInPlayingSquad);
+                        previousLineUpEntry.setIsInPlayingBench(isInPlayingBench);
+
+                        updateCricketSelectedPlayers(previousLineUpEntry);
+                    } else {
+                        String inviteStatus = lineup.getInviteStatus();
+                        String position = lineup.getOrder();
+                        String newRole = lineup.getRole();
+                        String isInPlayingSquad = lineup.getIsInPlayingSquad();
+                        String isInPlayingBench = lineup.getIsInBench();
+                        String avatarId = lineup.getAvatarId();
+                        CricketSelectedTeamPlayers cricketSelectedTeamPlayers = new CricketSelectedTeamPlayers("0", "", inviteStatus, String.valueOf(matchId), isInPlayingBench, String.valueOf(teamId), newRole, isInPlayingSquad, position, avatarId, "0", "");
+                        int lID = insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayers);
+                    }
+                }
+
+                //remove players which are not part of lineup
+                for (CricketSelectedTeamPlayersViewModel preLineUp : previousLineUp) {
+                    CricketSelectedTeamPlayersViewModel previousLineUpEntry = null;
+                    Boolean foundInPreviousLineUpCheck = false;
+                    for (NewMatchLineUpViewModel lineup : newMatchlineUp) {
+                        if (preLineUp.getAvatarId().equals(lineup.getAvatarId())) {
+                            foundInPreviousLineUpCheck = true;
+                        }
+                    }
+                    if (foundInPreviousLineUpCheck == false) {
+                        previousLineUpEntry = preLineUp;
+                        deleteTableRecord("cricket_selected_team_players", String.valueOf(preLineUp.getId()));
+                    }
+                }
+
+                //add existing players on sf to team
+                for (ExistingPlayersToAddViewModel playerToAdd : existingPlayersToAdd) {
+                    CreateAvatarAddToTeamAddToLinup(playerToAdd, teamId, matchId);
+                }
+                //create new user and add players to team
+                for (NewPlayersToAddInTeamViewModel playerToAdd : newPlayersToAddInTeam) {
+                    String email = playerToAdd.getEmail();
+                    String phoneNumber = "";
+                    String password = "";
+                    String msg = "";
+                    //$name=($playerToAdd['playerName']);
+                    String name = playerToAdd.getPlayerName();
+                    String lastName = "";
+
+                    User user = new User("", "", "1", "", "", "1970-01-01", "", "", "", "", email, "", "", "", "", "", "", "", name, "", lastName, "", "", "", "", "", "", "0");
+                    int userId = insertUser(user);
+
+                    GeneralProfile generalProfile = new GeneralProfile();
+                    generalProfile.setAbout("");
+                    generalProfile.setCoverImage("");
+                    generalProfile.setCreateDate("");
+                    generalProfile.setCurrentLocation("");
+                    generalProfile.setHometown("");
+                    generalProfile.setId(0);
+                    generalProfile.setLattitude("");
+                    generalProfile.setLongitude("");
+                    generalProfile.setPhoneNumber(phoneNumber);
+                    generalProfile.setPhoneNumberVisiblity("");
+                    generalProfile.setProfilePicture("/assets/defaults/images/default_avatar.png");
+                    generalProfile.setUser(String.valueOf(userId));
+
+
+                    insertGeneralProfileData(generalProfile);
+
+
+                    ExistingPlayersToAddViewModel existingPlayersToAddViewModel = new ExistingPlayersToAddViewModel();
+                    existingPlayersToAddViewModel.setAvatarId(playerToAdd.getAvatarId());
+                    existingPlayersToAddViewModel.setAvatarName(playerToAdd.getAvatarName());
+                    existingPlayersToAddViewModel.setEmail(playerToAdd.getEmail());
+                    existingPlayersToAddViewModel.setInviteStatus(playerToAdd.getInviteStatus());
+                    existingPlayersToAddViewModel.setIsInBench(playerToAdd.getIsInBench());
+                    existingPlayersToAddViewModel.setIsInPlayingSquad(playerToAdd.getIsInPlayingSquad());
+                    existingPlayersToAddViewModel.setOrder(playerToAdd.getOrder());
+                    existingPlayersToAddViewModel.setProfilePicture(playerToAdd.getProfilePicture());
+                    existingPlayersToAddViewModel.setPlayerName(playerToAdd.getPlayerName());
+                    existingPlayersToAddViewModel.setRole(playerToAdd.getRole());
+                    existingPlayersToAddViewModel.setShouldAddInRoster(playerToAdd.getShouldAddInRoster());
+                    existingPlayersToAddViewModel.setUserId(String.valueOf(userId));
+
+                    //playerToAdd.set= $userId;
+                    CreateAvatarAddToTeamAddToLinup(existingPlayersToAddViewModel, teamId, matchId);
+                }
+
+
+                int captainAvatarId = 0;
+                int viceCaptainAvatarId = 0;
+                int wicketKeeperAvatarId = 0;
+
+                if(captain != null) {
+
+                    if(captain .getUser() !=null) {
+                        if (!captain.getUser().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByUserId(captain.getUser());
+                            captainAvatarId = avatar.getId();
+                        }
+                    }
+                    if(captain .getAvatar() !=null) {
+                        if (!captain.getAvatar().equalsIgnoreCase("")) {
+                            captainAvatarId = Integer.parseInt(captain.getAvatar());
+
+                        }
+                    }
+                    if(captain .getEmail() !=null) {
+                        if (!captain.getEmail().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByEmail(captain.getEmail());
+                            captainAvatarId = avatar.getId();
+                        }
+                    }
+                }
+
+                if(viceCaptain != null) {
+                    if(viceCaptain .getUser() !=null) {
+                        if (!viceCaptain.getUser().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByUserId(viceCaptain.getUser());
+                            viceCaptainAvatarId = avatar.getId();
+                        }
+                    }
+                    if(viceCaptain .getAvatar() !=null) {
+                        if (!viceCaptain.getAvatar().equalsIgnoreCase("")) {
+                            viceCaptainAvatarId = Integer.parseInt(viceCaptain.getAvatar());
+
+                        }
+                    }
+                    if(viceCaptain .getEmail() !=null) {
+                        if (!viceCaptain.getEmail().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByEmail(viceCaptain.getEmail());
+                            viceCaptainAvatarId = avatar.getId();
+                        }
+                    }
+                }
+
+                if (wicketKeeper != null) {
+                    if(wicketKeeper .getUser() !=null) {
+                        if (!wicketKeeper.getUser().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByUserId(wicketKeeper.getUser());
+                            wicketKeeperAvatarId = avatar.getId();
+                        }
+                    }
+                    if(wicketKeeper .getAvatar() !=null) {
+                        if (!wicketKeeper.getAvatar().equalsIgnoreCase("")) {
+                            wicketKeeperAvatarId = Integer.parseInt(wicketKeeper.getAvatar());
+
+                        }
+                    }
+                    if(wicketKeeper .getEmail() !=null) {
+                        if (!wicketKeeper.getEmail().equalsIgnoreCase("")) {
+                            Avatar avatar = fetchAvatarByEmail(wicketKeeper.getEmail());
+                            wicketKeeperAvatarId = avatar.getId();
+                        }
+                    }
+
+                }
+                MatchTeamRoles matchRoles = fetchMatchRoles(matchId, teamId);
+
+                if (matchRoles != null) {
+                    if ((captainAvatarId == 0 || captainAvatarId == -1) && (wicketKeeperAvatarId == 0 || wicketKeeperAvatarId == -1) && (viceCaptainAvatarId == 0 || viceCaptainAvatarId == -1)) {
+                        deleteTableRecord("match_team_roles", String.valueOf(matchRoles.getId()));
+                    } else {
+
+                        matchRoles.setCaptainAvatar((captainAvatarId == 0 || captainAvatarId == -1) ? null : String.valueOf(captainAvatarId));
+                        matchRoles.setViceCaptain((viceCaptainAvatarId == 0 || viceCaptainAvatarId == -1) ? null : String.valueOf(viceCaptainAvatarId));
+                        matchRoles.setWicketKeeperAvatar((wicketKeeperAvatarId == 0 || wicketKeeperAvatarId == -1) ? null : String.valueOf(wicketKeeperAvatarId));
+                        updateMatchTeamRoles(matchRoles);
+                    }
+
+                } else {
+                    if ((captainAvatarId != 0) || (wicketKeeperAvatarId != 0) || (viceCaptainAvatarId != 0)) {
+                        MatchTeamRoles matchTeamRoles = new MatchTeamRoles((viceCaptainAvatarId == 0 || viceCaptainAvatarId == -1) ? null : String.valueOf(viceCaptainAvatarId), String.valueOf(matchId), (captainAvatarId == 0 || captainAvatarId == -1) ? null : String.valueOf(captainAvatarId), String.valueOf(teamId), (wicketKeeperAvatarId == 0 || wicketKeeperAvatarId == -1) ? null : String.valueOf(wicketKeeperAvatarId));
+                        insertMatchTeamRoles(matchTeamRoles);
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public int insertUser(User user) {
 
         ContentValues cv = new ContentValues();
@@ -879,6 +1506,120 @@ public class SportzDatabase {
         return cricketBall;
     }
 
+    public Avatar fetchAvatarById(String avatarId) {
+        Avatar avatar = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from avatar where id = '"
+                    + avatarId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String profileBackgroundImage = cursor.getString(cursor.getColumnIndex("profileBackgroundImage"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String avatarType = cursor.getString(cursor.getColumnIndex("avatarType"));
+                String coverImage = cursor.getString(cursor.getColumnIndex("coverImage"));
+                String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                String alias = cursor.getString(cursor.getColumnIndex("alias"));
+                String createDate = cursor.getString(cursor.getColumnIndex("createDate"));
+                String sportId = cursor.getString(cursor.getColumnIndex("sportId"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String profilePicture = cursor.getString(cursor.getColumnIndex("profilePicture"));
+                avatar= new Avatar(profileBackgroundImage,description,avatarType,coverImage,userId,alias,createDate,sportId,profilePicture,name);
+                avatar.setId(id);
+
+            }
+        } catch (Exception e) {
+            avatar = null;
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
+    public Avatar fetchAvatarByEmail(String email) {
+        Avatar avatar = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select a.* from avatar a inner join user u on u.id = a.user where u.email = '"
+                    + email + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String profileBackgroundImage = cursor.getString(cursor.getColumnIndex("profileBackgroundImage"));
+                ;
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                ;
+                String avatarType = cursor.getString(cursor.getColumnIndex("avatarType"));
+                ;
+                String coverImage = cursor.getString(cursor.getColumnIndex("coverImage"));
+                ;
+                String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                ;
+                String alias = cursor.getString(cursor.getColumnIndex("alias"));
+                ;
+                String createDate = cursor.getString(cursor.getColumnIndex("createDate"));
+                ;
+                String sportId = cursor.getString(cursor.getColumnIndex("sportId"));
+                ;
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                ;
+                String profilePicture = cursor.getString(cursor.getColumnIndex("profilePicture"));
+                ;
+                avatar= new Avatar(profileBackgroundImage,description,avatarType,coverImage,userId,alias,createDate,sportId,profilePicture,name);
+                avatar.setId(id);
+            }
+        } catch (Exception e) {
+            avatar = null;
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
+    public Avatar fetchAvatarByUserId(String userid) {
+        Avatar avatar = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select a.* from avatar a inner join user u on u.id = a.user where u.id = '"
+                    + userid + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String profileBackgroundImage = cursor.getString(cursor.getColumnIndex("profileBackgroundImage"));
+                ;
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                ;
+                String avatarType = cursor.getString(cursor.getColumnIndex("avatarType"));
+                ;
+                String coverImage = cursor.getString(cursor.getColumnIndex("coverImage"));
+                ;
+                String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                ;
+                String alias = cursor.getString(cursor.getColumnIndex("alias"));
+                ;
+                String createDate = cursor.getString(cursor.getColumnIndex("createDate"));
+                ;
+                String sportId = cursor.getString(cursor.getColumnIndex("sportId"));
+                ;
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                ;
+                String profilePicture = cursor.getString(cursor.getColumnIndex("profilePicture"));
+                ;
+                avatar= new Avatar(profileBackgroundImage,description,avatarType,coverImage,userId,alias,createDate,sportId,profilePicture,name);
+                avatar.setId(id);
+            }
+        } catch (Exception e) {
+            avatar = null;
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
     public List<CricketBallJson> fetchBallDataJson() {
         List<CricketBallJson> cricketBall = new ArrayList<>();
         Cursor cursor = null;
@@ -939,6 +1680,68 @@ public class SportzDatabase {
         }
         return tossJsons;
     }
+
+    public List<MatchScoreJson> fetchMatchScore_LocalJson() {
+        List<MatchScoreJson> matchScoreJsons = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from MatchScore_Local", null);
+            if (cursor != null && cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        MatchScoreJson matchScoreJson = new MatchScoreJson();
+
+                        matchScoreJson.setId(cursor.getInt(cursor.getColumnIndex("Id")));
+                        matchScoreJson.setSynced(cursor.getInt(cursor.getColumnIndex("synced")));
+                        matchScoreJson.setJsonData(cursor.getString(cursor.getColumnIndex("jsonData")));
+
+                        matchScoreJsons.add(matchScoreJson);
+                        cursor.moveToNext();
+                    }
+                }
+                //cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            matchScoreJsons = new ArrayList<>();
+            e.printStackTrace();
+            Log.d("l", e.getMessage());
+        }
+        return matchScoreJsons;
+    }
+    public List<MatchScoreJson> fetchMatchLineup_LocalJson() {
+        List<MatchScoreJson> matchScoreJsons = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from MatchLineup_Local", null);
+            if (cursor != null && cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        MatchScoreJson matchScoreJson = new MatchScoreJson();
+
+                        matchScoreJson.setId(cursor.getInt(cursor.getColumnIndex("Id")));
+                        matchScoreJson.setSynced(cursor.getInt(cursor.getColumnIndex("synced")));
+                        matchScoreJson.setJsonData(cursor.getString(cursor.getColumnIndex("jsonData")));
+
+                        matchScoreJsons.add(matchScoreJson);
+                        cursor.moveToNext();
+                    }
+                }
+                //cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            matchScoreJsons = new ArrayList<>();
+            e.printStackTrace();
+            Log.d("l", e.getMessage());
+        }
+        return matchScoreJsons;
+    }
+
+
+
     public List<TossJson> fetchSecondInningDataJson() {
         List<TossJson> tossJsons = new ArrayList<>();
         Cursor cursor = null;
@@ -1038,6 +1841,52 @@ public class SportzDatabase {
             e.printStackTrace();
         }
         return match;
+    }
+    public OtherMatchDetail fetchOtherMatch(int matchId, int userId) {
+        OtherMatchDetail otherMatchDetail = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT mt.id,mt.eventId,mt.team1Id,mt.team2Id,mte.startDate,a1.name as team1Name,a2.name as team2Name," +
+                    "a1.id as team1AvatarId,a2.id as team2AvatarId,a1.profilePicture as team1ProfilePicture,a2.profilePicture as team2ProfilePicture from matches mt" +
+                    " left join team t1 on t1.id = mt.team1Id left join team t2 on t2.id = mt.team2Id " +
+                    "left join avatar a1 on t1.avatar = a1.id " +
+                    "left join avatar a2 on t2.avatar = a2.id " +
+                    "left join event mte on mt.eventId = mte.id " +
+                    "where activeScorerId ='"+userId+"' and mt.id != '"+matchId+"' AND mt.matchStatus != 'ENDED'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                int matchId1 = cursor.getInt(cursor.getColumnIndex("id"));
+                String eventId = cursor.getString(cursor.getColumnIndex("eventId"));
+                String team1Id = cursor.getString(cursor.getColumnIndex("team1Id"));
+                String team2Id = cursor.getString(cursor.getColumnIndex("team2Id"));
+                String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+                String team1Name = cursor.getString(cursor.getColumnIndex("team1Name"));
+                String team2Name = cursor.getString(cursor.getColumnIndex("team2Name"));
+                String team1AvatarId = cursor.getString(cursor.getColumnIndex("team1AvatarId"));
+                String team2AvatarId = cursor.getString(cursor.getColumnIndex("team2AvatarId"));
+                String team1ProfilePicture = cursor.getString(cursor.getColumnIndex("team1ProfilePicture"));
+                String team2ProfilePicture = cursor.getString(cursor.getColumnIndex("team2ProfilePicture"));
+
+                otherMatchDetail = new OtherMatchDetail();
+                otherMatchDetail.setId(matchId);
+                otherMatchDetail.setEventId(eventId);
+                otherMatchDetail.setTeam1Id(team1Id);
+                otherMatchDetail.setTeam2Id(team2Id);
+                otherMatchDetail.setStartDate(startDate);
+                otherMatchDetail.setTeam1Name(team1Name);
+                otherMatchDetail.setTeam2Name(team2Name);
+                otherMatchDetail.setTeam1AvatarId(team1AvatarId);
+                otherMatchDetail.setTeam2AvatarId(team2AvatarId);
+                otherMatchDetail.setTeam1ProfilePicture(team1ProfilePicture);
+                otherMatchDetail.setTeam2ProfilePicture(team2ProfilePicture);
+
+            }
+        } catch (Exception e) {
+            otherMatchDetail = null;
+            e.printStackTrace();
+        }
+        return otherMatchDetail;
     }
 
     public Matches fetchDBMatchByMatchId(int id) {
@@ -1175,6 +2024,48 @@ public class SportzDatabase {
         return cricketInning;
     }
 
+    public CricketInning fetchInningByIdAndBattingTeamId(int matchId1, int battingteamId) {
+        CricketInning cricketInning = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from cricket_innings where id = '"
+                    + matchId1 + "' and and battingTeamId = '" + battingteamId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int inningId = cursor.getInt(cursor.getColumnIndex("id"));
+                String totalOvers = cursor.getString(cursor.getColumnIndex("totalOvers"));
+                String wickets = cursor.getString(cursor.getColumnIndex("wickets"));
+                String isDeclared = cursor.getString(cursor.getColumnIndex("isDeclared"));
+                String bowlingTeamId = cursor.getString(cursor.getColumnIndex("bowlingTeamId"));
+                String isScoredOnSF = cursor.getString(cursor.getColumnIndex("isScoredOnSF"));
+
+                String matchId = cursor.getString(cursor.getColumnIndex("matchId"));
+                String inningNumber = cursor.getString(cursor.getColumnIndex("inningNumber"));
+                String playing = cursor.getString(cursor.getColumnIndex("playing"));
+                String daySession = cursor.getString(cursor.getColumnIndex("daySession"));
+                String totalRunsScored = cursor.getString(cursor.getColumnIndex("totalRunsScored"));
+
+                String state = cursor.getString(cursor.getColumnIndex("state"));
+                String extras = cursor.getString(cursor.getColumnIndex("extras"));
+                String playedOvers = cursor.getString(cursor.getColumnIndex("playedOvers"));
+                String battingTeamId = cursor.getString(cursor.getColumnIndex("battingTeamId"));
+                String day = cursor.getString(cursor.getColumnIndex("day"));
+
+                cricketInning = new CricketInning(totalOvers, wickets, isDeclared, bowlingTeamId, isScoredOnSF, matchId,
+                        inningNumber, playing, daySession, totalRunsScored,
+                        state, extras, playedOvers, battingTeamId, day);
+                cricketInning.setId(inningId);
+
+            }
+        } catch (Exception e) {
+            cricketInning = null;
+            e.printStackTrace();
+        }
+        return cricketInning;
+    }
+
     public List<Inning> fetchInningsOfMatch(int matchId1) {
         List<Inning> innings = new ArrayList<>();
         Cursor cursor = null;
@@ -1215,8 +2106,6 @@ public class SportzDatabase {
                         String battingTeamProfilePic = cursor.getString(cursor.getColumnIndex("battingTeamProfilePic"));
                         String bowlingTeamIdProfilePic = cursor.getString(cursor.getColumnIndex("bowlingTeamIdProfilePic"));
                         String currentOverId = cursor.getString(cursor.getColumnIndex("currentOverId"));
-
-
                         inning.setId(inningId);
                         inning.setInningNumber(inningNumber);
                         inning.setTotalRunsScored(totalRunsScored);
@@ -1241,8 +2130,6 @@ public class SportzDatabase {
                         inning.setBattingTeamProfilePic(battingTeamProfilePic);
                         inning.setBowlingTeamIdProfilePic(bowlingTeamIdProfilePic);
                         inning.setCurrentOverId(currentOverId);
-
-
                         innings.add(inning);
                         cursor.moveToNext();
                     }
@@ -1253,6 +2140,387 @@ public class SportzDatabase {
             e.printStackTrace();
         }
         return innings;
+    }
+
+    public List<TeamPlayerProfile> playersOfTeam(int teamId) {
+        List<TeamPlayerProfile> teamPlayerProfiles = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT distinct rs.avatar,(select lower(u.firstName ||' '||u.lastName)) as playerName,u.id as userId,u.email ,lower(av.name) as avatarName,av.profilePicture,cp.jersyNumber as jerseyNumber,lower(cp.speciality) as speciality,rs.requestStatus FROM roster rs " +
+                    "INNER JOIN avatar av on rs.avatar=av.id " +
+                    "INNER JOIN cricket_profile cp on cp.avatar=av.id " +
+                    "INNER JOIN user u on u.id=av.userid " +
+                    "where team='" + teamId + "' order by u.firstName", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+                        TeamPlayerProfile teamPlayerProfile = new TeamPlayerProfile();
+
+                        teamPlayerProfile.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
+                        teamPlayerProfile.setPlayerName(cursor.getString(cursor.getColumnIndex("playerName")));
+                        teamPlayerProfile.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+                        teamPlayerProfile.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+                        teamPlayerProfile.setAvatarName(cursor.getString(cursor.getColumnIndex("avatarName")));
+                        teamPlayerProfile.setProfilePicture(cursor.getString(cursor.getColumnIndex("profilePicture")));
+                        teamPlayerProfile.setJerseyNumber(cursor.getString(cursor.getColumnIndex("jerseyNumber")));
+                        teamPlayerProfile.setSpeciality(cursor.getString(cursor.getColumnIndex("speciality")));
+                        teamPlayerProfile.setRequestStatus(cursor.getString(cursor.getColumnIndex("requestStatus")));
+
+                        teamPlayerProfiles.add(teamPlayerProfile);
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            teamPlayerProfiles = new ArrayList<>();
+            e.printStackTrace();
+        }
+        return teamPlayerProfiles;
+    }
+
+
+    public List<Lineup> fetchMatchLineup(int matchId, int teamId, String inviteStatus, int isInPlayingSquad, int isInPlayingBench) {
+        List<Lineup> lineup = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            String query = "";
+            if (inviteStatus == null) {
+                query = "SELECT ca.id as avatarId,u.id as userId,ca.name as avatarName,(u.firstName || ' ' || u.lastName) as playerName,ca.profilePicture as playerProfilePicture,cs.inviteStatus,cs.teamId,cs.matchId,(cs.position) as playingOrder,cp.speciality,cs.isInPlayingSquad,cs.isInPlayingBench from cricket_selected_team_players cs inner join avatar ca on cs.avatarId= ca.id inner join user u on u.id= ca.userId inner join cricket_profile cp on cp.avatar=ca.id inner join user cau on ca.userId= cau.id WHERE cs.matchId ='" + matchId + "' and cs.teamId='" + teamId + "' and cs.isInPlayingSquad = '" + isInPlayingSquad + "' and cs.isInPlayingBench= '" + isInPlayingBench + "' order by cau.firstName";
+            } else {
+                query = "SELECT ca.id as avatarId,u.id as userId,ca.name as avatarName,(u.firstName || ' ' || u.lastName) as playerName,ca.profilePicture as playerProfilePicture,cs.inviteStatus,cs.teamId,cs.matchId,(cs.position) as playingOrder,cp.speciality,cs.isInPlayingSquad,cs.isInPlayingBench from cricket_selected_team_players cs inner join avatar ca on cs.avatarId= ca.id inner join user u on u.id= ca.userId inner join cricket_profile cp on cp.avatar=ca.id inner join user cau on ca.userId= cau.id WHERE cs.matchId ='" + matchId + "' and cs.teamId='" + teamId + "' and cs.isInPlayingSquad = '" + isInPlayingSquad + "' and cs.inviteStatus = '" + inviteStatus + "' and cs.isInPlayingBench= '" + isInPlayingBench + "' order by cau.firstName";
+            }
+            cursor = db.rawQuery(query, null);
+            if (cursor != null && cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        Lineup p = new Lineup();
+                        p.setAvatarId(cursor.getString(cursor.getColumnIndex("avatarId")));
+                        p.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+                        p.setAvatarName(cursor.getString(cursor.getColumnIndex("avatarName")));
+                        p.setPlayerName(cursor.getString(cursor.getColumnIndex("playerName")));
+                        p.setPlayerProfilePicture(cursor.getString(cursor.getColumnIndex("playerProfilePicture")));
+                        p.setInviteStatus(cursor.getString(cursor.getColumnIndex("inviteStatus")));
+                        p.setTeamId(cursor.getString(cursor.getColumnIndex("teamId")));
+                        p.setMatchId(cursor.getString(cursor.getColumnIndex("matchId")));
+                        p.setOrder(cursor.getString(cursor.getColumnIndex("playingOrder")));
+                        p.setSpeciality(cursor.getString(cursor.getColumnIndex("speciality")));
+                        p.setIsInPlayingSquad(cursor.getString(cursor.getColumnIndex("isInPlayingSquad")));
+                        p.setIsInPlayingBench(cursor.getString(cursor.getColumnIndex("isInPlayingBench")));
+
+                        lineup.add(p);
+
+                        cursor.moveToNext();
+                    }
+                }
+                cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            lineup = new ArrayList<>();
+            e.printStackTrace();
+        }
+        return lineup;
+    }
+
+
+    public MatchTeamRolesModel fetchMatchRolesViewMode(int matchId, int teamId) {
+        MatchTeamRolesModel matchTeamRoles = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT mtr.*, ca.name as captainName, ca.profilePicture as captainProfilePicture, wa.name as wicketKeeperName, wa.profilePicture as wicketKeeperProfilePicture,va.name as viceCaptainName, va.profilePicture as viceCaptainProfilePicture  from match_team_roles mtr left join avatar ca on mtr.CaptainAvatar=ca.id left join avatar wa on mtr.WicketKeeperAvatar=wa.id left join avatar va on mtr.ViceCaptain=va.id  WHERE mtr.matchId = '" + matchId + "' and mtr.teamId='" + teamId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                matchTeamRoles = new MatchTeamRolesModel();
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String viceCaptain = cursor.getString(cursor.getColumnIndex("ViceCaptain"));
+                String captainAvatar = cursor.getString(cursor.getColumnIndex("CaptainAvatar"));
+                String wicketKeeperAvatar = cursor.getString(cursor.getColumnIndex("WicketKeeperAvatar"));
+                String captainName = cursor.getString(cursor.getColumnIndex("captainName"));
+                String captainProfilePicture = cursor.getString(cursor.getColumnIndex("captainProfilePicture"));
+                String wicketKeeperName = cursor.getString(cursor.getColumnIndex("wicketKeeperName"));
+                String wicketKeeperProfilePicture = cursor.getString(cursor.getColumnIndex("wicketKeeperProfilePicture"));
+                String viceCaptainName = cursor.getString(cursor.getColumnIndex("viceCaptainName"));
+                String viceCaptainProfilePicture = cursor.getString(cursor.getColumnIndex("viceCaptainProfilePicture"));
+                matchTeamRoles.setId(id);
+                matchTeamRoles.setMatchId(String.valueOf(matchId));
+                matchTeamRoles.setTeamId(String.valueOf(teamId));
+                matchTeamRoles.setViceCaptain(viceCaptain == null ? "" : viceCaptain);
+                matchTeamRoles.setCaptainAvatar(captainAvatar == null ? "" : captainAvatar);
+                matchTeamRoles.setWicketKeeperAvatar(wicketKeeperAvatar == null ? "" : wicketKeeperAvatar);
+                matchTeamRoles.setCaptainName(captainName == null ? "" : captainName);
+                matchTeamRoles.setViceCaptainName(viceCaptainName == null ? "" : viceCaptainName);
+                matchTeamRoles.setWicketKeeperName(wicketKeeperName == null ? "" : wicketKeeperName);
+                matchTeamRoles.setCaptainProfilePicture(captainProfilePicture == null ? "" : captainProfilePicture);
+                matchTeamRoles.setViceCaptainProfilePicture(viceCaptainProfilePicture == null ? "" : viceCaptainProfilePicture);
+                matchTeamRoles.setWicketKeeperProfilePicture(wicketKeeperProfilePicture == null ? "" : wicketKeeperProfilePicture);
+            }
+        } catch (Exception e) {
+            matchTeamRoles = null;
+            e.printStackTrace();
+        }
+        return matchTeamRoles;
+    }
+
+    public MatchTeamRoles fetchMatchRoles(int matchId, int teamId) {
+        MatchTeamRoles matchTeamRoles = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT *  from match_team_roles mtr  WHERE mtr.matchId = '" + matchId + "' and mtr.teamId='" + teamId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String viceCaptain = cursor.getString(cursor.getColumnIndex("ViceCaptain"));
+                String captainAvatar = cursor.getString(cursor.getColumnIndex("CaptainAvatar"));
+                String wicketKeeperAvatar = cursor.getString(cursor.getColumnIndex("WicketKeeperAvatar"));
+                matchTeamRoles = new MatchTeamRoles(viceCaptain == null ? "" : viceCaptain, String.valueOf(matchId), captainAvatar == null ? "" : captainAvatar, String.valueOf(teamId), wicketKeeperAvatar == null ? "" : wicketKeeperAvatar);
+                matchTeamRoles.setId(id);
+            }
+        } catch (Exception e) {
+            matchTeamRoles = null;
+            e.printStackTrace();
+        }
+        return matchTeamRoles;
+    }
+
+
+    public List<MatchScorerModel> fetchMatchScorers(int matchId, int teamId) {
+        List<MatchScorerModel> matchScorerModels = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery("SELECT ms.scorerId,ms.scorerOrder,ms.inviteStatus,ms.team,ms.matchId, (u.firstName ||' '||u.lastName) as scorerName,gp.profilePicture as userProfilePicture FROM match_scorer ms INNER JOIN user u ON ms.scorerId=u.id INNER JOIN general_profile gp on u.id=gp.user  WHERE ms.matchId= '" + matchId + "' AND ms.team='" + teamId + "' AND ms.inviteStatus='ACCEPTED' order by ms.scorerOrder", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        MatchScorerModel p = new MatchScorerModel();
+                        p.setScorerId(cursor.getString(cursor.getColumnIndex("scorerId")));
+                        p.setScorerOrder(cursor.getString(cursor.getColumnIndex("scorerOrder")));
+                        p.setMatchId(cursor.getString(cursor.getColumnIndex("matchId")));
+                        p.setInviteStatus(cursor.getString(cursor.getColumnIndex("inviteStatus")));
+                        p.setTeam(cursor.getString(cursor.getColumnIndex("team")));
+                        p.setScorerName(cursor.getString(cursor.getColumnIndex("scorerName")));
+                        p.setUserProfilePicture(cursor.getString(cursor.getColumnIndex("userProfilePicture")));
+
+                        matchScorerModels.add(p);
+
+                        cursor.moveToNext();
+                    }
+                }
+                cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            matchScorerModels = new ArrayList<>();
+            e.printStackTrace();
+        }
+        return matchScorerModels;
+    }
+
+
+    public MatchScorer fetchMatchScorerData(int matchId, int teamId, int userId) {
+        MatchScorer matchScorers = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * match_scorer ms WHERE  ms.matchId= '" + matchId + "' AND scorerId='"+userId+"' AND ms.team='" + teamId + "'", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String readStatus = cursor.getString(cursor.getColumnIndex("readStatus"));
+                String scorerOrder = cursor.getString(cursor.getColumnIndex("scorerOrder"));
+                String inviteStatus = cursor.getString(cursor.getColumnIndex("inviteStatus"));
+                String scorerId = cursor.getString(cursor.getColumnIndex("scorerId"));
+                String matchId1 = cursor.getString(cursor.getColumnIndex("matchId"));
+                String inviteSentOn = cursor.getString(cursor.getColumnIndex("inviteSentOn"));
+                String team = cursor.getString(cursor.getColumnIndex("team"));
+                MatchScorer matchScorer = new MatchScorer(readStatus, scorerOrder, inviteStatus, scorerId, matchId1, inviteSentOn, team);
+                matchScorer.setId(id);
+            }
+        } catch (Exception e) {
+            matchScorers = null;
+            e.printStackTrace();
+        }
+        return matchScorers;
+    }
+    public List<MatchScorer> fetchMatchScorerDataByUser(int matchId, int userId) {
+        List<MatchScorer> matchScorers = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * match_scorer ms WHERE  ms.matchId= '" + matchId + "' AND scorerId='"+userId+"'", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+
+                        int id = cursor.getInt(cursor.getColumnIndex("id"));
+                        String readStatus = cursor.getString(cursor.getColumnIndex("readStatus"));
+                        String scorerOrder = cursor.getString(cursor.getColumnIndex("scorerOrder"));
+                        String inviteStatus = cursor.getString(cursor.getColumnIndex("inviteStatus"));
+                        String scorerId = cursor.getString(cursor.getColumnIndex("scorerId"));
+                        String matchId1 = cursor.getString(cursor.getColumnIndex("matchId"));
+                        String inviteSentOn = cursor.getString(cursor.getColumnIndex("inviteSentOn"));
+                        String team = cursor.getString(cursor.getColumnIndex("team"));
+                        MatchScorer matchScorer = new MatchScorer(readStatus, scorerOrder, inviteStatus, scorerId, matchId1, inviteSentOn, team);
+                        matchScorer.setId(id);
+                        matchScorers.add(matchScorer);
+                        cursor.moveToNext();
+                    }
+                }
+                cursor.moveToFirst();
+            }
+        } catch (Exception e) {
+            matchScorers =  new ArrayList<>();
+            e.printStackTrace();
+        }
+        return matchScorers;
+    }
+
+    public JSONObject getMatchLineUp(int eventId, int teamId) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            Match mat = fetchMatchByEventId(eventId);
+            Matches match = fetchDBMatchByMatchId(mat.getId());
+            List<Lineup> lineup = fetchMatchLineup(match.getId(), teamId, null, 0, 0);
+            List<Lineup> lineup2 = fetchMatchLineup(match.getId(), teamId, "ACCEPTED", 1, 0);
+
+            MatchTeamRolesModel roles = fetchMatchRolesViewMode(match.getId(), teamId);
+            List<MatchScorerModel> team1Scorer = fetchMatchScorers(match.getId(), teamId);
+
+
+            String isTeamScoringOnSf = match.getTeam1Id().equals(String.valueOf(teamId)) ? match.getIsTeam1ScoringOnSf() : match.getIsTeam2ScoringOnSf();
+            String checkAvailability = match.getTeam1Id().equals(String.valueOf(teamId)) ? match.getTeam1CheckAvailibility() : match.getTeam2CheckAvailibility();
+
+
+            Gson gson = new Gson();
+            String j = gson.toJson(lineup);
+            String k = gson.toJson(lineup2);
+            String m = gson.toJson(team1Scorer);
+
+            JSONArray available = new JSONArray(j);
+            JSONArray acceptedLineup = new JSONArray(k);
+            JSONArray matchScorer = new JSONArray(m);
+
+            JSONObject captain = new JSONObject();
+            JSONObject viceCaptain = new JSONObject();
+            JSONObject wicketKeeper = new JSONObject();
+            if (roles != null) {
+                captain.put("avatarId", roles.getCaptainAvatar());
+                captain.put("playerName", roles.getCaptainName());
+                captain.put("playerProfilePicture", roles.getCaptainProfilePicture());
+
+
+                viceCaptain.put("avatarId", roles.getViceCaptain());
+                viceCaptain.put("playerName", roles.getViceCaptainName());
+                viceCaptain.put("playerProfilePicture", roles.getViceCaptainProfilePicture());
+
+
+                wicketKeeper.put("avatarId", roles.getWicketKeeperAvatar());
+                wicketKeeper.put("playerName", roles.getWicketKeeperName());
+                wicketKeeper.put("playerProfilePicture", roles.getWicketKeeperProfilePicture());
+            } else {
+                captain.put("avatarId", "");
+                captain.put("playerName", "");
+                captain.put("playerProfilePicture", "");
+
+
+                viceCaptain.put("avatarId", "");
+                viceCaptain.put("playerName", "");
+                viceCaptain.put("playerProfilePicture", "");
+
+
+                wicketKeeper.put("avatarId", "");
+                wicketKeeper.put("playerName", "");
+                wicketKeeper.put("playerProfilePicture", "");
+            }
+            JSONObject matchRoles = new JSONObject();
+
+            matchRoles.put("captain", captain);
+            matchRoles.put("viceCaptain", viceCaptain);
+            matchRoles.put("wicketKeeper", wicketKeeper);
+
+            jsonObject.put("result", 1);
+            jsonObject.put("matchId", match.getId());
+            jsonObject.put("checkAvailability", checkAvailability);
+            jsonObject.put("isTeamScoringOnSf", isTeamScoringOnSf);
+            jsonObject.put("playersAvailability", available);
+            jsonObject.put("lineupPlayers", acceptedLineup);
+            jsonObject.put("matchRoles", matchRoles);
+            jsonObject.put("scorers", matchScorer);
+            jsonObject.put("message", "Match lineup populated successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+
+    }
+
+    public ModelSportTeamList fetchTeamRoster(int teamId, int userId) {
+        ModelSportTeamList modelSportTeamList = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT t.id as teamId,t.owner as ownerId,a.description ,(Select (lower(u.firstName) || ' ' || lower(u.lastName)) from team where owner=t.owner and id=t.id) as ownerName, (Select profilePicture from avatar where avatarType='PLAYER' and id=t.owner) as ownerPic, t.captain as captainId, (Select (lower(u2.firstName) || ' ' || lower(u2.lastName))  from team where captain=t.captain and id=t.id) as captainName, (Select profilePicture from avatar where avatarType='PLAYER' and id=t.captain) as captainPic,t.location,t.avatar as teamAvatarId, lower(a2.name) as teamName,a2.profilePicture,s.sportName,t.isActive,(select count(*) from roster where team=t.id) as totalPlayersInTeam, (select count(distinct avatar) from roster where team=t.id and avatar=(select id from avatar where userId='" + userId + "' and avatarType='PLAYER')) as isTeamMember FROM team t INNER JOIN avatar a ON t.owner=a.id INNER JOIN user u ON a.userId=u.id INNER JOIN avatar a3 ON t.captain=a3.id INNER JOIN user u2 ON a3.userId=u2.id INNER JOIN avatar a2 ON a2.id=t.avatar INNER JOIN sport s ON s.id=a2.sportId WHERE t.isActive=1 AND t.id in (SELECT team from roster r WHERE r.requestStatus='ACCEPTED' and r.avatar in (SELECT id from avatar ra WHERE ra.sportId = a2.sportId)) and t.id='" + teamId + "'", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+
+                    modelSportTeamList = new ModelSportTeamList();
+                    modelSportTeamList.setProfilePicture(cursor.getString(cursor.getColumnIndex("profilePicture")));
+                    modelSportTeamList.setTeamId(cursor.getString(cursor.getColumnIndex("teamId")));
+                    modelSportTeamList.setOwnerId(cursor.getString(cursor.getColumnIndex("ownerId")));
+                    modelSportTeamList.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+                    modelSportTeamList.setOwnerName(cursor.getString(cursor.getColumnIndex("ownerName")));
+                    modelSportTeamList.setOwnerPic(cursor.getString(cursor.getColumnIndex("ownerPic")));
+                    modelSportTeamList.setCaptainId(cursor.getString(cursor.getColumnIndex("captainId")));
+                    modelSportTeamList.setCaptainName(cursor.getString(cursor.getColumnIndex("captainName")));
+                    modelSportTeamList.setCaptainPic(cursor.getString(cursor.getColumnIndex("captainPic")));
+                    modelSportTeamList.setLocation(cursor.getString(cursor.getColumnIndex("location")));
+                    modelSportTeamList.setTeamAvatarId(cursor.getString(cursor.getColumnIndex("teamAvatarId")));
+                    modelSportTeamList.setTeamName(cursor.getString(cursor.getColumnIndex("teamName")));
+                    modelSportTeamList.setSportName(cursor.getString(cursor.getColumnIndex("sportName")));
+                    modelSportTeamList.setIsActive(cursor.getString(cursor.getColumnIndex("isActive")));
+                    modelSportTeamList.setTotalPlayersInTeam(cursor.getString(cursor.getColumnIndex("totalPlayersInTeam")));
+
+                }
+            }
+        } catch (Exception e) {
+            modelSportTeamList = null;
+            e.printStackTrace();
+        }
+        return modelSportTeamList;
+    }
+
+    public JSONObject getTeamProfile(int teamId, int userId) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            ModelSportTeamList teamProfile = fetchTeamRoster(teamId, userId);
+
+            if (teamProfile != null) {
+
+                List<TeamPlayerProfile> teamPlayerProfiles = playersOfTeam(teamId);
+                jsonObject.put("result", 1);
+                jsonObject.put("'message'", "Successfully");
+                Gson gson = new Gson();
+                String j = gson.toJson(teamProfile);
+                String k = gson.toJson(teamPlayerProfiles);
+                JSONObject teamProfileJson = new JSONObject(j);
+                JSONArray teamPlayerProfileJson = new JSONArray(k);
+                teamProfileJson.put("teamProfile", teamPlayerProfileJson);
+                jsonObject.put("data", teamProfileJson);
+            } else {
+                jsonObject.put("result", 0);
+                jsonObject.put("'message'", "Error");
+                jsonObject.put("data", null);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+
+
     }
 
     public Inning fetchInningByInningNumber(int inningNumber1, int matchId1) {
@@ -1504,49 +2772,7 @@ public class SportzDatabase {
         Match match = null;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT m.id,m.description,m.location,m.matchDate,m.tie,m.points,m.leagueId," +
-                    "m.calendarId,m.tossSelection,m.matchType," +
-                    "m.numberOfInnings,m.inviteStatus,m.matchStatus," +
-                    "CASE WHEN (m.matchStatus='NOT STARTED')" +
-                    "THEN m.team1Id ELSE " +
-                    "(select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) " +
-                    "END as team1Id, (select id from cricket_innings where inningNumber=1 and matchId=m.id) as team1InningId," +
-                    " CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN m.team2Id ELSE (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) END as team2Id, " +
-                    "(select id from cricket_innings where inningNumber=2 and matchId=m.id) as team2InningId, " +
-                    "CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam1ScoringOnSf " +
-                    "ELSE (case WHEN (m.team1Id=(select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) " +
-                    "THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam1ScoringOnSf, " +
-                    "CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam2ScoringOnSf " +
-                    "ELSE ( case WHEN (m.team1Id=(select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) " +
-                    "THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam2ScoringOnSf, " +
-                    "CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar " +
-                    "WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') " +
-                    "END AS team1Name, CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar " +
-                    "WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') " +
-                    "END AS team2Name, CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar " +
-                    "WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') " +
-                    "END AS team1AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar " +
-                    "WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') " +
-                    "END AS team2AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) " +
-                    "AND a.avatarType='TEAM') END AS team1ProfilePic, CASE WHEN (m.matchStatus='NOT STARTED') " +
-                    "THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') " +
-                    "ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar " +
-                    "WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') " +
-                    "END AS team2ProfilePic, m.tournamentId,m.matchResultId," +
-                    "(select name from tournament where id=m.tournamentId) as tournamentName," +
-                    "m.tossResultId,m.eventId,m.activeScorerId,m.readStatus,m.numberOfPlayers,m.numberOfOvers," +
-                    "(SELECT startDate from event where id=m.eventId) as matchStartDate FROM matches m WHERE m.eventId= '"
+            cursor = db.rawQuery("SELECT m.id,m.description,m.location,m.matchDate,m.tie,m.points,m.leagueId,m.calendarId,m.tossSelection,m.matchType,m.numberOfInnings,m.inviteStatus,m.matchStatus,CASE WHEN (m.matchStatus='NOT STARTED') THEN m.team1Id ELSE (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) END as team1Id, (select id from cricket_innings where inningNumber=1 and matchId=m.id) as team1InningId, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.team2Id ELSE (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) END as team2Id, (select id from cricket_innings where inningNumber=2 and matchId=m.id) as team2InningId, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam1ScoringOnSf ELSE ( case WHEN (m.team1Id=(select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam1ScoringOnSf, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam2ScoringOnSf ELSE ( case WHEN (m.team1Id=(select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam2ScoringOnSf, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1Name, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2Name, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1ProfilePic, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2ProfilePic, m.tournamentId,m.matchResultId,(select name from tournament where id=m.tournamentId) as tournamentName,m.tossResultId,m.eventId,m.activeScorerId,m.readStatus,m.numberOfPlayers,m.numberOfOvers, (SELECT startDate from event where id=m.eventId) as matchStartDate FROM matches m WHERE m.eventId= '"
                     + id + "'", null);
 
             if (cursor != null && cursor.getCount() > 0) {
@@ -1714,6 +2940,7 @@ public class SportzDatabase {
         }
         return teamSquads;
     }
+
 
     public List<BattingStatViewModel> fetchBattingStats(int inningId1) {
         List<BattingStatViewModel> battingStats = new ArrayList<>();
@@ -2344,13 +3571,29 @@ public class SportzDatabase {
         cv.put("matchId", cricketInning.getMatchId());
         cv.put("inningNumber", cricketInning.getInningNumber());
         cv.put("playing", cricketInning.isPlaying());
-        cv.put("daySession", cricketInning.getDaySession());
+        if (cricketInning.getDaySession() == null) {
+            cv.put("daySession", "");
+        } else {
+            cv.put("daySession", cricketInning.getDaySession());
+        }
+
         cv.put("totalRunsScored", cricketInning.getTotalRunsScored());
-        cv.put("state", cricketInning.getState());
+        if (cricketInning.getState() == null) {
+            cv.put("state", "");
+        } else {
+            cv.put("state", cricketInning.getState());
+        }
+
+
         cv.put("extras", cricketInning.getExtras());
         cv.put("playedOvers", cricketInning.getPlayedOvers());
         cv.put("battingTeamId", cricketInning.getBattingTeamId());
-        cv.put("day", cricketInning.getDay());
+        if (cricketInning.getDay() == null) {
+            cv.put("day", "");
+        } else {
+            cv.put("day", cricketInning.getDay());
+        }
+
         if (cricketInning.getId() > 0) {
             cv.put("id", cricketInning.getId());
             cv.put("syncStatus", "0");
@@ -2406,6 +3649,49 @@ public class SportzDatabase {
         cv.put("team2Id", matches.getTeam2Id());
 
         db.update("matches", cv, "id =\"" + matches.getId() + "\"", null);
+    }
+
+    public void updateCricketSelectedPlayers(CricketSelectedTeamPlayersViewModel cricketSelectedTeamPlayers) {
+        ContentValues cv = new ContentValues();
+        cv.put("id", cricketSelectedTeamPlayers.getId());
+        cv.put("readStatus", cricketSelectedTeamPlayers.getReadStatus());
+        cv.put("invitationSendOn", cricketSelectedTeamPlayers.getInvitationSendOn());
+        cv.put("inviteStatus", cricketSelectedTeamPlayers.getInviteStatus());
+        cv.put("matchId", cricketSelectedTeamPlayers.getMatchId());
+        cv.put("isInPlayingBench", cricketSelectedTeamPlayers.getIsInPlayingBench());
+        cv.put("teamId", cricketSelectedTeamPlayers.getTeamId());
+        cv.put("role", cricketSelectedTeamPlayers.getRole());
+        cv.put("isInPlayingSquad", cricketSelectedTeamPlayers.getIsInPlayingSquad());
+        cv.put("position", cricketSelectedTeamPlayers.getPosition());
+        cv.put("avatarId", cricketSelectedTeamPlayers.getAvatarId());
+        cv.put("invitationAnsweredOn", cricketSelectedTeamPlayers.getInvitationAnsweredOn());
+
+        db.update("cricket_selected_team_players", cv, "id =\"" + cricketSelectedTeamPlayers.getId() + "\"", null);
+    }
+
+    public void updateMatchScorerData(MatchScorer matchScorer) {
+        ContentValues cv = new ContentValues();
+        cv.put("id", matchScorer.getId());
+        cv.put("readStatus", matchScorer.getReadStatus());
+        cv.put("scorerOrder", matchScorer.getScorerOrder());
+        cv.put("inviteStatus", matchScorer.getInviteStatus());
+        cv.put("scorerId", matchScorer.getScorerId());
+        cv.put("matchId", matchScorer.getMatchId());
+        cv.put("inviteSentOn", matchScorer.getInviteSentOn());
+        cv.put("team", matchScorer.getTeam());
+        db.update("match_scorer", cv, "id =\"" + matchScorer.getId() + "\"", null);
+    }
+
+    public void updateMatchTeamRoles(MatchTeamRoles matchTeamRoles) {
+
+        ContentValues cv = new ContentValues();
+        cv.put("id", matchTeamRoles.getId());
+        cv.put("ViceCaptain", matchTeamRoles.getViceCaptain());
+        cv.put("matchId", matchTeamRoles.getMatchId());
+        cv.put("CaptainAvatar", matchTeamRoles.getCaptainAvatar());
+        cv.put("teamId", matchTeamRoles.getTeamId());
+        cv.put("WicketKeeperAvatar", matchTeamRoles.getWicketKeeperAvatar());
+        db.update("match_team_roles", cv, "id =\"" + matchTeamRoles.getId() + "\"", null);
     }
 
     public void updateOverID(CricketOver cricketOver) {
@@ -2561,12 +3847,298 @@ public class SportzDatabase {
             Log.d("error", e.getMessage());
         }
     }
+
+    public void updateSyncStatusForMatchScore(int id) {
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("synced", "1");
+            db.update("MatchScore_Local", cv, "id =\"" + id + "\"", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("error", e.getMessage());
+        }
+    }
+    public void updateSyncStatusForMatchLineup(int id) {
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("synced", "1");
+            db.update("MatchLineup_Local", cv, "id =\"" + id + "\"", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("error", e.getMessage());
+        }
+    }
+    public CheckLineUpModel checkMatchLineupComplete(int matchId,String numberOfPlayers) {
+        CheckLineUpModel checkLineUpModel= null;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery("SELECT mt.id,mt.eventId,mt.team1Id,mt.team2Id,mt.isTeam1ScoringOnSf,mt.isTeam2ScoringOnSf, " +
+                    "(select a.name from team t left join avatar a on t.avatar = a.id where t.id = mt.team1Id) as team1Name," +
+                    "(select a.name from team t left join avatar a on t.avatar = a.id where t.id = mt.team2Id) as team2Name ," +
+                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId =:matchId and isInPlayingSquad=1 and isInPlayingBench=0 " +
+                    "and inviteStatus='ACCEPTED' and teamId=mt.team1Id) >= '"+numberOfPlayers+"') OR " +
+                    "(mt.isTeam1ScoringOnSf=0) THEN 1 ELSE 0 END as isLineupCompleteTeam1 ," +
+                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId =:matchId and isInPlayingSquad=1 " +
+                    "and isInPlayingBench=0 and inviteStatus='ACCEPTED' and teamId=mt.team2Id) >= '"+numberOfPlayers+"') " +
+                    "OR (mt.isTeam2ScoringOnSf=0) THEN 1 ELSE 0 END as isLineupCompleteTeam2 from matches mt where id='"+matchId+"'", null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String eventId = cursor.getString(cursor.getColumnIndex("eventId"));
+                String team1Id = cursor.getString(cursor.getColumnIndex("team1Id"));
+                String team2Id = cursor.getString(cursor.getColumnIndex("team2Id"));
+                String isTeam1ScoringOnSf = cursor.getString(cursor.getColumnIndex("isTeam1ScoringOnSf"));
+                String isTeam2ScoringOnSf = cursor.getString(cursor.getColumnIndex("isTeam2ScoringOnSf"));
+                String team1Name = cursor.getString(cursor.getColumnIndex("team1Name"));
+                String team2Name = cursor.getString(cursor.getColumnIndex("team2Name"));
+                String isLineupCompleteTeam1 = cursor.getString(cursor.getColumnIndex("isLineupCompleteTeam1"));
+                String isLineupCompleteTeam2 = cursor.getString(cursor.getColumnIndex("isLineupCompleteTeam2"));
+
+
+
+                checkLineUpModel.setId(id);
+                checkLineUpModel.setEventId(eventId);
+                checkLineUpModel.setTeam1Id(team1Id);
+                checkLineUpModel.setTeam2Id(team2Id);
+                checkLineUpModel.setIsLineupCompleteTeam1(isLineupCompleteTeam1);
+                checkLineUpModel.setIsLineupCompleteTeam2(isLineupCompleteTeam2);
+                checkLineUpModel.setTeam1Name(team1Name);
+                checkLineUpModel.setTeam2Name(team2Name);
+                checkLineUpModel.setIsTeam1ScoringOnSf(isTeam1ScoringOnSf);
+                checkLineUpModel.setIsTeam2ScoringOnSf(isTeam2ScoringOnSf);
+
+            }
+        } catch (Exception e) {
+            checkLineUpModel = null;
+            e.printStackTrace();
+        }
+        return checkLineUpModel;
+    }
+
+
+    public JSONObject checkForLineUpComplete(int matchId){
+
+        try {
+            JSONObject result = new JSONObject();
+            Match getmatchdata = fetchMatchByMatchId(matchId);
+
+            if (getmatchdata != null) {
+                CheckLineUpModel checkLineUpModel = checkMatchLineupComplete(getmatchdata.getId(), getmatchdata.getNumberOfPlayers());
+
+
+                //get team1 scorer
+                List<MatchScorerModel> team1Scorer = fetchMatchScorers(matchId, Integer.parseInt(getmatchdata.getTeam1Id()));
+            /*$stmt10 = $this->db->prepare("SELECT ms.*, concat(u.firstName,' ',u.lastName) as scorerName,gp.profilePicture FROM match_scorer ms INNER JOIN user u ON ms.scorerId=u.id INNER JOIN general_profile gp on u.id=gp.user  WHERE ms.matchId=:matchId AND ms.team=:team1Id AND ms.inviteStatus='ACCEPTED' order by ms.scorerOrder");
+            $stmt10->execute(array(":team1Id"=>$getmatchdata['team1Id'],":matchId"=>$getmatchdata['id']));
+            if($stmt10->rowCount()>0){
+                $team1Scorer=$stmt10->fetchAll();
+            }*/
+
+                //get team2 scorer
+                List<MatchScorerModel> team2Scorer = fetchMatchScorers(matchId, Integer.parseInt(getmatchdata.getTeam2Id()));
+            /*$stmt11=$this->db->prepare("SELECT ms.*, concat(u.firstName,' ',u.lastName) as scorerName,gp.profilePicture FROM match_scorer ms INNER JOIN user u ON ms.scorerId=u.id INNER JOIN general_profile gp on u.id=gp.user  WHERE ms.matchId=:matchId AND ms.team=:team2Id AND ms.inviteStatus='ACCEPTED' order by ms.scorerOrder");
+            $stmt11->execute(array(":team2Id"=>$getmatchdata['team2Id'],":matchId"=>$getmatchdata['id']));
+            if($stmt11->rowCount()>0){
+                $team2Scorer=$stmt11->fetchAll();
+            }*/
+
+                String team1ScorerString = "";
+                String team2ScorerString = "";
+                MatchScorer scorer1 = fetchMatchScorerData(matchId, Integer.parseInt(getmatchdata.getTeam1Id()), Integer.parseInt(AppUtils.getUserId(context)));
+
+                if (scorer1 != null) {
+                    team1ScorerString = "YES";
+                } else {
+                    team1ScorerString = "NO";
+                }
+                MatchScorer scorer2 = fetchMatchScorerData(matchId, Integer.parseInt(getmatchdata.getTeam2Id()), Integer.parseInt(AppUtils.getUserId(context)));
+                if (scorer2 != null) {
+                    team2ScorerString = "YES";
+                } else {
+                    team2ScorerString = "NO";
+                }
+                String message = "";
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("isLineUpCompleteForBothTeams", "1");
+                jsonObject.put("isScorerForTeam1", team1ScorerString);
+                jsonObject.put("isScorerForTeam2", team2ScorerString);
+                jsonObject.put("isTeam1ScoringOnSf", getmatchdata.getIsTeam1ScoringOnSf());
+                jsonObject.put("isTeam2ScoringOnSf", getmatchdata.getIsTeam2ScoringOnSf());
+                Gson gson = new Gson();
+                String cd= gson.toJson(team1Scorer);
+                String cd2= gson.toJson(team2Scorer);
+                JSONArray dd= new JSONArray(cd);
+                JSONArray dd1= new JSONArray(cd2);
+                jsonObject.put("team1Scorer", dd);
+                jsonObject.put("team2Scorer", dd1);
+
+                JSONArray jsonObject2 = new JSONArray();
+
+
+                jsonObject.put("isLineUpCompleteForBothTeams",  (checkLineUpModel.getIsLineupCompleteTeam1().equals("1") && checkLineUpModel.getIsLineupCompleteTeam2().equals("1")) ? 1 : 0);
+
+                if (checkLineUpModel.getIsLineupCompleteTeam1().equals("0"))
+                {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("teamId",checkLineUpModel.getTeam1Id());
+                    jsonObject1.put("teamName",checkLineUpModel.getTeam1Name());
+                    jsonObject1.put("isLineupCompleteTeam",checkLineUpModel.getIsLineupCompleteTeam1());
+
+                    jsonObject2.put(jsonObject1);
+
+
+                    message = "Playing lineup not yet completed for "+checkLineUpModel.getTeam1Name();
+                }
+                if (checkLineUpModel.getIsLineupCompleteTeam2().equals("0")) {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("teamId",checkLineUpModel.getTeam2Id());
+                    jsonObject1.put("teamName",checkLineUpModel.getTeam2Name());
+                    jsonObject1.put("isLineupCompleteTeam",checkLineUpModel.getIsLineupCompleteTeam2());
+
+                    jsonObject2.put(jsonObject1);
+                    message = "Playing lineup not yet completed for "+checkLineUpModel.getTeam1Name();
+                }
+                if (checkLineUpModel.getIsLineupCompleteTeam1().equals("0") && checkLineUpModel.getIsLineupCompleteTeam2().equals("0")) {
+                    message = "Playing lineup not yet completed for both teams";
+                }
+                if (checkLineUpModel.getIsLineupCompleteTeam1().equals("1") && checkLineUpModel.getIsLineupCompleteTeam2().equals("1")) {
+                    message = "Playing lineup completed for both teams";
+                }
+                jsonObject.put("NotCompleteData",jsonObject2);
+
+
+                result.put("result","1");
+                result.put("message",message);
+                result.put("data",jsonObject);
+
+                JSONObject scoringData= new JSONObject();
+                scoringData.put("isAllowedToScore",0);
+                scoringData.put("isActiveScorerForAnotherMatch",0);
+
+                JSONObject otherMatchDetails = new JSONObject();
+                JSONObject team1=  new JSONObject();
+
+                JSONObject team2=  new JSONObject();
+
+                       /* $result =
+                [
+                "result" =>1,
+                        "message" =>$message,
+                        "data" =>$f,
+                        "scoringData" =>[
+                "isAllowedToScore" =>"0",
+                        "isActiveScorerForAnotherMatch" =>"0",
+                        "otherMatchDetails" =>[
+                "team1" =>[
+                "name" =>"",
+                        "id" =>"",
+                        "avatarId" =>"",
+                        "profilePicture" =>""
+                            ],
+                "team2" =>[
+                "name" =>"",
+                        "id" =>"",
+                        "avatarId" =>"",
+                        "profilePicture" =>""
+                            ],
+                "dateTime" =>""
+                        ]
+                    ]
+                ];*/
+
+                List<MatchScorer>  matchScorerData = fetchMatchScorerDataByUser(matchId, Integer.parseInt(AppUtils.getUserId(context)));
+                OtherMatchDetail otherMatchDetail= fetchOtherMatch(matchId, Integer.parseInt(AppUtils.getUserId(context)));
+
+                if (matchScorerData.size()>0)
+                {
+                    scoringData.put("isAllowedToScore",1);
+                    if (otherMatchDetail != null)
+                    {
+                        scoringData.put("isActiveScorerForAnotherMatch",1);
+
+                        team1.put("id",otherMatchDetail.getTeam1Id());
+                        team1.put("avatarId",otherMatchDetail.getTeam1AvatarId());
+                        team1.put("name",otherMatchDetail.getTeam1Name());
+                        team1.put("profilePicture",otherMatchDetail.getTeam1ProfilePicture());
+
+
+
+                        team2.put("id",otherMatchDetail.getTeam2Id());
+                        team2.put("avatarId",otherMatchDetail.getTeam2AvatarId());
+                        team2.put("name",otherMatchDetail.getTeam2Name());
+                        team2.put("profilePicture",otherMatchDetail.getTeam2ProfilePicture());
+
+                        otherMatchDetails.put("dateTime",otherMatchDetail.getStartDate());
+                        otherMatchDetails.put("team1",team1);
+                        otherMatchDetails.put("team2",team2);
+                    }
+                }
+                scoringData.put("otherMatchDetails",otherMatchDetails);
+                result.put("scoringData",scoringData);
+
+            } else {
+                result.put("result","0");
+                result.put("message","match not found");
+            }
+            return  result;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return  new JSONObject();
+        }
+    }
+
+
     public void updateSecondInningServerID(int id, int serverId) {
         //SQLiteDatabase data = this.getWritableDatabase();
         try {
             ContentValues cv = new ContentValues();
             cv.put("serverinningId", serverId);
             db.update("SecondInning_local", cv, "id =\"" + id + "\"", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("error", e.getMessage());
+        }
+    }
+
+    public void updateBothInningIdForMatch(int firstinnningId, int secondinnningId, int matchID) {
+        try {
+            int newInningId = 0;
+            int oldInningId = 0;
+            List<Inning> cricketInnings = fetchInningsOfMatch(matchID);
+            for (int j = 0; j < cricketInnings.size(); j++) {
+                if (cricketInnings.get(j).getInningNumber() == "1") {
+                    if (firstinnningId > 0) {
+                        newInningId = firstinnningId;
+                    }
+
+                } else if (cricketInnings.get(j).getInningNumber() == "2") {
+                    if (secondinnningId > 0) {
+                        newInningId = secondinnningId;
+                    }
+                }
+                oldInningId = cricketInnings.get(j).getId();
+                if (newInningId > 0 && oldInningId > 0) {
+                    db.execSQL("update cricket_balls set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+                    db.execSQL("update cricket_innings set id = " + newInningId + " where id = " + oldInningId + "");
+                    db.execSQL("update cricket_overs set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+                    db.execSQL("update cricket_scorecard set inningId = " + newInningId + " where inningId = " + oldInningId + "");
+                    List<CricketBallJson> ballJsons = fetchBallDataJson();
+
+                    for (int i = 0; i < ballJsons.size(); i++) {
+                        JSONObject ballJson = new JSONObject(ballJsons.get(i).getJsonData());
+                        int ballInningId = Integer.parseInt(ballJson.getString("inningId"));
+                        if (ballInningId == oldInningId) {
+                            ballJson.put("inningId", newInningId);
+                            updateBallJson(ballJsons.get(i).getId(), ballJson.toString());
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("error", e.getMessage());
@@ -2585,8 +4157,8 @@ public class SportzDatabase {
 
             for (int i = 0; i < ballJsons.size(); i++) {
                 JSONObject ballJson = new JSONObject(ballJsons.get(i).getJsonData());
-                 int ballInningId = Integer.parseInt(ballJson.getString("inningId"));
-                if(ballInningId== oldInningId) {
+                int ballInningId = Integer.parseInt(ballJson.getString("inningId"));
+                if (ballInningId == oldInningId) {
                     ballJson.put("inningId", newInningId);
                     updateBallJson(ballJsons.get(i).getId(), ballJson.toString());
                 }

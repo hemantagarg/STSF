@@ -1,6 +1,6 @@
-package com.app.sportzfever.models.dbmodels;
+package com.app.sportzfever.models.dbmodels.apimodel;
 
-public class CricketSelectedTeamPlayers {
+public class CricketSelectedTeamPlayersViewModel {
 
     private int id;
     private String readStatus;
@@ -13,7 +13,24 @@ public class CricketSelectedTeamPlayers {
     private String isInPlayingSquad;
     private String position;
     private String avatarId;
-    private String invitationAnsweredOn;
+    private String userId;
+    private String  deviceToken;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
 
     public int getId() {
         return id;
@@ -111,20 +128,7 @@ public class CricketSelectedTeamPlayers {
         this.invitationAnsweredOn = invitationAnsweredOn;
     }
 
+    private String invitationAnsweredOn;
 
 
-    public CricketSelectedTeamPlayers (String readStatus,String invitationSendOn,String inviteStatus,String matchId,String isInPlayingBench,String teamId,String role,String isInPlayingSquad,String position,String avatarId,String id,String invitationAnsweredOn)
-    {
-        this.readStatus=readStatus;
-        this.invitationSendOn=invitationSendOn;
-                this.inviteStatus=inviteStatus;
-        this.matchId=matchId;
-        this.isInPlayingBench=isInPlayingBench;
-        this.teamId=teamId;
-        this.role=role;
-        this.isInPlayingSquad=isInPlayingSquad;
-        this.position=position;
-        this.avatarId=avatarId;
-        this.invitationAnsweredOn=invitationAnsweredOn;
-    }
 }

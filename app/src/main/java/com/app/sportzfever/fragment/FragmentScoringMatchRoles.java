@@ -26,14 +26,18 @@ import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
+import com.app.sportzfever.models.dbmodels.MatchScoreJson;
+import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.SportzDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -46,6 +50,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     private Activity context;
     View mView;
     private Button btn_create_team;
+    private SportzDatabase db;
     public static FragmentScoringMatchRoles fragment_friend_request;
     private final String TAG = FragmentScoringMatchRoles.class.getSimpleName();
     private String teamId = "", eventId = "", playersCount = "", title = "";
@@ -105,6 +110,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
+        setDatabase();
         getBundle();
         manageHeaderView();
     }
@@ -631,7 +637,8 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             jsonObject.put("newPlayersToAddInTeam", jo.getJSONArray("newPlayersToAddInTeam"));
 
             JSONArray scorers = new JSONArray();
-            if (spinner_select_scorer.getSelectedItemPosition() == 0) {
+            if (spinner_select_scorer.getSelectedItemPosition() == 0)
+            {
                 if (selectedUserList != null) {
                     JSONArray userList = selectedUserList.getJSONArray("userList");
                     for (int i = 0; i < userList.length(); i++) {
@@ -683,6 +690,31 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 captain.put("avatar", id);
                 jsonObject.put("wicketKeeper", captain);
             }*/
+           int jlength = scorers.length();
+            if(jlength==0)
+            {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("order", "1");
+                jsonObject1.put("userId", "-1");
+                scorers.put(jsonObject1);
+                jlength++;
+            }
+            if(jlength == 1)
+            {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("order", "2");
+                jsonObject1.put("userId", "-1");
+                scorers.put(jsonObject1);
+                jlength++;
+            }
+            if(jlength == 2)
+            {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("order", "3");
+                jsonObject1.put("userId", "-1");
+                scorers.put(jsonObject1);
+
+            }
             jsonObject.put("scorers", scorers);
             jsonObject.put("matchId", matchId);
             jsonObject.put("isTeamScoringOnSf", "1");
@@ -696,9 +728,85 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         return jsonObject;
     }
 
-    private void sentInvite() {
+    public void setDatabase() {
+        db = null;
         try {
-            if (AppUtils.isNetworkAvailable(context)) {
+            db = new SportzDatabase(context);
+            db.open();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally {
+            db.close();
+        }
+    }
+
+    int matchlineuptoupdate=0;
+    private void syncData() {
+        boolean allTosSyced= true;
+        if (db != null) {
+            try {
+                db.open();
+                List<MatchScoreJson> matchlineUpJson= db.fetchMatchLineup_LocalJson();
+                for (int i = 0; i < matchlineUpJson.size(); i++) {
+                    if (matchlineUpJson.get(i).getSynced() == 0) {
+                        allTosSyced=false;
+                        JSONObject jsonObject = new JSONObject(matchlineUpJson.get(i).getJsonData());
+                        if (AppUtils.isNetworkAvailable(context)) {
+                            matchlineuptoupdate=matchlineUpJson.get(i).getId();
+                            String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
+                            new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                        } else {
+                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally {
+                db.close();
+            }
+        }
+    }
+
+    private void sentInvite() {
+        try
+        {
+            if(db!= null)
+            {
+                db.open();
+                db.manageLineUpForMatch(jsonObject);
+                db.insertMatchLineupData(jsonObject.toString());
+                syncData();
+                if (isTeam1) {
+                    FragmentScoringPrepareLineup fragmentupcomingdetals = new FragmentScoringPrepareLineup();
+                    Bundle b = new Bundle();
+                    b.putString("eventId", eventId);
+                    b.putString("matchId", matchId);
+                    b.putString("team1Id", team2Id);
+                    b.putString("team2Id", teamId);
+                    b.putString("isScorerForTeam1", isScorerForTeam1);
+                    b.putString("isScorerForTeam2", isScorerForTeam2);
+                    b.putString("team1ScorerName", this.b.getString("team1ScorerName"));
+                    b.putString("team2ScorerName", this.b.getString("team2ScorerName"));
+                    b.putBoolean("isTeam1", false);
+                    b.putString("playersCount", playersCount);
+                    b.putString("title", team2Name);
+                    b.putString("overs", overs);
+                    b.putString("team1Name", team2Name);
+                    b.putString("team2Name", team1Name);
+                    fragmentupcomingdetals.setArguments(b);
+                    fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
+                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+                } else {
+                    checkLineupComplete();
+                }
+            }
+            /*if (AppUtils.isNetworkAvailable(context)) {
 
                 //   http://sfscoring.betasportzfever.com/getMatchLineup/23/77/479a44a634f82b0394f78352d302ec36
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
@@ -706,7 +814,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -807,31 +915,17 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     @Override
     public void onPostSuccess(int method, JSONObject response) {
         try {
-            if (method == 1) {
+            if (method == 1)
+            {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    if (isTeam1) {
-                        FragmentScoringPrepareLineup fragmentupcomingdetals = new FragmentScoringPrepareLineup();
-                        Bundle b = new Bundle();
-                        b.putString("eventId", eventId);
-                        b.putString("matchId", matchId);
-                        b.putString("team1Id", team2Id);
-                        b.putString("team2Id", teamId);
-                        b.putString("isScorerForTeam1", isScorerForTeam1);
-                        b.putString("isScorerForTeam2", isScorerForTeam2);
-                        b.putString("team1ScorerName", this.b.getString("team1ScorerName"));
-                        b.putString("team2ScorerName", this.b.getString("team2ScorerName"));
-                        b.putBoolean("isTeam1", false);
-                        b.putString("playersCount", playersCount);
-                        b.putString("title", team2Name);
-                        b.putString("team1Name", team2Name);
-                        b.putString("team2Name", team1Name);
-                        fragmentupcomingdetals.setArguments(b);
-                        fragmentupcomingdetals.setTargetFragment(FragmentScoringMatchRoles.this, AppConstant.FRAGMENT_CODE);
-                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
-                    } else {
-                        checkLineupComplete();
+                    if(db !=null)
+                    {
+                        db.open();
+                        db.updateSyncStatusForMatchLineup(matchlineuptoupdate);
+                        syncData();
                     }
+
                 } else {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
