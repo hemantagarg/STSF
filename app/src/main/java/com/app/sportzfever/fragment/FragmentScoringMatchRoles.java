@@ -21,13 +21,11 @@ import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelSportTeamList;
 import com.app.sportzfever.models.dbmodels.MatchScoreJson;
-import com.app.sportzfever.models.dbmodels.TossJson;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.SportzDatabase;
@@ -342,7 +340,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -757,7 +755,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                             String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
                             new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                         } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                      //      Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -843,14 +841,22 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
     private void checkLineupComplete() {
         try {
-            if (AppUtils.isNetworkAvailable(context)) {
+            if (db != null) {
+                db.open();
+                JSONObject jObject = db.checkForLineUpComplete(Integer.parseInt(matchId));
+                if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    JSONObject data = jObject.getJSONObject("data");
+                    checkLineupCompleteAndMove(data, jObject);
+                }
+            }
+           /* if (AppUtils.isNetworkAvailable(context)) {
                 // http://sfscoring.sf.com/CheckForLineUpComplete/87
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.CHECK_FOR_LNEUP_COMPLETE + matchId;
                 new CommonAsyncTaskHashmap(5, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }

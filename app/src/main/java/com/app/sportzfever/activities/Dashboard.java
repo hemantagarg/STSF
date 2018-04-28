@@ -66,6 +66,7 @@ import com.app.sportzfever.models.DrawerListModel;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
 import com.app.sportzfever.utils.CircleTransform;
+import com.app.sportzfever.utils.SportzDatabase;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -102,8 +103,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private ProgressBar api_loading_request;
     private ImageView image_search;
     /*
-      * Fragment instance
-      * */
+     * Fragment instance
+     * */
     private static Dashboard mInstance;
     private TextView text_score, text_gallery, text_logout, text_matches, text_tournament, text_sprtsavtar, text_myprofile;
     public static volatile Fragment currentFragment;
@@ -769,7 +770,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
                         AppUtils.setFriendList(context, "");
                         AppUtils.setChatList(context, "");
                         AppUtils.setAuthToken(context, "");
-
+                        cleanDatabase();
                         Intent intent = new Intent(context, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -788,6 +789,21 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
         alertDialog.show();
 
+    }
+
+    private void cleanDatabase() {
+        SportzDatabase db;
+        db = new SportzDatabase(context);
+        try {
+            if (db != null) {
+                db.open();
+                db.cleanDataBase(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
     }
 
 
@@ -888,12 +904,12 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
 
 
     /*
-         * To add fragment to a tab. tag -> Tab identifier fragment -> Fragment to
-         * show, false when we switch tabs, or adding first fragment to a tab true
-         * when we are pushing more fragment into navigation stack. shouldAdd ->
-         * Should add to fragment navigation stack (mStacks.get(tag)). false when we
-         * are switching tabs (except for the first time) true in all other cases.
-         */
+     * To add fragment to a tab. tag -> Tab identifier fragment -> Fragment to
+     * show, false when we switch tabs, or adding first fragment to a tab true
+     * when we are pushing more fragment into navigation stack. shouldAdd ->
+     * Should add to fragment navigation stack (mStacks.get(tag)). false when we
+     * are switching tabs (except for the first time) true in all other cases.
+     */
     public void pushFragments(String tag, Fragment fragment, boolean ShouldAdd) {
         if (fragment != null && currentFragment != fragment) {
             currentFragment = fragment;
@@ -948,7 +964,7 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //  https://sfscoring.betasportzfever.com/getMenu/1/479a44a634f82b0394f78352d302ec36
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GETMENU + AppUtils.getUserId(context) + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
@@ -970,8 +986,8 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
     private void popFragments() {
         /*
          * // * Select the last fragment in current tab's stack.. which will be
-		 * shown after the fragment transaction given below
-		 */
+         * shown after the fragment transaction given below
+         */
         Fragment fragment = mStacks.get(mCurrentTab).elementAt(
                 mStacks.get(mCurrentTab).size() - 1);
 
@@ -980,9 +996,9 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
         mStacks.get(mCurrentTab).remove(fragment);
         if (mStacks != null && mStacks.get(mCurrentTab) != null && !mStacks.get(mCurrentTab).isEmpty())
             currentFragment = mStacks.get(mCurrentTab).lastElement();
-           /*
+        /*
          * Remove the top fragment
-		 */
+         */
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
         // ft.add(R.id.realtabcontent, fragment);
@@ -1004,14 +1020,14 @@ public class Dashboard extends AppCompatActivity implements ApiResponse {
             if (mStacks.get(mCurrentTab).size() > 0 &&
                     ((BaseFragment) mStacks.get(mCurrentTab).lastElement()).onBackPressed() == false) {
                 AppUtils.showErrorLog(TAG, "onBackPressed");
-            /*
-             * top fragment in current tab doesn't handles back press, we can do
-			 * our thing, which is
-			 *
-			 * if current tab has only one fragment in stack, ie first fragment
-			 * is showing for this tab. finish the activity else pop to previous
-			 * fragment in stack for the same tab
-			 */
+                /*
+                 * top fragment in current tab doesn't handles back press, we can do
+                 * our thing, which is
+                 *
+                 * if current tab has only one fragment in stack, ie first fragment
+                 * is showing for this tab. finish the activity else pop to previous
+                 * fragment in stack for the same tab
+                 */
                 if (mStacks.get(mCurrentTab).size() == 1) {
                     AppUtils.showLog(TAG, "mStacks.get(mCurrentTab).size() == 1");
                     super.onBackPressed();

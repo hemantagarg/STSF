@@ -48,7 +48,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:10.2.6'
     compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile 'com.wdullaer:materialdatetimepicker:2.5.0'
-
+    // Stetho core
     testCompile 'junit:junit:4.12'
     compile files('libs/httpmime-4.2.5.jar')
     compile project(':simple-crop-image-lib')

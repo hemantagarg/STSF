@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.app.sportzfever.models.ModelSportTeamList;
@@ -67,8 +68,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.text.TextUtils;
 
 public class SportzDatabase {
     private static final String TAG = "SportzDatabase";
@@ -1852,7 +1851,7 @@ public class SportzDatabase {
                     "left join avatar a1 on t1.avatar = a1.id " +
                     "left join avatar a2 on t2.avatar = a2.id " +
                     "left join event mte on mt.eventId = mte.id " +
-                    "where activeScorerId ='"+userId+"' and mt.id != '"+matchId+"' AND mt.matchStatus != 'ENDED'", null);
+                    "where activeScorerId ="+userId+" and mt.id != "+matchId+" AND mt.matchStatus = 'STARTED'", null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
@@ -2077,7 +2076,7 @@ public class SportzDatabase {
                     "JOIN team t2 on t2.id=c.bowlingTeamId " +
                     "JOIN avatar a1 on a1.id= t1.avatar " +
                     "JOIN avatar a2 on a2.id=t2.avatar " +
-                    "JOIN matches m on m.id=c.matchId WHERE m.id='" + matchId1 + "'", null);
+                    "JOIN matches m on m.id=c.matchId WHERE m.id=" + matchId1 + "", null);
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast()) {
@@ -2326,7 +2325,7 @@ public class SportzDatabase {
         MatchScorer matchScorers = null;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT * match_scorer ms WHERE  ms.matchId= '" + matchId + "' AND scorerId='"+userId+"' AND ms.team='" + teamId + "'", null);
+            cursor = db.rawQuery("SELECT * from match_scorer ms WHERE  ms.matchId= " + matchId + " AND scorerId="+userId+" AND ms.team=" + teamId + "", null);
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
 
@@ -2338,8 +2337,8 @@ public class SportzDatabase {
                 String matchId1 = cursor.getString(cursor.getColumnIndex("matchId"));
                 String inviteSentOn = cursor.getString(cursor.getColumnIndex("inviteSentOn"));
                 String team = cursor.getString(cursor.getColumnIndex("team"));
-                MatchScorer matchScorer = new MatchScorer(readStatus, scorerOrder, inviteStatus, scorerId, matchId1, inviteSentOn, team);
-                matchScorer.setId(id);
+                matchScorers = new MatchScorer(readStatus, scorerOrder, inviteStatus, scorerId, matchId1, inviteSentOn, team);
+                matchScorers.setId(id);
             }
         } catch (Exception e) {
             matchScorers = null;
@@ -2351,7 +2350,7 @@ public class SportzDatabase {
         List<MatchScorer> matchScorers = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT * match_scorer ms WHERE  ms.matchId= '" + matchId + "' AND scorerId='"+userId+"'", null);
+            cursor = db.rawQuery("SELECT * from match_scorer ms WHERE  ms.matchId= " + matchId + " AND scorerId="+userId+"", null);
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast()) {
@@ -3869,19 +3868,19 @@ public class SportzDatabase {
         }
     }
     public CheckLineUpModel checkMatchLineupComplete(int matchId,String numberOfPlayers) {
-        CheckLineUpModel checkLineUpModel= null;
+        CheckLineUpModel checkLineUpModel= new CheckLineUpModel();
         Cursor cursor = null;
 
         try {
             cursor = db.rawQuery("SELECT mt.id,mt.eventId,mt.team1Id,mt.team2Id,mt.isTeam1ScoringOnSf,mt.isTeam2ScoringOnSf, " +
                     "(select a.name from team t left join avatar a on t.avatar = a.id where t.id = mt.team1Id) as team1Name," +
                     "(select a.name from team t left join avatar a on t.avatar = a.id where t.id = mt.team2Id) as team2Name ," +
-                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId =:matchId and isInPlayingSquad=1 and isInPlayingBench=0 " +
-                    "and inviteStatus='ACCEPTED' and teamId=mt.team1Id) >= '"+numberOfPlayers+"') OR " +
+                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId ="+matchId+" and isInPlayingSquad=1 and isInPlayingBench=0 " +
+                    "and inviteStatus='ACCEPTED' and teamId=mt.team1Id) >= "+numberOfPlayers+") OR " +
                     "(mt.isTeam1ScoringOnSf=0) THEN 1 ELSE 0 END as isLineupCompleteTeam1 ," +
-                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId =:matchId and isInPlayingSquad=1 " +
-                    "and isInPlayingBench=0 and inviteStatus='ACCEPTED' and teamId=mt.team2Id) >= '"+numberOfPlayers+"') " +
-                    "OR (mt.isTeam2ScoringOnSf=0) THEN 1 ELSE 0 END as isLineupCompleteTeam2 from matches mt where id='"+matchId+"'", null);
+                    "CASE WHEN ((select count(id) from cricket_selected_team_players WHERE matchId ="+matchId+" and isInPlayingSquad=1 " +
+                    "and isInPlayingBench=0 and inviteStatus='ACCEPTED' and teamId=mt.team2Id) >= "+numberOfPlayers+") " +
+                    "OR (mt.isTeam2ScoringOnSf=0) THEN 1 ELSE 0 END as isLineupCompleteTeam2 from matches mt where id="+matchId+"", null);
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
 
@@ -4804,18 +4803,16 @@ public class SportzDatabase {
             cricketInning.setPlayedOvers(playedOverss);
 
             updateInningData(cricketInning);
-
-            updateInningData(cricketInning);
             List<Inning> inningsForThisMatch = fetchInningsOfMatch(matchId);
             String tie = "";
             String matchWinner = "";
 
             if (inningsForThisMatch.size() > 1) {
-                if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) == Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored())) && (totalWickets == (numberOfPlayers - 1) || playedOverss == cricketInning.getTotalOvers())) {
+                if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) == Integer.parseInt(inningsForThisMatch.get(1).getTotalRunsScored())) && (totalWickets == (numberOfPlayers - 1) || playedOverss == cricketInning.getTotalOvers())) {
                     tie = "YES";
-                } else if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) < Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()))) {
+                } else if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) < Integer.parseInt(inningsForThisMatch.get(1).getTotalRunsScored()))) {
                     matchWinner = inningsForThisMatch.get(1).getBattingTeamId();
-                } else if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) < Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored())) && (totalWickets == (numberOfPlayers - 1) || playedOverss == cricketInning.getTotalOvers())) {
+                } else if ((Integer.parseInt(inningsForThisMatch.get(0).getTotalRunsScored()) > Integer.parseInt(inningsForThisMatch.get(1).getTotalRunsScored())) && (totalWickets == (numberOfPlayers - 1) || playedOverss == cricketInning.getTotalOvers())) {
                     matchWinner = inningsForThisMatch.get(0).getBattingTeamId();
                 }
             }
