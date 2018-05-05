@@ -1,6 +1,8 @@
 package com.app.sportzfever.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,7 +24,6 @@ import com.app.sportzfever.iclasses.HeaderViewManager;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
 import com.app.sportzfever.interfaces.ConnectionDetector;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.HeaderViewClickListener;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.interfaces.OnCustomItemClicListener;
@@ -112,9 +113,9 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         HeaderViewManager.getInstance().InitializeHeaderView(null, view_about, manageHeaderClick());
         HeaderViewManager.getInstance().setHeading(true, "Upcoming Matches");
         HeaderViewManager.getInstance().setLeftSideHeaderView(true, R.drawable.left_arrow);
-        HeaderViewManager.getInstance().setRightSideHeaderView(false, R.drawable.search);
+        HeaderViewManager.getInstance().setRightSideHeaderView(true, R.drawable.refresh);
         HeaderViewManager.getInstance().setLogoView(false);
-        HeaderViewManager.getInstance().setProgressLoader(false, false);
+        HeaderViewManager.getInstance().setProgressLoader(false, true);
 
     }
 
@@ -133,16 +134,44 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             @Override
             public void onClickOfHeaderRightView() {
                 //   Toast.makeText(mActivity, "Coming Soon", Toast.LENGTH_SHORT).show();
+                showSyncDialog();
             }
         };
     }
 
 
+    private void showSyncDialog() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                getActivity());
+
+        alertDialog.setTitle("Sync !");
+
+        alertDialog.setMessage("Do you want to sync your match settings?");
+
+        alertDialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getOffLineData(true);
+                    }
+                });
+
+        alertDialog.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setDatabase();
-        getOffLineData();
+        getOffLineData(false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -155,6 +184,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         manageHeaderView();
         setlistener();
     }
+
     public void setDatabase() {
         db = null;
         try {
@@ -306,12 +336,16 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             e.printStackTrace();
         }
     }
+
     //Function to get all the data needed for offline scoring
-    private void getOffLineData() {
+    private void getOffLineData(boolean isShowLoader) {
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.GET_OffLineDATA + AppUtils.getAuthToken(context);
-                new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbjectNoProgress(url, new JSONObject(), Request.Method.GET);
+                if (isShowLoader)
+                    new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
+                else
+                    new CommonAsyncTaskHashmap(10, context, this).getqueryJsonbjectNoProgress(url, new JSONObject(), Request.Method.GET);
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
@@ -502,9 +536,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     skipCount = skipCount - 10;
                     loading = true;
                 }
-            }
-            else if(position == 10)
-            {
+            } else if (position == 10) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     JSONObject data = jObject.getJSONObject("data");
                     JSONArray avatars = data.getJSONArray("avatar");
@@ -593,7 +625,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         sportTableRecord.add(matchObj);
                     }
                     for (int i = 0; i < cricketprofiles.length(); i++) {
-                        JSONObject cricketprofile= cricketprofiles.getJSONObject(i);
+                        JSONObject cricketprofile = cricketprofiles.getJSONObject(i);
                         Gson gson = new Gson();
                         CricketProfile cricketprofileObj = gson.fromJson(cricketprofile.toString(), CricketProfile.class);
                         Log.e("response", cricketprofileObj.toString());
@@ -661,7 +693,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                         cricketScoreCardTableRecord.add(cricketScoreCardObj);
                     }
 
-                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord,sportTableRecord,cricketprofileTableRecord);
+                    InsertDataInDb(userTableRecord, avatarTableRecord, cricketSelectedTeamPlayerTableRecord, eventTableRecord, generalProfileTableRecord, matchesTableRecord, matchScorerTableRecord, matchTeamRolesTableRecord, rosterTableRecord, teamTableRecord, cricketBallTableRecord, cricketInningTableRecord, cricketOverTableRecord, cricketScoreCardTableRecord, sportTableRecord, cricketprofileTableRecord);
 
 
                     //JSONObject match = data.getJSONObject("match");
@@ -675,15 +707,15 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
             e.printStackTrace();
         }
     }
+
     //lalit code for offline scoring
     // Inserting the data fetched from server
-    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord ,List<Sport> sports,List<CricketProfile> cricketProfile) {
+    private void InsertDataInDb(List<User> userTableRecord, List<Avatar> avatarTableRecord, List<CricketSelectedTeamPlayers> cricketSelectedTeamPlayerTableRecord, List<Event> eventTableRecord, List<GeneralProfile> generalProfileTableRecord, List<Matches> matchesTableRecord, List<MatchScorer> matchScorerTableRecord, List<MatchTeamRoles> matchTeamRolesTableRecord, List<Roster> rosterTableRecord, List<com.app.sportzfever.models.dbmodels.Team> teamTableRecord, List<CricketBall> cricketBallTableRecord, List<CricketInning> cricketInningTableRecord, List<CricketOver> cricketOverTableRecord, List<CricketScoreCard> cricketScoreCardTableRecord, List<Sport> sports, List<CricketProfile> cricketProfile) {
 
         try {
-            if (db != null)
-            {
+            if (db != null) {
                 db.open();
-                List<String> locallyStartedMatchId =  db.cleanDataBase(false);
+                List<String> locallyStartedMatchId = db.cleanDataBase(false);
                 for (int i = 0; i < userTableRecord.size(); i++) {
                     db.insertUser(userTableRecord.get(i));
                 }
@@ -697,24 +729,20 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                     db.insertRoster(rosterTableRecord.get(i));
                 }
                 for (int i = 0; i < matchTeamRolesTableRecord.size(); i++) {
-                    if( !locallyStartedMatchId.contains(matchTeamRolesTableRecord.get(i).getMatchId())) {
+                    if (!locallyStartedMatchId.contains(matchTeamRolesTableRecord.get(i).getMatchId())) {
                         db.insertMatchTeamRoles(matchTeamRolesTableRecord.get(i));
                     }
                 }
-                for (int i = 0; i < matchScorerTableRecord.size(); i++)
-                {
-                   if( !locallyStartedMatchId.contains(matchScorerTableRecord.get(i).getMatchId())) {
-                       db.insertMatchScorer(matchScorerTableRecord.get(i));
-                   }
-                }
-                List<String> eventIds =new ArrayList<>();
-                for (int i = 0; i < matchesTableRecord.size(); i++)
-                {
-                    if( !locallyStartedMatchId.contains(matchesTableRecord.get(i).getId())) {
-                        db.insertMatchData(matchesTableRecord.get(i));
+                for (int i = 0; i < matchScorerTableRecord.size(); i++) {
+                    if (!locallyStartedMatchId.contains(matchScorerTableRecord.get(i).getMatchId())) {
+                        db.insertMatchScorer(matchScorerTableRecord.get(i));
                     }
-                    else
-                    {
+                }
+                List<String> eventIds = new ArrayList<>();
+                for (int i = 0; i < matchesTableRecord.size(); i++) {
+                    if (!locallyStartedMatchId.contains(matchesTableRecord.get(i).getId())) {
+                        db.insertMatchData(matchesTableRecord.get(i));
+                    } else {
                         eventIds.add(matchesTableRecord.get(i).getEventId());
                     }
                 }
@@ -727,8 +755,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
 
 
                 for (int i = 0; i < eventTableRecord.size(); i++) {
-                    if (!eventIds.contains(eventTableRecord.get(i).getId()))
-                    {
+                    if (!eventIds.contains(eventTableRecord.get(i).getId())) {
                         db.insertEventData(eventTableRecord.get(i));
                     }
                 }
@@ -738,7 +765,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
                 }
 
                 for (int i = 0; i < cricketSelectedTeamPlayerTableRecord.size(); i++) {
-                    if(!locallyStartedMatchId.contains(cricketSelectedTeamPlayerTableRecord.get(i).getMatchId())) {
+                    if (!locallyStartedMatchId.contains(cricketSelectedTeamPlayerTableRecord.get(i).getMatchId())) {
                         db.insertCricketSelectedTeamPlayer(cricketSelectedTeamPlayerTableRecord.get(i));
                     }
                 }

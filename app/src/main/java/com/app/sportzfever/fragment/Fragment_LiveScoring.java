@@ -40,22 +40,9 @@ import com.app.sportzfever.models.BattingStats;
 import com.app.sportzfever.models.BowlingStats;
 import com.app.sportzfever.models.ModelLiveInnings;
 import com.app.sportzfever.models.ModelRecentBall;
-import com.app.sportzfever.models.dbmodels.Avatar;
-import com.app.sportzfever.models.dbmodels.CricketBall;
 import com.app.sportzfever.models.dbmodels.CricketBallJson;
-import com.app.sportzfever.models.dbmodels.CricketInning;
-import com.app.sportzfever.models.dbmodels.CricketOver;
-import com.app.sportzfever.models.dbmodels.CricketScoreCard;
-import com.app.sportzfever.models.dbmodels.CricketSelectedTeamPlayers;
-import com.app.sportzfever.models.dbmodels.Event;
-import com.app.sportzfever.models.dbmodels.GeneralProfile;
 import com.app.sportzfever.models.dbmodels.MatchScoreJson;
-import com.app.sportzfever.models.dbmodels.MatchScorer;
-import com.app.sportzfever.models.dbmodels.MatchTeamRoles;
-import com.app.sportzfever.models.dbmodels.Matches;
-import com.app.sportzfever.models.dbmodels.Roster;
 import com.app.sportzfever.models.dbmodels.TossJson;
-import com.app.sportzfever.models.dbmodels.User;
 import com.app.sportzfever.models.dbmodels.apimodel.StartSecondInningResponseModel;
 import com.app.sportzfever.models.dbmodels.apimodel.UniverseResponseModel;
 import com.app.sportzfever.utils.AppConstant;
@@ -148,7 +135,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         if (AppUtils.isNetworkAvailable(context)) {
             syncToss();
         } else {
-            Toast.makeText(context, "Toss Not Synced", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context, "Toss Not Synced", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -1841,7 +1828,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (AppUtils.isNetworkAvailable(context)) {
                         syncData();
                     } else {
-                        Toast.makeText(context, "Not Synced", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(context, "Not Synced", Toast.LENGTH_SHORT).show();
                     }
                     //Hemanta code for live scoring
                    /* if (AppUtils.isNetworkAvailable(context))
