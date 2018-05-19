@@ -54,6 +54,7 @@ public class Splash extends AppCompatActivity implements ApiResponse {
 
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                openNextScreen();
             }
         } catch (Exception e) {
             e.printStackTrace();

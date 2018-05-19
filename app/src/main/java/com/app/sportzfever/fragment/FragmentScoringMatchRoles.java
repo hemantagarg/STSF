@@ -117,7 +117,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        setTargetFragment(null,-1);
+        setTargetFragment(null, -1);
     }
 
     private void init() {
@@ -340,7 +340,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, null, Request.Method.GET);
 
             } else {
-            //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -635,8 +635,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
             jsonObject.put("newPlayersToAddInTeam", jo.getJSONArray("newPlayersToAddInTeam"));
 
             JSONArray scorers = new JSONArray();
-            if (spinner_select_scorer.getSelectedItemPosition() == 0)
-            {
+            if (spinner_select_scorer.getSelectedItemPosition() == 0) {
                 if (selectedUserList != null) {
                     JSONArray userList = selectedUserList.getJSONArray("userList");
                     for (int i = 0; i < userList.length(); i++) {
@@ -688,30 +687,26 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                 captain.put("avatar", id);
                 jsonObject.put("wicketKeeper", captain);
             }*/
-           int jlength = scorers.length();
-            if(jlength==0)
-            {
+            int jlength = scorers.length();
+            if (jlength == 0) {
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("order", "1");
                 jsonObject1.put("userId", "-1");
                 scorers.put(jsonObject1);
                 jlength++;
             }
-            if(jlength == 1)
-            {
+            if (jlength == 1) {
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("order", "2");
                 jsonObject1.put("userId", "-1");
                 scorers.put(jsonObject1);
                 jlength++;
             }
-            if(jlength == 2)
-            {
+            if (jlength == 2) {
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("order", "3");
                 jsonObject1.put("userId", "-1");
                 scorers.put(jsonObject1);
-
             }
             jsonObject.put("scorers", scorers);
             jsonObject.put("matchId", matchId);
@@ -739,43 +734,39 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
         }
     }
 
-    int matchlineuptoupdate=0;
+    int matchlineuptoupdate = 0;
+
     private void syncData() {
-        boolean allTosSyced= true;
+        boolean allTosSyced = true;
         if (db != null) {
             try {
                 db.open();
-                List<MatchScoreJson> matchlineUpJson= db.fetchMatchLineup_LocalJson();
+                List<MatchScoreJson> matchlineUpJson = db.fetchMatchLineup_LocalJson();
                 for (int i = 0; i < matchlineUpJson.size(); i++) {
                     if (matchlineUpJson.get(i).getSynced() == 0) {
-                        allTosSyced=false;
+                        allTosSyced = false;
                         JSONObject jsonObject = new JSONObject(matchlineUpJson.get(i).getJsonData());
                         if (AppUtils.isNetworkAvailable(context)) {
-                            matchlineuptoupdate=matchlineUpJson.get(i).getId();
+                            matchlineuptoupdate = matchlineUpJson.get(i).getId();
                             String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
                             new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                         } else {
-                      //      Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            //      Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 db.close();
             }
         }
     }
 
     private void sentInvite() {
-        try
-        {
-            if(db!= null)
-            {
+        try {
+            if (db != null) {
                 db.open();
                 db.manageLineUpForMatch(jsonObject);
                 db.insertMatchLineupData(jsonObject.toString());
@@ -921,12 +912,10 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
     @Override
     public void onPostSuccess(int method, JSONObject response) {
         try {
-            if (method == 1)
-            {
+            if (method == 1) {
                 if (response.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    if(db !=null)
-                    {
+                    if (db != null) {
                         db.open();
                         db.updateSyncStatusForMatchLineup(matchlineuptoupdate);
                         syncData();
@@ -1036,8 +1025,8 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
 
             JSONObject team1 = otherMatchDetails.getJSONObject("team1");
             JSONObject team2 = otherMatchDetails.getJSONObject("team2");
-            JSONObject dateTime = otherMatchDetails.getJSONObject("dateTime");
-            String time = dateTime.getString("date") + " " + dateTime.getString("ShortMonthName") + " " + dateTime.getString("year");
+            String time = otherMatchDetails.optString("dateTime");
+            // String time = dateTime.getString("date") + " " + dateTime.getString("ShortMonthName") + " " + dateTime.getString("year");
 
             String message = "You are active score for a match on " + "\n" + time + "\nbetween\n" +
                     team1.getString("name") + "\nvs\n" + team2.getString("name") + "\n" + "Please complete that match then you can start this match scoring";

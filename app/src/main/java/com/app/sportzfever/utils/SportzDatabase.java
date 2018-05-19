@@ -881,7 +881,7 @@ public class SportzDatabase {
             cursor = db.rawQuery("SELECT cs.* ,u.id as userId,  u.deviceToken as deviceToken from cricket_selected_team_players cs " +
                     "left join avatar a on cs.avatarId=a.id " +
                     "left join user u on a.userId=u.id " +
-                    "where teamId ='" + teamId + "' and matchId='" + matchId + "'", null);
+                    "where teamId =" + teamId + " and matchId=" + matchId + "", null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
@@ -1113,7 +1113,6 @@ public class SportzDatabase {
                             isInPlayingSquad = lineup.getIsInPlayingSquad();
                             isInPlayingBench = lineup.getIsInBench();
                         }
-
                         previousLineUpEntry.setPosition(newOrder);
                         previousLineUpEntry.setRole(newRole);
                         previousLineUpEntry.setIsInPlayingSquad(isInPlayingSquad);
@@ -2265,7 +2264,7 @@ public class SportzDatabase {
         MatchTeamRoles matchTeamRoles = null;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT *  from match_team_roles mtr  WHERE mtr.matchId = '" + matchId + "' and mtr.teamId='" + teamId + "'", null);
+            cursor = db.rawQuery("SELECT *  from match_team_roles mtr  WHERE mtr.matchId = " + matchId + " and mtr.teamId=" + teamId + "", null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
@@ -3662,7 +3661,7 @@ public class SportzDatabase {
         cv.put("avatarId", cricketSelectedTeamPlayers.getAvatarId());
         cv.put("invitationAnsweredOn", cricketSelectedTeamPlayers.getInvitationAnsweredOn());
 
-        db.update("cricket_selected_team_players", cv, "id =\"" + cricketSelectedTeamPlayers.getId() + "\"", null);
+        db.update("cricket_selected_team_players", cv, "avatarId =" + cricketSelectedTeamPlayers.getAvatarId() + "", null);
     }
 
     public void updateMatchScorerData(MatchScorer matchScorer) {

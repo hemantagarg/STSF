@@ -152,6 +152,7 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         alertDialog.setPositiveButton("YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        getServicelistRefresh();
                         getOffLineData(true);
                     }
                 });
