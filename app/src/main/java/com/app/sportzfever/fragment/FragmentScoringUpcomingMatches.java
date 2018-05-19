@@ -3,6 +3,7 @@ package com.app.sportzfever.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.adapter.AdapterSoringUpcomingMatches;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.iclasses.HeaderViewManager;
+import com.app.sportzfever.iclasses.SyncDataToServer;
 import com.app.sportzfever.interfaces.ApiResponse;
 import com.app.sportzfever.interfaces.ChoiceDialogClickListener;
 import com.app.sportzfever.interfaces.ConnectionDetector;
@@ -172,7 +174,6 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setDatabase();
-        getOffLineData(false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         list_request = (RecyclerView) view.findViewById(R.id.list_request);
@@ -184,6 +185,9 @@ public class FragmentScoringUpcomingMatches extends BaseFragment implements ApiR
         arrayList = new ArrayList<>();
         manageHeaderView();
         setlistener();
+        Intent intent = new Intent(context, SyncDataToServer.class);
+        context.startService(intent);
+        getOffLineData(false);
     }
 
     public void setDatabase() {

@@ -41,7 +41,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
     private ImageView image_back, image_refresh;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private JSONObject data;
+    private JSONObject data = new JSONObject();
     public static FragmentSoringMatchDetails fragment_teamJoin_request;
     private final String TAG = FragmentSoringMatchDetails.class.getSimpleName();
     private String avtarid = "";
@@ -104,8 +104,12 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         arrayteama = new ArrayList<>();
         getBundle();
-
-        getServicelistRefresh();
+        adapterViewPager = new ViewPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(adapterViewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+        setlistener();
+        //  getServicelistRefresh();
     }
 
     public void updatedData(String data) {
@@ -259,7 +263,7 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     Fragment_LiveScoring tab21 = new Fragment_LiveScoring();
                     Bundle b21 = new Bundle();
                     b21.putString("eventId", avtarid);
-                    b21.putString("data", data.toString());
+                    //  b21.putString("data", data.toString());
                     b21.putString("IsScorerForTeam2", IsScorerForTeam2);
                     tab21.setArguments(b21);
                     return tab21;
@@ -268,15 +272,15 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
                     Fragment_Scoring_ScorecardLive_match tab2 = new Fragment_Scoring_ScorecardLive_match();
                     Bundle b = new Bundle();
                     b.putString("eventId", avtarid);
-                    b.putString("data", data.toString());
+                    //  b.putString("data", data.toString());
                     tab2.setArguments(b);
 
                     return tab2;
                 case 2: // Fragment # 1 - This will show SecondFragment
                     Fragment_Match_TeamDetail fragmentMatchTeamDetail = new Fragment_Match_TeamDetail();
                     Bundle b112 = new Bundle();
-                    b112.putString("avtarid", avtarid);
-                    b112.putString("data", data.toString());
+                    b112.putString("eventId", avtarid);
+                    //  b112.putString("data", data.toString());
                     fragmentMatchTeamDetail.setArguments(b112);
                     return fragmentMatchTeamDetail;
                 default:
@@ -318,12 +322,12 @@ public class FragmentSoringMatchDetails extends BaseFragment implements ApiRespo
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
+                /*   HashMap<String, Object> hm = new HashMap<>();*/
                 String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, new JSONObject(), Request.Method.GET);
 
             } else {
-                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();

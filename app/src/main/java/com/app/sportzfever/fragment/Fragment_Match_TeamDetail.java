@@ -25,6 +25,7 @@ import com.app.sportzfever.interfaces.OnCustomItemClicListener;
 import com.app.sportzfever.models.ModelUpcomingTeamName;
 import com.app.sportzfever.utils.AppConstant;
 import com.app.sportzfever.utils.AppUtils;
+import com.app.sportzfever.utils.SportzDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,8 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
 
     public static Fragment_Match_TeamDetail fragment_teamJoin_request;
     private final String TAG = Fragment_Match_TeamDetail.class.getSimpleName();
-    private String avtarid = "";
+    private String eventId = "";
+    private SportzDatabase db;
 
     public static Fragment_Match_TeamDetail getInstance() {
         if (fragment_teamJoin_request == null)
@@ -66,7 +68,7 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
         arrayteama = new ArrayList<>();
         arrayListBowling = new ArrayList<>();
         b = getArguments();
-
+        setDatabase();
         return view_about;
     }
 
@@ -77,14 +79,31 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
         Dashboard.getInstance().manageFooterVisibitlity(false);
     }
 
+    private void setDatabase() {
+        db = null;
+        try {
+            db = new SportzDatabase(context);
+            db.open();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally {
+            db.close();
+        }
+    }
+
+
     private void getBundle() {
         try {
             Bundle bundle = getArguments();
             if (bundle != null) {
-                avtarid = bundle.getString("eventId");
-                String maindata = bundle.getString("data");
+                eventId = bundle.getString("eventId");
+                db.open();
+                String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
 
-                JSONObject data = new JSONObject(maindata);
+                JSONObject data1 = new JSONObject(str);
+                JSONObject data = data1.getJSONObject("data");
+
                 JSONObject team1 = data.getJSONObject("team1");
                 JSONObject team2 = data.getJSONObject("team2");
 
@@ -236,8 +255,8 @@ public class Fragment_Match_TeamDetail extends BaseFragment implements ApiRespon
         try {
             if (AppUtils.isNetworkAvailable(context)) {
                 //    http://sfscoring.betasportzfever.com/getNotifications/155/efc0c68e-8bb5-11e7-8cf8-008cfa5afa52
-             /*   HashMap<String, Object> hm = new HashMap<>();*/
-                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + avtarid + "/" + AppUtils.getAuthToken(context);
+                /*   HashMap<String, Object> hm = new HashMap<>();*/
+                String url = JsonApiHelper.BASEURL + JsonApiHelper.UPCOMINGMATCHDETAILS + eventId + "/" + AppUtils.getAuthToken(context);
                 new CommonAsyncTaskHashmap(1, context, this).getqueryNoProgress(url);
 
             } else {

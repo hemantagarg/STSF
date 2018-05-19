@@ -200,9 +200,10 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                 JSONObject data = jsonObject.getJSONObject("data");
                 int inningId = data.getInt("inningId");
                 db.insertTossDataLocal(match.toString(), inningId);
-
-                syncToss();
+                db.insertMatchScoreData(match.toString());
                 TossResultAndStartScoring(jsonObject);
+                syncToss();
+
             }
 
             //online scoring
@@ -228,12 +229,12 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             db.close();
         }
     }
-    TossJson tossdata=null;
-    private void syncToss()
-    {
-        tossdata=null;
-        if (AppUtils.isNetworkAvailable(context))
-        {
+
+    TossJson tossdata = null;
+
+    private void syncToss() {
+        tossdata = null;
+        if (AppUtils.isNetworkAvailable(context)) {
             if (db != null) {
                 try {
                     db.open();
@@ -242,11 +243,11 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                         if (tossJsons.get(i).getServerinningId() == 0) {
                             JSONObject jsonObject = new JSONObject(tossJsons.get(i).getJsonData());
                             if (AppUtils.isNetworkAvailable(context)) {
-                                tossdata=tossJsons.get(i);
+                                tossdata = tossJsons.get(i);
                                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
                                 new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                             } else {
-                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                                //   Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         }
@@ -269,9 +270,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             if (position == 1) {
                 Dashboard.getInstance().setProgressLoader(false);
                 TossResultAndStartScoring(jObject);
-            }
-            else if(position==11)
-            {
+            } else if (position == 11) {
 
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
@@ -288,8 +287,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             db.close();
         }
     }

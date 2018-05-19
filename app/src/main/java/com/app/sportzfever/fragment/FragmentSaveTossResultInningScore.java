@@ -19,7 +19,6 @@ import com.app.sportzfever.R;
 import com.app.sportzfever.activities.Dashboard;
 import com.app.sportzfever.aynctask.CommonAsyncTaskHashmap;
 import com.app.sportzfever.interfaces.ApiResponse;
-import com.app.sportzfever.interfaces.GlobalConstants;
 import com.app.sportzfever.interfaces.JsonApiHelper;
 import com.app.sportzfever.models.dbmodels.MatchScoreJson;
 import com.app.sportzfever.models.dbmodels.TossJson;
@@ -326,6 +325,11 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 JSONObject jObject = db.saveScoreForMatch(match);
                 Dashboard.getInstance().setProgressLoader(false);
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
+                    matchScoreDataIdToUodate = db.insertMatchScoreData(match.toString());
+                    if (AppUtils.isNetworkAvailable(context)) {
+                        String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
+                        new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, match, Request.Method.POST);
+                    }
                     context.onBackPressed();
                     if (isTeam1ScoringOnSf.equals("0") && isTeam2ScoringOnSf.equals("0")) {
                         FragmentUpcomingMatchDetails fragmentupcomingdetals = new FragmentUpcomingMatchDetails();
@@ -344,13 +348,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-                matchScoreDataIdToUodate = db.insertMatchScoreData(match.toString());
-                if (AppUtils.isNetworkAvailable(context)) {
-                    String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
-                    new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, match, Request.Method.POST);
-                } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
-                }
+
             }
 
         } catch (Exception e) {
@@ -375,7 +373,7 @@ public class FragmentSaveTossResultInningScore extends BaseFragment implements A
                 JSONObject data = jsonObject.getJSONObject("data");
                 int inningId = data.getInt("inningId");
                 db.insertTossDataLocal(match.toString(), inningId);
-
+                matchScoreDataIdToUodate = db.insertMatchScoreData(match.toString());
                 syncToss();
                 TossResultAndStartScoring(jsonObject);
             }

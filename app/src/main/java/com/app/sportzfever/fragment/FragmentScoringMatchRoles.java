@@ -749,7 +749,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                         if (AppUtils.isNetworkAvailable(context)) {
                             matchlineuptoupdate = matchlineUpJson.get(i).getId();
                             String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
-                            new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
+                            new CommonAsyncTaskHashmap(1, context, this).getqueryJsonbjectNoProgress(url, jsonObject, Request.Method.POST);
                         } else {
                             //      Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
@@ -918,7 +918,7 @@ public class FragmentScoringMatchRoles extends BaseFragment implements OnCustomI
                     if (db != null) {
                         db.open();
                         db.updateSyncStatusForMatchLineup(matchlineuptoupdate);
-                        syncData();
+             //           syncData();
                     }
 
                 } else {

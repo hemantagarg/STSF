@@ -135,7 +135,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
         if (AppUtils.isNetworkAvailable(context)) {
             syncToss();
         } else {
-          //  Toast.makeText(context, "Toss Not Synced", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(context, "Toss Not Synced", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -144,9 +144,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
     private void startScoring() {
-        try
-        {
-            if(db!=null) {
+        try {
+            if (db != null) {
                 db.open();
                 String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
                 getMatchDetailsAndCheckInning(str);
@@ -154,8 +153,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             db.close();
         }
     }
@@ -266,6 +264,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             e.printStackTrace();
         }
     }
+
     public void setDatabase() {
         db = null;
         try {
@@ -284,6 +283,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             db.open();
             if (modelInnings != null) {
                 if (getUserVisibleHint() && !isDialogVisible) {
+                    Log.e("refreshDatacalled", "onRefreshData");
                     String str = db.getMatchStatisticsDetails(Integer.parseInt(eventId));
                     getMatchDetailsAndCheckInning(str);
                 }
@@ -486,6 +486,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void selectBowlerBatsmanList(ModelLiveInnings modelInnings, JSONArray team1Squad, JSONArray team2Squad, boolean isAllOut) {
         try {
+            Log.e("selectBowlerBatsmanList", "selectBowlerBatsmanList");
             listNewBatsmanId.clear();
             listNewBatsmanName.clear();
             if (modelInnings != null) {
@@ -750,6 +751,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     private void selectNewBatsmanBowlerDialog(final boolean isAllOut, final String bowlingTeamId) {
         try {
+            Log.e("selectNewBatsmanBowlerDialog", "selectNewBatsmanBowlerDialog");
             isDialogVisible = true;
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -802,8 +804,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                         if (spinnerBatsmanTwo.getSelectedItemPosition() != 0 && spinnerBatsmanOne.getSelectedItemPosition() != 0
                                 && spinnerBowler.getSelectedItemPosition() != 0) {
                             if (spinnerBatsmanOne.getSelectedItemPosition() != spinnerBatsmanTwo.getSelectedItemPosition()) {
-                                addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
                                 isDialogVisible = false;
+                                dialog.cancel();
+                                dialog.dismiss();
+                                addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                                dialog.cancel();
                                 dialog.dismiss();
                             } else {
                                 Toast.makeText(context, "Please select different Batsman", Toast.LENGTH_SHORT).show();
@@ -814,8 +819,11 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     } else {
                         if (spinnerBatsmanOne.getSelectedItemPosition() != 0
                                 && spinnerBowler.getSelectedItemPosition() != 0) {
-                            addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
                             isDialogVisible = false;
+                            dialog.cancel();
+                            dialog.dismiss();
+                            addNewBowlerBatsman(spinnerBatsmanOne.getSelectedItemPosition(), spinnerBatsmanTwo.getSelectedItemPosition(), spinnerBowler.getSelectedItemPosition(), isAllOut);
+                            dialog.cancel();
                             dialog.dismiss();
                         } else {
                             Toast.makeText(context, "Please select Bowler and Batsman", Toast.LENGTH_SHORT).show();
@@ -1828,7 +1836,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (AppUtils.isNetworkAvailable(context)) {
                         syncData();
                     } else {
-                      //  Toast.makeText(context, "Not Synced", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(context, "Not Synced", Toast.LENGTH_SHORT).show();
                     }
                     //Hemanta code for live scoring
                    /* if (AppUtils.isNetworkAvailable(context))
@@ -1853,10 +1861,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     // TODO: 2/20/2018 Remove progress bar for this when calling api
     // TODO: 2/20/2018 Call this function on ok button and when mobile is connected with internet.
     // TODO: 2/20/2018 Remove manual calling(a sync button has been added on ui)
-    private void syncData()
-    {
-        if(syncToss())
-        {
+    private void syncData() {
+        if (syncToss()) {
             if (db != null) {
                 try {
                     db.open();
@@ -1875,7 +1881,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SYNC_BALL;
                                 new CommonAsyncTaskHashmap(11, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                             } else {
-                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                                //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         }
@@ -1891,6 +1897,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
 
     //Function to get match details and check inning(Hemanta's code used for check inning)
     private void getMatchDetailsAndCheckInning(String str) throws JSONException {
+        Log.e("getMatchDetailsAndCheckInning", "getMatchDetailsAndCheckInning");
         JSONObject jObject = new JSONObject(str);
         data = jObject.getJSONObject("data");
         AppUtils.setScoringData(context, data.toString());
@@ -1957,7 +1964,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 jsonObject.put("matchId", matchId);
 
                 int inningId = Integer.parseInt(dd.getData().getInningId());
-                db.insertSecondInningDataLocal(jsonObject.toString(),inningId);
+                db.insertSecondInningDataLocal(jsonObject.toString(), inningId);
                 syncToss();
             } catch (Exception e) {
                 Log.e("dd", e.getMessage());
@@ -2140,13 +2147,26 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             } else if (position == 8) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     context.onBackPressed();
-                    Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
-                    Bundle b = new Bundle();
-                    b.putString("eventId", eventId);
-                    fragmentupcomingdetals.setArguments(b);
+                    if (AppUtils.isNetworkAvailable(context)) {
 
-                    Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+                        Fragment_PastMatch_Details fragmentupcomingdetals = new Fragment_PastMatch_Details();
+                        Bundle b = new Bundle();
+                        b.putString("eventId", eventId);
+                        fragmentupcomingdetals.setArguments(b);
+                        Dashboard.getInstance().pushFragments(AppConstant.CURRENT_SELECTED_TAB, fragmentupcomingdetals, true);
+                    } else {
+                        AppUtils.customAlertDialogWithoutTitle(context, "The Match has Ended", "OK", new ChoiceDialogClickListener() {
+                            @Override
+                            public void onClickOfPositive() {
+                                context.onBackPressed();
+                            }
 
+                            @Override
+                            public void onClickOfNegative() {
+                                context.onBackPressed();
+                            }
+                        });
+                    }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
@@ -2155,9 +2175,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             //lalit code for offline scoring
             else if (position == 10) {
 
-            }
-            else if (position == 11)
-            {
+            } else if (position == 11) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
                     db.updateBallServerID(Integer.parseInt(jObject.getString("localDbId")), Integer.parseInt(data.getString("id")));
@@ -2165,9 +2183,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if(position==12)
-            {
+            } else if (position == 12) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
 
@@ -2179,9 +2195,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if(position==13)
-            {
+            } else if (position == 13) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     data = jObject.getJSONObject("data");
 
@@ -2193,9 +2207,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if(position==15)
-            {
+            } else if (position == 15) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
 
                     JSONObject data = jObject.getJSONObject("data");
@@ -2205,7 +2217,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                     if (db != null) {
                         db.open();
                         db.updateSyncStatusForMatchScore(matchScoreJsonToUpdate.getId());
-                        db.updateBothInningIdForMatch(firstinningId,secondinningId, Integer.parseInt(matchId));
+                        db.updateBothInningIdForMatch(firstinningId, secondinningId, Integer.parseInt(matchId));
 
                     }
                     syncToss();
@@ -2213,8 +2225,7 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if(position==16) {
+            } else if (position == 16) {
                 if (jObject.getString("result").equalsIgnoreCase("1")) {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
                     if (db != null) {
@@ -2236,34 +2247,38 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
             db.close();
         }
     }
-    TossJson tossdata=null;
-    TossJson secondInningdata=null;
+
+    TossJson tossdata = null;
+    TossJson secondInningdata = null;
     MatchScoreJson matchScoreJsonToUpdate = null;
-    int matchlineuptoupdate=0;
-    private boolean syncToss()
-    {
-        boolean allTosSyced= true;
-        tossdata=null;
+    int matchlineuptoupdate = 0;
+
+    private boolean syncToss() {
+        boolean allTosSyced = true;
+        tossdata = null;
         if (db != null) {
             try {
                 db.open();
+              /*  Intent intent = new Intent(context, SyncDataToServer.class);
+                intent.putExtra("matchId",matchId);
+                context.startService(intent);*/
 
-                List<MatchScoreJson> matchlineUpJson= db.fetchMatchLineup_LocalJson();
+                List<MatchScoreJson> matchlineUpJson = db.fetchMatchLineup_LocalJson();
                 for (int i = 0; i < matchlineUpJson.size(); i++) {
                     if (matchlineUpJson.get(i).getSynced() == 0) {
-                        allTosSyced=false;
+                        allTosSyced = false;
                         JSONObject jsonObject = new JSONObject(matchlineUpJson.get(i).getJsonData());
                         if (AppUtils.isNetworkAvailable(context)) {
-                            matchlineuptoupdate=matchlineUpJson.get(i).getId();
+                            matchlineuptoupdate = matchlineUpJson.get(i).getId();
                             String url = JsonApiHelper.BASEURL + JsonApiHelper.MANAGE_LINEUP_MATCH;
                             new CommonAsyncTaskHashmap(16, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                         } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
                 }
-                if(allTosSyced) {
+                if (allTosSyced) {
                     List<TossJson> tossJsons = db.fetchTossDataJson();
                     for (int i = 0; i < tossJsons.size(); i++) {
                         if (tossJsons.get(i).getServerinningId() == 0) {
@@ -2274,45 +2289,41 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
                                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_TOSS;
                                 new CommonAsyncTaskHashmap(12, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                             } else {
-                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         }
                     }
                 }
-                if(allTosSyced)
-                {
+                if (allTosSyced) {
                     List<MatchScoreJson> matchScoreJsons = db.fetchMatchScore_LocalJson();
                     for (int i = 0; i < matchScoreJsons.size(); i++) {
-                        if (matchScoreJsons.get(i).getSynced() == 0)
-                        {
-                            allTosSyced=false;
+                        if (matchScoreJsons.get(i).getSynced() == 0) {
+                            allTosSyced = false;
                             JSONObject jsonObject = new JSONObject(matchScoreJsons.get(i).getJsonData());
                             if (AppUtils.isNetworkAvailable(context)) {
-                                matchScoreJsonToUpdate=matchScoreJsons.get(i);
+                                matchScoreJsonToUpdate = matchScoreJsons.get(i);
                                 String url = JsonApiHelper.BASEURL + JsonApiHelper.SAVE_SCORERS_FOR_MATCH;
                                 new CommonAsyncTaskHashmap(15, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                             } else {
-                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                             //   Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         }
                     }
                 }
-                if(allTosSyced)
-                {
+                if (allTosSyced) {
                     List<TossJson> secondInningJsons = db.fetchSecondInningDataJson();
                     for (int i = 0; i < secondInningJsons.size(); i++) {
-                        if (secondInningJsons.get(i).getServerinningId() == 0)
-                        {
-                            allTosSyced=false;
+                        if (secondInningJsons.get(i).getServerinningId() == 0) {
+                            allTosSyced = false;
                             JSONObject jsonObject = new JSONObject(secondInningJsons.get(i).getJsonData());
                             if (AppUtils.isNetworkAvailable(context)) {
-                                secondInningdata=secondInningJsons.get(i);
+                                secondInningdata = secondInningJsons.get(i);
                                 String url = JsonApiHelper.BASEURL + JsonApiHelper.STARTSECONDINNING;
                                 new CommonAsyncTaskHashmap(13, context, this).getqueryJsonbject(url, jsonObject, Request.Method.POST);
                             } else {
-                                Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+                           //     Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         }
@@ -2329,8 +2340,8 @@ public class Fragment_LiveScoring extends BaseFragment implements ApiResponse, O
     }
 
 
-
     private void checkInning(JSONArray innings, JSONArray team1Squad, JSONArray team2Squad) {
+        Log.e("checkInning", "checkInning");
         try {
             if (innings.length() == 1) {
                 if (innings.getJSONObject(0).getString("playing").equals("1")) {
