@@ -2019,6 +2019,50 @@ public class SportzDatabase {
         return cricketInning;
     }
 
+    public CricketInning fetchInningByLocalId(int id) {
+        CricketInning cricketInning = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from cricket_innings where localId = "
+                    + id + "", null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                int inningId = cursor.getInt(cursor.getColumnIndex("id"));
+                String totalOvers = cursor.getString(cursor.getColumnIndex("totalOvers"));
+                String wickets = cursor.getString(cursor.getColumnIndex("wickets"));
+                String isDeclared = cursor.getString(cursor.getColumnIndex("isDeclared"));
+                String bowlingTeamId = cursor.getString(cursor.getColumnIndex("bowlingTeamId"));
+                String isScoredOnSF = cursor.getString(cursor.getColumnIndex("isScoredOnSF"));
+
+                String matchId = cursor.getString(cursor.getColumnIndex("matchId"));
+                String inningNumber = cursor.getString(cursor.getColumnIndex("inningNumber"));
+                String playing = cursor.getString(cursor.getColumnIndex("playing"));
+                String daySession = cursor.getString(cursor.getColumnIndex("daySession"));
+                String totalRunsScored = cursor.getString(cursor.getColumnIndex("totalRunsScored"));
+
+                String state = cursor.getString(cursor.getColumnIndex("state"));
+                String extras = cursor.getString(cursor.getColumnIndex("extras"));
+                String playedOvers = cursor.getString(cursor.getColumnIndex("playedOvers"));
+                String battingTeamId = cursor.getString(cursor.getColumnIndex("battingTeamId"));
+                String day = cursor.getString(cursor.getColumnIndex("day"));
+
+                cricketInning = new CricketInning(totalOvers, wickets, isDeclared, bowlingTeamId, isScoredOnSF, matchId,
+                        inningNumber, playing, daySession, totalRunsScored,
+                        state, extras, playedOvers, battingTeamId, day);
+                cricketInning.setId(inningId);
+
+            }
+        } catch (Exception e) {
+            cricketInning = null;
+            e.printStackTrace();
+        }
+        return cricketInning;
+    }
+
+
+
     public CricketInning fetchInningByIdAndBattingTeamId(int matchId1, int battingteamId) {
         CricketInning cricketInning = null;
         Cursor cursor = null;
@@ -2769,7 +2813,7 @@ public class SportzDatabase {
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT m.id,m.description,m.location,m.matchDate,m.tie,m.points,m.leagueId,m.calendarId,m.tossSelection,m.matchType,m.numberOfInnings,m.inviteStatus,m.matchStatus,CASE WHEN (m.matchStatus='NOT STARTED') THEN m.team1Id ELSE (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) END as team1Id, (select id from cricket_innings where inningNumber=1 and matchId=m.id) as team1InningId, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.team2Id ELSE (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) END as team2Id, (select id from cricket_innings where inningNumber=2 and matchId=m.id) as team2InningId, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam1ScoringOnSf ELSE ( case WHEN (m.team1Id=(select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam1ScoringOnSf, CASE WHEN (m.matchStatus='NOT STARTED') THEN m.isTeam2ScoringOnSf ELSE ( case WHEN (m.team1Id=(select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id)) THEN m.isTeam1ScoringOnSf ELSE (m.isTeam2ScoringOnSf) END ) END as isTeam2ScoringOnSf, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1Name, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT lower(a.name) FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2Name, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT a.id FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2AvatarId , CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team1Id AND a.avatarType='TEAM') ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select battingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team1ProfilePic, CASE WHEN (m.matchStatus='NOT STARTED') THEN (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id=m.team2Id AND a.avatarType='TEAM') ELSE (SELECT a.profilePicture FROM team t JOIN avatar a ON a.id=t.avatar WHERE t.id in (select bowlingTeamId from cricket_innings where inningNumber=1 and matchId=m.id) AND a.avatarType='TEAM') END AS team2ProfilePic, m.tournamentId,m.matchResultId,(select name from tournament where id=m.tournamentId) as tournamentName,m.tossResultId,m.eventId,m.activeScorerId,m.readStatus,m.numberOfPlayers,m.numberOfOvers, (SELECT startDate from event where id=m.eventId) as matchStartDate FROM matches m WHERE m.eventId= "
-                    + id + "", null);
+                    + id + " limit 1", null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
@@ -3594,7 +3638,7 @@ public class SportzDatabase {
             cv.put("syncStatus", "0");
         }
 
-        db.update("cricket_innings", cv, "localId =\"" + cricketInning.getId() + "\"", null);
+        db.update("cricket_innings", cv, "localId =" + cricketInning.getId() + "", null);
     }
 
     public void updateOverData(CricketOver cricketOver) {
@@ -3705,7 +3749,7 @@ public class SportzDatabase {
             cv.put("syncStatus", "0");
         }
 
-        db.update("cricket_overs", cv, "localId =\"" + cricketOver.getId() + "\"", null);
+        db.update("cricket_overs", cv, "localId =" + cricketOver.getId() + "", null);
     }
 
     public void updateBallData(CricketBall cricketBall) {
@@ -3802,7 +3846,7 @@ public class SportzDatabase {
             cv.put("id", cricketBall.getId());
             cv.put("syncStatus", "0");
         }
-        db.update("cricket_balls", cv, "localId =\"" + cricketBall.getId() + "\"", null);
+        db.update("cricket_balls", cv, "localId =" + cricketBall.getId() + "", null);
     }
 
     public void updateBallServerID(int id, int serverId) {
@@ -3823,7 +3867,7 @@ public class SportzDatabase {
         try {
             ContentValues cv = new ContentValues();
             cv.put("jsonData", jsonData);
-            db.update("cricket_balls_local", cv, "id =\"" + id + "\"", null);
+            db.update("cricket_balls_local", cv, "id =" + id + "", null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4088,7 +4132,7 @@ public class SportzDatabase {
         try {
             ContentValues cv = new ContentValues();
             cv.put("serverinningId", serverId);
-            db.update("SecondInning_local", cv, "id =\"" + id + "\"", null);
+            db.update("SecondInning_local", cv, "id =" + id + "", null);
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("error", e.getMessage());
@@ -4673,6 +4717,7 @@ public class SportzDatabase {
                     , isFour, isSix, String.valueOf(runScoredOnNoBall), isNoBall, isWideBall,
                     String.valueOf(runScoredOnWideBall), isBye, String.valueOf(runScoredOnBye), isLegBye, String.valueOf(runScoredOnLegBye), isWicket, wicketType, comments, String.valueOf(batsmanId), String.valueOf(bowlerId)
                     , String.valueOf(inningId), String.valueOf(overId), String.valueOf(matchId), String.valueOf(caughtById), String.valueOf(runOutById), String.valueOf(stumpedById), String.valueOf(outBatsmanId)));
+            Log.e("inningId", "insertid: " + inningId);
             CricketBall newBallInserted = fetchBallById(newBallInsertedId);
             insertBallDataLocal(jsonObject.toString(), newBallInsertedId);
             int strikeBatsmanRuns = Integer.parseInt(strikeBatsmanScoreCard.getRuns());

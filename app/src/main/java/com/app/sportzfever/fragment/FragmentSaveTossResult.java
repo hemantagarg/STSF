@@ -49,6 +49,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
     private ArrayList<String> listSelectonType = new ArrayList<>();
     private String isScorerForTeam1 = "", isScorerForTeam2 = "";
     private SportzDatabase db;
+    private JSONObject tossJson;
 
     public static FragmentSaveTossResult getInstance() {
         if (fragment_teamJoin_request == null)
@@ -197,11 +198,11 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
 
                 String str = db.SaveToss(match);
                 JSONObject jsonObject = new JSONObject(str);
+                tossJson = jsonObject;
                 JSONObject data = jsonObject.getJSONObject("data");
                 int inningId = data.getInt("inningId");
                 db.insertTossDataLocal(match.toString(), inningId);
                 db.insertMatchScoreData(match.toString());
-                TossResultAndStartScoring(jsonObject);
                 syncToss();
 
             }
@@ -260,7 +261,12 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
             }
 
         } else {
-            Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
+            try {
+                TossResultAndStartScoring(tossJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //   Toast.makeText(context, context.getResources().getString(R.string.message_network_problem), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -279,7 +285,7 @@ public class FragmentSaveTossResult extends BaseFragment implements ApiResponse 
                         db.updateTossServerID(tossdata.getId(), Integer.parseInt(data.getString("inningId")));
                         tossdata.setServerinningId(Integer.parseInt(data.getString("inningId")));
                         db.updateInningIdForMatch(tossdata.getCricket_inning_id(), tossdata.getServerinningId());
-                        syncToss();
+                        TossResultAndStartScoring(tossJson);
                     }
                 } else {
                     Toast.makeText(context, jObject.getString("message"), Toast.LENGTH_SHORT).show();
