@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     useLibrary 'org.apache.http.legacy'
     lintOptions {
         disable 'MissingTranslation'
@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.app.sportzfever"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 7
         versionName "1.4"
         multiDexEnabled true
@@ -30,27 +30,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.github.darsh2:MultipleImageSelect:3474549'
-    compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.googlecode.android-query:android-query:0.24.3'
-    compile 'com.android.support:cardview-v7:25.0.0'
-    compile 'com.prolificinteractive:material-calendarview:1.4.3'
-    compile 'com.google.android.gms:play-services:10.2.6'
-    compile 'com.google.firebase:firebase-messaging:9.4.0'
-    compile 'com.wdullaer:materialdatetimepicker:2.5.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.github.darsh2:MultipleImageSelect:3474549'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.google.code.gson:gson:2.4'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.googlecode.android-query:android-query:0.24.3'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+    implementation 'com.google.android.gms:play-services:10.2.6'
+    implementation 'com.google.firebase:firebase-messaging:10.2.1'
+    implementation 'com.wdullaer:materialdatetimepicker:2.5.0'
     // Stetho core
-    testCompile 'junit:junit:4.12'
-    compile files('libs/httpmime-4.2.5.jar')
-    compile project(':simple-crop-image-lib')
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/httpmime-4.2.5.jar')
+    implementation project(':simple-crop-image-lib')
 }
 apply plugin: 'com.google.gms.google-services'
